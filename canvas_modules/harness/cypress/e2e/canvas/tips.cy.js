@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,9 +65,21 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 	});
 
 	it("Test to check if tip show up for link image decoration.", function() {
-		// Must switch off link tips here otherwise, in Cypress, the link tip
-		// appears when hovering over the decoration instead of the decoration tip
-		// even though the decoration tip appears correctly in usual operation.
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
+				"decorations": true, "links": true }
+		});
+		// Add a decoration with a tooltip.
+		cy.setLinkDecorations("Discard Fields-Define Types",
+			[{ "id": "123", "image": "/images/decorators/zoom-in_32.svg",
+				"tooltip": "Zoom zoom!",
+				"x_pos": "0", "y_pos": "0" }]);
+		cy.wait(10);
+		cy.hoverOverLinkDecoration("Discard Fields-Define Types", "123");
+		cy.verifyTipForDecoration("Zoom zoom!");
+	});
+
+	it("Test to check if tip show up for link image decoration with link tips switched off.", function() {
 		cy.setCanvasConfig({
 			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
 				"decorations": true, "links": false }
@@ -82,13 +94,25 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 		cy.verifyTipForDecoration("Zoom zoom!");
 	});
 
-	it("Test to check if tip show up for node text decoration.", function() {
-		// Must switch off link tips here otherwise, in Cypress, the link tip
-		// appears when hovering over the decoration instead of the decoration tip
-		// even though the decoration tip appears correctly in usual operation.
+	it("Test to check if a tip shows up for link hovering over a decoration when tip decorations are switched off.", function() {
 		cy.setCanvasConfig({
 			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
-				"decorations": true, "links": false }
+				"decorations": false, "links": true }
+		});
+		// Add a decoration with a tooltip.
+		cy.setLinkDecorations("Discard Fields-Define Types",
+			[{ "id": "123", "image": "/images/decorators/zoom-in_32.svg",
+				"tooltip": "Zoom zoom!",
+				"x_pos": "0", "y_pos": "0" }]);
+		cy.wait(10);
+		cy.hoverOverLinkDecoration("Discard Fields-Define Types", "123");
+		cy.verifyTipForLink("Discard Fields", "Output Port Two", "Define Types", "Input Port 2");
+	});
+
+	it("Test to check if tip show up for node text decoration.", function() {
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": true, "ports": false,
+				"decorations": true, "links": true }
 		});
 		// Add a decoration with a tooltip.
 		cy.setNodeDecorations("DRUG1n",
@@ -98,6 +122,36 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 		cy.wait(10);
 		cy.hoverOverNodeDecoration("DRUG1n", "123");
 		cy.verifyTipForDecoration("A tooltip for a label decoration!");
+	});
+
+	it("Test to check if tip show up for node text decoration with node tips switched off.", function() {
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
+				"decorations": true, "links": true }
+		});
+		// Add a decoration with a tooltip.
+		cy.setNodeDecorations("DRUG1n",
+			[{ "id": "123", "label": "A node label decoration",
+				"tooltip": "A tooltip for a label decoration!",
+				"x_pos": "-20", "y_pos": "-20" }]);
+		cy.wait(10);
+		cy.hoverOverNodeDecoration("DRUG1n", "123");
+		cy.verifyTipForDecoration("A tooltip for a label decoration!");
+	});
+
+	it("Test to check if a tip shows up for node hovering over a decoration when tip decorations are switched off.", function() {
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": true, "ports": false,
+				"decorations": false, "links": true }
+		});
+		// Add a decoration with a tooltip.
+		cy.setNodeDecorations("Discard Fields",
+			[{ "id": "123", "label": "A node label decoration",
+				"tooltip": "A tooltip for a label decoration!",
+				"x_pos": "-20", "y_pos": "-20" }]);
+		cy.wait(10);
+		cy.hoverOverNodeDecoration("Discard Fields", "123");
+		cy.verifyTipForNodeAtLocation("Discard Fields", "below");
 	});
 
 	it("Test to check if tip does NOT show up for node text decoration when switched off.", function() {
@@ -492,13 +546,58 @@ describe("Test to check if tips show up for toolbar items", function() {
 		// The Run Selection tool tip should not be displayed because the label
 		// is already displayed next to the icon in the tool button.
 		cy.hoverOverToolbarItem(".runSelection-action");
-		cy.verifyTipForToolbarItemNotDisplayed(".runSelection-action");
+		cy.verifyNoTipsExist();
+
 		cy.mouseoutToolbarItem(".runSelection-action");
 
 		// This tooltip should show because there is no text in the button.
 		cy.hoverOverToolbarItem(".run-action");
 		cy.verifyTipForToolbarItem(".run-action", "Run");
 		cy.mouseoutToolbarItem(".run-action");
+	});
+
+	it("Test to check if tooltip is removed from display when the toolbar size changes", function() {
+		// Click on addComment button and verify focus and the tooltip is displayed
+		cy.clickToolbarAddComment();
+		cy.get(".createAutoComment-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".createAutoComment-action", "New comment");
+
+		// Move focus left to the Undo button
+		cy.get("body").type("{leftarrow}");
+		cy.get(".undo-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Create comment");
+
+		// Move focus left again to the Palette button
+		cy.get("body").type("{leftarrow}");
+		cy.get(".paletteOpen-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".paletteOpen-action", "Palette");
+
+		// Activate the palette button by pressing Return key
+		cy.get(".paletteOpen-action").type("{enter}");
+
+		// Verify tooltip is removed after activation. Tooltips should be removed
+		// when the toolbar resizes, as it does in this case.
+		cy.verifyNoTipsExist();
+	});
+
+	it("Test to check if a tooltip displayed after keyboard navigation is removed after hovering mouse over a toolbar button", function() {
+		// Click on addComment button and verify focus and the tooltip is displayed
+		cy.clickToolbarAddComment();
+		cy.get(".createAutoComment-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".createAutoComment-action", "New comment");
+
+		// Move focus left to the Undo button
+		cy.get("body").type("{leftarrow}");
+		cy.get(".undo-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Create comment");
+
+		// Hover mouse over the Zoom in button
+		cy.hoverOverToolbarItem(".zoomIn-action");
+		cy.mouseoutToolbarItem(".zoomIn-action");
+
+		// Verify tooltip is removed after activation. Tooltips should be removed
+		// when the toolbar resizes, as it does in this case.
+		cy.verifyNoTipsExist();
 	});
 });
 

@@ -21,8 +21,12 @@ import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { isEmpty, includes } from "lodash";
-import { Checkbox } from "@carbon/react";
-import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
+import { Checkbox, RadioButton } from "@carbon/react";
+// Carbon icons - direct imports for tree-shaking optimization
+import ArrowUp from "@carbon/icons-react/lib/ArrowUp";
+import ArrowDown from "@carbon/icons-react/lib/ArrowDown";
+import ArrowsVertical from "@carbon/icons-react/lib/ArrowsVertical";
+import Information from "@carbon/icons-react/lib/Information";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "../truncated-content-tooltip";
@@ -157,6 +161,10 @@ const VirtualizedGrid = (props) => {
 	}, [props.columns]);
 
 	const renderHeaderCheckbox = () => {
+		if (props.selectable && props.rowSelection === ROW_SELECTION.SINGLE) {
+			// For single selection, we just need a blank header to match the width of the radio buttons
+			return (<th className="properties-vt-column properties-vt-header-radio" />);
+		}
 		const headerCheckboxLabel = (typeof props.columns === "undefined" || props.columns.length === 0) ? "" : props.columns[checkboxLabelColumnIndex].headerLabel;
 		const translatedHeaderCheckboxLabel = props.intl.formatMessage(
 			{ id: "virtualizedTable.header.checkbox.label", defaultMessage: defaultMessages["virtualizedTable.header.checkbox.label"] },
@@ -184,35 +192,60 @@ const VirtualizedGrid = (props) => {
 		}
 
 		let selectOption = "";
-		if (props.selectable && props.rowSelection !== ROW_SELECTION.SINGLE) {
+		if (props.selectable) {
 			const rowSelected = isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
 			const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
-			const translatedRowCheckboxLabel = props.intl.formatMessage(
-				{ id: "virtualizedTable.row.checkbox.label", defaultMessage: defaultMessages["virtualizedTable.row.checkbox.label"] },
-				{ row_index: rowIndex + 1, table_label: (props.tableLabel ? props.tableLabel : "") }
-			);
 
-			selectOption = (<td className="properties-vt-row-checkbox"
-				onMouseEnter={(evt) => overSelectOption(evt)}
-				onMouseLeave={(evt) => overSelectOption(evt)}
-				onFocus={(evt) => overSelectOption(evt)}
-				onBlur={(evt) => overSelectOption(evt)}
-				onKeyDown={(evt) => {
-					if (evt.key === "Space" || evt.key === "Enter") {
-						onRowClick(evt, rowIndex, rowData);
-					}
-				}}
-			>
-				<Checkbox
-					id={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
-					key={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
-					labelText={translatedRowCheckboxLabel}
-					hideLabel
-					checked={rowSelected}
-					disabled={rowDisabled || props.tableDisabled}
-					readOnly={props.readOnly}
-				/>
-			</td>);
+			// Use radio button for single selection, checkbox for multiple selection
+			if (props.rowSelection === ROW_SELECTION.SINGLE) {
+				const translatedRowRadioLabel = props.intl.formatMessage(
+					{ id: "virtualizedTable.row.radio.label", defaultMessage: defaultMessages["virtualizedTable.row.radio.label"] },
+					{ row_index: rowIndex + 1, table_label: (props.tableLabel ? props.tableLabel : "") }
+				);
+
+				selectOption = (<td className="properties-vt-row-radio"
+					onMouseEnter={(evt) => overSelectOption(evt)}
+					onMouseLeave={(evt) => overSelectOption(evt)}
+					onFocus={(evt) => overSelectOption(evt)}
+					onBlur={(evt) => overSelectOption(evt)}
+				>
+					<RadioButton
+						id={`properties-vt-row-radio-${props.scrollKey}-${rowIndex}`}
+						key={`properties-vt-row-radio-${props.scrollKey}-${rowIndex}`}
+						name={`properties-vt-radio-group-${props.scrollKey}`}
+						labelText={translatedRowRadioLabel}
+						hideLabel
+						checked={rowSelected}
+						disabled={rowDisabled || props.tableDisabled}
+						readOnly={props.readOnly}
+						value={rowData.originalRowIndex}
+						onChange={(_value, _name, evt) => onRowClick(evt, rowIndex, rowData)}
+					/>
+				</td>);
+			} else {
+				const translatedRowCheckboxLabel = props.intl.formatMessage(
+					{ id: "virtualizedTable.row.checkbox.label", defaultMessage: defaultMessages["virtualizedTable.row.checkbox.label"] },
+					{ row_index: rowIndex + 1, table_label: (props.tableLabel ? props.tableLabel : "") }
+				);
+
+				selectOption = (<td className="properties-vt-row-checkbox"
+					onMouseEnter={(evt) => overSelectOption(evt)}
+					onMouseLeave={(evt) => overSelectOption(evt)}
+					onFocus={(evt) => overSelectOption(evt)}
+					onBlur={(evt) => overSelectOption(evt)}
+				>
+					<Checkbox
+						id={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
+						key={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
+						labelText={translatedRowCheckboxLabel}
+						hideLabel
+						checked={rowSelected}
+						disabled={rowDisabled || props.tableDisabled}
+						readOnly={props.readOnly}
+						onChange={(evt, data) => onRowClick(evt.nativeEvent, rowIndex, rowData, data.checked)}
+					/>
+				</td>);
+			}
 		}
 		return selectOption;
 	};
@@ -391,12 +424,24 @@ const VirtualizedGrid = (props) => {
 		</tbody>);
 	};
 
-	const onRowClick = (evt, rowIndex, rowData) => {
+	/**
+	 * Handles row click events for selection and interaction.
+	 * Prevents propagation for dropdown options and manages row selection state
+	 * including support for shift-key multi-selection.
+	 *
+	 * @param {Event} evt - The click event object
+	 * @param {number} rowIndex - The visual index of the clicked row
+	 * @param {Object} rowData - The data object for the clicked row
+	 * @param {number} rowData.originalRowIndex - The original index from getOriginalRowIndex
+	 * @param {boolean} rowData.disabled - Whether the row is disabled
+	 * @param {boolean} [newValue] - Optional explicit new selection state (true/false)
+	 */
+	const onRowClick = (evt, rowIndex, rowData, newValue) => {
 		if (evt.target.className === "cds--select-option") {
 			evt.stopPropagation(); // stop propagation when selecting dropdown select options within table rows
-		} else {
+		} else if (typeof newValue !== "undefined" || props.rowSelection === ROW_SELECTION.SINGLE) {
 			// Set selections
-			const selected = !isRowSelected(rowData.originalRowIndex);
+			const selected = newValue ?? !isRowSelected(rowData.originalRowIndex);
 			if (typeof props.setRowsSelected === "function") {
 				props.setRowsSelected({
 					"index": rowIndex,

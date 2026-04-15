@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,9 @@ import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import { Button } from "@carbon/react";
-import { FlowData, ArrowLeft } from "@carbon/react/icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import FlowData from "@carbon/icons-react/lib/FlowData";
+import ArrowLeft from "@carbon/icons-react/lib/ArrowLeft";
 import { CANVAS_FOCUS, DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
@@ -496,10 +498,9 @@ class CanvasContents extends React.Component {
 		if (this.props.canvasConfig.enableKeyboardNavigation) {
 			// Set tabindex to 0 so the focus can go to the <div>
 			return (
-				<section role="application"
+				<div role="application"
 					id={this.svgCanvasDivId}
 					tabIndex="0"
-					aria-roledescription={this.getLabel("canvas.roleDescription")}
 					className="d3-svg-canvas-div keyboard-navigation"
 					onMouseDown={this.onMouseDown}
 					onMouseLeave={this.onMouseLeave}
@@ -515,7 +516,7 @@ class CanvasContents extends React.Component {
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		return (
-			<section tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
+			<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
 				onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 			/>
 		);

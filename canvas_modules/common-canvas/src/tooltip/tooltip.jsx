@@ -32,6 +32,7 @@ class ToolTip extends React.Component {
 		this.uuid = uuid4();
 		this.pendingTooltip = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
+		this.handleMouseOverOtherTrigger = this.handleMouseOverOtherTrigger.bind(this);
 		this.stopEventPropagation = this.stopEventPropagation.bind(this);
 		this.tabKeyPressed = false;
 		// Tooltip should not close if link inside tooltip is clicked.
@@ -42,6 +43,7 @@ class ToolTip extends React.Component {
 	componentDidMount() {
 		window.addEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
 		window.addEventListener("resize", this.hideTooltipOnScrollAndResize, true);
+		document.addEventListener("mouseover", this.handleMouseOverOtherTrigger, true);
 		if (this.props.targetObj) {
 			this.setTooltipVisible(true);
 		}
@@ -50,6 +52,7 @@ class ToolTip extends React.Component {
 	componentWillUnmount() {
 		window.removeEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
 		window.removeEventListener("resize", this.hideTooltipOnScrollAndResize, true);
+		document.removeEventListener("mouseover", this.handleMouseOverOtherTrigger, true);
 		if (this.pendingTooltip) {
 			clearTimeout(this.pendingTooltip);
 		}
@@ -365,6 +368,16 @@ class ToolTip extends React.Component {
 		}
 	}
 
+	// Handles mouseover events on the document to detect when the user hovers
+	// over a different tooltip trigger element. If detected, closes the current
+	// tooltip to prevent multiple tooltips from being displayed simultaneously.
+	handleMouseOverOtherTrigger(evt) {
+		const target = evt.target.closest(".tooltip-trigger");
+		if (target && target !== this.triggerRef && this.state.isTooltipVisible) {
+			this.setTooltipVisible(false);
+		}
+	}
+
 	render() {
 		let tooltipContent = null;
 		let triggerContent = null;
@@ -387,9 +400,16 @@ class ToolTip extends React.Component {
 			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
 			// Ref - https://stackoverflow.com/a/49512400
 			const onKeyDown = (evt) => this.setKeyPressed(evt);
-			const onFocus = () => this.showTooltipWithDelay();
+			const onFocus = () => {
+				if (this.props.showToolTipOnClick) {
+					this.showTooltipWithDelay();
+				} else {
+					// For regular hover tooltips, show immediately on focus for better keyboard accessibility
+					this.setTooltipVisible(true);
+				}
+			};
 			const onBlur = (evt) => {
-				// Close the tooltip if tab is click
+				// Close the tooltip if tab is clicked
 				if (this.tabKeyPressed) {
 					this.setTooltipVisible(false);
 					this.tabKeyPressed = false;
@@ -408,7 +428,10 @@ class ToolTip extends React.Component {
 
 			// If the content has a tooltip that can be shown via hover, then it must also be doable via keyboard
 			const canDisplayFullText = this.canDisplayFullText(this.triggerRef);
-			const allowKeyboardFocus = this.props.showToolTipIfTruncated && !canDisplayFullText;
+			const textOverflowing = this.props.showToolTipIfTruncated && !canDisplayFullText;
+
+			// If the children wrapped by the tooltip can be focused, then the tooltip should be shown on focus
+			const enableKeyboardAccess = this.props.showToolTipOnClick || textOverflowing || !this.props.disable;
 
 			triggerContent = (<div
 				data-id={`${this.uuid}-${this.props.id}-trigger`}
@@ -417,14 +440,14 @@ class ToolTip extends React.Component {
 				onMouseLeave={!this.props.showToolTipOnClick ? mouseleave : null}
 				onMouseDown={!this.props.showToolTipOnClick ? mousedown : null}
 				onClick={this.props.showToolTipOnClick ? click : null}
-				onFocus={this.props.showToolTipOnClick || allowKeyboardFocus ? onFocus : null} // When focused using keyboard
-				onBlur={this.props.showToolTipOnClick || allowKeyboardFocus ? onBlur : null}
+				onFocus={enableKeyboardAccess ? onFocus : null} // When focused using keyboard
+				onBlur={enableKeyboardAccess ? onBlur : null}
 				onKeyDown={this.props.showToolTipOnClick ? onKeyDown : null}
-				tabIndex={this.props.showToolTipOnClick || allowKeyboardFocus ? 0 : null}
-				role={this.props.showToolTipOnClick || allowKeyboardFocus ? "button" : null}
-				aria-labelledby={this.props.showToolTipOnClick || allowKeyboardFocus ? `${this.uuid}-${this.props.id}` : null}
-				aria-expanded={this.props.showToolTipOnClick || allowKeyboardFocus ? this.state.isTooltipVisible : null}
-				aria-controls={this.props.showToolTipOnClick || allowKeyboardFocus ? `${this.uuid}-${this.props.id}` : null}
+				tabIndex={this.props.showToolTipOnClick || textOverflowing ? 0 : null}
+				role={this.props.showToolTipOnClick || textOverflowing ? "button" : null}
+				aria-labelledby={this.props.showToolTipOnClick || textOverflowing ? `${this.uuid}-${this.props.id}` : null}
+				aria-expanded={this.props.showToolTipOnClick || textOverflowing ? this.state.isTooltipVisible : null}
+				aria-controls={this.props.showToolTipOnClick || textOverflowing ? `${this.uuid}-${this.props.id}` : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}

@@ -97,5 +97,8 @@ export const PARAMETER_DEFS = "parameterDefs";
 
 export const PRIMARY = "Primary";
 
+export const ELK_STRATEGY_INTERACTIVE = "INTERACTIVE";
+export const ELK_STRATEGY_SIMPLE = "SIMPLE";
+
 export const CATEGORY_VIEW_ACCORDIONS = "accordions";
 export const CATEGORY_VIEW_TABS = "tabs";

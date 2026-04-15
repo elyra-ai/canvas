@@ -52,26 +52,26 @@ Cypress.Commands.add("checkCommentDoesntExist", (commentText) => {
 
 function getCommentGrpSelector() {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const selector = `section > svg > g > g > g[data-id^=comment_grp_${inst}]`;
+	const selector = `.d3-svg-canvas-div > svg > g > g > g[data-id^=comment_grp_${inst}]`;
 	return selector;
 }
 
 function getCommentGrpSelectorInSubFlow() {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const selector = `section > svg > g > g > g > svg > g > g > g[data-id^=comment_grp_${inst}]`;
+	const selector = `.d3-svg-canvas-div > svg > g > g > g > svg > g > g > g[data-id^=comment_grp_${inst}]`;
 	return selector;
 }
 
 function getCommentGrpSelectorInSubFlowNested() {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const selector = `section > svg > g > g > g > svg > g > g > g > svg > g > g > g[data-id^=comment_grp_${inst}]`;
+	const selector = `.d3-svg-canvas-div > svg > g > g > g > svg > g > g > g > svg > g > g > g[data-id^=comment_grp_${inst}]`;
 	return selector;
 }
 
 function getCommentGrpSelectorInSupernode(supernodeId) {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	const selector =
-	`section > svg > g > g > g[data-id='node_grp_${inst}_${supernodeId}'] > svg > g > g > g[data-id^='comment_grp_${inst}']`;
+	`.d3-svg-canvas-div > svg > g > g > g[data-id='node_grp_${inst}_${supernodeId}'] > svg > g > g > g[data-id^='comment_grp_${inst}']`;
 	return selector;
 }
 
@@ -158,6 +158,10 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, 
 	if (saveComment) {
 		cy.get(`#canvas-div-${document.instanceId}`).click(2, 2);
 	}
+});
+
+Cypress.Commands.add("completeTextEntry", () => {
+	cy.focused().type("{shift}{enter}");
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {

@@ -69,6 +69,8 @@ mockTextArea.mockImplementation((props) => {
 	return <TextAreaComp {...props} />;
 });
 
+const controlItem = (<span>Test Label</span>);
+
 describe("textarea control renders correctly", () => {
 	const user = userEvent.setup();
 
@@ -88,6 +90,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -96,6 +99,7 @@ describe("textarea control renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -105,6 +109,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -119,6 +124,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -134,6 +140,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={controlList}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyIdList}
 			/>
 		);
@@ -149,6 +156,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -167,6 +175,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={controlList}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyIdList}
 			/>
 		);
@@ -184,6 +193,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={controlNoLimit}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyIdList}
 			/>
 		);
@@ -200,6 +210,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -214,6 +225,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -231,6 +243,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -249,6 +262,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -265,6 +279,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -272,13 +287,14 @@ describe("textarea control renders correctly", () => {
 		expect(textWrapper.querySelector("textarea").disabled).to.equal(true);
 	});
 
-	it("textarea doesn not render when hidden", () => {
+	it("textarea does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<TextArea
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -297,6 +313,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -313,6 +330,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -331,6 +349,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -346,6 +365,7 @@ describe("textarea control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 				readOnly
 			/>

@@ -351,6 +351,7 @@ describe("structuretable control renders correctly", () => {
 					controller={controller}
 					propertyId={propertyId}
 					buildUIItem={genUIItem}
+					openFieldPicker={openFieldPicker}
 					rightFlyout
 				/>
 			</Provider>
@@ -361,6 +362,7 @@ describe("structuretable control renders correctly", () => {
 			"control": control,
 			"propertyId": propertyId,
 			"buildUIItem": genUIItem,
+			"openFieldPicker": openFieldPicker,
 			"rightFlyout": true
 		});
 	});

@@ -405,6 +405,12 @@ export interface Breadcrumb {
  */
 export declare class CanvasController {
     /**
+     * Creates a new CanvasController instance.
+     * @param instanceId - Optional instance ID for the canvas controller. If not provided, an auto-generated ID will be used.
+     */
+    constructor(instanceId?: string | number);
+
+    /**
      * Loads the pipelineFlow document provided into common-canvas and displays it.
      * The document must conform to the pipelineFlow schema as documented in the
      * elyra-ai pipeline-schemas repo. Documents conforming to older versions may be
@@ -453,6 +459,13 @@ export declare class CanvasController {
      * @returns the canvas objects in the internal canvas-info format
      */
     getCanvasInfo(): CanvasInfo;
+
+    /**
+     * Returns a unique identifier for this instance of Common Canvas.
+     * The instanceId can be set via the constructor parameter or will be auto-generated.
+     * @returns the instance ID
+     */
+    getInstanceId(): string | number;
 
     /**
      * Returns an array of ancestor pipelines from the primary pipeline to
@@ -1719,6 +1732,19 @@ export declare class CanvasController {
     setLinkProperties(
       linkId: CanvasLinkId,
       properties: Omit<Partial<CanvasLink>, "id">,
+      pipelineId?: PipelineId
+    ): void;
+
+    /**
+     * Sets the link parameters
+     * @param linkId - The ID of the link
+     * @param parameters - An array of parameters
+     * @param pipelineId - Optional. The ID of the pipeline of the link.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    setLinkParameters(
+      linkId: CanvasLinkId,
+      parameters: Record<string, unknown>[],
       pipelineId?: PipelineId
     ): void;
 

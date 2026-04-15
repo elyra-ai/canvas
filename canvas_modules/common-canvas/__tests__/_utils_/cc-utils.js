@@ -16,28 +16,13 @@
 
 import React from "react";
 import { Provider } from "react-redux";
-import { IntlProvider } from "react-intl";
-import { render } from "./mount-utils.js";
+import { renderWithIntl } from "./intl-utils.js";
 import sinon from "sinon";
 
 
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
 import CommonCanvasToolbar from "../../src/common-canvas/cc-toolbar.jsx";
 import CommonCanvasTextToolbar from "../../src/common-canvas/cc-text-toolbar.jsx";
-
-const locale = "en";
-const messages = {
-	"canvas.undo": "Undo",
-	"canvas.redo": "Redo",
-	"edit.cutSelection": "Cut",
-	"edit.copySelection": "Copy",
-	"edit.pasteSelection": "Paste",
-	"canvas.addComment": "Add Comment",
-	"canvas.deleteObject": "Delete",
-	"toolbar.zoomIn": "Zoom In",
-	"toolbar.zoomOut": "Zoom Out",
-	"toolbar.zoomToFit": "Zoom To Fit"
-};
 
 export function createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig, handlers) {
 	canvasController.getObjectModel().setPipelineFlowPalette({});
@@ -89,26 +74,24 @@ export function createIntlCommonCanvasRTL(
 	canvasController) {
 
 
-	const wrapper = render(
-		<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
-			<CommonCanvas
-				config={config}
-				contextMenuHandler={contextMenuHandler}
-				beforeEditActionHandler={beforeEditActionHandler}
-				editActionHandler={editActionHandler}
-				clickActionHandler={clickActionHandler}
-				decorationActionHandler={decorationActionHandler}
-				selectionChangeHandler={selectionChangeHandler}
-				tipHandler={tipHandler}
-				toolbarConfig={toolbarConfig}
-				notificationConfig={notificationConfig}
-				contextMenuConfig={contextMenuConfig}
-				showRightFlyout={showRightFlyout}
-				rightFlyoutContent={rightFlyoutContent}
-				showBottomPanel={showBottomPanel}
-				canvasController={canvasController}
-			/>
-		</IntlProvider>
+	const wrapper = renderWithIntl(
+		<CommonCanvas
+			config={config}
+			contextMenuHandler={contextMenuHandler}
+			beforeEditActionHandler={beforeEditActionHandler}
+			editActionHandler={editActionHandler}
+			clickActionHandler={clickActionHandler}
+			decorationActionHandler={decorationActionHandler}
+			selectionChangeHandler={selectionChangeHandler}
+			tipHandler={tipHandler}
+			toolbarConfig={toolbarConfig}
+			notificationConfig={notificationConfig}
+			contextMenuConfig={contextMenuConfig}
+			showRightFlyout={showRightFlyout}
+			rightFlyoutContent={rightFlyoutContent}
+			showBottomPanel={showBottomPanel}
+			canvasController={canvasController}
+		/>
 	);
 	return wrapper;
 }
@@ -133,11 +116,9 @@ export function createIntlCommonCanvasToolbar(data, canvasController) {
 		canvasController.closeNotificationPanel();
 	}
 
-	const wrapper = render(
+	const wrapper = renderWithIntl(
 		<Provider store={canvasController.getStore()}>
-			<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
-				<CommonCanvasToolbar canvasController={canvasController} />
-			</IntlProvider>
+			<CommonCanvasToolbar canvasController={canvasController} containingDivId="test-div-id" />
 		</Provider>
 	);
 
@@ -145,11 +126,9 @@ export function createIntlCommonCanvasToolbar(data, canvasController) {
 }
 
 export function createIntlCommonCanvasTextToolbar(data, canvasController) {
-	const wrapper = render(
+	const wrapper = renderWithIntl(
 		<Provider store={canvasController.getStore()}>
-			<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
-				<CommonCanvasTextToolbar canvasController={canvasController} />
-			</IntlProvider>
+			<CommonCanvasTextToolbar canvasController={canvasController} />
 		</Provider>
 	);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasMarkdown from "./svg-canvas-utils-markdown.js";
+import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import {
 	MARKDOWN, WYSIWYG
 } from "./constants/canvas-constants.js";
@@ -45,14 +46,13 @@ const BLACK = "#000000";
 
 export default class SvgCanvasTextArea {
 
-	constructor(config, dispUtils, nodeUtils, decUtils, canvasController,
+	constructor(config, dispUtils, decUtils, canvasController,
 		canvasDiv, activePipeline, removeTempCursorOverlay,
 		displayCommentsCallback, displayLinksCallback, getCommentToolbarPosCallback,
 		addCanvasZoomBehavior, removeCanvasZoomBehavior) {
 
 		this.config = config;
 		this.dispUtils = dispUtils;
-		this.nodeUtils = nodeUtils;
 		this.decUtils = decUtils;
 		this.canvasController = canvasController;
 		this.canvasDiv = canvasDiv;
@@ -88,6 +88,7 @@ export default class SvgCanvasTextArea {
 	displayCommentTextArea(d, parentDomObj) {
 		this.editingTextData = {
 			id: d.id,
+			focusReturn: d,
 			text: d.content,
 			singleLine: false,
 			maxCharacters: null,
@@ -464,17 +465,18 @@ export default class SvgCanvasTextArea {
 
 		this.editingTextData = {
 			id: node.id,
+			focusReturn: node,
 			text: node.label,
 			singleLine: node.layout.labelSingleLine,
 			maxCharacters: node.layout.labelMaxCharacters,
 			allowReturnKey: node.layout.labelAllowReturnKey,
 			textCanBeEmpty: false,
-			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
-			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
-			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
-			height: this.nodeUtils.getNodeLabelTextAreaHeight(node),
+			xPos: SvgCanvasNodes.getNodeLabelTextAreaPosX(node),
+			yPos: SvgCanvasNodes.getNodeLabelTextAreaPosY(node),
+			width: SvgCanvasNodes.getNodeLabelTextAreaWidth(node),
+			height: SvgCanvasNodes.getNodeLabelTextAreaHeight(node),
 			autoSize: true,
-			className: this.nodeUtils.getNodeLabelTextAreaClass(node),
+			className: SvgCanvasNodes.getNodeLabelTextAreaClass(node),
 			parentDomObj: parentDomObj,
 			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
 			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),
@@ -537,6 +539,7 @@ export default class SvgCanvasTextArea {
 
 		this.editingTextData = {
 			id: dec.id,
+			focusReturn: obj,
 			text: dec.label,
 			singleLine: dec.label_single_line || false,
 			maxCharacters: dec.label_max_characters || null,
@@ -635,6 +638,7 @@ export default class SvgCanvasTextArea {
 		// the text value since it will be unavailable after the text area closes.
 		const newText = newValue;
 		this.closeTextArea(data);
+
 		if (data.text !== newText || this.textAreaHeight !== data.height ||
 				!this.areFormatsTheSame(data.formats, data.newFormats)) {
 			data.saveTextChangesCallback(data, newText, this.textAreaHeight);
@@ -708,6 +712,7 @@ export default class SvgCanvasTextArea {
 		}
 		this.editingText = false;
 		this.editingTextId = "";
+		this.canvasController.setFocusObject(data.focusReturn, null, true);
 	}
 
 	// Returns true if one of the keys that are allowed in the text area, when
@@ -879,6 +884,12 @@ export default class SvgCanvasTextArea {
 			})
 			.on("blur", (d3Event, d) => {
 				this.logger.log("Text area - blur");
+
+				// Some Cypress test scenarios can result in a second call to onBlur. So if
+				// neither of the underlying objects are in existence we can just return.
+				if (!this.foreignObjectComment && !this.foreignObjectLabel) {
+					return;
+				}
 
 				// If the esc key was pressed to cause the blur event just return
 				// so label returns to what it was before editing started.

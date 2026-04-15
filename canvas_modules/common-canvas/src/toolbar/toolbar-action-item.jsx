@@ -35,6 +35,7 @@ class ToolbarActionItem extends React.Component {
 		};
 
 		this.divRef = React.createRef();
+		this.buttonItemRef = React.createRef();
 
 		this.actionClickHandler = this.actionClickHandler.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
@@ -75,6 +76,13 @@ class ToolbarActionItem extends React.Component {
 	// Called by toolbar.jsx
 	isEnabled() {
 		return this.props.actionObj.enable || this.props.actionObj.jsx;
+	}
+
+	// Called by toolbar.jsx to hide tooltip when toolbar layout changes
+	hideTooltip() {
+		if (this.buttonItemRef.current) {
+			this.buttonItemRef.current.hideTooltip();
+		}
 	}
 
 	// Called by toolbar.jsx and internally
@@ -237,6 +245,7 @@ class ToolbarActionItem extends React.Component {
 			>
 				<div className="toolbar-button-item">
 					<ToolbarButtonItem
+						ref={this.buttonItemRef}
 						actionObj={actionObj}
 						actionName={this.generateActionName()}
 						tooltipDirection={this.props.tooltipDirection}

@@ -142,7 +142,14 @@
                     }
                   },
                   "type_attr": "Primary",
-                  "description": "A test description for a link"
+                  "description": "A test description for a link",
+                  "parameters": {
+                    "param1": 42,
+                    "param2": {
+                      "param2a": [1 ,2, 3],
+                      "param2b:": "xxx"
+                    }
+                  }
                 }
               ]
             }

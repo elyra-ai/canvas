@@ -926,14 +926,14 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		let fieldTable = container.querySelector("div.properties-field-table-container");
 		let rows = tableUtilsRTL.getTableRows(fieldTable);
 		expect(rows).to.have.length(4);
-		expect(rows[1].textContent).to.equal("Sexstring");
+		expect(rows[1].textContent).to.equal("Select row 2 from Fields tableSexstring");
 		const searchInput = fieldTable.querySelectorAll("div.properties-ft-search-container input");
 		expect(searchInput).to.have.length(1);
 		fireEvent.change(searchInput[0], { target: { value: "Age" } });
 		fieldTable = container.querySelector("div.properties-field-table-container");
 		rows = tableUtilsRTL.getTableRows(fieldTable);
 		expect(rows).to.have.length(1);
-		expect(rows[0].textContent).to.equal("Ageinteger");
+		expect(rows[0].textContent).to.equal("Select row 1 from Fields tableAgeinteger");
 	});
 	it("expression builder filters values table", () => {
 		reset();
@@ -950,14 +950,14 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		let fieldTable = container.querySelector("div.properties-value-table-container");
 		let rows = tableUtilsRTL.getTableRows(fieldTable);
 		expect(rows).to.have.length(2);
-		expect(rows[0].textContent).to.equal("Min: 21");
+		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMin: 21");
 		const searchInput = fieldTable.querySelectorAll("div.properties-ft-search-container input");
 		expect(searchInput).to.have.length(1);
 		fireEvent.change(searchInput[0], { target: { value: "Max" } });
 		fieldTable = container.querySelector("div.properties-value-table-container");
 		rows = tableUtilsRTL.getTableRows(fieldTable);
 		expect(rows).to.have.length(1);
-		expect(rows[0].textContent).to.equal("Max: 55");
+		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMax: 55");
 	});
 	it("expression builder filters function table", () => {
 		reset();
@@ -982,13 +982,13 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		functionTable = container.querySelector("div.properties-functions-table");
 		rows = tableUtilsRTL.getTableRows(functionTable);
 		expect(rows).to.have.length(2);
-		expect(rows[0].textContent).to.equal("if  COND1  then  EXPR1  else  EXPR2  endifAny");
+		expect(rows[0].textContent).to.equal("Select row 1 from Functions tableif  COND1  then  EXPR1  else  EXPR2  endifAny");
 		searchInput = functionTable.querySelectorAll("div.properties-ft-search-container input");
 		fireEvent.change(searchInput[0], { target: { value: "to_int" } });
 		functionTable = container.querySelector("div.properties-functions-table");
 		rows = tableUtilsRTL.getTableRows(functionTable);
 		expect(rows).to.have.length(1);
-		expect(rows[0].textContent).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
+		expect(rows[0].textContent).to.equal("Select row 1 from Functions tableto_integer(Item)[Esperanto~Integer~~eo]");
 	});
 	it("expression builder sorts fields table", () => {
 		reset();
@@ -1005,16 +1005,16 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		const fieldTable = container.querySelector("div.properties-field-table-container");
 		const rows = tableUtilsRTL.getTableRows(fieldTable);
 		expect(rows).to.have.length(4);
-		expect(rows[1].textContent).to.equal("Sexstring");
+		expect(rows[1].textContent).to.equal("Select row 2 from Fields tableSexstring");
 
 		const sortHeaders = fieldTable.querySelectorAll(".properties-vt-column-sortable");
 		expect(sortHeaders).to.have.length(2);
 
 		tableUtilsRTL.clickHeaderColumnSort(fieldTable, 0);
-		expect(rows[1].textContent).to.equal("BPstring");
+		expect(rows[1].textContent).to.equal("Select row 2 from Fields tableBPstring");
 
 		tableUtilsRTL.clickHeaderColumnSort(fieldTable, 0);
-		expect(rows[1].textContent).to.equal("Cholesterolstring");
+		expect(rows[1].textContent).to.equal("Select row 2 from Fields tableCholesterolstring");
 	});
 	it("expression builder sorts value table", () => {
 		reset();
@@ -1032,14 +1032,14 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		const rows = tableUtilsRTL.getTableRows(valueTable);
 		const sortHeaders = valueTable.querySelectorAll(".properties-vt-column-sortable");
 		expect(rows).to.have.length(2);
-		expect(rows[0].textContent).to.equal("Min: 21");
+		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMin: 21");
 		expect(sortHeaders).to.have.length(1);
 
 		tableUtilsRTL.clickHeaderColumnSort(valueTable, 0);
-		expect(rows[0].textContent).to.equal("Max: 55");
+		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMax: 55");
 
 		tableUtilsRTL.clickHeaderColumnSort(valueTable, 0);
-		expect(rows[0].textContent).to.equal("Min: 21");
+		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMin: 21");
 	});
 	it("expression builder sorts function table", () => {
 		reset();
@@ -1058,14 +1058,14 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		const rows = tableUtilsRTL.getTableRows(functionTable);
 		const sortHeaders = functionTable.querySelectorAll(".properties-vt-column-sortable");
 		expect(rows).to.have.length(4);
-		expect(rows[0].textContent).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
+		expect(rows[0].textContent).to.equal("Select row 1 from Functions tableto_integer(Item)[Esperanto~Integer~~eo]");
 		expect(sortHeaders).to.have.length(2);
 
 		tableUtilsRTL.clickHeaderColumnSort(functionTable, 0);
-		expect(rows[0].textContent).to.equal("count_equal(Item, List)Integer");
+		expect(rows[0].textContent).to.equal("Select row 1 from Functions tablecount_equal(Item, List)Integer");
 
 		tableUtilsRTL.clickHeaderColumnSort(functionTable, 1);
-		expect(rows[0].textContent).to.equal("if  COND1  then  EXPR1  else  EXPR2  endifAny");
+		expect(rows[0].textContent).to.equal("Select row 1 from Functions tableif  COND1  then  EXPR1  else  EXPR2  endifAny");
 	});
 });
 
@@ -1093,8 +1093,10 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		fireEvent.click(dropDownList[1]);
 		expect(container.querySelector("div.properties-expression-field-select span").textContent).to.equal("Recently Used");
 		expect(container.querySelectorAll("div.properties-field-table-container .properties-vt-column")[0]
-			.textContent).to.equal("Add");
+			.textContent).to.equal("");
 		expect(container.querySelectorAll("div.properties-field-table-container .properties-vt-column")[1]
+			.textContent).to.equal("Add");
+		expect(container.querySelectorAll("div.properties-field-table-container .properties-vt-column")[2]
 			.textContent).to.equal("Item");
 		fieldRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-field-table-container"));
 		expect(fieldRows).to.have.length(0);
@@ -1116,12 +1118,12 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// check that the fields were correctly added
 		fieldRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-field-table-container"));
 		expect(fieldRows).to.have.length(2);
-		expect(fieldRows[0].textContent).to.equal("Sex");
-		expect(fieldRows[1].textContent).to.equal("Age");
+		expect(fieldRows[0].textContent).to.equal("Select row 1 from Fields tableSex");
+		expect(fieldRows[1].textContent).to.equal("Select row 2 from Fields tableAge");
 		// check that recently used field has the correct values stored with it
 		let valueRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-value-table-container"));
 		expect(valueRows).to.have.length(3);
-		expect(valueRows[2].textContent).to.equal("not specified");
+		expect(valueRows[2].textContent).to.equal("Select row 3 from Values tablenot specified");
 		// check that reusing a field will move it to the top of Recently Used
 		dropDown = container.querySelector("div.properties-expression-field-select .cds--list-box__field");
 		fireEvent.click(dropDown);
@@ -1138,11 +1140,11 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// order of rows should be reversed
 		fieldRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-field-table-container"));
 		expect(fieldRows).to.have.length(2);
-		expect(fieldRows[0].textContent).to.equal("Age");
-		expect(fieldRows[1].textContent).to.equal("Sex");
+		expect(fieldRows[0].textContent).to.equal("Select row 1 from Fields tableAge");
+		expect(fieldRows[1].textContent).to.equal("Select row 2 from Fields tableSex");
 		valueRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-value-table-container"));
 		expect(valueRows).to.have.length(2);
-		expect(valueRows[0].textContent).to.equal("Min: 21");
+		expect(valueRows[0].textContent).to.equal("Select row 1 from Values tableMin: 21");
 	});
 	it("expression builder correctly adds and reorders functions to Recently Used", () => {
 		reset();
@@ -1167,8 +1169,10 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		fireEvent.click(dropDownList[1]);
 		expect(container.querySelector("div.properties-expression-function-select span").textContent).to.equal("Recently Used");
 		expect(container.querySelectorAll("div.properties-functions-table-container .properties-vt-column")[0]
-			.textContent).to.equal("Add");
+			.textContent).to.equal("");
 		expect(container.querySelectorAll("div.properties-functions-table-container .properties-vt-column")[1]
+			.textContent).to.equal("Add");
+		expect(container.querySelectorAll("div.properties-functions-table-container .properties-vt-column")[2]
 			.textContent).to.equal("Function");
 		funcRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(0);
@@ -1190,8 +1194,8 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// check that the functions were correctly added
 		funcRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(2);
-		expect(funcRows[0].textContent).to.equal("count_equal(Item, List)Integer");
-		expect(funcRows[1].textContent).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
+		expect(funcRows[0].textContent).to.equal("Select row 1 from Functions tablecount_equal(Item, List)Integer");
+		expect(funcRows[1].textContent).to.equal("Select row 2 from Functions tableto_integer(Item)[Esperanto~Integer~~eo]");
 		// check that reusing a function will move it to the top of Recently Used
 		dropDown = container.querySelector("div.properties-expression-function-select .cds--list-box__field");
 		fireEvent.click(dropDown);
@@ -1209,8 +1213,8 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// order of rows should be reversed
 		funcRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(2);
-		expect(funcRows[0].textContent).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
-		expect(funcRows[1].textContent).to.equal("count_equal(Item, List)Integer");
+		expect(funcRows[0].textContent).to.equal("Select row 1 from Functions tableto_integer(Item)[Esperanto~Integer~~eo]");
+		expect(funcRows[1].textContent).to.equal("Select row 2 from Functions tablecount_equal(Item, List)Integer");
 	});
 });
 
@@ -1304,7 +1308,7 @@ describe("expression select field function tests", () => {
 				controller={controller}
 				language={control.language}
 				onChange={Sinon.spy()}
-				functionList={ExpressionInfo.actual.functionCategories}
+				functionList={ExpressionInfo.actual.functionCategories["General Functions"].functionList}
 			/>
 		);
 	});

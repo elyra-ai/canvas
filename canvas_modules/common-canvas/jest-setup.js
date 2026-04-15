@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-/* global fetch */
+/* global jest, beforeEach */
 import fetchMock from "jest-fetch-mock";
 fetchMock.enableMocks();
 fetch.mockResponse("<svg />");
 
 // Added to filter out `act` error and warning messages
-console.warn = jest.fn(mockConsole(console.warn));
-console.error = jest.fn(mockConsole(console.error));
+console.warn = mockConsole(console.warn);
+console.error = mockConsole(console.error);
 
 // Added to simulate scrollIntoView for react components
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
@@ -43,8 +43,59 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 function mockConsole(consoleMethod) {
-	const ignoredMessages = ["test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged"];
-	return (message, ...args) => {
+	const ignoredMessages = [
+		"test was not wrapped in act(...)",
+		"Rendering components directly into document.body is discouraged",
+		"[WARNING]: Ignoring unsupported condition operation 'colDoesExists' for control type structuretable:",
+		"[WARNING]: Ignoring unsupported condition operation 'colDoesExists' for control type structurelisteditor:",
+		"[WARNING]: Ignoring unsupported condition operation 'colNotExists' for control type numberfield:",
+		"[WARNING]: Ignoring unsupported condition operation 'contains' for control type passwordfield:",
+		"[WARNING]: Ignoring unsupported condition operation 'notContains' for control type passwordfield:",
+		"[WARNING]: Ignoring unsupported condition operation 'notEquals' for control type passwordfield:",
+		"[WARNING]: Ignoring unsupported condition operation 'cellNotEmpty' for control type wrongcontrol:",
+		"[WARNING]: Ignoring unsupported condition operation 'equals' for control type passwordfield:",
+		"[WARNING]: Ignoring condition operation 'equals' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Ignoring condition operation 'matches' for parameter_ref test no regular expression specified in condition.:",
+		"[WARNING]: Ignoring condition operation 'matches' for parameter_ref test with input data type number:",
+		"[WARNING]: Ignoring condition operation 'notMatches' for parameter_ref undefined no regular expression specified in condition.:",
+		"[WARNING]: Ignoring condition operation 'notMatches' for parameter_ref undefined with input data type number:",
+		"[WARNING]: Ignoring condition operation 'isNotEmpty' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Ignoring condition operation 'isEmpty' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Ignoring condition operation 'contains' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Ignoring condition operation 'notContains' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Condition Operator dmRoleEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmMeasurementEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmMeasurementNotEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmTypeNotEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmTypeEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmRoleEquals only intended for use on columns:",
+		"[WARNING]: Control not found for samplingSize:",
+		"[WARNING]: Control not found for param_removed:",
+		"[WARNING]: Control not found for expression:",
+		"[WARNING]: Control not found for custom_name_checkbox:",
+		"[WARNING]: Control not found for hidden_field:",
+		"[WARNING]: Control not found for custom_name:",
+		"[WARNING]: Control not found for annotation:",
+		"[WARNING]: Control not found for custom_name_checkbox:",
+		"[WARNING]: Control not found for defaultOperations:",
+		"[WARNING]: Control not found for default_boolean:",
+		"[WARNING]: Control not found for keys:",
+		"[WARNING]: Control not found for textfield:",
+		"[WARNING]: Ignoring unknown condition operation 'customSyntaxCheck' for parameter_ref expression:",
+		"[WARNING]: Ignoring unknown condition operation 'customNonEmptyListLessThan' for parameter_ref list_string_error:",
+		"[WARNING]: Ignoring unknown condition operation 'customRequiredColumn' for parameter_ref checkbox:",
+		"[WARNING]: Ignoring unknown condition operation 'customMax' for parameter_ref custom_op_num:",
+
+		// This message for VirtualizedGrid
+		"Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+		// These messages from virtualized-table
+		"componentWillMount has been renamed",
+		"componentWillReceiveProps has been renamed"
+
+	];
+	return (msg, ...args) => {
+		const message = typeof msg === "object" ? msg.toString() : msg; // msg might be an error object if one was thrown.
+
 		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message && typeof message === "string" && message.includes(ignoredMessage));
 		if (!hasIgnoredMessage) {
 			consoleMethod(message, ...args);
@@ -55,9 +106,11 @@ function mockConsole(consoleMethod) {
 beforeEach(() => {
 	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
 	Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
+		configurable: true,
 		value: 1000
 	});
 	Object.defineProperty(HTMLElement.prototype, "offsetWidth", {
+		configurable: true,
 		value: 1000
 	});
 });

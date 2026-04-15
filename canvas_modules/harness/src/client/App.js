@@ -27,7 +27,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
-import { Password, Code } from "@carbon/icons-react";
+import { Password, Code, WarningFilled, ErrorFilled } from "@carbon/icons-react";
 
 import { jsPDF } from "jspdf";
 import * as htmlToImage from "html-to-image";
@@ -81,6 +81,7 @@ import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 import CustomOverflowAction from "./components/custom-actions/CustomOverflowAction.js";
+import NotificationsPanelWrapper from "./components/carbon-notifications-panel/carbon-notifications-panel-wrapper.jsx";
 
 import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
@@ -144,7 +145,8 @@ import {
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
-	CATEGORY_VIEW_ACCORDIONS
+	CATEGORY_VIEW_ACCORDIONS,
+	ELK_STRATEGY_INTERACTIVE
 } from "./constants/harness-constants.js";
 
 import {
@@ -162,7 +164,8 @@ import {
 	IMAGE_DISPLAY_SVG_INLINE,
 	UNDERLAY_NONE,
 	PALETTE_LAYOUT_FLYOUT,
-	TOOLBAR_LAYOUT_TOP
+	TOOLBAR_LAYOUT_TOP,
+	LAYOUT_LIBRARY_DAGRE
 } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -184,6 +187,71 @@ class App extends React.Component {
 			openSidepanelCanvas: false,
 			openSidepanelProperties: false,
 			openSidepanelAPI: false,
+
+			// Twisty panel state
+			twistyLabelText: "",
+			twistyLabelIcon: "none",
+
+			// Notifications state
+			carbonNotifications: [
+				{
+					id: "1",
+					type: "error",
+					title: "Error notification",
+					subtitle: "This is an error notification",
+					description: "Error code: ERR_500. The server encountered an internal error and was unable to complete your request. " +
+						"Please try again later or contact support if the problem persists.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 1")
+				},
+				{
+					id: "2",
+					type: "warning",
+					title: "Warning notification",
+					subtitle: "This is a warning notification",
+					description: "Your session will expire in 5 minutes due to inactivity. Please save your work to avoid losing any unsaved changes.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 2")
+				},
+				{
+					id: "3",
+					type: "informational",
+					title: "Informational notification",
+					subtitle: "This is an informational notification",
+					description: "A new version of the application is available. Update now to access the latest features and improvements, " +
+						"including enhanced performance and bug fixes.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 3")
+				},
+				{
+					id: "4",
+					type: "success",
+					title: "Success notification",
+					subtitle: "Operation completed successfully",
+					description: "Your data has been successfully exported to CSV format. The file contains 1,234 records and is ready for download from your downloads folder.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 4")
+				},
+				{
+					id: "5",
+					type: "error",
+					title: "Connection failed",
+					subtitle: "Unable to connect to the server",
+					description: "Network connection lost. Please check your internet connection and try again. " +
+						"If you're behind a firewall, ensure that the required ports are open.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 5")
+				},
+				{
+					id: "6",
+					type: "warning",
+					title: "Storage limit warning",
+					subtitle: "You are approaching your storage limit",
+					description: "You have used 9.2 GB of your 10 GB storage quota (92%). Consider deleting old files or upgrading your plan to avoid service interruption.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 6")
+				}
+			],
 
 			// Common canvas state variables
 			paletteOpened: false,
@@ -208,6 +276,8 @@ class App extends React.Component {
 			selectedMoveNodesInComment: false,
 			selectedContextToolbar: false,
 			selectedSnapToGridType: SNAP_TO_GRID_NONE,
+			selectedLayoutLibrary: LAYOUT_LIBRARY_DAGRE,
+			elkLayeredStrategy: ELK_STRATEGY_INTERACTIVE,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedDisplayGridType: DISPLAY_GRID_NONE,
@@ -387,6 +457,9 @@ class App extends React.Component {
 		this.clearNotificationMessages = this.clearNotificationMessages.bind(this);
 		this.setCanvasConfig = this.setCanvasConfig.bind(this);
 
+		this.dismissSingleNotification = this.dismissSingleNotification.bind(this);
+		this.dismissAllNotifications = this.dismissAllNotifications.bind(this);
+
 		this.setBreadcrumbsDefinition = this.setBreadcrumbsDefinition.bind(this);
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelProperties = this.sidePanelProperties.bind(this);
@@ -460,7 +533,7 @@ class App extends React.Component {
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
-
+		this.panelTitleHandler = this.panelTitleHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
 
@@ -512,7 +585,7 @@ class App extends React.Component {
 		// which would cause a refresh.
 		this.emptyCanvasDiv = (
 			<div>
-				<Isvg src={BlankCanvasImage} aria-label="Harness empty image" className="harness-empty-image" />
+				<Isvg src={BlankCanvasImage} aria-label="Empty canvas - add nodes to get started" alt="Empty canvas illustration" className="harness-empty-image" />
 				<span className="harness-empty-text">
 					<FormattedMessage
 						id={"canvas.emptyText"}
@@ -671,6 +744,18 @@ class App extends React.Component {
 
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={labelId} defaultMessage={defaultLabel} />);
+	}
+
+	dismissSingleNotification(notification) {
+		this.setState((prevState) => ({
+			carbonNotifications: prevState.carbonNotifications.filter((n) => n.id !== notification.id)
+		}));
+		this.log("Dismissed notification: " + notification.id);
+	}
+
+	dismissAllNotifications() {
+		this.setState({ carbonNotifications: [] });
+		this.log("Dismissed all notifications");
 	}
 
 	getPropertyDefName(node) {
@@ -1895,6 +1980,32 @@ class App extends React.Component {
 		return "Save properties custom label";
 	}
 
+	// Handler for panel title labels
+	panelTitleHandler({ panelId, label }) {
+		if (panelId === "TwistyPanel2") {
+			const labelText = this.state.twistyLabelText;
+			const iconType = this.state.twistyLabelIcon;
+
+			if (labelText) {
+				let icon = null;
+				if (iconType === "warning") {
+					icon = <WarningFilled />;
+				} else if (iconType === "error") {
+					icon = <ErrorFilled />;
+				}
+
+				return (<div className="harness-custom-twisty-title">
+					{label}
+					<div className={classNames("harness-twisty-sub-title", iconType)}>
+						{icon}
+						<span>{labelText}</span>
+					</div>
+				</div>);
+			}
+		}
+		return null;
+	}
+
 	refreshContent(streamId, diagramId) {
 		this.log("refreshContent()");
 	}
@@ -1964,6 +2075,10 @@ class App extends React.Component {
 
 		if (actionId === "openTearsheet") {
 			propertiesController.setActiveTearsheet(data.tearsheet_ref);
+		}
+		if (actionId === "multiselect-update") {
+			const propertyId = { name: data.parameter_ref };
+			propertiesController.updatePropertyValue(propertyId, ["red", "orange"]);
 		}
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
@@ -2077,6 +2192,15 @@ class App extends React.Component {
 			}
 			propertiesController.updatePropertyValue(propertyId, value);
 		}
+		if (actionId === "submitTwistyTitleLabel") {
+			// Get the current values from the properties controller and save to state
+			const labelText = propertiesController.getPropertyValue({ name: "twistyLabelInput" });
+			const iconType = propertiesController.getPropertyValue({ name: "twistyLabelIcon" });
+			this.setState({
+				twistyLabelText: labelText,
+				twistyLabelIcon: iconType
+			});
+		}
 
 
 		this.log("propertyActionHandler() " + actionId);
@@ -2103,7 +2227,8 @@ class App extends React.Component {
 			propertiesActionLabelHandler: this.propertiesActionLabelHandler,
 			tooltipLinkHandler: this.tooltipLinkHandler,
 			propertyIconHandler: this.propertyIconHandler,
-			filterItemsHandler: this.filterItemsHandler
+			filterItemsHandler: this.filterItemsHandler,
+			panelTitleHandler: this.panelTitleHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;
@@ -2205,6 +2330,7 @@ class App extends React.Component {
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
+			enableLayoutLibrary: this.state.selectedLayoutLibrary,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableImageDisplay: this.state.selectedImageDisplay,
 			enableLinkType: this.state.selectedLinkType,
@@ -2266,7 +2392,12 @@ class App extends React.Component {
 				displayGridMajorY: this.state.enteredMajorGridY,
 				displayGridMinorX: this.state.enteredMinorGridX,
 				displayGridMinorY: this.state.enteredMinorGridY,
-				...this.state.selectedCanvasLayout
+				...this.state.selectedCanvasLayout,
+				elkLayout: {
+					root: {
+						"elk.layered.nodePlacement.strategy": this.state.elkLayeredStrategy
+					}
+				}
 			},
 			enableLinksOverNodes: this.state.selectedLinksOverNodes
 		};
@@ -2336,6 +2467,12 @@ class App extends React.Component {
 						</div>
 					</div>);
 
+			const notificationsData = {
+				notifications: this.state.carbonNotifications,
+				onDismissSingleNotification: this.dismissSingleNotification,
+				onDismissAllNotifications: this.dismissAllNotifications
+			};
+
 			toolbarConfig = {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
@@ -2355,6 +2492,9 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "settingspanel", iconEnabled: (<Settings />), label: "Settings", enable: true,
 						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
+					{ divider: true },
+					{ action: "notifications-panel", iconEnabled: (<NotificationIcon size={32} />), label: "Notifications", enable: true,
+						subPanel: NotificationsPanelWrapper, subPanelData: notificationsData },
 					{ divider: true },
 					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale size={32} />), label: "Text Size", enable: true,
 						subMenu: subMenuTextSize, closeSubAreaOnClick: true },
@@ -2403,28 +2543,30 @@ class App extends React.Component {
 			];
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOMIZE_AUTO) {
-			toolbarConfig = [
-				{ action: "cut", label: "Cut" },
-				{ action: "copy", label: "Copy" },
-				{ action: "paste", label: "Paste" },
-				{ divider: true },
-				{ action: "undo", label: "Undo" },
-				{ action: "redo", label: "Redo" },
-				{ divider: true },
-				{ action: "togglePalette",
-					label: this.canvasController.isPaletteOpen() ? "Close Palette" : "Open Palette",
-					iconEnabled: this.canvasController.isPaletteOpen() ? (<SubtractAlt />) : (<AddAlt />),
-					incLabelWithIcon: "after"
-				},
-				{ divider: true },
-				{ action: "toggleNotificationPanel", iconEnabled: (<NotificationIcon />) },
-				{ divider: true },
-				{ action: "deleteSelectedObjects", label: "Delete" },
-				{ divider: true },
-				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
-				{ divider: true }
-			];
+			toolbarConfig = {
+				leftBar: [
+					{ action: "cut", label: "Cut" },
+					{ action: "copy", label: "Copy" },
+					{ action: "paste", label: "Paste" },
+					{ divider: true },
+					{ action: "undo", label: "Undo" },
+					{ action: "redo", label: "Redo" },
+					{ divider: true },
+					{ action: "togglePalette",
+						label: this.canvasController.isPaletteOpen() ? "Close Palette" : "Open Palette",
+						iconEnabled: this.canvasController.isPaletteOpen() ? (<SubtractAlt />) : (<AddAlt />),
+						incLabelWithIcon: "after"
+					},
+					{ divider: true },
+					{ action: "toggleNotificationPanel", iconEnabled: (<NotificationIcon />) },
+					{ divider: true },
+					{ action: "deleteSelectedObjects", label: "Delete" },
+					{ divider: true },
+					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
+					{ divider: true }
+				]
+			};
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
 			toolbarConfig = {
@@ -2747,18 +2889,6 @@ class App extends React.Component {
 		const toolbarConfig = {
 			leftBar: [
 				{
-					action: "harness-title",
-					label: "Elyra Canvas",
-					enable: true,
-					jsx: (tabIndex) => (
-						<div className="harness-title-container toolbar-jsx-obj" tabIndex={tabIndex} role="button">
-							<span className="harness-title">Elyra Canvas</span>
-							<span className="harness-version">{todaysDateFormatted}</span>
-						</div>
-					)
-				},
-				{ divider: true },
-				{
 					action: "console",
 					label: "Console",
 					enable: true,
@@ -2826,10 +2956,10 @@ class App extends React.Component {
 				{ divider: true },
 				{
 					action: "sidepanelCanvas",
-					label: "Common Canvas",
+					label: "Common Canvas Options",
 					enable: true,
 					iconEnabled: (<FlowData size={16} />),
-					tooltip: "Common Canvas"
+					tooltip: "Common Canvas Options"
 				},
 				{
 					action: "sidepanelAPI",
@@ -2840,16 +2970,20 @@ class App extends React.Component {
 				},
 				{
 					action: "sidepanelProperties",
-					label: "Common Properties",
+					label: "Common Properties Options",
 					enable: true,
 					iconEnabled: (<GuiManagement size={16} />),
-					tooltip: "Common Properties"
+					tooltip: "Common Properties Options"
 				}
 			]
 		};
 
 		return (
-			<div className="harness-app-navbar" role="navigation" aria-label="Test harness options">
+			<div className="harness-app-navbar" role="banner" aria-label="Test harness">
+				<div className="harness-title-container">
+					<span className="harness-title">Elyra Canvas</span>
+					<span className="harness-version">{todaysDateFormatted}</span>
+				</div>
 				<Toolbar
 					config={toolbarConfig}
 					instanceId={this.canvasController.getInstanceId()}
@@ -3172,18 +3306,24 @@ class App extends React.Component {
 			);
 		}
 
+		const className = classNames(
+			"harness-canvas-container",
+			{ "double": this.state.selectedExtraCanvasDisplayed },
+			{ "side-panel-open": this.isSidePanelOpen() },
+			{ "console-panel-open": this.state.consoleOpened }
+		);
+
 		const tooltipFontSize = "13px";
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			{sidePanel}
 			{!isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null}
-			<div className={classNames("harness-canvas-container",
-				{ "double": this.state.selectedExtraCanvasDisplayed },
-				{ "side-panel-open": this.isSidePanelOpen() },
-				{ "console-panel-open": this.state.consoleOpened })}
+			<main className={className}
+				aria-label="Test harness"
+				aria-roledescription={"Display"}
 			>
 				{commonCanvas}
-			</div>
+			</main>
 			{consoleView}
 			<ReactTooltip id="toolbar-tooltip" place="bottom" effect="solid" style={{ fontSize: tooltipFontSize }} />
 		</div>);

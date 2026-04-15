@@ -18,9 +18,11 @@ import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } f
 import PropTypes from "prop-types";
 
 import { Button } from "@carbon/react";
-import { OverflowMenuVertical } from "@carbon/react/icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import OverflowMenuVertical from "@carbon/icons-react/lib/OverflowMenuVertical";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
+import Tooltip from "../tooltip/tooltip.jsx";
 
 const ToolbarOverflowItem = forwardRef(({
 	index,
@@ -35,19 +37,27 @@ const ToolbarOverflowItem = forwardRef(({
 	toolbarFocusAction,
 	setToolbarFocusAction,
 	isFocusInToolbar,
-	closeAnyOpenSubArea
+	closeAnyOpenSubArea,
+	tooltipDirection,
+	isVisible
 }, ref) => {
 
 	const [showExtendedMenu, setShowExtendedMenu] = useState(false);
 
 	const buttonRef = useRef(null);
+	const tooltipRef = useRef(null);
 
 	// Manage button focus
 	useEffect(() => {
 		if (toolbarFocusAction === action && isFocusInToolbar && !showExtendedMenu) {
 			buttonRef.current.focus();
+			// Show tooltip when button receives focus via keyboard navigation
+			tooltipRef.current?.setTooltipVisible?.(true);
+		} else {
+			// Hide tooltip when button loses focus
+			tooltipRef.current?.setTooltipVisible?.(false);
 		}
-	}, [toolbarFocusAction, isFocusInToolbar, showExtendedMenu]);
+	}, [toolbarFocusAction, isFocusInToolbar, showExtendedMenu, action]);
 
 
 	// Manage event listener for clicking outside the overflow menu.
@@ -84,7 +94,7 @@ const ToolbarOverflowItem = forwardRef(({
 	function closeSubArea() {
 		setOverflowIndex(null); // Clear the indexes
 		setShowExtendedMenu(false);
-		setToolbarFocusAction(action); // This will not set focus on this item
+		setToolbarFocusAction(action); // This should set focus back to the overflow button
 	}
 
 	function openSubArea() {
@@ -131,6 +141,7 @@ const ToolbarOverflowItem = forwardRef(({
 	let overflowMenu = null;
 	if (showExtendedMenu) {
 		const actionItemRect = buttonRef.current.getBoundingClientRect();
+
 		overflowMenu = (
 			<ToolbarSubMenu
 				subMenuActions={subMenuActions}
@@ -151,6 +162,36 @@ const ToolbarOverflowItem = forwardRef(({
 
 	const tabIndex = toolbarFocusAction === action ? 0 : -1;
 
+	const onButtonFocus = () => {
+		tooltipRef.current?.setTooltipVisible?.(true);
+	};
+
+	const onButtonBlur = () => {
+		tooltipRef.current?.setTooltipVisible?.(false);
+	};
+
+	const buttonContent = (
+		<div className="toolbar-item-content default">
+			<div className="content-main">
+				<div className="toolbar-icon">
+					<OverflowMenuVertical />
+				</div>
+			</div>
+		</div>
+	);
+
+	const direction = tooltipDirection || "bottom";
+	const wrappedButtonContent = (
+		<Tooltip ref={tooltipRef} id={`overflow-${action}-${instanceId}-tooltip`} tip={label} className="icon-tooltip" direction={direction} hoverable>
+			{buttonContent}
+		</Tooltip>
+	);
+
+	// Button should be aria-hidden when it's NOT visible in the toolbar
+	// When visible, it should never be aria-hidden (even if not focused)
+	// When the submenu is open, it should also not be aria-hidden
+	const isAriaHidden = !isVisible && !showExtendedMenu;
+
 	return (
 		<div className={genOverflowButtonClassName()} data-toolbar-action={action}>
 			<div className={"toolbar-overflow-item"}>
@@ -160,17 +201,13 @@ const ToolbarOverflowItem = forwardRef(({
 					tabIndex={tabIndex}
 					onClick={toggleExtendedMenu}
 					onKeyDown={onKeyDown}
+					onFocus={onButtonFocus}
+					onBlur={onButtonBlur}
 					aria-label={label}
-					aria-hidden={tabIndex === -1}
+					aria-hidden={isAriaHidden}
 					size={size}
 				>
-					<div className="toolbar-item-content default">
-						<div className="content-main">
-							<div className="toolbar-icon">
-								<OverflowMenuVertical />
-							</div>
-						</div>
-					</div>
+					{wrappedButtonContent}
 				</Button>
 			</div>
 			{overflowMenu}
@@ -194,7 +231,9 @@ ToolbarOverflowItem.propTypes = {
 	toolbarFocusAction: PropTypes.string,
 	setToolbarFocusAction: PropTypes.func,
 	isFocusInToolbar: PropTypes.bool,
-	closeAnyOpenSubArea: PropTypes.func
+	closeAnyOpenSubArea: PropTypes.func,
+	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
+	isVisible: PropTypes.bool
 };
 
 export default ToolbarOverflowItem;

@@ -4,5 +4,12 @@
   "toolbar.zoomOut": "Zoom arrière",
   "toolbar.zoomToFit": "Zoom pour adapter",
   "toolbar.overflowMenu": "Menu déroulant dynamique",
-  "toolbar.label": "Barre d'outils de canevas"
+  "toolbar.flowEditorToolbarLabel": "Editeur de flux",
+  "toolbar.flowEditorToolbarContainer": "Options de l'éditeur de flux",
+  "toolbar.textToolbarLabel": "Texte",
+  "toolbar.textToolbarContainer": "Options texte",
+  "toolbar.contextToolbarLabel": "Contexte",
+  "toolbar.contextToolbarContainer": "Options de contexte",
+  "toolbar.paletteDialogToolbarLabel": "Boîte de dialogue Palette",
+  "toolbar.paletteDialogToolbarContainer": "Options de la boîte de dialogue Palette"
 }

@@ -159,6 +159,7 @@ export default (state = {}, action) => {
 	case "UPDATE_NODES":
 	case "REPLACE_NODES":
 	case "REPLACE_NODE":
+	case "REPLACE_COMMENTS":
 	case "SIZE_AND_POSITION_OBJECTS":
 	case "SET_NODE_PARAMETERS":
 	case "SET_NODE_UI_PARAMETERS":
@@ -166,6 +167,7 @@ export default (state = {}, action) => {
 	case "SET_NODE_MESSAGES":
 	case "SET_NODE_DECORATIONS":
 	case "SET_LINK_DECORATIONS":
+	case "SET_LINK_PARAMETERS":
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 	case "SET_NODE_LABEL":

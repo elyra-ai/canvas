@@ -539,6 +539,8 @@ class EditorForm extends React.Component {
 						cancelHandler={onCloseCallback}
 						key={panel.id}
 						tearsheet={this.visibleTearsheet}
+						controller={this.props.controller}
+						disableSaveOnRequiredErrors={false}
 					/>
 				);
 			}

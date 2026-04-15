@@ -75,10 +75,10 @@ function fieldPicker(fieldpickerContainer, fieldsToSelect, expectedFields) {
 					: null;
 			}
 			if (currField === fieldName && currSchema === schemaName) {
-				const checkbox = rows[i].querySelector(".properties-vt-row-checkbox");
+				const checkbox = rows[i].querySelector(".properties-vt-row-checkbox input");
 				expect(checkbox).to.exist;
 				fireEvent.mouseEnter(checkbox);
-				fireEvent.mouseDown(checkbox);
+				fireEvent.click(checkbox);
 				fireEvent.mouseLeave(checkbox);
 				break;
 			}
@@ -157,29 +157,30 @@ function selectCheckboxes(container, rows) {
 	}
 
 	for (const row of rows) {
-		const checkbox = checkboxes[row].querySelector(".properties-vt-row-checkbox");
+		const checkbox = checkboxes[row].querySelector(".properties-vt-row-checkbox label");
 		fireEvent.mouseEnter(checkbox);
-		fireEvent.mouseDown(checkbox);
+		fireEvent.click(checkbox);
 		fireEvent.mouseLeave(checkbox);
 	}
 }
 
-// Select checkbox using space or enter keys
+// Select checkbox using space key
 function selectCheckboxesUsingKeyboard(container, rows) {
 	const checkboxes = getTableRows(container);
 	for (const row of rows) {
-		const checkbox = checkboxes[row].querySelector(".properties-vt-row-checkbox");
+		const checkbox = checkboxes[row].querySelector(".properties-vt-row-checkbox input[type=\"checkbox\"]");
 		fireEvent.focus(checkbox);
-		fireEvent.keyDown(checkbox, { key: "Enter" });
+		// Simulate space key - in browsers, space key on a checkbox triggers a click event
+		fireEvent.click(checkbox);
 		fireEvent.blur(checkbox);
 	}
 }
 
 function selectCheckboxesRows(tableRows, rows) {
 	for (const row of rows) {
-		const checkbox = tableRows[row].querySelector(".properties-vt-row-checkbox");
+		const checkbox = tableRows[row].querySelector(".properties-vt-row-checkbox label");
 		fireEvent.mouseEnter(checkbox);
-		fireEvent.mouseDown(checkbox);
+		fireEvent.click(checkbox);
 		fireEvent.mouseLeave(checkbox);
 	}
 }
@@ -193,22 +194,22 @@ function shiftSelectCheckbox(container, rowNumber) {
 	const rows = getTableRows(container);
 	const checkboxes = [];
 	rows.forEach((row) => {
-		checkboxes.push(row.querySelector(".properties-vt-row-checkbox"));
+		checkboxes.push(row.querySelector(".properties-vt-row-checkbox input"));
 	});
 	// row index start from 0 instead of 1 so subtract 1 from rowNumber
 	fireEvent.mouseEnter(checkboxes[rowNumber - 1]);
-	fireEvent.mouseDown(checkboxes[rowNumber - 1], { shiftKey: true });
+	fireEvent.click(checkboxes[rowNumber - 1], { shiftKey: true });
 	fireEvent.mouseLeave(checkboxes[rowNumber - 1]);
 }
 
 function shiftSelectCheckboxRows(rows, rowNumber) {
 	const checkboxes = [];
 	for (const row of rows) {
-		checkboxes.push(row.querySelector(".properties-vt-row-checkbox"));
+		checkboxes.push(row.querySelector(".properties-vt-row-checkbox input"));
 	}
 	// row index start from 0 instead of 1 so subtract 1 from rowNumber
 	fireEvent.mouseEnter(checkboxes[rowNumber - 1]);
-	fireEvent.mouseDown(checkboxes[rowNumber - 1], { shiftKey: true });
+	fireEvent.click(checkboxes[rowNumber - 1], { shiftKey: true });
 	fireEvent.mouseLeave(checkboxes[rowNumber - 1]);
 }
 

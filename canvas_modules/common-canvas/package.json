@@ -17,7 +17,7 @@
   "homepage": "https://elyra-ai.github.io/canvas/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/elyra-ai/canvas/tree/main/canvas_modules/common-canvas"
+    "url": "git+https://github.com/elyra-ai/canvas.git#main"
   },
   "bugs": {
     "url": "https://github.com/elyra-ai/canvas/issues"
@@ -56,9 +56,10 @@
     "d3": "7.9.0",
     "dagre": "^0.8.5",
     "date-fns": "^2.28.0",
-    "immutable": "^4.0.0",
+    "elkjs": "^0.11.1",
+    "immutable": "^5.1.5",
     "jsonschema": "^1.4.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "markdown-it": "^14.1.1",
     "prop-types": "^15.7.2",
     "react-draggable": "^4.4.4",
@@ -83,8 +84,8 @@
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.0.6",
     "@rollup/plugin-url": "6.1.0",
-    "@testing-library/jest-dom": "5.17.0",
-    "@testing-library/react": "14.2.2",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.6.1",
     "autoprefixer": "9.8.8",
     "babel-jest": "26.3.0",
@@ -116,7 +117,7 @@
     "react-is": "18.3.1",
     "react-test-renderer": "18.3.1",
     "reactable": "1.1.0",
-    "rollup": "2.79.2",
+    "rollup": "2.80.0",
     "rollup-plugin-auto-external": "2.0.0",
     "rollup-plugin-scss": "3.0.0",
     "rollup-plugin-terser": "7.0.2",
@@ -128,7 +129,7 @@
     "url": "0.11.3"
   },
   "peerDependencies": {
-    "@carbon/react": "^1.51.0",
+    "@carbon/react": "^1.98.0",
     "react": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0"
@@ -141,6 +142,9 @@
   },
   "jest": {
     "testEnvironment": "jest-fixed-jsdom",
+    "testEnvironmentOptions": {
+      "url": "http://localhost/"
+    },
     "transformIgnorePatterns": [],
     "moduleFileExtensions": [
       "js",
@@ -168,7 +172,6 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(svg)": "<rootDir>/__mocks__/svgMock.js",
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.js"
-    },
-    "testURL": "http://localhost/"
+    }
   }
 }

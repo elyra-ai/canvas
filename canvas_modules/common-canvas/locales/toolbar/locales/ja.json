@@ -4,5 +4,12 @@
   "toolbar.zoomOut": "ズームアウト",
   "toolbar.zoomToFit": "適合ズーム",
   "toolbar.overflowMenu": "オーバーフロー・メニュー",
-  "toolbar.label": "キャンバス・ツールバー"
+  "toolbar.flowEditorToolbarLabel": "フロー・エディター",
+  "toolbar.flowEditorToolbarContainer": "フローエディタのオプション",
+  "toolbar.textToolbarLabel": "テキスト",
+  "toolbar.textToolbarContainer": "テキストのオプション",
+  "toolbar.contextToolbarLabel": "コンテキスト",
+  "toolbar.contextToolbarContainer": "コンテキストオプション",
+  "toolbar.paletteDialogToolbarLabel": "パレットダイアログ",
+  "toolbar.paletteDialogToolbarContainer": "パレットダイアログのオプション"
 }

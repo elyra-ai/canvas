@@ -192,6 +192,22 @@ export type TitleChangeHandler = (
 ) => void;
 
 /**
+ * Callback handler for customizing panel titles.
+ * Called when a twisty panel is rendered, allowing you to replace the default title with custom content.
+ *
+ * @param params - Object containing panelId, label, and data
+ * @param params.panelId - The ID of the panel
+ * @param params.label - The default label/title of the panel
+ * @param params.data - Optional data object associated with the panel
+ * @returns A custom title (string or ReactNode) to replace the default, or null to use the default label
+ */
+export type PanelTitleHandler = (params: {
+  panelId: string;
+  label: string;
+  data?: Record<string, unknown>;
+}) => ReactNode | null;
+
+/**
  * https://elyra-ai.github.io/canvas/04.08-properties-config/
  */
 export interface CommonPropertiesConfig {
@@ -462,6 +478,12 @@ export interface CommonPropertiesProps {
       url: string;
       label: string;
     };
+    /**
+     * Callback handler for panel titles.
+     * Called when a panel title needs to be rendered or customized.
+     * Currently only used for twisty panels.
+     */
+    panelTitleHandler?: PanelTitleHandler;
   };
   propertiesConfig?: CommonPropertiesConfig;
   customPanels?: unknown[];

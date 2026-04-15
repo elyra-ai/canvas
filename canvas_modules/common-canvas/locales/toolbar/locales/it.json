@@ -4,5 +4,12 @@
   "toolbar.zoomOut": "Zoom indietro",
   "toolbar.zoomToFit": "Adatta alla finestra",
   "toolbar.overflowMenu": "Menu di overflow",
-  "toolbar.label": "Barra degli strumenti area di disegno"
+  "toolbar.flowEditorToolbarLabel": "Editor di flusso",
+  "toolbar.flowEditorToolbarContainer": "Opzioni dell'editor di flusso",
+  "toolbar.textToolbarLabel": "Testo",
+  "toolbar.textToolbarContainer": "Opzioni del testo",
+  "toolbar.contextToolbarLabel": "Contesto",
+  "toolbar.contextToolbarContainer": "Opzioni di contesto",
+  "toolbar.paletteDialogToolbarLabel": "Finestra di dialogo Tavolozza",
+  "toolbar.paletteDialogToolbarContainer": "Opzioni della finestra di dialogo Tavolozza"
 }

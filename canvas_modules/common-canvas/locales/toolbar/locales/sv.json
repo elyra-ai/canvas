@@ -4,5 +4,12 @@
   "toolbar.zoomOut": "Zooma ut",
   "toolbar.zoomToFit": "Zooma för att passa in",
   "toolbar.overflowMenu": "Overflow-meny",
-  "toolbar.label": "Verktygsfält för arbetsyta"
+  "toolbar.flowEditorToolbarLabel": "Flödesredigerare",
+  "toolbar.flowEditorToolbarContainer": "Alternativ för flödesredigeraren",
+  "toolbar.textToolbarLabel": "Text",
+  "toolbar.textToolbarContainer": "Textalternativ",
+  "toolbar.contextToolbarLabel": "Kontext",
+  "toolbar.contextToolbarContainer": "Kontextalternativ",
+  "toolbar.paletteDialogToolbarLabel": "Palettdialog",
+  "toolbar.paletteDialogToolbarContainer": "Alternativ i palettdialogrutan"
 }

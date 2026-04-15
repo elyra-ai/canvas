@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "Show more",
   "palette.flyout.search.less": "Show less",
   "palette.flyout.label": "Flyout Palette",
-  "palette.dialog.label": "Dialog Palette"
+  "palette.dialog.label": "Dialog Palette",
+  "palette.dialog.grid": "Grid view",
+  "palette.dialog.list": "List view",
+  "palette.dialog.close": "Close palette"
 }

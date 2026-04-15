@@ -67,7 +67,7 @@ export default class SVGCanvasUtilsDragLink {
 
 		this.dragLink.centerDragPos = this.ren.getTransformedMousePos(d3Event);
 		this.ren.displayLinks();
-		this.ren.raiseLinkToTopById(this.dragLink.id);
+		this.ren.raiseLinkToTopByIdPreserveFocus(this.dragLink.id);
 
 		const nodeNearMouse = this.ren.getNodeNearMousePos(d3Event, this.ren.canvasLayout.nodeProximity);
 

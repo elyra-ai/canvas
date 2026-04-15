@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,12 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { injectIntl } from "react-intl";
 
-import { CloseOutline, Grid, List } from "@carbon/react/icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import CloseOutline from "@carbon/icons-react/lib/CloseOutline";
+import Grid from "@carbon/icons-react/lib/Grid";
+import List from "@carbon/icons-react/lib/List";
 
 import Toolbar from "../toolbar";
 
@@ -54,41 +58,48 @@ class PaletteDialogTopbar extends React.Component {
 	}
 
 	render() {
+		const gridLabel = this.props.intl.formatMessage({ id: "palette.dialog.grid" });
+		const listLabel = this.props.intl.formatMessage({ id: "palette.dialog.list" });
+		const closeLabel = this.props.intl.formatMessage({ id: "palette.dialog.close" });
+
 		const config = {
 			leftBar: [
-				{ action: "grid", iconEnabled: (<Grid />), enable: true, isSelected: this.props.showGrid },
-				{ action: "list", iconEnabled: (<List />), enable: true, isSelected: !this.props.showGrid },
+				{ action: "grid", label: gridLabel, iconEnabled: (<Grid />), enable: true, isSelected: this.props.showGrid },
+				{ action: "list", label: listLabel, iconEnabled: (<List />), enable: true, isSelected: !this.props.showGrid },
 				{ divider: true }
 			],
 			rightBar: [
 				{ divider: true },
-				{ action: "close", iconEnabled: (<CloseOutline />), enable: true }
+				{ action: "close", label: closeLabel, iconEnabled: (<CloseOutline />), enable: true }
 			]
 		};
 
 
 		return (
-			<aside
+			<div
 				className="palette-dialog-topbar"
 				onMouseDown={this.mouseDown}
 				onDoubleClick={this.doubleClick}
-				aria-label={this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarContainer")}
 			>
 				<Toolbar
 					instanceId = {0}
 					config={config}
 					toolbarActionHandler={this.toolbarActionHandler}
 					additionalText={{
-						overflowMenuLabel: this.props.canvasController.labelUtil.getLabel("toolbar.overflowMenu"),
-						ariaLabel: this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarLabel")
+						overflowMenuLabel: this.props.intl.formatMessage({ id: "toolbar.overflowMenu" }),
+						ariaLabel: this.props.intl.formatMessage({ id: "toolbar.paletteDialogToolbarLabel" })
 					}}
 				/>
-			</aside>
+			</div>
 		);
 	}
 }
 
 PaletteDialogTopbar.propTypes = {
+	// From injectIntl
+	intl: PropTypes.object.isRequired,
+
+	// From PaletteDialogUnder
 	showGridMethod: PropTypes.func.isRequired,
 	windowMaximizeMethod: PropTypes.func.isRequired,
 	showGrid: PropTypes.bool.isRequired,
@@ -96,4 +107,5 @@ PaletteDialogTopbar.propTypes = {
 	canvasController: PropTypes.object.isRequired
 };
 
-export default PaletteDialogTopbar;
+
+export default (injectIntl(PaletteDialogTopbar));

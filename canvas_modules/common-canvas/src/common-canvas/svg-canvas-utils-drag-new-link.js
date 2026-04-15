@@ -23,6 +23,7 @@ const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection);
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_CURVE, LINK_TYPE_STRAIGHT, LINK_SELECTION_DETACHABLE,
 	FLOW_IN, FLOW_OUT,
@@ -66,10 +67,12 @@ export default class SVGCanvasUtilsDragNewLink {
 	dragStartNewLink(d3Event, d) {
 		if (this.isEventForOutputPort(d3Event)) {
 			const node = this.getNodeForPort(d3Event);
+			this.beginNewLinkCallback(d, node);
 			this.startOutputPortNewLink(d3Event, d, node);
 
 		} else if (this.isEventForInputPort(d3Event)) {
 			const node = this.getNodeForPort(d3Event);
+			this.beginNewLinkCallback(d, node);
 			this.startInputPortNewLink(d3Event, d, node);
 
 		} else if (this.ren.activePipeline.getObjectTypeName(d) === "comment") {
@@ -280,7 +283,7 @@ export default class SVGCanvasUtilsDragNewLink {
 		// to draw straight lines over the node.
 		if (linkCategory === NODE_LINK &&
 				this.ren.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
-				this.ren.nodeUtils.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcObj)) {
+				SvgCanvasNodes.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcObj)) {
 			this.removeNewLinkLine();
 
 		} else {
@@ -327,11 +330,12 @@ export default class SVGCanvasUtilsDragNewLink {
 			.each((d, i, guideSel) => {
 				const obj = d3.select(guideSel[i]);
 				const transform = this.ren.getLinkImageTransform(d);
+				// Create a port object with the guide position
+				const guidePort = { ...this.drawingNewLinkData.srcPort, cx: d.x2, cy: d.y2 };
 				this.ren.updatePort(obj,
 					this.drawingNewLinkData.portGuideInfo,
 					this.drawingNewLinkData.srcObj,
-					d.x2,
-					d.y2,
+					guidePort,
 					transform);
 			});
 	}
@@ -667,5 +671,16 @@ export default class SVGCanvasUtilsDragNewLink {
 			}
 		}
 		return false;
+	}
+
+	// Signals to the host application that the link is beginning to be
+	// created, to give the app the chance to prepare.
+	beginNewLinkCallback(port, node) {
+		this.ren.canvasController.editActionHandler({
+			editType: "beginNewLink",
+			editSource: "canvas",
+			node: node,
+			port: port
+		});
 	}
 }

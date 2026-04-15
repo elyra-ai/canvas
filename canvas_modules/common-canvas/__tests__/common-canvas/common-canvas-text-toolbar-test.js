@@ -39,7 +39,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 		canvasController.openTextToolbar(100, 200, [], MARKDOWN, () => { /**/ });
 
 		await waitFor(() => {
-			expect(container.querySelectorAll("aside.text-toolbar")).to.have.length(1);
+			expect(container.querySelectorAll("div.text-toolbar")).to.have.length(1);
 			expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
 			expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
 			expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
@@ -61,7 +61,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 
 	it("should render text toolbar in new position when moved", async() => {
 		const { container } = createIntlCommonCanvasTextToolbar({}, canvasController);
-		canvasController.openTextToolbar(100, 200, [], () => { /**/ });
+		canvasController.openTextToolbar(100, 200, [], MARKDOWN, () => { /**/ });
 
 		await waitFor(() => {
 			expect(container.querySelectorAll(".text-toolbar")[0].style.left).to.equal("100px");
@@ -78,17 +78,17 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 
 	it("should NOT render <Toolbar/> after it is closed", async() => {
 		const { container } = createIntlCommonCanvasTextToolbar({}, canvasController);
-		canvasController.openTextToolbar(100, 200, [], () => { /**/ });
+		canvasController.openTextToolbar(100, 200, [], MARKDOWN, () => { /**/ });
 
 		await waitFor(() => {
-			expect(container.querySelectorAll("aside.text-toolbar")).to.have.length(1);
+			expect(container.querySelectorAll("div.text-toolbar")).to.have.length(1);
 			expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
 		});
 
 		canvasController.closeTextToolbar();
 
 		await waitFor(() => {
-			expect(container.querySelectorAll("aside.text-toolbar")).to.have.length(0);
+			expect(container.querySelectorAll("div.text-toolbar")).to.have.length(0);
 			expect(container.querySelectorAll("div.toolbar-div")).to.have.length(0);
 		});
 	});

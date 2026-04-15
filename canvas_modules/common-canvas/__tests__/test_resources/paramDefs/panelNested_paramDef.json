@@ -427,6 +427,9 @@
         "label": {
           "resource_key": "moon"
         },
+        "description": {
+          "default": "This is a tooltip for moon action image."
+        },
         "control": "image",
         "data": {
           "parameter_ref": "moon_phase"
@@ -986,7 +989,7 @@
             }
           },
           {
-            "id": "harness-custom-toggle-panel",
+            "id": "harness-custom-toggle-panel-nested",
             "type": "customPanel",
             "nested_panel": true,
             "parameter_refs": [

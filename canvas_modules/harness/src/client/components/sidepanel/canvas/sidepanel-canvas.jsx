@@ -61,7 +61,9 @@ import {
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
-	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
+	ELK_STRATEGY_INTERACTIVE,
+	ELK_STRATEGY_SIMPLE
 } from "../../../constants/harness-constants.js";
 
 import {
@@ -109,7 +111,9 @@ import {
 	DISPLAY_GRID_DOTS,
 	DISPLAY_GRID_BOXES,
 	DISPLAY_GRID_DOTS_AND_LINES,
-	DISPLAY_GRID_BOXES_AND_LINES
+	DISPLAY_GRID_BOXES_AND_LINES,
+	LAYOUT_LIBRARY_ELK,
+	LAYOUT_LIBRARY_DAGRE
 } from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
 import FormsService from "../../../services/FormsService";
@@ -654,6 +658,51 @@ export default class SidePanelForms extends React.Component {
 					onChange={this.enteredStateValue}
 					value={this.props.getStateValue("enteredSnapToGridY")}
 				/>
+			</div>
+		</div>);
+
+		var layoutLibrary = (<div className="harness-sidepanel-children" id="harness-sidepanel-layout-library">
+			<div>
+				<FormGroup
+					legendText="Layout Library"
+				>
+					<RadioButtonGroup
+						className="harness-sidepanel-radio-group"
+						name="selectedLayoutLibrary" // Set name to corresponding field name in App.js
+						onChange={this.setStateValue}
+						defaultSelected={this.props.getStateValue("selectedLayoutLibrary")}
+						orientation="vertical"
+					>
+						<RadioButton
+							value={LAYOUT_LIBRARY_DAGRE}
+							labelText={LAYOUT_LIBRARY_DAGRE}
+						/>
+						<RadioButton
+							value={LAYOUT_LIBRARY_ELK}
+							labelText={LAYOUT_LIBRARY_ELK}
+						/>
+					</RadioButtonGroup>
+				</FormGroup>
+				<FormGroup
+					legendText="ELK node placement"
+				>
+					<RadioButtonGroup
+						className="harness-sidepanel-radio-group"
+						name="elkLayeredStrategy" // Set name to corresponding field name in App.js
+						onChange={this.setStateValue}
+						defaultSelected={this.props.getStateValue("elkLayeredStrategy")}
+						orientation="vertical"
+					>
+						<RadioButton
+							value={ELK_STRATEGY_INTERACTIVE}
+							labelText={ELK_STRATEGY_INTERACTIVE}
+						/>
+						<RadioButton
+							value={ELK_STRATEGY_SIMPLE}
+							labelText={ELK_STRATEGY_SIMPLE}
+						/>
+					</RadioButtonGroup>
+				</FormGroup>
 			</div>
 		</div>);
 
@@ -1608,7 +1657,7 @@ export default class SidePanelForms extends React.Component {
 
 		var toolbarSize = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-size">
 			<FormGroup
-				legendText="Toolbar Size"
+				legendText={(<div><span>Toolbar Size</span><br /><span>Note: Size doesn't work with Default and SingleLeftBarArray.</span></div>)}
 			>
 				<RadioButtonGroup
 					name="selectedToolbarSize" // Set name to corresponding field name in App.js
@@ -1979,6 +2028,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCanvasUnderlay}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{layoutLibrary}
 					{divider}
 					{enableKeyboardNavigation}
 					{divider}

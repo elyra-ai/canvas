@@ -134,7 +134,11 @@ describe("subtabs classNames applied correctly", () => {
 
 describe("subtabs renders correctly in a Tearsheet container", () => {
 	beforeEach(() => {
-		propertyUtilsRTL.flyoutEditorForm(tabParamDef, { rightFlyout: false, containerType: "Tearsheet" });
+		propertyUtilsRTL.flyoutEditorForm(tabParamDef, {
+			rightFlyout: false,
+			containerType: "Tearsheet",
+			disableSaveOnRequiredErrors: false
+		});
 	});
 
 	afterEach(() => {

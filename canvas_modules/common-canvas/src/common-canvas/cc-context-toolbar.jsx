@@ -242,13 +242,15 @@ class CommonCanvasContextToolbar extends React.Component {
 			// Make sure the context toolbar is fully inside the viewport.
 			({ x, y } = this.adjustPosToFit(x, y, toolbarWidth, ICON_SIZE_PLUS_GAP));
 
+			// Only set initial focus if context toolbar was opened via keyboard
+			const setInitialFocus = this.props.contextSource.cause === CAUSE_KEYBOARD;
+
 			contextToolbar = (
-				<aside
+				<div
 					className={"context-toolbar floating-toolbar"}
 					style={{ left: x, top: y, width: toolbarWidth }}
 					onMouseEnter={this.onMouseEnter}
 					onMouseLeave={this.onMouseLeave}
-					aria-label={this.props.canvasController.labelUtil.getLabel("toolbar.contextToolbarContainer")}
 				>
 					<Toolbar
 						config={toolbarConfig}
@@ -256,7 +258,7 @@ class CommonCanvasContextToolbar extends React.Component {
 						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.toolbarActionHandler}
 						tooltipDirection={"top"}
-						setInitialFocus
+						setInitialFocus={setInitialFocus}
 						closeToolbarOnEsc
 						closeToolbar={this.closeContextToolbar}
 						size={"sm"}
@@ -265,7 +267,7 @@ class CommonCanvasContextToolbar extends React.Component {
 							ariaLabel: this.props.canvasController.labelUtil.getLabel("toolbar.contextToolbarLabel")
 						}}
 					/>
-				</aside>
+				</div>
 			);
 		}
 

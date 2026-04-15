@@ -26,6 +26,7 @@ import { fireEvent, cleanup } from "@testing-library/react";
 
 
 const controller = new Controller();
+const controlItem = (<span>Test Label</span>);
 
 const emptyValueIndicator = "...";
 
@@ -71,6 +72,7 @@ describe("selectschema renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -78,6 +80,7 @@ describe("selectschema renders correctly", () => {
 			"store": controller.getStore(),
 			"controller": controller,
 			"control": control,
+			"controlItem": controlItem,
 			"propertyId": propertyId,
 		});
 	});
@@ -89,8 +92,9 @@ describe("selectschema renders correctly", () => {
 			<SelectSchemaControl
 				store={controller.getStore()}
 				control={control}
-				propertyId={propertyId}
 				controller = {controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;

@@ -291,7 +291,7 @@ export default class KeyboardUtils {
 	}
 
 	static returnToTextEditing(evt) {
-		return !evt.shiftKey && evt.key === TAB_KEY;
+		return !evt.shiftKey && (evt.key === TAB_KEY || evt.key === ESC_KEY);
 	}
 
 	// During text entry this might either complete the text entry OR

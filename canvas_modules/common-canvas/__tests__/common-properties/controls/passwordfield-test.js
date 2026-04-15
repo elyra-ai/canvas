@@ -26,6 +26,7 @@ import passwordfieldParamDef from "../../test_resources/paramDefs/passwordfield_
 import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
+const controlItem = (<span>Test Label</span>);
 
 const control = {
 	tooltip: {
@@ -69,11 +70,13 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
 		expectJest(mockPasswordfield).toHaveBeenCalledWith({
 			"store": controller.getStore(),
+			"controlItem": controlItem,
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
@@ -85,6 +88,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -98,6 +102,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -112,6 +117,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -128,6 +134,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -145,6 +152,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -160,6 +168,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -173,6 +182,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -190,6 +200,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -203,6 +214,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -227,6 +239,7 @@ describe("Passwordfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);

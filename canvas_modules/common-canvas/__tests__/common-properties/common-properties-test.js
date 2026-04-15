@@ -25,6 +25,7 @@ import PropertiesDialog from "../../src/common-properties/components/properties-
 import propertyUtilsRTL from "../_utils_/property-utilsRTL.js";
 import tableUtilsRTL from "../_utils_/table-utilsRTL.js";
 import { render } from "../_utils_/mount-utils.js";
+import { suppressConsoleWarning } from "../_utils_/message-utils";
 
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import expressionTestResource from "../test_resources/json/expression-one-category.json";
@@ -431,6 +432,11 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size=small and pixel_width min and max are set resize button should be rendered", () => {
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
+			"Control not found for samplingSize"
+		]);
+
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
 		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 800 };
@@ -451,6 +457,9 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
 		style = window.getComputedStyle(customSizeContainer[0]);
 		expect(style.width).to.equal("400px");
+
+		// Restore console.warn
+		consoleWarnSpy.mockRestore();
 	});
 
 	it("When enableResize=true and editor_size=medium and pixel_width min and max are set resize button should be rendered", () => {
@@ -500,6 +509,11 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size=small and pixel_width min and max are the same the resize button should not be rendered", () => {
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
+			"Control not found for samplingSize"
+		]);
+
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
 		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
@@ -512,9 +526,17 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(customSizeContainer).to.have.length(1);
 		const style = window.getComputedStyle(customSizeContainer[0]);
 		expect(style.width).to.equal("800px");
+
+		// Restore console.warn
+		consoleWarnSpy.mockRestore();
 	});
 
 	it("When enableResize=true and editor_size=medium and pixel_width min and max are the same the resize button should not be rendered", () => {
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to default max size.",
+			"Control not found for samplingSize"
+		]);
+
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
 		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
@@ -527,9 +549,17 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(customSizeContainer).to.have.length(1);
 		const style = window.getComputedStyle(customSizeContainer[0]);
 		expect(style.width).to.equal("800px");
+
+		// Restore console.warn
+		consoleWarnSpy.mockRestore();
 	});
 
 	it("When enableResize=true and editor_size=large and pixel_width min and max are the same the resize button should not be rendered", () => {
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to default max size.",
+			"Control not found for samplingSize"
+		]);
+
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
 		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
@@ -542,6 +572,9 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(customSizeContainer).to.have.length(1);
 		const style = window.getComputedStyle(customSizeContainer[0]);
 		expect(style.width).to.equal("800px");
+
+		// Restore console.warn
+		consoleWarnSpy.mockRestore();
 	});
 
 	it("When enableResize=true and editor_size=max and pixel_width is ommited the resize button should not be rendered", () => {
@@ -556,6 +589,11 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size=max and pixel_width min and max is provided the resize button should not be rendered", () => {
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size ignored.",
+			"Control not found for samplingSize"
+		]);
+
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "max";
 		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 1000 }; // set pixel_width more than width of "max" editor_size
@@ -568,9 +606,17 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(customSizeContainer).to.have.length(1);
 		const style = window.getComputedStyle(customSizeContainer[0]);
 		expect(style.width).to.equal("1000px");
+
+		// Restore console.warn
+		consoleWarnSpy.mockRestore();
 	});
 
 	it("When enableResize=true and editor_size is omitted and pixel_width min and max are the same the resize button should not be rendered", () => {
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
+			"Control not found for samplingSize"
+		]);
+
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
@@ -582,6 +628,9 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(customSizeContainer).to.have.length(1);
 		const style = window.getComputedStyle(customSizeContainer[0]);
 		expect(style.width).to.equal("800px");
+
+		// Restore console.warn
+		consoleWarnSpy.mockRestore();
 	});
 
 	it("When no groups or parameters are defined the flyout should still render", () => {
@@ -1101,6 +1150,7 @@ describe("CommonProperties should set propertiesConfig correctly", () => {
 			applyOnBlur: false,
 			heading: true,
 			showRequiredIndicator: true,
+			disableSaveOnRequiredErrors: false,
 			trimSpaces: true
 		};
 		const wrapper = renderedObject.wrapper;

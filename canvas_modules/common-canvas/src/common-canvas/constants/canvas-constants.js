@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -145,6 +145,9 @@ export const DEC_LINK = "link";
 export const DAGRE_HORIZONTAL = "LR";
 export const DAGRE_VERTICAL = "TB";
 
+export const LAYOUT_LIBRARY_ELK = "ELK";
+export const LAYOUT_LIBRARY_DAGRE = "Dagre";
+
 export const NODE_LINK = "nodeLink";
 export const ASSOCIATION_LINK = "associationLink";
 export const COMMENT_LINK = "commentLink";
@@ -208,21 +211,6 @@ export const PORT_HEIGHT_DEFAULT = 12;
 // Context Menu button value
 export const CONTEXT_MENU_BUTTON = 2;
 
-export const CANVAS_CARBON_ICONS = {
-	CHEVRONARROWS: {
-		UP: "chevron-up",
-		DOWN: "chevron-down"
-	},
-	SEARCH: "search",
-	WARNING_UNFILLED: "warning16"
-};
-
-export const CONTEXT_MENU_CARBON_ICONS = {
-	CHEVRONARROWS: {
-		RIGHT: "chevron-right"
-	}
-};
-
 export const TOOLBAR_STOP = "stop";
 export const TOOLBAR_RUN = "run";
 export const TOOLBAR_UNDO = "undo";
@@ -236,7 +224,7 @@ export const TOOLBAR_CLIPBOARD = "clipboard";
 export const TOOLBAR_CREATE_COMMENT = "createComment";
 export const TOOLBAR_CREATE_AUTO_COMMENT = "createAutoComment";
 export const TOOLBAR_CREATE_WYSIWYG_COMMENT = "createWYSIWYGComment";
-export const TOOLBAR_CREATE_AUTO_WYSIWYG_COMMENT = "createAutoWysiwygComment";
+export const TOOLBAR_CREATE_AUTO_WYSIWYG_COMMENT = "createAutoWYSIWYGComment";
 export const TOOLBAR_SET_COMMENT_EDIT_MODE = "setCommentEditingMode";
 export const TOOLBAR_SHOW_COMMENTS = "commentsShow";
 export const TOOLBAR_HIDE_COMMENTS = "commentsHide";

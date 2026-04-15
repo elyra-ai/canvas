@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,7 +182,8 @@ class PropertiesMain extends React.Component {
 			titleChangeHandler: this.props.callbacks.titleChangeHandler,
 			tooltipLinkHandler: this.props.callbacks.tooltipLinkHandler,
 			propertyIconHandler: this.props.callbacks.propertyIconHandler,
-			filterItemsHandler: this.props.callbacks.filterItemsHandler
+			filterItemsHandler: this.props.callbacks.filterItemsHandler,
+			panelTitleHandler: this.props.callbacks.panelTitleHandler
 		});
 	}
 
@@ -653,7 +654,7 @@ class PropertiesMain extends React.Component {
 					<div className="properties-right-flyout-container">
 						<aside
 							aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
-							role="complementary"
+							role="region"
 							ref={this.commonProperties}
 							className={className}
 							onBlur={this.onBlur}
@@ -717,7 +718,8 @@ PropertiesMain.propTypes = {
 		propertiesActionLabelHandler: PropTypes.func,
 		tooltipLinkHandler: PropTypes.func,
 		propertyIconHandler: PropTypes.func,
-		filterItemsHandler: PropTypes.func
+		filterItemsHandler: PropTypes.func,
+		panelTitleHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls

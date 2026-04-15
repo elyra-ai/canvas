@@ -23,12 +23,36 @@ import ToggleNotificationPanel from "./../../assets/images/notification_counter_
 import { Button } from "@carbon/react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
-	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
-	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
-	Checkmark, ChevronRight, ChevronDown, ChevronUp,
-	CenterToFit, OpenPanelFilledLeft, ConnectSource, ConnectTarget,
-	ArrangeVertical, ArrangeHorizontal } from "@carbon/react/icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import StopFilledAlt from "@carbon/icons-react/lib/StopFilledAlt";
+import Play from "@carbon/icons-react/lib/Play";
+import Undo from "@carbon/icons-react/lib/Undo";
+import Redo from "@carbon/icons-react/lib/Redo";
+import Chat from "@carbon/icons-react/lib/Chat";
+import ChatOff from "@carbon/icons-react/lib/ChatOff";
+import Result from "@carbon/icons-react/lib/Result";
+import Cut from "@carbon/icons-react/lib/Cut";
+import Copy from "@carbon/icons-react/lib/Copy";
+import Paste from "@carbon/icons-react/lib/Paste";
+import Edit from "@carbon/icons-react/lib/Edit";
+import ColorPalette from "@carbon/icons-react/lib/ColorPalette";
+import Maximize from "@carbon/icons-react/lib/Maximize";
+import Minimize from "@carbon/icons-react/lib/Minimize";
+import Launch from "@carbon/icons-react/lib/Launch";
+import AddComment from "@carbon/icons-react/lib/AddComment";
+import TrashCan from "@carbon/icons-react/lib/TrashCan";
+import ZoomIn from "@carbon/icons-react/lib/ZoomIn";
+import ZoomOut from "@carbon/icons-react/lib/ZoomOut";
+import Checkmark from "@carbon/icons-react/lib/Checkmark";
+import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
+import ChevronDown from "@carbon/icons-react/lib/ChevronDown";
+import ChevronUp from "@carbon/icons-react/lib/ChevronUp";
+import CenterToFit from "@carbon/icons-react/lib/CenterToFit";
+import OpenPanelFilledLeft from "@carbon/icons-react/lib/OpenPanelFilledLeft";
+import ConnectSource from "@carbon/icons-react/lib/ConnectSource";
+import ConnectTarget from "@carbon/icons-react/lib/ConnectTarget";
+import ArrangeVertical from "@carbon/icons-react/lib/ArrangeVertical";
+import ArrangeHorizontal from "@carbon/icons-react/lib/ArrangeHorizontal";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT,
@@ -49,21 +73,30 @@ class ToolbarButtonItem extends React.Component {
 		super(props);
 
 		this.buttonRef = React.createRef();
+		this.tooltipRef = React.createRef();
+
+		this.onButtonFocus = this.onButtonFocus.bind(this);
+		this.onButtonBlur = this.onButtonBlur.bind(this);
 	}
 
-	componentDidUpdate() {
-		if (this.props.isFocusInToolbar &&
-				this.props.buttonFocusAction === this.props.actionObj.action) {
-			// If a Jsx object was provided, the class of the component should have
-			// been set to toolbar-jsx-obj.
-			const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
-			if (jsxItem) {
-				jsxItem.focus();
-				return;
-			}
-
-			this.buttonRef.current.focus();
+	componentDidUpdate(prevProps) {
+		// Handle cascaded menu closing separately from regular focus changes
+		if (this.handleCascadeMenuClosing(prevProps)) {
+			return;
 		}
+
+		// Handle regular focus changes
+		this.handleRegularFocusChanges(prevProps);
+	}
+
+	onButtonFocus(evt) {
+		// Show tooltip when button receives focus (including via Tab key)
+		this.showTooltip();
+	}
+
+	onButtonBlur(evt) {
+		// Hide tooltip when button loses focus (including via Tab key)
+		this.hideTooltip();
 	}
 
 	// Returns a default icon, if there is one, for the action passed in.
@@ -137,6 +170,74 @@ class ToolbarButtonItem extends React.Component {
 		default:
 			return null;
 		}
+	}
+
+	// Sets focus on the button or JSX item. For JSX items, if the item itself
+	// cannot receive focus (e.g., wrapper has tabIndex={-1}), searches for and
+	// focuses the first focusable child element within the wrapper.
+	setButtonFocus() {
+		const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
+		if (jsxItem) {
+			jsxItem.focus();
+			if (document.activeElement !== jsxItem) {
+				const focusableElement = this.buttonRef.current.querySelector(
+					"button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])"
+				);
+				if (focusableElement) {
+					focusableElement.focus();
+				}
+			}
+		} else {
+			this.buttonRef.current.focus();
+		}
+	}
+
+	// Handles focus restoration when a cascaded menu closes. If a cascaded menu
+	// just closed while this button still has focus, restores focus to the button
+	// and ensures the tooltip remains visible.
+	handleCascadeMenuClosing(prevProps) {
+		const isThisButtonFocused = this.props.buttonFocusAction === this.props.actionObj.action;
+		const cascadeMenuJustClosed = prevProps.subAreaDisplayed && !this.props.subAreaDisplayed && isThisButtonFocused;
+
+		if (cascadeMenuJustClosed) {
+			this.setButtonFocus();
+			this.showTooltip();
+			return true;
+		}
+		return false;
+	}
+
+	// Handles regular focus changes for toolbar buttons. Sets focus on the button
+	// when it becomes the focused item during keyboard navigation, and hides the
+	// tooltip when focus moves away.
+	handleRegularFocusChanges(prevProps) {
+		const isThisButtonFocused = this.props.buttonFocusAction === this.props.actionObj.action;
+		const wasThisButtonFocused = prevProps.buttonFocusAction === this.props.actionObj.action;
+
+		const hasFocus = this.props.isFocusInToolbar && isThisButtonFocused;
+		const hadFocus = prevProps.isFocusInToolbar && wasThisButtonFocused;
+
+		if ((hasFocus && !hadFocus) ||
+			(isThisButtonFocused && !wasThisButtonFocused && this.props.isFocusInToolbar)) {
+			this.setButtonFocus();
+
+		} else if (hadFocus && !hasFocus) {
+			// Button is losing focus
+			this.hideTooltip();
+		}
+
+		// Hide tooltip if this button is no longer the focused button (even if it still has DOM focus)
+		if (wasThisButtonFocused && !isThisButtonFocused) {
+			this.hideTooltip();
+		}
+	}
+
+	showTooltip() {
+		this.tooltipRef.current?.setTooltipVisible?.(true);
+	}
+
+	hideTooltip() {
+		this.tooltipRef.current?.setTooltipVisible?.(false);
 	}
 
 	generateLabel(label, disable, isInMenu, incLabelWithIcon) {
@@ -247,6 +348,8 @@ class ToolbarButtonItem extends React.Component {
 			<Button kind={kind}
 				ref={this.buttonRef}
 				onClick={this.props.actionClickHandler}
+				onFocus={this.onButtonFocus}
+				onBlur={this.onButtonBlur}
 				disabled={!actionObj.enable}
 				aria-label={ariaLabel}
 				size={this.props.size}
@@ -276,7 +379,8 @@ class ToolbarButtonItem extends React.Component {
 				return <div className={"toolbar-right-chevron"}><ChevronRight /></div>;
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
-					actionObj.incLabelWithIcon === "after") {
+					actionObj.incLabelWithIcon === "after" ||
+					actionObj.incLabelWithIcon === "label-only") {
 				const chevron = this.props.subAreaDisplayed ? (<ChevronUp />) : (<ChevronDown />);
 				return (<div className={"toolbar-up-down-chevron"}>{chevron}</div>);
 			}
@@ -312,7 +416,11 @@ class ToolbarButtonItem extends React.Component {
 			content = actionObj.jsx;
 		}
 		const jsx = this.wrapInTooltip(content);
-		const div = (<div ref={this.buttonRef}>{jsx}</div>);
+		const div = (
+			<div ref={this.buttonRef} onFocus={this.onButtonFocus} onBlur={this.onButtonBlur}>
+				{jsx}
+			</div>
+		);
 
 		return div;
 	}
@@ -326,7 +434,7 @@ class ToolbarButtonItem extends React.Component {
 			const direction = this.props.tooltipDirection ? this.props.tooltipDirection : "bottom";
 
 			return (
-				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction} hoverable>
+				<Tooltip ref={this.tooltipRef} id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction} hoverable>
 					{content}
 				</Tooltip>
 			);
@@ -340,7 +448,8 @@ class ToolbarButtonItem extends React.Component {
 	showLabelAsTip(actionObj) {
 		if (actionObj.label) {
 			if (actionObj.incLabelWithIcon === "before" ||
-					actionObj.incLabelWithIcon === "after") {
+					actionObj.incLabelWithIcon === "after" ||
+					actionObj.incLabelWithIcon === "label-only") {
 				return false;
 			}
 			return true;
@@ -407,3 +516,4 @@ ToolbarButtonItem.propTypes = {
 };
 
 export default ToolbarButtonItem;
+

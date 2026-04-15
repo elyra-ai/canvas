@@ -35,6 +35,7 @@ const controller = new Controller();
 const propertyId = { name: "test-tabletoolbar" };
 propertyUtilsRTL.setControls(controller, [propertyId]);
 const multiSelectEditRowPropertyId = { name: `table-multi-select-edit-property-${propertyId.name}` };
+const tableLabel = "Test label";
 
 const controlValue = [
 	["Na", "Ascending"],
@@ -136,6 +137,7 @@ describe("TableToolbar renderes correctly", () => {
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				rightFlyout
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				addRemoveRows
 				moveableRows
 				multiSelectEdit
@@ -152,6 +154,7 @@ describe("TableToolbar renderes correctly", () => {
 			"setCurrentControlValueSelected": setCurrentControlValueSelected,
 			"rightFlyout": true,
 			"tableState": STATES.ENABLED,
+			"tableLabel": tableLabel,
 			"addRemoveRows": true,
 			"moveableRows": true,
 			"multiSelectEdit": true,
@@ -172,6 +175,7 @@ describe("TableToolbar renderes correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>);
 		const { container } = wrapper;
@@ -193,6 +197,7 @@ describe("TableToolbar renderes correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>);
 		const { container } = wrapper;
@@ -214,6 +219,7 @@ describe("TableToolbar renderes correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -245,6 +251,7 @@ describe("TableToolbar renderes correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				addRemoveRows
 			/>
 		);
@@ -268,6 +275,7 @@ describe("TableToolbar renderes correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				addRemoveRows={false}
 				moveableRows
 			/>
@@ -292,6 +300,7 @@ describe("TableToolbar renderes correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				addRemoveRows
 			/>
 		);
@@ -324,6 +333,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -354,6 +364,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows={false}
 				addRemoveRows
 			/>
@@ -385,6 +396,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -422,6 +434,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -461,6 +474,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -499,6 +513,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -537,6 +552,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -568,6 +584,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -601,6 +618,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 			setScrollToRow={setScrollToRow}
 			setCurrentControlValueSelected={setCurrentControlValueSelected}
 			tableState={STATES.ENABLED}
+			tableLabel={tableLabel}
 			moveableRows
 		/>);
 		const tableToolbarUpdated = container.querySelector("div.properties-table-toolbar");
@@ -629,6 +647,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -663,6 +682,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -692,6 +712,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -725,6 +746,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -758,6 +780,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -791,6 +814,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -820,6 +844,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
@@ -856,6 +881,7 @@ describe("TableToolbar row move buttons work correctly", () => {
 				setScrollToRow={setScrollToRow}
 				setCurrentControlValueSelected={setCurrentControlValueSelected}
 				tableState={STATES.ENABLED}
+				tableLabel={tableLabel}
 				moveableRows
 			/>
 		);
