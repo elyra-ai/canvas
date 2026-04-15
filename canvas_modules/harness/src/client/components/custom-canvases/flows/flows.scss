@@ -84,6 +84,10 @@
 
 		/* Hover over d3-node-group */
 		&:hover {
+			.d3-node-body-outline {
+				fill: carbon.$background;
+			}
+
 			.d3-node-port-output {
 				opacity: 1;
 				transform: translateX(0);
