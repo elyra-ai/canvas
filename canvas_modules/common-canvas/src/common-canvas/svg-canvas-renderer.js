@@ -1913,7 +1913,7 @@ export default class SVGCanvasRenderer {
 		// Node Body
 		nonBindingNodeGrps
 			.selectChildren(".d3-node-body-outline")
-			.data((d) => (d.layout.nodeShapeDisplay ? [d] : []), (d) => d.id)
+			.data((d) => (d.layout.nodeShapeDisplay || CanvasUtils.isExpandedSupernode(d) ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
 					enter
