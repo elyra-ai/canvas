@@ -409,12 +409,6 @@ export default class SVGCanvasUtilsDragObjects {
 			this.ren.displayMovedLinks();
 			this.ren.displayCanvasAccoutrements();
 
-			if (CanvasUtils.isExpandedSupernode(resizeObj)) {
-				if (this.ren.dispUtils.isDisplayingSubFlow()) {
-					this.ren.displayBindingNodesToFitSVG();
-				}
-				this.ren.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());
-			}
 			this.logger.logEndTimer("displayObjects");
 		}
 	}
