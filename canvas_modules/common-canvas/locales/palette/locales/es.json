@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "Mostrar más",
   "palette.flyout.search.less": "Mostrar menos",
   "palette.flyout.label": "Paleta flotante",
-  "palette.dialog.label": "Paleta de diálogos"
+  "palette.dialog.label": "Paleta de diálogos",
+  "palette.dialog.grid": "Vista de cuadrícula",
+  "palette.dialog.list": "Vista de lista",
+  "palette.dialog.close": "Cerrar paleta"
 }

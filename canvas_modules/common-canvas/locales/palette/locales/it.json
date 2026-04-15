@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "Mostra di più",
   "palette.flyout.search.less": "Mostra di meno",
   "palette.flyout.label": "Tavolozza flyout",
-  "palette.dialog.label": "Tavolozza finestra di dialogo"
+  "palette.dialog.label": "Tavolozza finestra di dialogo",
+  "palette.dialog.grid": "Vista griglia",
+  "palette.dialog.list": "Vista elenco",
+  "palette.dialog.close": "Chiudi tavolozza"
 }

@@ -114,6 +114,7 @@
   "multiselect.dropdown.options.selected.label": "valda alternativ",
   "virtualizedTable.header.checkbox.label": "Markera alla {header_checkbox_label}",
   "virtualizedTable.row.checkbox.label": "Välj rad {row_index} från {table_label}",
+  "virtualizedTable.row.radio.label": "Välj rad {row_index} från {table_label}",
   "properties.empty.table.text": "Klicka på \"{button_label}\" för att börja",
   "label.indicator.required": "(obligatorisk)",
   "label.indicator.optional": "(valfritt)",
