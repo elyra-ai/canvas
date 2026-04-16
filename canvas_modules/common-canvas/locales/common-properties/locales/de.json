@@ -114,6 +114,7 @@
   "multiselect.dropdown.options.selected.label": "ausgewählte Optionen",
   "virtualizedTable.header.checkbox.label": "Alle {header_checkbox_label} auswählen",
   "virtualizedTable.row.checkbox.label": "Zeile {row_index} aus {table_label} auswählen",
+  "virtualizedTable.row.radio.label": "Zeile {row_index} aus {table_label} auswählen",
   "properties.empty.table.text": "Klicken Sie zum Starten auf \"{button_label}\".",
   "label.indicator.required": "(erforderlich)",
   "label.indicator.optional": "(optional)",
