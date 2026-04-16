@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "Visa mer",
   "palette.flyout.search.less": "Visa färre",
   "palette.flyout.label": "Flyout-palett",
-  "palette.dialog.label": "Dialogpalett"
+  "palette.dialog.label": "Dialogpalett",
+  "palette.dialog.grid": "Rutnätsvy",
+  "palette.dialog.list": "Listvy",
+  "palette.dialog.close": "Stäng palett"
 }
