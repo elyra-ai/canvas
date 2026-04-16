@@ -69,7 +69,7 @@
 
 		&.cm-focused {
 			outline: 2px solid carbon.$focus;
-			outline-offset: -2px;
+			outline-offset: 0px;
 		}
 
 		.cm-gutters {
@@ -96,14 +96,27 @@
 		.cm-activeLine {
 			background-color: carbon.$background-selected; // works for both dark n light
 		}
-		.cm-activeLineGutter {
-			background-color: carbon.$text-placeholder;
+
+		.cm-lineNumbers .cm-gutterElement:not(.cm-activeLineGutter) {
 			color: carbon.$text-primary;
 		}
+
+		.cm-lineNumbers  .cm-activeLineGutter {
+			background-clip: padding-box;
+			background-color: carbon.$layer-accent-hover-02;
+			color: carbon.$text-primary;
+		}
+
+		.cm-gutter.cm-foldGutter > div.cm-gutterElement.cm-activeLineGutter {
+			background-color: carbon.$layer-accent-hover-02;
+			color: carbon.$text-primary;
+		}
+
 		&.cm-focused .cm-selectionBackground, ::selection {
 			/* stylelint-disable-next-line declaration-no-important */
 			background: carbon.$support-info-inverse !important; // add !important to override the selected text style
 		}
+
 		.cm-tooltip-autocomplete {
 			z-index: 1110;
 			background: carbon.$field-02; // Background color of the autocompletion menu to support dark mode
