@@ -42,14 +42,14 @@ export default {
 	},
 	output: [
 		{
-			entryFileNames: "[name].js",
+			entryFileNames: "[name].cjs",
 			dir: "./dist",
 			format: "cjs",
 			sourcemap: true,
 			exports: "auto"
 		},
 		{
-			entryFileNames: "[name].[format].js",
+			entryFileNames: "[name].js",
 			dir: "./dist",
 			format: "esm",
 			sourcemap: true
