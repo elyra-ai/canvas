@@ -2254,6 +2254,20 @@ export declare class CanvasController {
      */
 
     /**
+     * Sets the width for the right flyout
+     */
+    setRightFlyoutWidth(
+      width: number
+    ): void;
+
+    /**
+     * Sets the minimum width for the right flyout
+     */
+    setRightFlyoutMinWidth(
+      width: number
+    ): void;
+
+    /**
      * @returns a boolean to indicate if the right flyout is open or not
      */
     isRightFlyoutOpen(): boolean;
