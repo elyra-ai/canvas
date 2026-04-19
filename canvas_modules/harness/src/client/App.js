@@ -137,6 +137,7 @@ import {
 	PARAMETER_DEFS,
 	PRIMARY,
 	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_STANDARD_ACTIONS,
 	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_CUSTOMIZE_AUTO,
@@ -2437,6 +2438,22 @@ class App extends React.Component {
 		let toolbarConfig = null;
 		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
 			toolbarConfig = null;
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_STANDARD_ACTIONS) {
+			toolbarConfig = {
+				leftBar: [
+					{ action: "undo" },
+					{ action: "redo" },
+					{ action: "cut" },
+					{ action: "copy" },
+					{ action: "paste" },
+					{ action: "createAutoComment" },
+					{ action: "deleteSelectedObjects" },
+					{ action: "arrangeHorizontally" },
+					{ action: "arrangeVertically" },
+				]
+			};
+
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SUB_AREAS) {
 			const subMenuTextSize = [

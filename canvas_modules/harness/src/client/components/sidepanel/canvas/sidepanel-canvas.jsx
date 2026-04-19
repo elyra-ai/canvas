@@ -61,6 +61,7 @@ import {
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
+	TOOLBAR_TYPE_STANDARD_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
 	ELK_STRATEGY_INTERACTIVE,
 	ELK_STRATEGY_SIMPLE
@@ -1618,6 +1619,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={TOOLBAR_TYPE_DEFAULT}
 						labelText={TOOLBAR_TYPE_DEFAULT}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_STANDARD_ACTIONS}
+						labelText="Standard Actions"
 					/>
 					<RadioButton
 						value={TOOLBAR_TYPE_SUB_AREAS}
