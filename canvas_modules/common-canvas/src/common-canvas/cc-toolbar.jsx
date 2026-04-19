@@ -165,7 +165,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		let paletteLabel = this.getLabel("toolbar.palette");
 
-		// If the leftBar contains and old palette action and if followed by a
+		// If the leftBar contains an old palette action and if followed by a
 		// divider remove them.
 		let newLeftBar = leftBar;
 		if (leftBar && leftBar.length > 0 && leftBar[0].action === "palette") {
@@ -317,6 +317,50 @@ class CommonCanvasToolbar extends React.Component {
 		return toolbarConfig;
 	}
 
+	// Adds appropriate labels to any tools with standard actions if they
+	// don't already have a label.
+	addDefaultCommandLabels(toolbarConfig) {
+		toolbarConfig.leftBar.forEach((tool) => {
+			this.addLabelIfNeeded(tool);
+		});
+		toolbarConfig.rightBar.forEach((tool) => {
+			this.addLabelIfNeeded(tool);
+		});
+		return toolbarConfig;
+	}
+
+	// Add a label to the tool, if it doesn't already have one, where
+	// the label is appropriate if the tool's action is a standard action.
+	addLabelIfNeeded(tool) {
+		if (typeof tool.label === "undefined") {
+			const lk = this.genLabelKey(tool.action);
+			if (lk) {
+				tool.label = this.getLabel(lk);
+			}
+		}
+	}
+
+	// Returns an appropriate label-key for any of the standard actions
+	// or null if this is not a standard action.
+	genLabelKey(action) {
+		switch (action) {
+		case "undo": return "canvas.undo";
+		case "redo": return "canvas.redo";
+		case "cut": return "edit.cutSelection";
+		case "copy": return "edit.copySelection";
+		case "paste": return "edit.pasteSelection";
+		case "createAutoComment": return "canvas.addComment";
+		case "deleteSelectedObjects": return "canvas.deleteObject";
+		case "arrangeHorizontally": return "canvas.arrangeHorizontally";
+		case "arrangeVertically": return "canvas.arrangeVertically";
+		case "zoomIn": return "toolbar.zoomIn";
+		case "zoomOut": return "toolbar.zoomOut";
+		case "zoomToFit": return "toolbar.zoomToFit";
+
+		default: return null;
+		}
+	}
+
 	addUndoRedoCommandLabels(toolbarConfig) {
 		const undoLabel = this.props.undoLabel;
 		const redoLabel = this.props.redoLabel;
@@ -361,6 +405,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		let toolbarConfig = this.generateToolbarConfig();
 		toolbarConfig = this.configureToolbarButtonsState(toolbarConfig);
+		toolbarConfig = this.addDefaultCommandLabels(toolbarConfig);
 		toolbarConfig = this.addUndoRedoCommandLabels(toolbarConfig);
 		let canvasToolbar = null;
 
