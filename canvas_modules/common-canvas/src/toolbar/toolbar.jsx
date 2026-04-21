@@ -668,7 +668,10 @@ class Toolbar extends React.Component {
 }
 
 Toolbar.propTypes = {
-	config: PropTypes.object.isRequired,
+	config: PropTypes.shape({
+		leftBar: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+		rightBar: PropTypes.arrayOf(PropTypes.object.isRequired)
+	}).isRequired,
 	instanceId: PropTypes.number.isRequired,
 	containingDivId: PropTypes.string,
 	toolbarActionHandler: PropTypes.func,
