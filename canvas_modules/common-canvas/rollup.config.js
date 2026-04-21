@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,12 @@ export default {
 		"lib/canvas-controller": "./src/common-canvas/canvas-controller.js",
 		"common-canvas": "./src/index.js"
 	},
+	external: [
+		// autoExternal() handles top-level packages from dependencies/peerDependencies
+		// but we need to explicitly externalize React subpath imports
+		"react/jsx-runtime",
+		"react/jsx-dev-runtime"
+	],
 	output: [
 		{
 			entryFileNames: "[name].cjs",
@@ -56,15 +62,13 @@ export default {
 		}
 	],
 	plugins: [
-		autoExternal(),
+		autoExternal({
+			dependencies: true,
+			peerDependencies: true
+		}),
 		json(),
 		url(),
 		scss({ output: false }),
-		resolve(
-			{
-				extensions: [".js", ".jsx", ".json"]
-			}
-		),
 		babel({
 			babelHelpers: "runtime",
 			exclude: "**/node_modules/**",
@@ -80,8 +84,11 @@ export default {
 				["transform-react-remove-prop-types", { removeImport: true }]
 			]
 		}),
-		terser(),
+		resolve({
+			extensions: [".js", ".jsx", ".json"]
+		}),
 		commonjs(),
+		terser(),
 		visualizer({ open: bundleReport })
 	]
 };
