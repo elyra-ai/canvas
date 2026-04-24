@@ -390,6 +390,7 @@ class App extends React.Component {
 			disableRowMoveButtonsPropertyIds: "[{ \"name\": \"parameterName\"}]",
 			maxLengthForMultiLineControls: 1024,
 			maxLengthForSingleLineControls: 128,
+			showCharacterCounter: true,
 			addRemoveRowsPropertyId: "{ \"name\": \"parameterName\"}",
 			addRemoveRowsEnabled: true,
 			hideEditButtonPropertyId: "{ \"name\": \"parameterName\"}",
@@ -2318,6 +2319,7 @@ class App extends React.Component {
 			returnValueFiltering: returnValueFilters,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
+			showCharacterCounter: this.state.showCharacterCounter,
 			locale: this.locale,
 			iconSwitch: this.state.iconSwitch,
 			enableTanstackTable: this.state.enableTanstackTable
@@ -2833,6 +2835,7 @@ class App extends React.Component {
 			setActiveTabTopLevel: this.setActiveTabTopLevel,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
+			showCharacterCounter: this.state.showCharacterCounter,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

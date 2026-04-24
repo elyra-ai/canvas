@@ -56,6 +56,12 @@ class TextareaControl extends React.Component {
 		value = joined.value;
 		const truncated = joined.truncated;
 
+		// Determine if counter should be shown
+		// Show counter only if NOT in a table AND (showCharacterCounter is true OR limit is reached)
+		const showCharacterCounter = this.props.controller.getShowCharacterCounter();
+		const isAtLimit = this.charLimit !== -1 && value.length >= this.charLimit;
+		const shouldShowCounter = !this.props.tableControl && this.charLimit !== -1 && (showCharacterCounter || isAtLimit);
+
 		let textArea = null;
 		let validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		let showValidationMessage = false;
@@ -83,7 +89,7 @@ class TextareaControl extends React.Component {
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
-					enableCounter={this.charLimit !== -1}
+					enableCounter={shouldShowCounter}
 					maxCount={this.charLimit}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
@@ -102,7 +108,7 @@ class TextareaControl extends React.Component {
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
-					enableCounter={this.charLimit !== -1}
+					enableCounter={shouldShowCounter}
 					maxCount={this.charLimit}
 				/>
 			);

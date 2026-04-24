@@ -456,6 +456,95 @@ describe("textfield list works correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.eql([]);
 	});
 });
+describe("textfield counter display tests", () => {
+	const propertyId = { name: "test-text" };
+
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues({ "test-text": "Test" });
+	});
+
+	it("textfield should show counter when showCharacterCounter is true (default)", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: true });
+		const wrapper = render(
+			<Provider store={controller.getStore()}>
+				<Textfield
+					store={controller.getStore()}
+					control={control}
+					controller={controller}
+					controlItem={controlItem}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-text']");
+		// Check for the counter element
+		const counter = textWrapper.querySelector(".cds--text-input__label-counter");
+		expect(counter).to.not.be.null;
+	});
+
+	it("textfield should hide counter when showCharacterCounter is false and not at limit", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: false });
+		controller.setPropertyValues({ "test-text": "Short" });
+		const wrapper = render(
+			<Provider store={controller.getStore()}>
+				<Textfield
+					store={controller.getStore()}
+					control={control}
+					controller={controller}
+					controlItem={controlItem}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-text']");
+		// Counter should be hidden (enableCounter=false)
+		const counter = textWrapper.querySelector(".cds--text-input__label-counter");
+		expect(counter).to.be.null;
+	});
+
+	it("textfield should show counter when showCharacterCounter is false but limit is reached", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: false });
+		controller.setPropertyValues({ "test-text": "15 characters!!" }); // Exactly at limit
+		const wrapper = render(
+			<Provider store={controller.getStore()}>
+				<Textfield
+					store={controller.getStore()}
+					control={control}
+					controller={controller}
+					controlItem={controlItem}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-text']");
+		// Counter should be visible when at limit
+		const counter = textWrapper.querySelector(".cds--text-input__label-counter");
+		expect(counter).to.not.be.null;
+	});
+
+	it("textfield should not show counter in table controls regardless of showCharacterCounter", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: true });
+		const wrapper = render(
+			<Provider store={controller.getStore()}>
+				<Textfield
+					store={controller.getStore()}
+					control={control}
+					controller={controller}
+					controlItem={controlItem}
+					propertyId={propertyId}
+					tableControl
+				/>
+			</Provider>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-text']");
+		// Counter should never show in tables
+		const counter = textWrapper.querySelector(".cds--text-input__label-counter");
+		expect(counter).to.be.null;
+	});
+});
+
 
 describe("textfield classnames appear correctly", () => {
 	let wrapper;

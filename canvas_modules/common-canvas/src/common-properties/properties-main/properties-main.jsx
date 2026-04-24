@@ -696,6 +696,7 @@ PropertiesMain.propTypes = {
 		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		maxLengthForMultiLineControls: PropTypes.number,
 		maxLengthForSingleLineControls: PropTypes.number,
+		showCharacterCounter: PropTypes.bool,
 		convertValueDataTypes: PropTypes.bool,
 		showRequiredIndicator: PropTypes.bool,
 		showAlertsTab: PropTypes.bool,

@@ -25,6 +25,7 @@
 		"disableRowMoveButtonsPropertyIds": "",
 		"maxLengthForMultiLineControls": 1024,
 		"maxLengthForSingleLineControls": 128,
+		"showCharacterCounter": true,
 		"addRemoveRowsPropertyId": "{ \"name\": \"parameterName\"}",
 		"addRemoveRowsEnabled": true,
 		"hideEditButtonPropertyId": "{ \"name\": \"parameterName\"}",
@@ -183,6 +184,11 @@
 		{
 			"id": "maxLengthForSingleLineControls",
 			"type": "integer"
+		},
+		{
+			"id": "showCharacterCounter",
+			"default": true,
+			"type": "boolean"
 		},
 		{
 			"id": "addRemoveRowsPropertyId",
@@ -492,6 +498,16 @@
 				}
 			},
 			{
+				"parameter_ref": "showCharacterCounter",
+				"label": {
+					"default": "showCharacterCounter"
+				},
+				"description": {
+					"default": "Show character counter for textfield and textarea controls. When false, counter is hidden until limit is reached."
+				},
+				"control": "toggle"
+			},
+			{
 				"parameter_ref": "addRemoveRowsPropertyId",
 				"label": {
 					"default": "setAddRemoveRows"
@@ -755,7 +771,8 @@
 					"conditionDisabledPropertyHandling",
 					"returnValueFiltering",
 					"maxLengthForMultiLineControls",
-					"maxLengthForSingleLineControls"
+					"maxLengthForSingleLineControls",
+					"showCharacterCounter"
 				]
 			},
 			{

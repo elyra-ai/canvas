@@ -374,6 +374,87 @@ describe("textarea control renders correctly", () => {
 		expect(readOnlyWrapper.querySelector("textarea").readOnly).to.equal(control.readOnly);
 	});
 });
+describe("textarea counter display tests", () => {
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues({ "test-textarea": "Test" });
+	});
+
+	it("textarea should show counter when showCharacterCounter is true (default)", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: true });
+		const wrapper = render(
+			<TextArea
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
+		// Check for the counter element
+		const counter = textWrapper.querySelector(".cds--text-area__label-counter");
+		expect(counter).to.not.be.null;
+	});
+
+	it("textarea should hide counter when showCharacterCounter is false and not at limit", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: false });
+		controller.setPropertyValues({ "test-textarea": "Short text" });
+		const wrapper = render(
+			<TextArea
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
+		// Counter should be hidden (enableCounter=false)
+		const counter = textWrapper.querySelector(".cds--text-area__label-counter");
+		expect(counter).to.be.null;
+	});
+
+	it("textarea should show counter when showCharacterCounter is false but limit is reached", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: false });
+		// Create a string that's exactly at the 256 character limit
+		const longText = "a".repeat(256);
+		controller.setPropertyValues({ "test-textarea": longText });
+		const wrapper = render(
+			<TextArea
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
+		// Counter should be visible when at limit
+		const counter = textWrapper.querySelector(".cds--text-area__label-counter");
+		expect(counter).to.not.be.null;
+	});
+
+	it("textarea should not show counter in table controls regardless of showCharacterCounter", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: true });
+		const wrapper = render(
+			<TextArea
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+				tableControl
+			/>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
+		// Counter should never show in tables
+		const counter = textWrapper.querySelector(".cds--text-area__label-counter");
+		expect(counter).to.be.null;
+	});
+});
+
 
 describe("textarea classnames appear correctly", () => {
 	let wrapper;
