@@ -75,7 +75,7 @@
     "react-virtualized": "9.22.6",
     "redux": "^5.0.1",
     "seedrandom": "^3.0.5",
-    "uuid": "^8.3.0"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.25.2",
