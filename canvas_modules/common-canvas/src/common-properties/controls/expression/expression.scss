@@ -115,13 +115,10 @@
 		}
 
 		&.cm-focused {
-			.cm-selectionBackground {
+			.cm-selectionBackground,
+			.cm-selectionMatch {
 				/* stylelint-disable-next-line declaration-no-important */
 				background-color: carbon.$highlight !important; // !important overrides the selection background style
-			}
-
-			.cm-selectionMatch {
-				background-color: carbon.$highlight !important;;
 			}
 		}
 
