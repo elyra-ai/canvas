@@ -31,9 +31,11 @@ export default [
 		settings: {
 			"import/resolver": {
 				"node": {
-					"extensions": [".js", ".jsx", ".json"]
+					"extensions": [".js", ".jsx", ".json", ".mjs"],
+					"moduleDirectory": ["node_modules", "src"]
 				}
-			}
+			},
+			"import/core-modules": ["uuid"]
 		},
 		rules: {
 			...js.configs.recommended.rules,
