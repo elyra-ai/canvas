@@ -16,6 +16,7 @@
       }
     },
     "./src/*": "./src/*",
+    "./dist/styles/common-canvas.min.css": "./dist/styles/common-canvas.min.css",
     "./locales/*/locales": "./locales/*/locales/index.js",
     "./package.json": "./package.json"
   },
