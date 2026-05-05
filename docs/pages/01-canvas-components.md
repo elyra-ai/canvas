@@ -35,13 +35,15 @@ Common Canvas has several constituent parts that can be visible to the user and 
 read-only.
 * [Tooltips](01.08-tooltips.md) - information tips displayed when the mouse cursor is over an object.
 
-In addition, there are [three optional panels](01.09-panels.md) where application specific output can be displayed such as
+In addition, there are [five optional panels](01.09-panels.md) where application specific output can be displayed such as
 properties, log info or data previews.
-<img src="../assets/cc-panels.png" width="900" />
+<img src="../assets/cc-panels-example.png" width="900" />
 
-* Right side flyout - a panel, often used to display node properties
-* Top panel - a panel which can be used to display other app related information
-* Bottom panel - a panel which can be used to display other app related information
+* Toolbar panel - always displays the toolbar but can be hidden
+* Left-flyout panel - typically displays a palette of nodes
+* Right-flyout panel - often used to display node properties
+* Top panel - used to display other app related information
+* Bottom panel - used to display other app related information
 
 
 ## Common Properties

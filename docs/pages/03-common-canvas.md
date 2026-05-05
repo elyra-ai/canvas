@@ -164,7 +164,9 @@ The `<div>` should have the dimensions you want for your canvas to display in yo
 See the [Localization](02-set-up.md/#localization) section of the Initial Setup page to see how `<IntlProvider>` can be configured.
 
 ### Common Canvas customization
-If you want to customize the behavior of Common Canvas you can specify any combination of the following optional settings:
+If you want to customize the behavior of Common Canvas you can specify any combination of the following **optional** settings:
+
+#### Config objects
 ```js
     return (
         <div>
@@ -176,6 +178,21 @@ If you want to customize the behavior of Common Canvas you can specify any combi
                 notificationConfig={this.notificationConfig}
                 contextMenuConfig={this.contextMenuConfig}
                 keyboardConfig={this.keyboardConfig}
+            >
+            </CommonCanvas>
+        </div>
+    );
+```
+
+Common Canvas has five **optional** configuration objects. They are documented here: [Config Objects](03.02-configuration.md)
+
+#### Handlers
+
+```js
+    return (
+        <div>
+            <CommonCanvas
+                canvasController={this.canvasController}
 
                 contextMenuHandler={this.contextMenuHandler}
                 beforeEditActionHandler={this.beforeEditActionHandler}
@@ -187,41 +204,39 @@ If you want to customize the behavior of Common Canvas you can specify any combi
                 idGeneratorHandler={this.idGeneratorHandler}
                 selectionChangeHandler={this.selectionChangeHandler}
                 actionLabelHandler={this.actionLabelHandler}
-
-                showRightFlyout={showRightFlyout}
-                rightFlyoutContent={rightFlyoutContent}
-
-                showBottomPanel={showBottomPanel}
-                bottomPanelContent={bottomPanelContent}
-
-                showTopPanel={showTopPanel}
-                topPanelContent={topPanelContent}
             >
             </CommonCanvas>
         </div>
     );
 ```
 
-#### Config objects
-Common Canvas has five **optional** configuration objects. They are documented here: [Config Objects](03.02-configuration.md)
 
-#### Handlers
-There are several **optional** handlers implemented as callback functions. They are documented here: [Common Canvas Callbacks](03.03-callbacks.md)
+There are ten **optional** handlers implemented as callback functions. They are documented here: [Common Canvas Callbacks](03.03-callbacks.md)
 
-#### Right-flyout panel parameters
-The right flyout panel appears on the right of the canvas area. You can add whatever content you like to this panel. Typically, it is used to display properties of nodes on the canvas. There are two **optional** parameters to let you manage the right flyout panel These are:
+#### Panels
 
-- showRightFlyout: This can be true or false to indicate whether the flyout panel is shown or not. The default is false.
-- rightFlyoutContent: content to display in the right flyout which is a JSX object. Nothing is displayed by default.
+```js
+    return (
+        <div>
+            <CommonCanvas
+                canvasController={this.canvasController}
 
-#### Bottom panel parameters
-The bottom panel appears below the canvas area and between the palette and the right flyout panel. You can add whatever content you like to this panel. There are two **optional** parameters to let you manage the bottom panel. These are:
+                showLeftFlyout={showLeftFlyout}
+                leftFlyoutContent={leftFlyoutContent}
 
-- showBottomPanel: This can be true or false to indicate whether the bottom panel is shown or not. The default is false.
-- bottomPanelContent: content to display in the bottom panel which is a JSX object. Nothing is displayed by default.
+                showRightFlyout={showRightFlyout}
+                rightFlyoutContent={rightFlyoutContent}
 
-#### Top panel parameters
-The top panel appears below the toolbar and between the palette and the right flyout panel. You can add whatever content you like to this panel. There are two **optional** parameters to let you manage the top panel. These are:
+                showTopPanel={showTopPanel}
+                topPanelContent={topPanelContent}
 
-- showTopPanel: This can be true or false to indicate whether the top panel is shown or not. The default is false.
-- topPanelContent: content to display in the top panel which is a JSX object. Nothing is displayed by default.
+                showBottomPanel={showBottomPanel}
+                bottomPanelContent={bottomPanelContent}
+            >
+            </CommonCanvas>
+        </div>
+    );
+```
+
+There are eight **optional** props that can be used to control the display of panels within the area where `<CommonCanvas>` is displayed.   They are documented here: [Panels customization](03.06.05-panels-customization.md)
+
