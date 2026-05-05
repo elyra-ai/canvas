@@ -18,6 +18,8 @@
   "canvas.undoCommand": "실행 취소: {undo_command}",
   "canvas.redoCommand": "다시 실행: {redo_command}",
   "canvas.deleteObject": "삭제",
+  "canvas.arrangeHorizontally": "가로로 배열",
+  "canvas.arrangeVertically": "세로로 배열",
   "canvas.flowIsEmpty": "플로우가 비어 있습니다.",
   "canvas.addNodeToStart": "노드를 추가하여 시작하십시오.",
   "canvas.stateTagLocked": "잠김",

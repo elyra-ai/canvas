@@ -18,6 +18,8 @@
   "canvas.undoCommand": "Ångra: {undo_command}",
   "canvas.redoCommand": "Gör om: {redo_command}",
   "canvas.deleteObject": "Ta bort",
+  "canvas.arrangeHorizontally": "Ordna horisontellt",
+  "canvas.arrangeVertically": "Ordna vertikalt",
   "canvas.flowIsEmpty": "Ditt flöde är tomt.",
   "canvas.addNodeToStart": "Kom igång genom att lägga till en nod.",
   "canvas.stateTagLocked": "Låst",

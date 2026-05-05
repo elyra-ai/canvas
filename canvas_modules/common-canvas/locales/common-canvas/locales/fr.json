@@ -18,6 +18,8 @@
   "canvas.undoCommand": "Annuler : {undo_command}",
   "canvas.redoCommand": "Rétablir : {redo_command}",
   "canvas.deleteObject": "Supprimer",
+  "canvas.arrangeHorizontally": "Disposer horizontalement",
+  "canvas.arrangeVertically": "Disposer verticalement",
   "canvas.flowIsEmpty": "Votre flux est vide.",
   "canvas.addNodeToStart": "Pour commencer, ajoutez un noeud.",
   "canvas.stateTagLocked": "Verrouillé",

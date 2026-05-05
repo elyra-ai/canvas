@@ -18,6 +18,8 @@
   "canvas.undoCommand": "Annulla: {undo_command}",
   "canvas.redoCommand": "Ripeti: {redo_command}",
   "canvas.deleteObject": "Elimina",
+  "canvas.arrangeHorizontally": "Disponi orizzontalmente",
+  "canvas.arrangeVertically": "Disponi verticalmente",
   "canvas.flowIsEmpty": "Il flusso è vuoto.",
   "canvas.addNodeToStart": "Iniziare aggiungendo un nodo.",
   "canvas.stateTagLocked": "Bloccato",

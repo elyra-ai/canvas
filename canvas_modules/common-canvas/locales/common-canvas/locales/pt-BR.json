@@ -18,6 +18,8 @@
   "canvas.undoCommand": "Desfazer: {undo_command}",
   "canvas.redoCommand": "Refazer: {redo_command}",
   "canvas.deleteObject": "Excluir",
+  "canvas.arrangeHorizontally": "Organizar horizontalmente",
+  "canvas.arrangeVertically": "Organizar verticalmente",
   "canvas.flowIsEmpty": "Seu fluxo está vazio.",
   "canvas.addNodeToStart": "Comece incluindo um nó.",
   "canvas.stateTagLocked": "Bloqueado",
