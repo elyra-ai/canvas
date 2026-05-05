@@ -1766,7 +1766,7 @@ export default class CanvasController {
 		logger.log(msg);
 	}
 
-	// Mange after update calls
+	// Manage after-update calls
 
 	addAfterUpdateCallback(callback) {
 		if (this.canvasContents) {
