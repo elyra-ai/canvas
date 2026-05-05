@@ -1194,6 +1194,8 @@
       
         
       
+        
+      
     
     
     
@@ -1441,32 +1443,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#right-flyout-panel-parameters" class="md-nav__link">
+  <a href="#panels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Right-flyout panel parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bottom-panel-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bottom panel parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#top-panel-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Top panel parameters
+        Panels
       
     </span>
   </a>
@@ -2509,14 +2489,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../03.06.04-canvas-customization/" class="md-nav__link">
+      <a href="../03.06.04-flow-editor-customization/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Canvas Customization
+    Flow Editor Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.05-panels-customization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Panels Customization
   
 
     
@@ -2750,10 +2758,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_18" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_19" >
         
           
-          <label class="md-nav__link" for="__nav_4_18" id="__nav_4_18_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_19" id="__nav_4_19_label" tabindex="0">
             
   
   
@@ -2771,8 +2779,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_18_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_18">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_19">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3581,32 +3589,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#right-flyout-panel-parameters" class="md-nav__link">
+  <a href="#panels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Right-flyout panel parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bottom-panel-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bottom panel parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#top-panel-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Top panel parameters
+        Panels
       
     </span>
   </a>
@@ -3777,7 +3763,8 @@ export default TinyApp;
 The <code>&lt;div&gt;</code> should have the dimensions you want for your canvas to display in your page. For the <code>canvasController</code> prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below. If you want to display Common Canvas using one of the four Carbon styling themes you can wrapper the JSX with a <code>&lt;Theme theme="g10"&gt;</code> tag where &ldquo;g10&rdquo; can also be set to &ldquo;g100&rdquo;, &ldquo;g90&rdquo; or &ldquo;white&rdquo; (the default).</p>
 <p>See the <a href="../02-set-up/#localization">Localization</a> section of the Initial Setup page to see how <code>&lt;IntlProvider&gt;</code> can be configured.</p>
 <h3 id="common-canvas-customization">Common Canvas customization<a class="headerlink" href="#common-canvas-customization" title="Permanent link">&para;</a></h3>
-<p>If you want to customize the behavior of Common Canvas you can specify any combination of the following optional settings:
+<p>If you want to customize the behavior of Common Canvas you can specify any combination of the following <strong>optional</strong> settings:</p>
+<h4 id="config-objects">Config objects<a class="headerlink" href="#config-objects" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
 <span class="w">            </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span>
@@ -3788,6 +3775,17 @@ The <code>&lt;div&gt;</code> should have the dimensions you want for your canvas
 <span class="w">                </span><span class="nx">notificationConfig</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">notificationConfig</span><span class="p">}</span>
 <span class="w">                </span><span class="nx">contextMenuConfig</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">contextMenuConfig</span><span class="p">}</span>
 <span class="w">                </span><span class="nx">keyboardConfig</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">keyboardConfig</span><span class="p">}</span>
+<span class="w">            </span><span class="o">&gt;</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="err">/CommonCanvas&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<span class="w">    </span><span class="p">);</span>
+</code></pre></div>
+<p>Common Canvas has five <strong>optional</strong> configuration objects. They are documented here: <a href="../03.02-configuration/">Config Objects</a></p>
+<h4 id="handlers">Handlers<a class="headerlink" href="#handlers" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span>
+<span class="w">                </span><span class="nx">canvasController</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">}</span>
 
 <span class="w">                </span><span class="nx">contextMenuHandler</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">contextMenuHandler</span><span class="p">}</span>
 <span class="w">                </span><span class="nx">beforeEditActionHandler</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">beforeEditActionHandler</span><span class="p">}</span>
@@ -3799,42 +3797,35 @@ The <code>&lt;div&gt;</code> should have the dimensions you want for your canvas
 <span class="w">                </span><span class="nx">idGeneratorHandler</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">idGeneratorHandler</span><span class="p">}</span>
 <span class="w">                </span><span class="nx">selectionChangeHandler</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">selectionChangeHandler</span><span class="p">}</span>
 <span class="w">                </span><span class="nx">actionLabelHandler</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">actionLabelHandler</span><span class="p">}</span>
-
-<span class="w">                </span><span class="nx">showRightFlyout</span><span class="o">=</span><span class="p">{</span><span class="nx">showRightFlyout</span><span class="p">}</span>
-<span class="w">                </span><span class="nx">rightFlyoutContent</span><span class="o">=</span><span class="p">{</span><span class="nx">rightFlyoutContent</span><span class="p">}</span>
-
-<span class="w">                </span><span class="nx">showBottomPanel</span><span class="o">=</span><span class="p">{</span><span class="nx">showBottomPanel</span><span class="p">}</span>
-<span class="w">                </span><span class="nx">bottomPanelContent</span><span class="o">=</span><span class="p">{</span><span class="nx">bottomPanelContent</span><span class="p">}</span>
-
-<span class="w">                </span><span class="nx">showTopPanel</span><span class="o">=</span><span class="p">{</span><span class="nx">showTopPanel</span><span class="p">}</span>
-<span class="w">                </span><span class="nx">topPanelContent</span><span class="o">=</span><span class="p">{</span><span class="nx">topPanelContent</span><span class="p">}</span>
 <span class="w">            </span><span class="o">&gt;</span>
 <span class="w">            </span><span class="o">&lt;</span><span class="err">/CommonCanvas&gt;</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
 <span class="w">    </span><span class="p">);</span>
-</code></pre></div></p>
-<h4 id="config-objects">Config objects<a class="headerlink" href="#config-objects" title="Permanent link">&para;</a></h4>
-<p>Common Canvas has five <strong>optional</strong> configuration objects. They are documented here: <a href="../03.02-configuration/">Config Objects</a></p>
-<h4 id="handlers">Handlers<a class="headerlink" href="#handlers" title="Permanent link">&para;</a></h4>
-<p>There are several <strong>optional</strong> handlers implemented as callback functions. They are documented here: <a href="../03.03-callbacks/">Common Canvas Callbacks</a></p>
-<h4 id="right-flyout-panel-parameters">Right-flyout panel parameters<a class="headerlink" href="#right-flyout-panel-parameters" title="Permanent link">&para;</a></h4>
-<p>The right flyout panel appears on the right of the canvas area. You can add whatever content you like to this panel. Typically, it is used to display properties of nodes on the canvas. There are two <strong>optional</strong> parameters to let you manage the right flyout panel These are:</p>
-<ul>
-<li>showRightFlyout: This can be true or false to indicate whether the flyout panel is shown or not. The default is false.</li>
-<li>rightFlyoutContent: content to display in the right flyout which is a JSX object. Nothing is displayed by default.</li>
-</ul>
-<h4 id="bottom-panel-parameters">Bottom panel parameters<a class="headerlink" href="#bottom-panel-parameters" title="Permanent link">&para;</a></h4>
-<p>The bottom panel appears below the canvas area and between the palette and the right flyout panel. You can add whatever content you like to this panel. There are two <strong>optional</strong> parameters to let you manage the bottom panel. These are:</p>
-<ul>
-<li>showBottomPanel: This can be true or false to indicate whether the bottom panel is shown or not. The default is false.</li>
-<li>bottomPanelContent: content to display in the bottom panel which is a JSX object. Nothing is displayed by default.</li>
-</ul>
-<h4 id="top-panel-parameters">Top panel parameters<a class="headerlink" href="#top-panel-parameters" title="Permanent link">&para;</a></h4>
-<p>The top panel appears below the toolbar and between the palette and the right flyout panel. You can add whatever content you like to this panel. There are two <strong>optional</strong> parameters to let you manage the top panel. These are:</p>
-<ul>
-<li>showTopPanel: This can be true or false to indicate whether the top panel is shown or not. The default is false.</li>
-<li>topPanelContent: content to display in the top panel which is a JSX object. Nothing is displayed by default.</li>
-</ul>
+</code></pre></div>
+<p>There are ten <strong>optional</strong> handlers implemented as callback functions. They are documented here: <a href="../03.03-callbacks/">Common Canvas Callbacks</a></p>
+<h4 id="panels">Panels<a class="headerlink" href="#panels" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span>
+<span class="w">                </span><span class="nx">canvasController</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">}</span>
+
+<span class="w">                </span><span class="nx">showLeftFlyout</span><span class="o">=</span><span class="p">{</span><span class="nx">showLeftFlyout</span><span class="p">}</span>
+<span class="w">                </span><span class="nx">leftFlyoutContent</span><span class="o">=</span><span class="p">{</span><span class="nx">leftFlyoutContent</span><span class="p">}</span>
+
+<span class="w">                </span><span class="nx">showRightFlyout</span><span class="o">=</span><span class="p">{</span><span class="nx">showRightFlyout</span><span class="p">}</span>
+<span class="w">                </span><span class="nx">rightFlyoutContent</span><span class="o">=</span><span class="p">{</span><span class="nx">rightFlyoutContent</span><span class="p">}</span>
+
+<span class="w">                </span><span class="nx">showTopPanel</span><span class="o">=</span><span class="p">{</span><span class="nx">showTopPanel</span><span class="p">}</span>
+<span class="w">                </span><span class="nx">topPanelContent</span><span class="o">=</span><span class="p">{</span><span class="nx">topPanelContent</span><span class="p">}</span>
+
+<span class="w">                </span><span class="nx">showBottomPanel</span><span class="o">=</span><span class="p">{</span><span class="nx">showBottomPanel</span><span class="p">}</span>
+<span class="w">                </span><span class="nx">bottomPanelContent</span><span class="o">=</span><span class="p">{</span><span class="nx">bottomPanelContent</span><span class="p">}</span>
+<span class="w">            </span><span class="o">&gt;</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="err">/CommonCanvas&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<span class="w">    </span><span class="p">);</span>
+</code></pre></div>
+<p>There are eight <strong>optional</strong> props that can be used to control the display of panels within the area where <code>&lt;CommonCanvas&gt;</code> is displayed.   They are documented here: <a href="../03.06.05-panels-customization/">Panels customization</a></p>
 
 
 

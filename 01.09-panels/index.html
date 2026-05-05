@@ -1255,6 +1255,8 @@
       
         
       
+        
+      
     
     
     
@@ -2343,14 +2345,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../03.06.04-canvas-customization/" class="md-nav__link">
+      <a href="../03.06.04-flow-editor-customization/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Canvas Customization
+    Flow Editor Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.05-panels-customization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Panels Customization
   
 
     
@@ -2584,10 +2614,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_18" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_19" >
         
           
-          <label class="md-nav__link" for="__nav_4_18" id="__nav_4_18_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_19" id="__nav_4_19_label" tabindex="0">
             
   
   
@@ -2605,8 +2635,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_18_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_18">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_19">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3317,27 +3347,21 @@
 
 
 <h1 id="panels">Panels<a class="headerlink" href="#panels" title="Permanent link">&para;</a></h1>
-<p>Common Canvas has three additional optional panels: top panel, bottom panel, right-flyout. These can be used by the application to display any additional content to the user such as logs or data previews or properties of selected objects. Traditionally, the right-flyout is used to display node properties.</p>
-<p>The application can, optionally, use <a href="../01.10-common-properties/">Common Properties</a> to display the controls for the properties of a node.</p>
-<p><img src="../assets/cc-panels.png" width="900" /></p>
-<h2 id="customizing-content-and-display">Customizing content and display<a class="headerlink" href="#customizing-content-and-display" title="Permanent link">&para;</a></h2>
-<p>The content and display of the panels is controlled by these six props of the <code>&lt;CommonCanvas&gt;</code> React object:</p>
+<p>As well as the flow editor, which displays and allows editing of the flow of nodes and links, Common Canvas has five additional optional panels:</p>
 <ul>
-<li>showRightFlyout - a Boolean</li>
-<li>
-<p>rightFlyoutContent - JSX object showing content</p>
-</li>
-<li>
-<p>showBottomPanel - a Boolean</p>
-</li>
-<li>
-<p>bottomPanelContent - JSX object showing content</p>
-</li>
-<li>
-<p>showTopPanel - a Boolean</p>
-</li>
-<li>topPanelContent - JSX object showing content</li>
+<li>Toolbar panel</li>
+<li>Left-flyout panel</li>
+<li>Right-flyout panel</li>
+<li>Top panel</li>
+<li>Bottom panel</li>
 </ul>
+<p><img src="../assets/cc-panels.png" width="600" /></p>
+<p>The toolbar panel always displays the main toolbar but the others can be used by the application to display any additional content to the user such as a palette of nodes, properties for a node, logs, data previews or other ancillary information.</p>
+<p>Traditionally, the left-flyout is used to display a palette of nodes and the right-flyout is used to display properties of the currently selected node.</p>
+<p><img src="../assets/cc-panels-example.png" width="1100" /></p>
+<p>The application can, optionally, use <a href="../01.10-common-properties/">Common Properties</a> to display the controls for the properties of a node.</p>
+<h2 id="customizing-content-and-display">Customizing content and display<a class="headerlink" href="#customizing-content-and-display" title="Permanent link">&para;</a></h2>
+<p>The panels can be displayed or hidden and their contents and layout customized using <a href="../03.06.05-panels-customization/">customization options for panels</a>.</p>
 
 
 

@@ -1194,6 +1194,8 @@
       
         
       
+        
+      
     
     
     
@@ -2186,21 +2188,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#context-menu-methods" class="md-nav__link">
+  <a href="#left-flyout-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context menu methods
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notification-panel-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notification Panel methods
+        Left-flyout methods
       
     </span>
   </a>
@@ -2211,7 +2202,7 @@
   <a href="#right-flyout-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Right Flyout methods
+        Right-flyout methods
       
     </span>
   </a>
@@ -2234,6 +2225,28 @@
     <span class="md-ellipsis">
       
         Bottom panel methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-menu-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context menu methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notification-panel-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notification Panel methods
       
     </span>
   </a>
@@ -2593,14 +2606,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../03.06.04-canvas-customization/" class="md-nav__link">
+      <a href="../03.06.04-flow-editor-customization/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Canvas Customization
+    Flow Editor Customization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.05-panels-customization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Panels Customization
   
 
     
@@ -2834,10 +2875,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_18" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_19" >
         
           
-          <label class="md-nav__link" for="__nav_4_18" id="__nav_4_18_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_19" id="__nav_4_19_label" tabindex="0">
             
   
   
@@ -2855,8 +2896,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_18_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_18">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_19">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3686,21 +3727,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#context-menu-methods" class="md-nav__link">
+  <a href="#left-flyout-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context menu methods
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notification-panel-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notification Panel methods
+        Left-flyout methods
       
     </span>
   </a>
@@ -3711,7 +3741,7 @@
   <a href="#right-flyout-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Right Flyout methods
+        Right-flyout methods
       
     </span>
   </a>
@@ -3734,6 +3764,28 @@
     <span class="md-ellipsis">
       
         Bottom panel methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-menu-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context menu methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notification-panel-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notification Panel methods
       
     </span>
   </a>
@@ -4659,7 +4711,10 @@ Note:</p>
 <span class="nx">setLoggingState</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="palette-methods_1">Palette methods<a class="headerlink" href="#palette-methods_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Opens the palette</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Toggles the palette between open and closed</span>
+<span class="nx">togglePalette</span><span class="p">()</span>
+
+<span class="c1">// Opens the palette</span>
 <span class="nx">openPalette</span><span class="p">()</span>
 
 <span class="c1">// Closes the palette</span>
@@ -4667,6 +4722,33 @@ Note:</p>
 
 <span class="c1">// Returns true if the palette is currently open</span>
 <span class="nx">isPaletteOpen</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="left-flyout-methods">Left-flyout methods<a class="headerlink" href="#left-flyout-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the left-flyout is open or not</span>
+<span class="nx">isLeftFlyoutOpen</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="right-flyout-methods">Right-flyout methods<a class="headerlink" href="#right-flyout-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the right-flyout is open or not</span>
+<span class="nx">isRightFlyoutOpen</span><span class="p">()</span>
+
+<span class="c1">// Sets the width for the right-flyout</span>
+<span class="nx">setRightFlyoutWidth</span><span class="p">(</span><span class="nx">width</span><span class="p">)</span>
+
+<span class="c1">// Sets the minimum width for the right-flyout</span>
+<span class="w"> </span><span class="nx">setRightFlyoutMinWidth</span><span class="p">(</span><span class="nx">width</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="top-panel-methods">Top panel methods<a class="headerlink" href="#top-panel-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the top panel is open or not</span>
+<span class="nx">isTopPanelOpen</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="bottom-panel-methods">Bottom panel methods<a class="headerlink" href="#bottom-panel-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the bottom panel is open or not</span>
+<span class="nx">isBottomPanelOpen</span><span class="p">()</span>
+
+<span class="c1">// Sets the height of the bottom panel in pixels. This can be called</span>
+<span class="c1">// immediately after the CanvasController has been created, if the bottom</span>
+<span class="c1">// panel should be displayed at a specific height when it first opens.</span>
+<span class="nx">setBottomPanelHeight</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="context-menu-methods">Context menu methods<a class="headerlink" href="#context-menu-methods" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Opens the context menu</span>
@@ -4684,29 +4766,6 @@ Note:</p>
 
 <span class="c1">// Either opens or closes the notification panel based on its current status</span>
 <span class="nx">toggleNotificationPanel</span><span class="p">()</span>
-</code></pre></div>
-<h3 id="right-flyout-methods">Right Flyout methods<a class="headerlink" href="#right-flyout-methods" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Sets the width for the right flyout</span>
-<span class="nx">setRightFlyoutWidth</span><span class="p">(</span><span class="nx">width</span><span class="p">)</span>
-
-<span class="c1">// Sets the minimum width for the right flyout</span>
-<span class="w"> </span><span class="nx">setRightFlyoutMinWidth</span><span class="p">(</span><span class="nx">width</span><span class="p">)</span>
-
-<span class="c1">// Returns a boolean to indicate if the right flyout is open or not</span>
-<span class="nx">isRightFlyoutOpen</span><span class="p">()</span>
-</code></pre></div>
-<h3 id="top-panel-methods">Top panel methods<a class="headerlink" href="#top-panel-methods" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the top panel is open or not</span>
-<span class="nx">isTopPanelOpen</span><span class="p">()</span>
-</code></pre></div>
-<h3 id="bottom-panel-methods">Bottom panel methods<a class="headerlink" href="#bottom-panel-methods" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the bottom panel is open or not</span>
-<span class="nx">isBottomPanelOpen</span><span class="p">()</span>
-
-<span class="c1">// Sets the height of the bottom panel in pixels. This can be called</span>
-<span class="c1">// immediately after the CanvasController has been created, if the bottom</span>
-<span class="c1">// panel should be displayed at a specific height when it first opens.</span>
-<span class="nx">setBottomPanelHeight</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="canvaspipeline-navigation-methods">Canvas/pipeline navigation methods<a class="headerlink" href="#canvaspipeline-navigation-methods" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Displays a pipeline (identified by the pipelineId passed in). This must be</span>
