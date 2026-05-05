@@ -97,6 +97,12 @@ class TextfieldControl extends React.Component {
 			</div>);
 		} else {
 			const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
+			// Determine if counter should be shown
+			// Show counter only if NOT in a table AND (showCharacterCounter is true OR limit is reached)
+			const showCharacterCounter = this.props.controller.getShowCharacterCounter();
+			const isAtLimit = this.charLimit !== -1 && value.length >= this.charLimit;
+			const shouldShowCounter = !this.props.tableControl && this.charLimit !== -1 && (showCharacterCounter || isAtLimit);
+
 			textInput = (
 				<TextInput
 					{...validationProps}
@@ -113,7 +119,7 @@ class TextfieldControl extends React.Component {
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 					ref={this.textInputRef}
 					readOnly={this.props.readOnly}
-					enableCounter={this.charLimit !== -1}
+					enableCounter={shouldShowCounter}
 					maxCount={this.charLimit}
 				/>
 			);

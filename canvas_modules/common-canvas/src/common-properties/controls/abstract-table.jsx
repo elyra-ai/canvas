@@ -437,7 +437,7 @@ export default class AbstractTable extends React.Component {
 		return this.props.controller.getLight() && this.props.control.light;
 	}
 
-	makeTableToolbar(selectedRows, tableLabel) {
+	makeTableToolbar(selectedRows, tableLabel, tableDivId) {
 		// For single select tables, table toolbar doesn't show delete icon because it is added at row level
 		const singleSelectTable = this.props.control.rowSelection === ROW_SELECTION.SINGLE;
 		if (
@@ -471,6 +471,7 @@ export default class AbstractTable extends React.Component {
 						isSingleSelectTable={singleSelectTable}
 						smallFlyout={false}
 						tableLabel={tableLabel}
+						containingDivId={tableDivId}
 					/>
 				</>
 			);
@@ -625,12 +626,13 @@ export default class AbstractTable extends React.Component {
 
 		const headers = this.makeHeader(sortFields, filterFields);
 		const showHeader = this.props.control.header !== false;
+		const tableDivId = "flexible-table-" + uuid4();
 
 		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
 		const tableLabel = this.props.control?.label?.text || "";
-		const tableToolbar = this.makeTableToolbar(this.props.selectedRows, tableLabel);
+		const tableToolbar = this.makeTableToolbar(this.props.selectedRows, tableLabel, tableDivId);
 		let topRightPanel = null;
 		if (this.props.selectedRows.length > 0 && tableToolbar) {
 			topRightPanel = tableToolbar;
@@ -681,7 +683,7 @@ export default class AbstractTable extends React.Component {
 				emptyTablePlaceholder={this.props.control.additionalText}
 			/>);
 		return (
-			<div>
+			<div id={tableDivId}>
 				{table}
 			</div>
 		);

@@ -8,7 +8,6 @@
   "edit.copySelection": "複製",
   "edit.pasteSelection": "貼上",
   "canvas.label": "流程編輯器 (flow editor)",
-  "canvas.roleDescription": "區域",
   "canvas.contents": "流程編輯器內容",
   "canvas.addComment": "新建註解",
   "canvas.addWysiwygComment": "新的 WYSIWYG 註解",

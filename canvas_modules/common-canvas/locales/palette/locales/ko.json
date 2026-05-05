@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "자세히 표시",
   "palette.flyout.search.less": "간략히 보기",
   "palette.flyout.label": "플라이아웃 팔레트",
-  "palette.dialog.label": "대화 상자 팔레트"
+  "palette.dialog.label": "대화 상자 팔레트",
+  "palette.dialog.grid": "격자 보기",
+  "palette.dialog.list": "목록 보기",
+  "palette.dialog.close": "팔레트 닫기"
 }

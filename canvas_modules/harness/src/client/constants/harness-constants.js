@@ -48,6 +48,7 @@ export const CUSTOM = "Custom";
 export const EDITING = "Editing";
 
 export const TOOLBAR_TYPE_DEFAULT = "Default";
+export const TOOLBAR_TYPE_STANDARD_ACTIONS = "StandardActions";
 export const TOOLBAR_TYPE_SUB_AREAS = "SubAreas";
 export const TOOLBAR_TYPE_SINGLE_BAR = "SingleLeftBarArray";
 export const TOOLBAR_TYPE_CUSTOMIZE_AUTO = "CustomizeAutoItems";

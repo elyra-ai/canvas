@@ -114,6 +114,7 @@
   "multiselect.dropdown.options.selected.label": "opzioni selezionate",
   "virtualizedTable.header.checkbox.label": "Seleziona tutto {header_checkbox_label}",
   "virtualizedTable.row.checkbox.label": "Selezionare la riga {row_index} da {table_label}",
+  "virtualizedTable.row.radio.label": "Selezionare la riga {row_index} da {table_label}",
   "properties.empty.table.text": "Per iniziare, fare clic su \"{button_label}\"",
   "label.indicator.required": "(obbligatorio)",
   "label.indicator.optional": "(facoltativo).",

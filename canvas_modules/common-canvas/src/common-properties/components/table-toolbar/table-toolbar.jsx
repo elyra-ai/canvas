@@ -84,18 +84,23 @@ class TableToolbar extends React.Component {
 		const cancelLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
 
 		const editBtn = { action: "multiSelectEdit", label: editLabel, iconEnabled: (<Edit />), enable: true, kind: "primary" };
-		const deleteBtn = (this.props.addRemoveRows && !this.props.isReadonlyTable && !this.props.isSingleSelectTable)
-			? { action: "delete", label: deleteLabel, iconEnabled: (<TrashCan />), enable: true, kind: "primary" } : null;
+		const deleteBtn = { action: "delete", label: deleteLabel, iconEnabled: (<TrashCan />), enable: true, kind: "primary" };
 		const cancelBtn = { action: "cancel", label: cancelLabel, enable: true, incLabelWithIcon: "label-only", kind: "primary" };
 
 		// For delete, edit, show its divider only if those icons are present
 		const toolbarConfig = [
-			...(this.props.moveableRows ? this.getTableRowMoveButtons() : []),
-			deleteBtn,
-			this.props.multiSelectEdit ? editBtn : null,
-			{ divider: true },
-			cancelBtn
+			...(this.props.moveableRows ? this.getTableRowMoveButtons() : [])
 		];
+		if (this.props.addRemoveRows &&
+				!this.props.isReadonlyTable &&
+				!this.props.isSingleSelectTable) {
+			toolbarConfig.push(deleteBtn);
+		}
+		if (this.props.multiSelectEdit) {
+			toolbarConfig.push(editBtn);
+		}
+		toolbarConfig.push({ divider: true });
+		toolbarConfig.push(cancelBtn);
 		return toolbarConfig;
 	}
 

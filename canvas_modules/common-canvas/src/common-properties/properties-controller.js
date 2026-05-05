@@ -1932,6 +1932,18 @@ export default class PropertiesController {
 	}
 
 	/**
+	* Returns whether to show the character counter for textfield and textarea controls
+	* Default value is true
+	* When false, counter is hidden until character limit is reached
+	*/
+	getShowCharacterCounter() {
+		const showCharacterCounter = (typeof this.getPropertiesConfig().showCharacterCounter !== "undefined")
+			? this.getPropertiesConfig().showCharacterCounter
+			: true;
+		return showCharacterCounter;
+	}
+
+	/**
 	* Set the initial values of addRemoveRows for all structure controls
 	*/
 	setInitialAddRemoveRows() {

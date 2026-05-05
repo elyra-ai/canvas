@@ -18,6 +18,8 @@
 	"canvas.undoCommand": "[Esperanto~Undo: {undo_command}~~eo]",
 	"canvas.redoCommand": "[Esperanto~Redo: {redo_command}~~eo]",
 	"canvas.deleteObject": "[Esperanto~Delete~eo]",
+	"canvas.arrangeHorizontally": "[Esperanto~Arrange horizontally~eo]",
+	"canvas.arrangeVertically": "[Esperanto~Arrange vertically~eo]",
 	"canvas.flowIsEmpty": "[Esperanto~Your flow is empty.~~~~~eo]",
 	"canvas.addNodeToStart": "[Esperanto~Get started by adding a node.~~~~~~~~~eo]",
 	"canvas.stateTagLocked": "[Esperanto~Locked~~eo]",

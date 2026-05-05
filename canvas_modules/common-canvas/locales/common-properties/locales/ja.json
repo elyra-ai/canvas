@@ -114,6 +114,7 @@
   "multiselect.dropdown.options.selected.label": "選択されたオプション",
   "virtualizedTable.header.checkbox.label": "すべての {header_checkbox_label} を選択",
   "virtualizedTable.row.checkbox.label": "{table_label} から行 {row_index} を選択",
+  "virtualizedTable.row.radio.label": "{table_label} から行 {row_index} を選択",
   "properties.empty.table.text": "開始するには、「{button_label}」をクリックします",
   "label.indicator.required": "(必須)",
   "label.indicator.optional": "(オプション)",

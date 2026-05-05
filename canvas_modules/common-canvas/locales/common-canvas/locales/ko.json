@@ -8,7 +8,6 @@
   "edit.copySelection": "복사",
   "edit.pasteSelection": "붙여넣기",
   "canvas.label": "플로우 편집기(flow editor)",
-  "canvas.roleDescription": "영역",
   "canvas.contents": "플로우 에디터 내용",
   "canvas.addComment": "새로운 주석",
   "canvas.addWysiwygComment": "새 WYSIWYG 주석",

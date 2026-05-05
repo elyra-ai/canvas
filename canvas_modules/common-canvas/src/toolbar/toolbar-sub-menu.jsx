@@ -53,7 +53,7 @@ class ToolbarSubMenu extends React.Component {
 
 	componentDidUpdate() {
 		if (this.state.focusAction !== "subarea") {
-			const actionObj = this.props.subMenuActions?.find((sma) => sma.action === this.state.focusAction);
+			const actionObj = this.props.subMenuActions?.find((sma) => sma?.action === this.state.focusAction);
 			if (!actionObj?.enable) {
 				const actionToSet = this.getClosestEnabledAction(this.state.focusAction);
 				if (actionToSet !== null) {

@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "顯示更多",
   "palette.flyout.search.less": "顯示更少",
   "palette.flyout.label": "飛出視窗選用區",
-  "palette.dialog.label": "對話選用區"
+  "palette.dialog.label": "對話選用區",
+  "palette.dialog.grid": "網格視圖",
+  "palette.dialog.list": "清單視圖",
+  "palette.dialog.close": "關閉調色板"
 }

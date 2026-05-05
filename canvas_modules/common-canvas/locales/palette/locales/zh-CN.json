@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "显示更多",
   "palette.flyout.search.less": "显示更少",
   "palette.flyout.label": "弹窗选用板",
-  "palette.dialog.label": "对话框选用板"
+  "palette.dialog.label": "对话框选用板",
+  "palette.dialog.grid": "网格视图",
+  "palette.dialog.list": "列表视图",
+  "palette.dialog.close": "关闭调色板"
 }

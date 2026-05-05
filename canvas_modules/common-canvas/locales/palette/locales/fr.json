@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "Afficher plus",
   "palette.flyout.search.less": "Afficher moins",
   "palette.flyout.label": "Palette de menu déroulant",
-  "palette.dialog.label": "Palette de boîte de dialogue"
+  "palette.dialog.label": "Palette de boîte de dialogue",
+  "palette.dialog.grid": "Vue de grille",
+  "palette.dialog.list": "Vue de liste",
+  "palette.dialog.close": "Fermer la palette"
 }

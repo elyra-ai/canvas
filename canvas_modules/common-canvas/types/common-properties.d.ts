@@ -275,6 +275,13 @@ export interface CommonPropertiesConfig {
    */
   maxLengthForSingleLineControls?: number;
   /**
+   * Show character counter for textfield and textarea controls.
+   * When false, counter is hidden until character limit is reached.
+   * Counter is never shown in table controls regardless of this setting.
+   * default: true
+   */
+  showCharacterCounter?: boolean;
+  /**
    * Default false. If set to true, currentParameter values whose data type
    * does not match what is defined in the parameter definitions will be
    * converted to the specified data type.

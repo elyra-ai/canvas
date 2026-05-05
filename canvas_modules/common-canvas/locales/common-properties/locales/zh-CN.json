@@ -114,6 +114,7 @@
   "multiselect.dropdown.options.selected.label": "个选项已选定",
   "virtualizedTable.header.checkbox.label": "全选 {header_checkbox_label}",
   "virtualizedTable.row.checkbox.label": "从 {table_label} 中选择行 {row_index}",
+  "virtualizedTable.row.radio.label": "从 {table_label} 中选择行 {row_index}",
   "properties.empty.table.text": "要开始操作，请单击“{button_label}”",
   "label.indicator.required": "（必需）",
   "label.indicator.optional": "（可选）",

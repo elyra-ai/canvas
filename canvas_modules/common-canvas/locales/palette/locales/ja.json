@@ -6,5 +6,8 @@
   "palette.flyout.search.more": "さらに表示",
   "palette.flyout.search.less": "簡略表示",
   "palette.flyout.label": "フライアウト・パレット",
-  "palette.dialog.label": "ダイアログ・パレット"
+  "palette.dialog.label": "ダイアログ・パレット",
+  "palette.dialog.grid": "グリッド・ビュー",
+  "palette.dialog.list": "リスト・ビュー",
+  "palette.dialog.close": "パレットを閉じる"
 }

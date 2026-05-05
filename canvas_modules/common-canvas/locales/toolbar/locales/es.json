@@ -5,11 +5,7 @@
   "toolbar.zoomToFit": "Ajustar",
   "toolbar.overflowMenu": "Menú de desbordamiento",
   "toolbar.flowEditorToolbarLabel": "Editor de flujos",
-  "toolbar.flowEditorToolbarContainer": "Opciones del editor de flujo",
   "toolbar.textToolbarLabel": "Texto",
-  "toolbar.textToolbarContainer": "Opciones del texto",
   "toolbar.contextToolbarLabel": "Contexto",
-  "toolbar.contextToolbarContainer": "Opciones de contexto",
-  "toolbar.paletteDialogToolbarLabel": "Cuadro de diálogo Paleta",
-  "toolbar.paletteDialogToolbarContainer": "Opciones del cuadro de diálogo Paleta"
+  "toolbar.paletteDialogToolbarLabel": "Cuadro de diálogo Paleta"
 }

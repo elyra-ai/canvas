@@ -5,11 +5,7 @@
   "toolbar.zoomToFit": "Automatisch zoomen",
   "toolbar.overflowMenu": "Überlaufmenü",
   "toolbar.flowEditorToolbarLabel": "Ablaufeditor",
-  "toolbar.flowEditorToolbarContainer": "Optionen des Fluss-Editors",
   "toolbar.textToolbarLabel": "Text",
-  "toolbar.textToolbarContainer": "Textoptionen",
   "toolbar.contextToolbarLabel": "context (Element)",
-  "toolbar.contextToolbarContainer": "Kontextoptionen",
-  "toolbar.paletteDialogToolbarLabel": "Palettendialog",
-  "toolbar.paletteDialogToolbarContainer": "Paletten-Dialogoptionen"
+  "toolbar.paletteDialogToolbarLabel": "Palettendialog"
 }

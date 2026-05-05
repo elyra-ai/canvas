@@ -1,4 +1,5 @@
 {
+	"customSyntax": "postcss-scss",
 	"rules": {
 		"indentation": "tab",
 		"string-quotes": "double",

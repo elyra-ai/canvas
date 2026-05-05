@@ -8,7 +8,6 @@
   "edit.copySelection": "复制",
   "edit.pasteSelection": "粘贴",
   "canvas.label": "流程编辑器",
-  "canvas.roleDescription": "区域",
   "canvas.contents": "流程编辑器内容",
   "canvas.addComment": "新建注释",
   "canvas.addWysiwygComment": "新的所见即所得注释",
