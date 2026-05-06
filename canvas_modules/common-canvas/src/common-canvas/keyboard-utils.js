@@ -472,6 +472,14 @@ export default class KeyboardUtils {
 		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === UP_ARROW_KEY;
 	}
 
+	static leaveNodeInCategory(evt) {
+		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === ESC_KEY;
+	}
+
+	static closeCategory(evt) {
+		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === ESC_KEY;
+	}
+
 	static createAutoNode(evt) {
 		return !evt.shiftKey && (this.isSpaceKey(evt) || evt.key === RETURN_KEY);
 	}
