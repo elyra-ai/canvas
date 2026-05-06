@@ -1749,6 +1749,8 @@ export default class CanvasController {
 	// Operational methods
 	// ---------------------------------------------------------------------------
 
+	// Logging methods
+
 	// Returns a Boolean to indicate whether canvas logging is switched on or off.
 	getLoggingState() {
 		return Logger.getLoggingState();
@@ -1764,6 +1766,8 @@ export default class CanvasController {
 		logger.log(msg);
 	}
 
+	// Manage after-update calls
+
 	addAfterUpdateCallback(callback) {
 		if (this.canvasContents) {
 			this.canvasContents.addAfterUpdateCallback(callback);
@@ -1775,6 +1779,8 @@ export default class CanvasController {
 			this.canvasContents.removeAfterUpdateCallback(callback);
 		}
 	}
+
+	// Palette methods
 
 	togglePalette() {
 		this.getObjectModel().togglePalette();
@@ -1792,16 +1798,16 @@ export default class CanvasController {
 		return this.getObjectModel().isPaletteOpen();
 	}
 
-	isBottomPanelOpen() {
-		return this.getObjectModel().isBottomPanelOpen();
-	}
-
-	setBottomPanelHeight(ht) {
-		this.objectModel.setBottomPanelHeight(ht);
-	}
+	// Left-flyout methods
 
 	isLeftFlyoutOpen() {
 		return this.objectModel.isLeftFlyoutOpen();
+	}
+
+	// Right-flyout methods
+
+	isRightFlyoutOpen() {
+		return this.objectModel.isRightFlyoutOpen();
 	}
 
 	setRightFlyoutWidth(wd) {
@@ -1812,13 +1818,23 @@ export default class CanvasController {
 		this.objectModel.setRightFlyoutMinWidth(wd);
 	}
 
-	isRightFlyoutOpen() {
-		return this.objectModel.isRightFlyoutOpen();
-	}
+	// Top panel methods
 
 	isTopPanelOpen() {
 		return this.getObjectModel().isTopPanelOpen();
 	}
+
+	// Bottom panel methods
+
+	isBottomPanelOpen() {
+		return this.getObjectModel().isBottomPanelOpen();
+	}
+
+	setBottomPanelHeight(ht) {
+		this.objectModel.setBottomPanelHeight(ht);
+	}
+
+	// Context menu methods
 
 	openContextMenu(menuDef, source) {
 		this.objectModel.openContextMenu(menuDef, source);
@@ -1868,6 +1884,8 @@ export default class CanvasController {
 		this.mouseInObject = id;
 	}
 
+	// Notification panel methods
+
 	openNotificationPanel() {
 		this.objectModel.openNotificationPanel();
 	}
@@ -1879,6 +1897,8 @@ export default class CanvasController {
 	toggleNotificationPanel() {
 		this.objectModel.toggleNotificationPanel();
 	}
+
+	// Canvas/pipeline navigation methods
 
 	isDisplayingFullPageSubFlow() {
 		const breadcrumbs = this.objectModel.getBreadcrumbs();
@@ -1948,6 +1968,26 @@ export default class CanvasController {
 		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb(), editSource: "canvas" };
 		this.editActionHandler(data);
 	}
+
+	// Canvas and viewport dimensions methods
+
+	getViewPortDimensions() {
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getTransformedViewportDimensions();
+		}
+		return null;
+	}
+
+	getCanvasDimensionsWithPadding() {
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getCanvasDimensionsWithPadding();
+		}
+		return null;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Zoom methods
+	// ---------------------------------------------------------------------------
 
 	zoomIn() {
 		if (this.canvasContents) {
@@ -2039,20 +2079,6 @@ export default class CanvasController {
 	// set to "LocalStorage".
 	clearSavedZoomValues() {
 		this.objectModel.clearSavedZoomValues();
-	}
-
-	getViewPortDimensions() {
-		if (this.canvasContents) {
-			return this.getSVGCanvasD3().getTransformedViewportDimensions();
-		}
-		return null;
-	}
-
-	getCanvasDimensionsWithPadding() {
-		if (this.canvasContents) {
-			return this.getSVGCanvasD3().getCanvasDimensionsWithPadding();
-		}
-		return null;
 	}
 
 	// ---------------------------------------------------------------------------
