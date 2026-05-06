@@ -18,6 +18,8 @@
   "canvas.undoCommand": "元に戻す: {undo_command}",
   "canvas.redoCommand": "やり直し: {redo_command}",
   "canvas.deleteObject": "削除",
+  "canvas.arrangeHorizontally": "横方向に配置",
+  "canvas.arrangeVertically": "縦方向に配置",
   "canvas.flowIsEmpty": "フローが空です。",
   "canvas.addNodeToStart": "ノードの追加から開始します。",
   "canvas.stateTagLocked": "ロック済み",

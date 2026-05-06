@@ -18,6 +18,8 @@
   "canvas.undoCommand": "復原：{undo_command}",
   "canvas.redoCommand": "重做：{redo_command}",
   "canvas.deleteObject": "刪除",
+  "canvas.arrangeHorizontally": "水平排列",
+  "canvas.arrangeVertically": "垂直排列",
   "canvas.flowIsEmpty": "您的流程為空。",
   "canvas.addNodeToStart": "從新增節點開始。",
   "canvas.stateTagLocked": "已鎖定",
