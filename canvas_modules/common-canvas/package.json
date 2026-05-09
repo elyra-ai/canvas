@@ -16,13 +16,7 @@
       }
     },
     "./src/*": "./src/*",
-    "./dist/styles/common-canvas.min.css": "./dist/styles/common-canvas.min.css",
-    "./locales/command-actions/locales": "./locales/command-actions/locales/index.js",
-    "./locales/common-canvas/locales": "./locales/common-canvas/locales/index.js",
-    "./locales/common-properties/locales": "./locales/common-properties/locales/index.js",
-    "./locales/notification-panel/locales": "./locales/notification-panel/locales/index.js",
-    "./locales/palette/locales": "./locales/palette/locales/index.js",
-    "./locales/toolbar/locales": "./locales/toolbar/locales/index.js",
+    "./locales/*/locales": "./locales/*/locales/index.js",
     "./package.json": "./package.json"
   },
   "homepage": "https://elyra-ai.github.io/canvas/",
