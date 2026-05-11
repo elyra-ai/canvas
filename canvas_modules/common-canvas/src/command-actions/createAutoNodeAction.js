@@ -38,8 +38,11 @@ export default class CreateAutoNodeAction extends Action {
 		this.srcNode = this.apiPipeline.getAutoSourceNode(autoLinkOnlyFromSelNodes);
 		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
 		this.newLink = null;
-		if (this.data.addLink && this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
-			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
+		if (this.data.addLink) {
+			const availablePorts = this.apiPipeline.findAvailablePortsForAutoLink(this.newNode, this.srcNode);
+			if (availablePorts) {
+				this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode, availablePorts.srcPortId, availablePorts.trgPortId);
+			}
 		}
 	}
 

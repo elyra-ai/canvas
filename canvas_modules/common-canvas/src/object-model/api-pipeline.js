@@ -350,11 +350,23 @@ export default class APIPipeline {
 	}
 
 	// Returns true if the node passed in is OK to be used as a source node
-	// for a node which is to be auto-added to the canvas.
+	// for a node which is to be auto-added to the canvas. A node is viable if
+	// it has at least one output port that is not at maximum cardinality.
 	isViableAutoSourceNode(node) {
-		return node.outputs &&
-			node.outputs.length > 0 &&
-			!CanvasUtils.isSrcCardinalityAtMax(node.outputs[0].id, node, this.getLinks());
+		if (!node.outputs || node.outputs.length === 0) {
+			return false;
+		}
+
+		const links = this.getLinks();
+
+		// Check if ANY output port is available (not at max cardinality)
+		for (const output of node.outputs) {
+			if (!CanvasUtils.isSrcCardinalityAtMax(output.id, node, links)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	// Returns a newly created 'auto node' whose position is based on the
@@ -427,24 +439,43 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.pipelineId });
 	}
 
-	// Returns true if a new link needs to be created with the newly created
-	// auto node. A link is required when there IS a source node and the source
-	// and target nodes each have a single port and the cardinality is not
-	// exceeded for the ports.
-	isLinkNeededWithAutoNode(newNode, srcNode) {
-		let isLinkNeededWithAutoNode = false;
-
-		if (newNode &&
-				srcNode &&
-				newNode.inputs &&
-				srcNode.outputs &&
-				newNode.inputs.length === 1 &&
-				srcNode.outputs.length === 1 &&
-				!CanvasUtils.isCardinalityAtMax(srcNode.outputs[0].id, newNode.inputs[0].id, srcNode, newNode, this.getLinks())) {
-			isLinkNeededWithAutoNode = true;
+	// Returns the port IDs for the first available connection between the source
+	// and target nodes, or null if no connection is possible. This method checks
+	// all possible port combinations in order and returns the first pair where
+	// the cardinality is not exceeded.
+	// Returns: { srcPortId, trgPortId } or null
+	findAvailablePortsForAutoLink(newNode, srcNode) {
+		if (!newNode || !srcNode || !newNode.inputs || !srcNode.outputs) {
+			return null;
 		}
 
-		return isLinkNeededWithAutoNode;
+		const links = this.getLinks();
+
+		// Iterate through all source output ports
+		for (const srcOutput of srcNode.outputs) {
+			// Check if source port cardinality is already at max
+			if (CanvasUtils.isSrcCardinalityAtMax(srcOutput.id, srcNode, links)) {
+				continue;
+			}
+
+			// Iterate through all target input ports
+			for (const trgInput of newNode.inputs) {
+				// Check if target port cardinality is already at max
+				if (CanvasUtils.isTrgCardinalityAtMax(trgInput.id, newNode, links)) {
+					continue;
+				}
+
+				// Check if this combination would exceed cardinality
+				if (!CanvasUtils.isCardinalityAtMax(srcOutput.id, trgInput.id, srcNode, newNode, links)) {
+					return {
+						srcPortId: srcOutput.id,
+						trgPortId: trgInput.id
+					};
+				}
+			}
+		}
+
+		return null;
 	}
 
 	// Returns true if the node passed in is an entry binding node. We detect
@@ -1048,7 +1079,7 @@ export default class APIPipeline {
 	// Link methods
 	// ---------------------------------------------------------------------------
 
-	createLink(trgNode, srcNode) {
+	createLink(trgNode, srcNode, srcPortId, trgPortId) {
 		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": trgNode });
 		let newLink = {
 			id: linkId,
@@ -1057,10 +1088,16 @@ export default class APIPipeline {
 			type: NODE_LINK
 		};
 
-		if (srcNode.outputs && srcNode.outputs.length > 0) {
+		// Use provided port IDs if available, otherwise default to first port
+		if (srcPortId) {
+			newLink = Object.assign(newLink, { "srcNodePortId": srcPortId });
+		} else if (srcNode.outputs && srcNode.outputs.length > 0) {
 			newLink = Object.assign(newLink, { "srcNodePortId": srcNode.outputs[0].id });
 		}
-		if (trgNode.inputs && trgNode.inputs.length > 0) {
+
+		if (trgPortId) {
+			newLink = Object.assign(newLink, { "trgNodePortId": trgPortId });
+		} else if (trgNode.inputs && trgNode.inputs.length > 0) {
 			newLink = Object.assign(newLink, { "trgNodePortId": trgNode.inputs[0].id });
 		}
 
