@@ -36,7 +36,12 @@ export default class CreateAutoNodeAction extends Action {
 		this.data.addLink = typeof this.data.addLink === "undefined" ? true : this.data.addLink;
 
 		const autoLinkOnlyFromSelNodes = canvasController.getCanvasConfig().enableAutoLinkOnlyFromSelNodes;
-		this.srcNode = this.apiPipeline.getAutoSourceNode(autoLinkOnlyFromSelNodes);
+		this.srcNode = CanvasUtils.getAutoSourceNode(
+			autoLinkOnlyFromSelNodes,
+			this.apiPipeline.getNodes(),
+			this.objectModel.getSelectedNodes(),
+			this.apiPipeline.getLinks()
+		);
 		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
 		this.newLink = null;
 		if (this.data.addLink) {

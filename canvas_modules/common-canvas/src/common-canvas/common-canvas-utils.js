@@ -1052,6 +1052,52 @@ export default class CanvasUtils {
 		});
 	}
 
+	// Returns true if the node passed in is OK to be used as a source node
+	// for a node which is to be auto-added to the canvas. A node is viable if
+	// it has at least one output port that is not at maximum cardinality.
+	static isViableAutoSourceNode(node, links) {
+		if (!node.outputs || node.outputs.length === 0) {
+			return false;
+		}
+
+		// Check if ANY output port is available (not at max cardinality)
+		for (const output of node.outputs) {
+			if (!this.isSrcCardinalityAtMax(output.id, node, links)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// Returns a source node for auto completion or null if no source node can be
+	// detected. The source node is either:
+	// 1. The selected node, if only *one* node is currently selected or
+	// 2. The most recently added node, provided it has one or more output ports or
+	// 3. The most-recent-but-one added node, provided it has one or more output ports
+	static getAutoSourceNode(autoLinkOnlyFromSelNodes, nodes, selectedNodes, links) {
+		var sourceNode = null;
+
+		if (selectedNodes.length === 1 &&
+				this.isViableAutoSourceNode(selectedNodes[0], links)) {
+			sourceNode = selectedNodes[0];
+
+		} else if (!autoLinkOnlyFromSelNodes) {
+			if (nodes.length > 0) {
+				var lastNodeAdded = nodes[nodes.length - 1];
+				if (lastNodeAdded.outputs) {
+					sourceNode = lastNodeAdded;
+				} else if (nodes.length > 1) {
+					var lastButOneNodeAdded = nodes[nodes.length - 2];
+					if (lastButOneNodeAdded.outputs) {
+						sourceNode = lastButOneNodeAdded;
+					}
+				}
+			}
+		}
+		return sourceNode;
+	}
+
 	// Returns the port IDs for the first available connection between the source
 	// and target nodes, or null if no connection is possible. This method uses a
 	// two-pass approach:
