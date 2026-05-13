@@ -76,7 +76,8 @@ class ExpressionControl extends React.Component {
 		this.state = {
 			showExpressionBuilder: false,
 			validationInProgress: false,
-			expressionEditorHeight: 0
+			expressionEditorHeight: 0,
+			theme: "g10"
 		};
 		this.editable = new Compartment; // eslint-disable-line new-parens
 		this.editorRef = React.createRef();
@@ -100,7 +101,7 @@ class ExpressionControl extends React.Component {
 
 	componentDidMount() {
 		this.createCodeMirrorEditor();
-		this.setColors();
+		this.setTheme();
 	}
 
 	// this is needed to ensure expression builder selection works.
@@ -134,7 +135,7 @@ class ExpressionControl extends React.Component {
 					anchor: selection.anchor,
 					head: selection.head } });
 		}
-		this.setColors();
+		this.setTheme();
 	}
 
 	getCodemirrorState() {
@@ -148,66 +149,7 @@ class ExpressionControl extends React.Component {
 		});
 	}
 
-	// Sets the colors for the text content provided in the Code Mirror editor. This is done
-	// programmatically here because the current Carbon theme cannot be determined in the SCSS
-	// code where these "--cm-***" variables are actually used (in expression.scss).
-	// The colors specified allow the Code Mirror text to be displayed and allow
-	// it to pass the 'high contrast' display rule so that passes WCAG AA color contrast
-	// standard using: https://webaim.org/resources/contrastchecker/
-	// for 'normal text' when compared to the different background colors used in the UI
-	// There are four different possible backgrounds:
-	// * expression in narrow flyout,                    Light theme: #F4F4F4, Dark theme: #525252
-	// * expression in narrow flyout - highlighted line, Light theme: #DFDFDF, Dark theme: #606060
-	// * modal expression builder,                       Light theme: #FFFFFF, Dark theme: #393939
-	// * modal expression builder - highlighted line,    Light theme: #E8E8E8, Dark theme: #4D4D4D
-	// Colors specified are derived from those in the Carbon 'syntax'
-	// group of colors: https://carbondesignsystem.com/elements/color/tokens/#syntax
-	// but with their brightness adjusted to pass the standard. The inline comments
-	// indicate which Carbon color-token the adjusted colors were derived from.
-	setColors() {
-		const themes = {
-			dark: {
-				"--cm-keyword-color": "#E6D6FF", // From $syntax-control-keyword
-				"--cm-number-color": "#A9EAB9", // From $syntax-number
-				"--cm-def-color": "#F8D968", // From $syntax-definition
-				"--cm-comment-color": "#B1E7BE", // From $syntax-comment
-				"--cm-variable-color": "#CCDEFF", // From $syntax-variable
-				"--cm-punctuation-color": "#{carbon.$syntax-punctuation}", // From $syntax-punctuation
-				"--cm-property-color": "#9EE6F0", // From $syntax-property-name
-				"--cm-operator-color": "#{carbon.$syntax-operator}", // This work as-is
-				"--cm-string-color": "#{carbon.$syntax-string}", // This work as-is
-				"--cm-meta--color": "#B6E7C3" // From $syntax-meta
-			},
-			light: {
-				"--cm-keyword-color": "#7922FC", // From $syntax-control-keyword
-				"--cm-number-color": "#177233", // From $syntax-number
-				"--cm-def-color": "#755D06", // From $syntax-definition
-				"--cm-comment-color": "#187233", // From $syntax-comment
-				"--cm-variable-color": "#0152E9", // From $syntax-variable
-				"--cm-punctuation-color": "#636363", // From $syntax-punctuation
-				"--cm-property-color": "#006C7A", // From $syntax-property-name
-				"--cm-operator-color": "#636363", // From $syntax-operator
-				"--cm-string-color": "#{carbon.$syntax-string}", // This work as-is
-				"--cm-meta--color": "#197132" // From $syntax-meta
-			}
-		};
-
-		const element = document.querySelector(".properties-expression-editor-wrapper");
-
-		const bgColor = getComputedStyle(element)
-			.getPropertyValue("--cds-layer-background")
-			.trim();
-
-		const isLightTheme = (bgColor === "#ffffff");
-
-		const currentTheme = isLightTheme ? themes.light : themes.dark;
-
-		Object.entries(currentTheme).forEach(([property, value]) => {
-			element.style.setProperty(property, value);
-		});
-	}
-
-	// get the set of dataset field names
+	// Get the set of dataset field names
 	getDatasetFields() {
 		const results = [];
 		const fields = this.props.controller.getDatasetMetadataFields();
@@ -215,6 +157,19 @@ class ExpressionControl extends React.Component {
 			results.push({ label: field.name, type: "variable" });
 		}
 		return results;
+	}
+
+	setTheme() {
+		const element = document.querySelector(".properties-expression-editor-wrapper");
+
+		const bgColor = getComputedStyle(element)
+			.getPropertyValue("--cds-layer-background")
+			.trim();
+
+		const theme = (bgColor === "#ffffff" ? "g10" : "g90");
+		if (this.state.theme !== theme) {
+			this.setState({ theme });
+		}
 	}
 
 	// Add the dataset field names to the autocomplete list
@@ -572,7 +527,7 @@ class ExpressionControl extends React.Component {
 					{header}
 					{toggleMaxMin}
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
-						className={className}
+						className={className} data-theme={this.state.theme}
 					>
 						<div
 							className={codemirrorClassName}
