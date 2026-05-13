@@ -439,45 +439,6 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.pipelineId });
 	}
 
-	// Returns the port IDs for the first available connection between the source
-	// and target nodes, or null if no connection is possible. This method checks
-	// all possible port combinations in order and returns the first pair where
-	// the cardinality is not exceeded.
-	// Returns: { srcPortId, trgPortId } or null
-	findAvailablePortsForAutoLink(newNode, srcNode) {
-		if (!newNode || !srcNode || !newNode.inputs || !srcNode.outputs) {
-			return null;
-		}
-
-		const links = this.getLinks();
-
-		// Iterate through all source output ports
-		for (const srcOutput of srcNode.outputs) {
-			// Check if source port cardinality is already at max
-			if (CanvasUtils.isSrcCardinalityAtMax(srcOutput.id, srcNode, links)) {
-				continue;
-			}
-
-			// Iterate through all target input ports
-			for (const trgInput of newNode.inputs) {
-				// Check if target port cardinality is already at max
-				if (CanvasUtils.isTrgCardinalityAtMax(trgInput.id, newNode, links)) {
-					continue;
-				}
-
-				// Check if this combination would exceed cardinality
-				if (!CanvasUtils.isCardinalityAtMax(srcOutput.id, trgInput.id, srcNode, newNode, links)) {
-					return {
-						srcPortId: srcOutput.id,
-						trgPortId: trgInput.id
-					};
-				}
-			}
-		}
-
-		return null;
-	}
-
 	// Returns true if the node passed in is an entry binding node. We detect
 	// this by checking that there are no inputs.
 	isEntryBindingNode(node) {

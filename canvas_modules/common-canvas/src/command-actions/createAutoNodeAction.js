@@ -23,6 +23,7 @@
 /***************************************************************************/
 
 import Action from "../command-stack/action.js";
+import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 
 export default class CreateAutoNodeAction extends Action {
 	constructor(data, canvasController) {
@@ -39,7 +40,7 @@ export default class CreateAutoNodeAction extends Action {
 		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
 		this.newLink = null;
 		if (this.data.addLink) {
-			const availablePorts = this.apiPipeline.findAvailablePortsForAutoLink(this.newNode, this.srcNode);
+			const availablePorts = CanvasUtils.findAvailablePortsForAutoLink(this.srcNode, this.newNode, this.apiPipeline.getLinks());
 			if (availablePorts) {
 				this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode, availablePorts.srcPortId, availablePorts.trgPortId);
 			}
