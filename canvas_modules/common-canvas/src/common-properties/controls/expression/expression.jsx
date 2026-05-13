@@ -148,12 +148,13 @@ class ExpressionControl extends React.Component {
 		});
 	}
 
-	// Sets the colors for the content provided in the Code Mirror editor. This is done
-	// programmatically because the Carbon theme cannot be determined in the SCSS code where
-	// these "--cm-***" variables are actually used in expression.scss.
-	// Define code mirror colors that pass WCAG AA color contrast standard
-	// using: https://webaim.org/resources/contrastchecker/
-	// when compared to the different background colors used in the UI
+	// Sets the colors for the text content provided in the Code Mirror editor. This is done
+	// programmatically here because the current Carbon theme cannot be determined in the SCSS
+	// code where these "--cm-***" variables are actually used (in expression.scss).
+	// The colors specified allow the Code Mirror text to be displayed and allow
+	// it to pass the 'high contrast' display rule so that passes WCAG AA color contrast
+	// standard using: https://webaim.org/resources/contrastchecker/
+	// for 'normal text' when compared to the different background colors used in the UI
 	// There are four different possible backgrounds:
 	// * expression in narrow flyout,                    Light theme: #F4F4F4, Dark theme: #525252
 	// * expression in narrow flyout - highlighted line, Light theme: #DFDFDF, Dark theme: #606060
@@ -161,8 +162,8 @@ class ExpressionControl extends React.Component {
 	// * modal expression builder - highlighted line,    Light theme: #E8E8E8, Dark theme: #4D4D4D
 	// Colors specified are derived from those in the Carbon 'syntax'
 	// group of colors: https://carbondesignsystem.com/elements/color/tokens/#syntax
-	// but with their brightness adjusted to pass the standard for
-	// 'normal text'.
+	// but with their brightness adjusted to pass the standard. The inline comments
+	// indicate which Carbon color-token the adjusted colors were derived from.
 	setColors() {
 		const themes = {
 			dark: {
@@ -185,7 +186,7 @@ class ExpressionControl extends React.Component {
 				"--cm-variable-color": "#0152E9", // From $syntax-variable
 				"--cm-punctuation-color": "#636363", // From $syntax-punctuation
 				"--cm-property-color": "#006C7A", // From $syntax-property-name
-				"--cm-operator-color": "#636363", // This work as-is
+				"--cm-operator-color": "#636363", // From $syntax-operator
 				"--cm-string-color": "#{carbon.$syntax-string}", // This work as-is
 				"--cm-meta--color": "#197132" // From $syntax-meta
 			}
