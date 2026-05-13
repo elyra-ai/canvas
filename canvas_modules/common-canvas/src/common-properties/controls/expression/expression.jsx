@@ -70,14 +70,16 @@ const pxPerLine = 26;
 const defaultCharPerLine = 30;
 const maxLineHeight = 15 * pxPerLine; // 20 lines
 const minLineHeight = 4 * pxPerLine; // 4 lines
+const themeG10 = "g10";
+const themeG90 = "g90";
 class ExpressionControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			showExpressionBuilder: false,
 			validationInProgress: false,
-			expressionEditorHeight: 0,
-			theme: "g10"
+			theme: themeG10,
+			expressionEditorHeight: 0
 		};
 		this.editable = new Compartment; // eslint-disable-line new-parens
 		this.editorRef = React.createRef();
@@ -166,7 +168,7 @@ class ExpressionControl extends React.Component {
 			.getPropertyValue("--cds-layer-background")
 			.trim();
 
-		const theme = (bgColor === "#ffffff" ? "g10" : "g90");
+		const theme = (bgColor === "#ffffff" ? themeG10 : themeG90);
 		if (this.state.theme !== theme) {
 			this.setState({ theme });
 		}
