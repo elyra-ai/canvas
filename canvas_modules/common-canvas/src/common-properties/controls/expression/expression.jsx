@@ -148,6 +148,64 @@ class ExpressionControl extends React.Component {
 		});
 	}
 
+	// Sets the colors for the content provided in the Code Mirror editor. This is done
+	// programmatically because the Carbon theme cannot be determined in the SCSS code where
+	// these "--cm-***" variables are actually used in expression.scss.
+	// Define code mirror colors that pass WCAG AA color contrast standard
+	// using: https://webaim.org/resources/contrastchecker/
+	// when compared to the different background colors used in the UI
+	// There are four different possible backgrounds:
+	// * expression in narrow flyout,                    Light theme: #F4F4F4, Dark theme: #525252
+	// * expression in narrow flyout - highlighted line, Light theme: #DFDFDF, Dark theme: #606060
+	// * modal expression builder,                       Light theme: #FFFFFF, Dark theme: #393939
+	// * modal expression builder - highlighted line,    Light theme: #E8E8E8, Dark theme: #4D4D4D
+	// Colors specified are derived from those in the Carbon 'syntax'
+	// group of colors: https://carbondesignsystem.com/elements/color/tokens/#syntax
+	// but with their brightness adjusted to pass the standard for
+	// 'normal text'.
+	setColors() {
+		const themes = {
+			dark: {
+				"--cm-keyword-color": "#E6D6FF", // From $syntax-control-keyword
+				"--cm-number-color": "#A9EAB9", // From $syntax-number
+				"--cm-def-color": "#F8D968", // From $syntax-definition
+				"--cm-comment-color": "#B1E7BE", // From $syntax-comment
+				"--cm-variable-color": "#CCDEFF", // From $syntax-variable
+				"--cm-punctuation-color": "#{carbon.$syntax-punctuation}", // From $syntax-punctuation
+				"--cm-property-color": "#9EE6F0", // From $syntax-property-name
+				"--cm-operator-color": "#{carbon.$syntax-operator}", // This work as-is
+				"--cm-string-color": "#{carbon.$syntax-string}", // This work as-is
+				"--cm-meta--color": "#B6E7C3" // From $syntax-meta
+			},
+			light: {
+				"--cm-keyword-color": "#7922FC", // From $syntax-control-keyword
+				"--cm-number-color": "#177233", // From $syntax-number
+				"--cm-def-color": "#755D06", // From $syntax-definition
+				"--cm-comment-color": "#187233", // From $syntax-comment
+				"--cm-variable-color": "#0152E9", // From $syntax-variable
+				"--cm-punctuation-color": "#636363", // From $syntax-punctuation
+				"--cm-property-color": "#006C7A", // From $syntax-property-name
+				"--cm-operator-color": "#636363", // This work as-is
+				"--cm-string-color": "#{carbon.$syntax-string}", // This work as-is
+				"--cm-meta--color": "#197132" // From $syntax-meta
+			}
+		};
+
+		const element = document.querySelector(".properties-expression-editor-wrapper");
+
+		const bgColor = getComputedStyle(element)
+			.getPropertyValue("--cds-layer-background")
+			.trim();
+
+		const isLightTheme = (bgColor === "#ffffff");
+
+		const currentTheme = isLightTheme ? themes.light : themes.dark;
+
+		Object.entries(currentTheme).forEach(([property, value]) => {
+			element.style.setProperty(property, value);
+		});
+	}
+
 	// get the set of dataset field names
 	getDatasetFields() {
 		const results = [];
@@ -284,69 +342,6 @@ class ExpressionControl extends React.Component {
 				}, 0);
 			}
 		}
-	}
-
-	// Sets the colors for the content provided in the Code Mirror editor. This is done
-	// programmatically because the Carbon theme cannot be determined in the SCSS code where
-	// these "--cm-***" variables are actually used in expression.scss.
-	// Define code mirror colors that pass WCAG AA color contrast standard
-	// using: https://webaim.org/resources/contrastchecker/
-	// when compared to the different background colors used in the UI
-	// There are four different possible backgrounds:
-	// * expression in narrow flyout,                    Light theme: #F4F4F4, Dark theme: #525252
-	// * expression in narrow flyout - highlighted line, Light theme: #DFDFDF, Dark theme: #606060
-	// * modal expression builder,                       Light theme: #FFFFFF, Dark theme: #393939
-	// * modal expression builder - highlighted line,    Light theme: #E8E8E8, Dark theme: #4D4D4D
-	// Colors specified are derived from those in the Carbon 'syntax'
-	// group of colors: https://carbondesignsystem.com/elements/color/tokens/#syntax
-	// but with their brightness adjusted to pass the standard for
-	// 'normal text'.
-	setColors() {
-		const isDark = !this.isLightTheme();
-
-		if (isDark) {
-			document.documentElement.style.setProperty("--cm-keyword-color", "#E6D6FF");
-			document.documentElement.style.setProperty("--cm-number-color", "#A9EAB9");
-			document.documentElement.style.setProperty("--cm-def-color", "#F8D968"); // From $syntax-definition
-			document.documentElement.style.setProperty("--cm-comment-color", "#B1E7BE"); // From $syntax-comment
-			document.documentElement.style.setProperty("--cm-variable-color", "#CCDEFF"); // From $syntax-variable
-			document.documentElement.style.setProperty("--cm-punctuation-color", "#{carbon.$syntax-punctuation}"); // From $syntax-punctuation
-			document.documentElement.style.setProperty("--cm-property-color", "#9EE6F0"); // From $syntax-property-name
-			document.documentElement.style.setProperty("--cm-operator-color", "#{carbon.$syntax-operator}"); // This work as-is
-			document.documentElement.style.setProperty("--cm-string-color", "#{carbon.$syntax-string}"); // This work as-is
-			document.documentElement.style.setProperty("--cm-meta--color", "#B6E7C3"); // From $syntax-meta
-		} else {
-			document.documentElement.style.setProperty("--cm-keyword-color", "#7922FC");
-			document.documentElement.style.setProperty("--cm-number-color", "#177233");
-			document.documentElement.style.setProperty("--cm-def-color", "#755D06"); // From $syntax-definition
-			document.documentElement.style.setProperty("--cm-comment-color", "#187233"); // From $syntax-comment
-			document.documentElement.style.setProperty("--cm-variable-color", "#0152E9"); // From $syntax-variable
-			document.documentElement.style.setProperty("--cm-punctuation-color", "#636363"); // From $syntax-punctuation
-			document.documentElement.style.setProperty("--cm-property-color", "#006C7A"); // From $syntax-property-name
-			document.documentElement.style.setProperty("--cm-operator-color", "#636363"); // This work as-is
-			document.documentElement.style.setProperty("--cm-string-color", "#{carbon.$syntax-string}"); // This work as-is
-			document.documentElement.style.setProperty("--cm-meta--color", "#197132"); // From $syntax-meta
-		}
-	}
-
-	isLightTheme() {
-		const element = document.querySelector(".properties-expression-editor-wrapper")
-
-		const bgColor = getComputedStyle(element)
-			.getPropertyValue("--cds-layer-background")
-			.trim();
-
-		// Convert hex to RGB and calculate brightness
-		const hex = bgColor.replace("#", "");
-		const r = parseInt(hex.substr(0, 2), 16);
-		const g = parseInt(hex.substr(2, 2), 16);
-		const b = parseInt(hex.substr(4, 2), 16);
-
-		// Calculate perceived brightness (0-255)
-		const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-		// If brightness > 128, it's a light theme
-		return brightness > 128;
 	}
 
 	showExpressionBuilder() {
