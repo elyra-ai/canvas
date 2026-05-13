@@ -23,6 +23,7 @@
 /***************************************************************************/
 
 import Action from "../command-stack/action.js";
+import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 
 export default class CreateAutoNodeAction extends Action {
 	constructor(data, canvasController) {
@@ -35,11 +36,19 @@ export default class CreateAutoNodeAction extends Action {
 		this.data.addLink = typeof this.data.addLink === "undefined" ? true : this.data.addLink;
 
 		const autoLinkOnlyFromSelNodes = canvasController.getCanvasConfig().enableAutoLinkOnlyFromSelNodes;
-		this.srcNode = this.apiPipeline.getAutoSourceNode(autoLinkOnlyFromSelNodes);
+		this.srcNode = CanvasUtils.getAutoSourceNode(
+			autoLinkOnlyFromSelNodes,
+			this.apiPipeline.getNodes(),
+			this.objectModel.getSelectedNodes(),
+			this.apiPipeline.getLinks()
+		);
 		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
 		this.newLink = null;
-		if (this.data.addLink && this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
-			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
+		if (this.data.addLink) {
+			const availablePorts = CanvasUtils.findAvailablePortsForAutoLink(this.srcNode, this.newNode, this.apiPipeline.getLinks());
+			if (availablePorts) {
+				this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode, availablePorts.srcPortId, availablePorts.trgPortId);
+			}
 		}
 	}
 

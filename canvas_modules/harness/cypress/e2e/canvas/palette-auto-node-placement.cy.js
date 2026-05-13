@@ -361,3 +361,65 @@ function verify(data) {
 	cy.verifyNumberOfExternalPipelines(data.extPipelines);
 	cy.verifyNumberOfExternalPipelineFlows(data.extFlows);
 }
+
+describe("Test multi-port auto-linking with enableAutoLinkOnlyFromSelectedNodes", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("carbonPalette.json");
+		cy.setCanvasConfig({
+			"selectedAutoLinkOnlyFromSelNodes": true,
+			"selectedSingleClickAddFromPalette": true
+		});
+	});
+
+	it("Test that multi-port nodes link correctly based on port availability and selection", function() {
+		cy.clickToolbarPaletteOpen();
+
+		// Step 1: Click Database node
+		cy.clickCategory("Input");
+		cy.clickNodeInCategory("Database", "Input");
+		cy.verifyNumberOfNodes(1);
+		cy.verifyNumberOfPortDataLinks(0);
+
+		// Step 2: Click Join node - should link from Database first port to Join
+		cy.clickCategory("Operations");
+		cy.clickNodeInCategory("Join", "Operations");
+		cy.verifyNumberOfNodes(2);
+		cy.verifyNumberOfPortDataLinks(1);
+		// Verify link is from Database outPort to Join inPort1
+		cy.verifyDataLinkBetweenPorts("Database", "outPort", "Join", "inPort1");
+
+		// Step 3: Click Split node - should link from Join to Split
+		cy.clickNodeInCategory("Split", "Operations");
+		cy.verifyNumberOfNodes(3);
+		cy.verifyNumberOfPortDataLinks(2);
+
+		// Step 4: Click Sort node - should link from Split first port (outPort1) to Sort
+		cy.clickNodeInCategory("Sort", "Operations");
+		cy.verifyNumberOfNodes(4);
+		cy.verifyNumberOfPortDataLinks(3);
+		// Verify link is from Split outPort1 to Sort inPort
+		cy.verifyDataLinkBetweenPorts("Split", "outPort1", "Sort", "inPort");
+
+		// Step 5: Click the Split node to select it
+		cy.clickNode("Split");
+
+		// Step 6: Click Aggregate node - should link from Split second port (outPort2) to Aggregate
+		cy.clickNodeInCategory("Aggregate", "Operations");
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfPortDataLinks(4);
+		// Verify link is from Split outPort2 to Aggregate inPort
+		cy.verifyDataLinkBetweenPorts("Split", "outPort2", "Aggregate", "inPort");
+
+		// Step 7: Click the Split node again to select it
+		cy.clickNode("Split");
+
+		// Step 8: Click Balance node - should link from Split first port (outPort1) to Balance
+		// because outPort1 can have multiple connections (cardinality max: -1)
+		cy.clickNodeInCategory("Balance", "Operations");
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfPortDataLinks(5);
+		// Verify link is from Split outPort1 to Balance inPort
+		cy.verifyDataLinkBetweenPorts("Split", "outPort1", "Balance", "inPort");
+	});
+});

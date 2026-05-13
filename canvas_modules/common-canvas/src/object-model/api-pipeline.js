@@ -319,44 +319,6 @@ export default class APIPipeline {
 		return node;
 	}
 
-	// Returns a source node for auto completion or null if no source node can be
-	// detected. The source node is either:
-	// 1. The selected node, if only *one* node is currently selected or
-	// 2. The most recently added node, provided it has one or more output ports or
-	// 3. The most-recent-but-one added node, provided it has one or more output ports
-	getAutoSourceNode(autoLinkOnlyFromSelNodes) {
-		var sourceNode = null;
-		var selectedNodes = this.objectModel.getSelectedNodes();
-
-		if (selectedNodes.length === 1 &&
-				this.isViableAutoSourceNode(selectedNodes[0])) {
-			sourceNode = selectedNodes[0];
-
-		} else if (!autoLinkOnlyFromSelNodes) {
-			var nodesArray = this.getNodes();
-			if (nodesArray.length > 0) {
-				var lastNodeAdded = nodesArray[nodesArray.length - 1];
-				if (lastNodeAdded.outputs) {
-					sourceNode = lastNodeAdded;
-				} else if (nodesArray.length > 1) {
-					var lastButOneNodeAdded = nodesArray[nodesArray.length - 2];
-					if (lastButOneNodeAdded.outputs) {
-						sourceNode = lastButOneNodeAdded;
-					}
-				}
-			}
-		}
-		return sourceNode;
-	}
-
-	// Returns true if the node passed in is OK to be used as a source node
-	// for a node which is to be auto-added to the canvas.
-	isViableAutoSourceNode(node) {
-		return node.outputs &&
-			node.outputs.length > 0 &&
-			!CanvasUtils.isSrcCardinalityAtMax(node.outputs[0].id, node, this.getLinks());
-	}
-
 	// Returns a newly created 'auto node' whose position is based on the
 	// source node (if one is provided) and the the other nodes on the canvas.
 	createAutoNode(data, sourceNode) {
@@ -425,26 +387,6 @@ export default class APIPipeline {
 
 	replaceNodes(replacementNodes) {
 		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.pipelineId });
-	}
-
-	// Returns true if a new link needs to be created with the newly created
-	// auto node. A link is required when there IS a source node and the source
-	// and target nodes each have a single port and the cardinality is not
-	// exceeded for the ports.
-	isLinkNeededWithAutoNode(newNode, srcNode) {
-		let isLinkNeededWithAutoNode = false;
-
-		if (newNode &&
-				srcNode &&
-				newNode.inputs &&
-				srcNode.outputs &&
-				newNode.inputs.length === 1 &&
-				srcNode.outputs.length === 1 &&
-				!CanvasUtils.isCardinalityAtMax(srcNode.outputs[0].id, newNode.inputs[0].id, srcNode, newNode, this.getLinks())) {
-			isLinkNeededWithAutoNode = true;
-		}
-
-		return isLinkNeededWithAutoNode;
 	}
 
 	// Returns true if the node passed in is an entry binding node. We detect
@@ -1048,7 +990,7 @@ export default class APIPipeline {
 	// Link methods
 	// ---------------------------------------------------------------------------
 
-	createLink(trgNode, srcNode) {
+	createLink(trgNode, srcNode, srcPortId, trgPortId) {
 		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": trgNode });
 		let newLink = {
 			id: linkId,
@@ -1057,10 +999,16 @@ export default class APIPipeline {
 			type: NODE_LINK
 		};
 
-		if (srcNode.outputs && srcNode.outputs.length > 0) {
+		// Use provided port IDs if available, otherwise default to first port
+		if (srcPortId) {
+			newLink = Object.assign(newLink, { "srcNodePortId": srcPortId });
+		} else if (srcNode.outputs && srcNode.outputs.length > 0) {
 			newLink = Object.assign(newLink, { "srcNodePortId": srcNode.outputs[0].id });
 		}
-		if (trgNode.inputs && trgNode.inputs.length > 0) {
+
+		if (trgPortId) {
+			newLink = Object.assign(newLink, { "trgNodePortId": trgPortId });
+		} else if (trgNode.inputs && trgNode.inputs.length > 0) {
 			newLink = Object.assign(newLink, { "trgNodePortId": trgNode.inputs[0].id });
 		}
 
