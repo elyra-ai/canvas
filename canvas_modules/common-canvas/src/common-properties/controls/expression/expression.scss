@@ -100,7 +100,7 @@
 		}
 	}
 
-	// The "--cm-***" variable below are set programmatically in expression.jsx because
+	// The "--cm-***" variables below are set programmatically in expression.jsx because
 	// we cannot determine the Carbon theme, set by the Elyra Canvas host application,
 	// in this SCSS file.
 	.cm-line .cm-keyword { color: var(--cm-keyword-color); }
