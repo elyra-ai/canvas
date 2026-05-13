@@ -70,8 +70,8 @@ const pxPerLine = 26;
 const defaultCharPerLine = 30;
 const maxLineHeight = 15 * pxPerLine; // 20 lines
 const minLineHeight = 4 * pxPerLine; // 4 lines
-const themeG10 = "g10";
-const themeG90 = "g90";
+const themeG10 = "theme-g10";
+const themeG90 = "theme-g90";
 class ExpressionControl extends React.Component {
 	constructor(props) {
 		super(props);
