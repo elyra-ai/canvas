@@ -411,10 +411,10 @@ describe("Test multi-port auto-linking with enableAutoLinkOnlyFromSelectedNodes"
 		// Verify link is from Split outPort2 to Aggregate inPort
 		cy.verifyDataLinkBetweenPorts("Split", "outPort2", "Aggregate", "inPort");
 
-		// Step 6.5: Click the Split node again to select it
+		// Step 7: Click the Split node again to select it
 		cy.clickNode("Split");
 
-		// Step 7: Click Balance node - should link from Split first port (outPort1) to Balance
+		// Step 8: Click Balance node - should link from Split first port (outPort1) to Balance
 		// because outPort1 can have multiple connections (cardinality max: -1)
 		cy.clickNodeInCategory("Balance", "Operations");
 		cy.verifyNumberOfNodes(6);
