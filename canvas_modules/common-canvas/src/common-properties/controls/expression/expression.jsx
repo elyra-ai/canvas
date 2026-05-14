@@ -164,11 +164,11 @@ class ExpressionControl extends React.Component {
 	setTheme() {
 		const element = document.querySelector(".properties-expression-editor-wrapper");
 
-		const bgColor = getComputedStyle(element)
-			.getPropertyValue("--cds-layer-background")
+		const colorScheme = getComputedStyle(element)
+			.getPropertyValue("--cds-color-scheme")
 			.trim();
 
-		const theme = (bgColor === "#ffffff" ? themeG10 : themeG90);
+		const theme = (colorScheme === "light" ? themeG10 : themeG90);
 		if (this.state.theme !== theme) {
 			this.setState({ theme });
 		}
