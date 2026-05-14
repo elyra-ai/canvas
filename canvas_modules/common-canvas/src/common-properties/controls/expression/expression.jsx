@@ -70,12 +70,15 @@ const pxPerLine = 26;
 const defaultCharPerLine = 30;
 const maxLineHeight = 15 * pxPerLine; // 20 lines
 const minLineHeight = 4 * pxPerLine; // 4 lines
+const themeG10 = "theme-g10";
+const themeG90 = "theme-g90";
 class ExpressionControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			showExpressionBuilder: false,
 			validationInProgress: false,
+			theme: themeG10,
 			expressionEditorHeight: 0
 		};
 		this.editable = new Compartment; // eslint-disable-line new-parens
@@ -100,6 +103,7 @@ class ExpressionControl extends React.Component {
 
 	componentDidMount() {
 		this.createCodeMirrorEditor();
+		this.setTheme();
 	}
 
 	// this is needed to ensure expression builder selection works.
@@ -133,6 +137,7 @@ class ExpressionControl extends React.Component {
 					anchor: selection.anchor,
 					head: selection.head } });
 		}
+		this.setTheme();
 	}
 
 	getCodemirrorState() {
@@ -146,7 +151,7 @@ class ExpressionControl extends React.Component {
 		});
 	}
 
-	// get the set of dataset field names
+	// Get the set of dataset field names
 	getDatasetFields() {
 		const results = [];
 		const fields = this.props.controller.getDatasetMetadataFields();
@@ -154,6 +159,19 @@ class ExpressionControl extends React.Component {
 			results.push({ label: field.name, type: "variable" });
 		}
 		return results;
+	}
+
+	setTheme() {
+		const element = document.querySelector(".properties-expression-editor-wrapper");
+
+		const colorScheme = getComputedStyle(element)
+			.getPropertyValue("--cds-color-scheme")
+			.trim();
+
+		const theme = (colorScheme === "light" ? themeG10 : themeG90);
+		if (this.state.theme !== theme) {
+			this.setState({ theme });
+		}
 	}
 
 	// Add the dataset field names to the autocomplete list
@@ -511,7 +529,7 @@ class ExpressionControl extends React.Component {
 					{header}
 					{toggleMaxMin}
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
-						className={className}
+						className={className} data-theme={this.state.theme}
 					>
 						<div
 							className={codemirrorClassName}
