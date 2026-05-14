@@ -1030,6 +1030,129 @@ export default class CanvasUtils {
 		return trgPortId;
 	}
 
+	// Returns true if the source port has any existing links.
+	static srcPortHasLinks(portId, node, links) {
+		return links.some((link) => {
+			if (link.type === NODE_LINK && link.srcNodeId === node.id) {
+				return link.srcNodePortId === portId ||
+					(!link.srcNodePortId && this.isFirstPort(node.outputs, portId));
+			}
+			return false;
+		});
+	}
+
+	// Returns true if the target port has any existing links.
+	static trgPortHasLinks(portId, node, links) {
+		return links.some((link) => {
+			if (link.type === NODE_LINK && link.trgNodeId === node.id) {
+				return link.trgNodePortId === portId ||
+					(!link.trgNodePortId && this.isFirstPort(node.inputs, portId));
+			}
+			return false;
+		});
+	}
+
+	// Returns true if the node passed in is OK to be used as a source node
+	// for a node which is to be auto-added to the canvas. A node is viable if
+	// it has at least one output port that is not at maximum cardinality.
+	static isViableAutoSourceNode(node, links) {
+		if (!node.outputs || node.outputs.length === 0) {
+			return false;
+		}
+
+		// Check if ANY output port is available (not at max cardinality)
+		for (const output of node.outputs) {
+			if (!this.isSrcCardinalityAtMax(output.id, node, links)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// Returns a source node for auto completion or null if no source node can be
+	// detected. The source node is either:
+	// 1. The selected node, if only *one* node is currently selected or
+	// 2. The most recently added node, provided it has one or more output ports or
+	// 3. The most-recent-but-one added node, provided it has one or more output ports
+	static getAutoSourceNode(autoLinkOnlyFromSelNodes, nodes, selectedNodes, links) {
+		var sourceNode = null;
+
+		if (selectedNodes.length === 1 &&
+				this.isViableAutoSourceNode(selectedNodes[0], links)) {
+			sourceNode = selectedNodes[0];
+
+		} else if (!autoLinkOnlyFromSelNodes) {
+			if (nodes.length > 0) {
+				var lastNodeAdded = nodes[nodes.length - 1];
+				if (lastNodeAdded.outputs) {
+					sourceNode = lastNodeAdded;
+				} else if (nodes.length > 1) {
+					var lastButOneNodeAdded = nodes[nodes.length - 2];
+					if (lastButOneNodeAdded.outputs) {
+						sourceNode = lastButOneNodeAdded;
+					}
+				}
+			}
+		}
+		return sourceNode;
+	}
+
+	// Returns the port IDs for the first available connection between the source
+	// and target nodes, or null if no connection is possible. This method uses a
+	// two-pass approach:
+	// 1. First pass: Look for ports that have NO existing links
+	// 2. Second pass: Look for ports that haven't exceeded their max cardinality
+	// Returns: { srcPortId, trgPortId } or null
+	static findAvailablePortsForAutoLink(srcNode, trgNode, links) {
+		if (!srcNode || !trgNode || !srcNode.outputs || !trgNode.inputs) {
+			return null;
+		}
+
+		// First pass: Look for ports with NO existing links
+		for (const srcOutput of srcNode.outputs) {
+			if (this.srcPortHasLinks(srcOutput.id, srcNode, links)) {
+				continue;
+			}
+
+			for (const trgInput of trgNode.inputs) {
+				if (this.trgPortHasLinks(trgInput.id, trgNode, links)) {
+					continue;
+				}
+
+				// Both ports have no links, check if connection is valid
+				if (!this.isCardinalityAtMax(srcOutput.id, trgInput.id, srcNode, trgNode, links)) {
+					return {
+						srcPortId: srcOutput.id,
+						trgPortId: trgInput.id
+					};
+				}
+			}
+		}
+
+		// Second pass: Look for ports that haven't exceeded max cardinality
+		for (const srcOutput of srcNode.outputs) {
+			if (this.isSrcCardinalityAtMax(srcOutput.id, srcNode, links)) {
+				continue;
+			}
+
+			for (const trgInput of trgNode.inputs) {
+				if (this.isTrgCardinalityAtMax(trgInput.id, trgNode, links)) {
+					continue;
+				}
+
+				if (!this.isCardinalityAtMax(srcOutput.id, trgInput.id, srcNode, trgNode, links)) {
+					return {
+						srcPortId: srcOutput.id,
+						trgPortId: trgInput.id
+					};
+				}
+			}
+		}
+
+		return null;
+	}
+
 
 	// Returns the port referenced by srcPortId from the node referenced
 	// by srcNode.
