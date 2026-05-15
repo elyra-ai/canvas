@@ -1818,6 +1818,10 @@ export default class CanvasController {
 		this.objectModel.setRightFlyoutMinWidth(wd);
 	}
 
+	setRightFlyoutMaxWidth(wd) {
+		this.objectModel.setRightFlyoutMaxWidth(wd);
+	}
+
 	// Top panel methods
 
 	isTopPanelOpen() {

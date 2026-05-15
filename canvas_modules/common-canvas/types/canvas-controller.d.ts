@@ -2235,9 +2235,21 @@ export declare class CanvasController {
     ): void;
 
     /**
-     * Sets the minimum width for the right flyout
+     * Sets the minimum width for the right flyout.
+     * If minimum width is not specified, it will default to the display width of the contents.
      */
     setRightFlyoutMinWidth(
+      width: number
+    ): void;
+
+    /**
+     * Sets the maximum width for the right flyout.
+     * Note: The specified max width may be overridden to ensure:
+     * 1. It is always greater than or equal to the minimum width
+     * 2. It does not exceed the available width (center panel width + current panel width)
+     * If max width is not provided, the maximum will default to 70% of the available width.
+     */
+    setRightFlyoutMaxWidth(
       width: number
     ): void;
 

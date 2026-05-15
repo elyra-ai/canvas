@@ -17,6 +17,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Button } from "@carbon/react";
+import ChevronLeft from "@carbon/icons-react/lib/ChevronLeft";
+import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
 import Logger from "../logging/canvas-logger.js";
 
 // Should cover at most 70% of available width.
@@ -39,13 +42,34 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.getCurrentWidth = this.getCurrentWidth.bind(this);
 
 		this.getRightFlyoutResizeContent = this.getRightFlyoutResizeContent.bind(this);
+		this.getResizeDirection = this.getResizeDirection.bind(this);
+		this.resize = this.resize.bind(this);
+		this.getResizeButton = this.getResizeButton.bind(this);
 	}
 
 	componentDidMount() {
 		// Since flyout content width can be dynamic set the minimum width to width of the content
 		// unless a minimum width has been specified by the application. In which case, use it.
 		if (typeof this.props.panelMinWidth === "undefined" || this.props.panelMinWidth === null) {
+			// Use stored initialMinWidth from Redux if available, otherwise measure from DOM
+			if (typeof this.props.panelInitialMinWidth !== "undefined" && this.props.panelInitialMinWidth !== null) {
+				this.initialMinWidth = this.props.panelInitialMinWidth;
+			} else {
+				this.initialMinWidth = this.getCurrentWidth();
+				// Store in Redux so it persists across remounts
+				this.props.canvasController.setRightFlyoutConfig({ panelInitialMinWidth: this.initialMinWidth });
+			}
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		// If content has changed, reset initialMinWidth to the new content's width
+		// This allows the min width to adjust when different content is loaded
+		if (prevProps.content !== this.props.content &&
+		    (typeof this.props.panelMinWidth === "undefined" || this.props.panelMinWidth === null)) {
 			this.initialMinWidth = this.getCurrentWidth();
+			// Update Redux state with new initialMinWidth
+			this.props.canvasController.setRightFlyoutConfig({ panelInitialMinWidth: this.initialMinWidth });
 		}
 	}
 
@@ -72,7 +96,8 @@ class CommonCanvasRightFlyout extends React.Component {
 			const panelWidth = this.isPanelWidthSpecified() ? this.props.panelWidth : this.getCurrentWidth();
 			const diff = e.clientX - this.posX;
 			const wd = panelWidth - diff;
-			this.props.canvasController.setRightFlyoutWidth(this.limitWidth(wd));
+			const limitedWidth = this.limitWidth(wd);
+			this.props.canvasController.setRightFlyoutWidth(limitedWidth);
 			this.posX = e.clientX;
 		}
 	}
@@ -96,9 +121,13 @@ class CommonCanvasRightFlyout extends React.Component {
 	}
 
 	// Returns the minimum width for the flyout. This will be the minimum width specified by the
-	// application but if one is not specified the width that the flyout when it first opened.
+	// application but, if one is not specified, the width of the flyout when it first opened.
 	getMinWidth() {
 		if (typeof this.props.panelMinWidth === "undefined" || this.props.panelMinWidth === null) {
+			// Use panelInitialMinWidth from Redux if available, otherwise use instance variable
+			if (typeof this.props.panelInitialMinWidth !== "undefined" && this.props.panelInitialMinWidth !== null) {
+				return this.props.panelInitialMinWidth;
+			}
 			// When this flyout is first rendered, getMinWidth() will be called before
 			//  initialMinWidth has been set. So return min width as zero.
 			if (this.initialMinWidth === null) {
@@ -109,6 +138,42 @@ class CommonCanvasRightFlyout extends React.Component {
 		return this.props.panelMinWidth;
 	}
 
+	// Returns the maximum width for the flyout. This will be the maximum width specified by the
+	// application but if one is not specified, use the calculated max based on available space.
+	getMaxWidth() {
+		const centerPanelWidth = this.props.getCenterPanelWidth();
+		const panelWidth = this.isPanelWidthSpecified() ? this.props.panelWidth : this.getCurrentWidth();
+		const availableWidth = centerPanelWidth + panelWidth;
+		const minWidth = this.getMinWidth();
+
+		let maxWidth;
+		if (typeof this.props.panelMaxWidth !== "undefined" && this.props.panelMaxWidth !== null) {
+			maxWidth = Math.min(this.props.panelMaxWidth, availableWidth);
+		} else {
+			maxWidth = availableWidth * MAX_WIDTH_EXTEND_PERCENT;
+		}
+
+		return Math.max(maxWidth, minWidth);
+	}
+
+	// Returns the appropriate resize button icon based on direction
+	getResizeButton() {
+		const direction = this.getResizeDirection();
+		return direction === "expand" ? <ChevronLeft /> : <ChevronRight />;
+	}
+
+	// Determines which direction the button should show
+	// If current width > midpoint: point left to contract to min
+	// If current width <= midpoint: point right to expand to max
+	getResizeDirection() {
+		const currentWidth = this.isPanelWidthSpecified() ? this.props.panelWidth : this.getCurrentWidth();
+		const minWidth = this.getMinWidth();
+		const maxWidth = this.getMaxWidth();
+		const midpoint = minWidth + ((maxWidth - minWidth) / 2);
+
+		return currentWidth > midpoint ? "contract" : "expand";
+	}
+
 	// Return true if a value is provided for this.props.panelWidth
 	isPanelWidthSpecified() {
 		return !(typeof this.props.panelWidth === "undefined" || this.props.panelWidth === null);
@@ -117,21 +182,31 @@ class CommonCanvasRightFlyout extends React.Component {
 	// Returns a new width for right panel limited by the need to enforce
 	// a minimum and maximum width
 	limitWidth(wd) {
-		const centerPanelWidth = this.props.getCenterPanelWidth();
-		const panelWidth = this.getCurrentWidth();
-
-		// Max Width should be a percentage of the total available width (center panel + rightflyout)
-		const maxWidth = (centerPanelWidth + panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
+		const maxWidth = this.getMaxWidth();
 		const minWidth = this.getMinWidth();
 		const width = Math.min(Math.max(wd, minWidth), maxWidth);
 
 		return width;
 	}
 
+	// Resizes the panel based on button direction
+	// When pointing left (contract): resize to minimum width
+	// When pointing right (expand): resize to maximum width
+	resize() {
+		const direction = this.getResizeDirection();
+		const minWidth = this.getMinWidth();
+		const maxWidth = this.getMaxWidth();
+
+		// Left arrow (contract) -> go to min width, Right arrow (expand) -> go to max width
+		const newWidth = direction === "contract" ? minWidth : maxWidth;
+		this.props.canvasController.setRightFlyoutWidth(newWidth);
+	}
+
 	render() {
 		this.logger.log("render");
 
 		let rightFlyout = null;
+		let resizeBtn = null;
 
 		if (this.props.content && this.props.isOpen) {
 			const rightFlyoutDragContent = this.getRightFlyoutResizeContent();
@@ -150,9 +225,32 @@ class CommonCanvasRightFlyout extends React.Component {
 					</div>
 				</div>
 			);
+
+			// Show resize button when enabled, panel is open, and not being dragged
+			if (this.props.enableRightFlyoutResizeButton && !this.state.isBeingDragging) {
+				const direction = this.getResizeDirection();
+				const resizeIcon = this.getResizeButton();
+				const resizeBtnLabel = direction === "expand" ? "Expand" : "Contract";
+
+				resizeBtn = (
+					<Button
+						kind="ghost"
+						className="right-flyout-btn-resize"
+						onClick={this.resize}
+						aria-label={resizeBtnLabel}
+					>
+						{resizeIcon}
+					</Button>
+				);
+			}
 		}
 
-		return rightFlyout;
+		return (
+			<div className="right-flyout-container">
+				{rightFlyout}
+				{resizeBtn}
+			</div>
+		);
 	}
 }
 
@@ -166,8 +264,11 @@ CommonCanvasRightFlyout.propTypes = {
 	content: PropTypes.object,
 	enableRightFlyoutUnderToolbar: PropTypes.bool,
 	enableRightFlyoutDragToResize: PropTypes.bool,
+	enableRightFlyoutResizeButton: PropTypes.bool,
 	panelWidth: PropTypes.number,
-	panelMinWidth: PropTypes.number
+	panelMinWidth: PropTypes.number,
+	panelMaxWidth: PropTypes.number,
+	panelInitialMinWidth: PropTypes.number
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -175,8 +276,11 @@ const mapStateToProps = (state, ownProps) => ({
 	content: state.rightflyout.content,
 	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
 	enableRightFlyoutDragToResize: state.canvasconfig.enableRightFlyoutDragToResize,
+	enableRightFlyoutResizeButton: state.canvasconfig.enableRightFlyoutResizeButton,
 	panelWidth: state.rightflyout.panelWidth,
-	panelMinWidth: state.rightflyout.panelMinWidth
+	panelMinWidth: state.rightflyout.panelMinWidth,
+	panelMaxWidth: state.rightflyout.panelMaxWidth,
+	panelInitialMinWidth: state.rightflyout.panelInitialMinWidth
 });
 
 export default connect(mapStateToProps)(CommonCanvasRightFlyout);
