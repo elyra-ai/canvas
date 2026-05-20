@@ -83,15 +83,15 @@ class PropertiesMain extends React.Component {
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
-		// this._getOverrideSize = this._getOverrideSize.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.detectResize = this.detectResize.bind(this);
+
 		// Rate limit how often the panel rerenders on size change
 		this.detectResizeThrottled = debounce(this.detectResize, 500);
-		// used to tracked when the resize button is clicked and ignore detectResize
-		// this.resizeClicked = false;
+
 		// Track panel height to avoid resize calls whenever height changes
 		this.lastPanelHeight = 0;
+
 		// Track if we're using flyout context for width management
 		this.usingFlyoutContext = false;
 	}
@@ -484,6 +484,7 @@ class PropertiesMain extends React.Component {
 				>
 					{editorForm}
 				</PropertiesEditor>);
+
 			} else if (this.props.propertiesConfig.containerType === "Custom") {
 				propertiesDialog = (
 					<div className={classNames("properties-custom-container",
@@ -496,6 +497,7 @@ class PropertiesMain extends React.Component {
 					>
 						{editorForm}
 					</div>);
+
 			} else if (this.props.propertiesConfig.containerType === "Tearsheet") {
 				propertiesDialog = (<TearSheet
 					open
@@ -513,6 +515,7 @@ class PropertiesMain extends React.Component {
 					controller={this.propertiesController}
 					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
+
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
 					onHide={this.props.callbacks.closePropertiesDialog}
