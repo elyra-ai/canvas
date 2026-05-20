@@ -79,10 +79,6 @@ export default class Icon extends React.Component {
 			return <ChevronUp className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.CHEVRONARROWS.DOWN):
 			return <ChevronDown className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.CHEVRONARROWS.LEFT):
-			return <ChevronLeft className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.CHEVRONARROWS.RIGHT):
-			return <ChevronRight className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.ADD):
 			return <AddAlt className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.SETTINGS):

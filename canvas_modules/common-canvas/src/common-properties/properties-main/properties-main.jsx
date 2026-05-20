@@ -25,24 +25,22 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS, CATEGORY_VIEW } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, APPLY, CANCEL, ACTIONS, CATEGORY_VIEW } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep, debounce } from "lodash";
-import Icon from "./../../icons/icon.jsx";
-import { Button } from "@carbon/react";
 import { Provider } from "react-redux";
-import logger from "../../../utils/logger";
 import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
+import FlyoutContext from "./../../contexts/flyout-context.jsx";
 
 import { injectIntl } from "react-intl";
-import styles from "./properties-main-widths.module.scss";
 
-const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
-const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
-const FLYOUT_WIDTH_LARGE = parseInt(styles.flyoutWidthLarge, 10);
-const FLYOUT_WIDTH_MAX = parseInt(styles.flyoutWidthMax, 10);
+// Fixed editor widths
+const FLYOUT_WIDTH_SMALL = 320;
+const FLYOUT_WIDTH_MEDIUM = 480;
+const FLYOUT_WIDTH_LARGE = 640;
+const FLYOUT_WIDTH_MAX = 900;
 
 class PropertiesMain extends React.Component {
 	constructor(props) {
@@ -80,24 +78,22 @@ class PropertiesMain extends React.Component {
 		const editorSize = this.getEditorSize();
 		this.state = {
 			showPropertiesButtons: true,
-			editorSize: editorSize,
-			showResizeBtn: true
+			editorSize: editorSize
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
-		this.updateEditorSize = this.updateEditorSize.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
-		this._getOverrideSize = this._getOverrideSize.bind(this);
-		this._getResizeButton = this._getResizeButton.bind(this);
-		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
+		// this._getOverrideSize = this._getOverrideSize.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.detectResize = this.detectResize.bind(this);
 		// Rate limit how often the panel rerenders on size change
 		this.detectResizeThrottled = debounce(this.detectResize, 500);
 		// used to tracked when the resize button is clicked and ignore detectResize
-		this.resizeClicked = false;
+		// this.resizeClicked = false;
 		// Track panel height to avoid resize calls whenever height changes
 		this.lastPanelHeight = 0;
+		// Track if we're using flyout context for width management
+		this.usingFlyoutContext = false;
 	}
 
 	componentDidMount() {
@@ -109,6 +105,8 @@ class PropertiesMain extends React.Component {
 		if (this.commonProperties.current) {
 			this.resizeObserver.observe(this.commonProperties.current);
 		}
+
+		this.initializeFlyoutContext();
 
 		this.props.callbacks.setPropertiesHasMounted();
 	}
@@ -153,6 +151,11 @@ class PropertiesMain extends React.Component {
 	componentDidUpdate(prevProps) {
 		if (!isEqual(prevProps.callbacks, this.props.callbacks)) {
 			this.setCallbacks();
+		}
+		// Re-check flyout context if it wasn't set initially
+		// This handles cases where the context becomes available after initial mount
+		if (!this.usingFlyoutContext) {
+			this.initializeFlyoutContext();
 		}
 	}
 
@@ -257,121 +260,65 @@ class PropertiesMain extends React.Component {
 		return (initialEditorSize ? initialEditorSize : defaultEditorSize);
 	}
 
-	_getOverrideSize() {
-		const pixelWidth = this.propertiesController.getForm().pixelWidth;
-		const editorSizeInForm = this.propertiesController.getForm().editorSize;
-		let overrideSize = null;
-
-		if (pixelWidth) {
-			if (editorSizeInForm === Size.SMALL) {
-				if (this.state.editorSize === Size.SMALL && pixelWidth.min) {
-					overrideSize = pixelWidth.min;
-
-				} else if (this.state.editorSize === Size.MEDIUM && pixelWidth.max) {
-					overrideSize = pixelWidth.max;
-				}
-
-			} else if (editorSizeInForm === Size.MEDIUM) {
-				if (this.state.editorSize === Size.MEDIUM && pixelWidth.min) {
-					overrideSize = pixelWidth.min;
-
-				} else if (this.state.editorSize === Size.LARGE && pixelWidth.max) {
-					overrideSize = pixelWidth.max;
-				}
-
-			} else if (editorSizeInForm === Size.LARGE) {
-				if (this.state.editorSize === Size.LARGE && pixelWidth.min) {
-					overrideSize = pixelWidth.min;
-
-				} else if (this.state.editorSize === Size.MAX && pixelWidth.max) {
-					overrideSize = pixelWidth.max;
-				}
-
-			} else if (editorSizeInForm === Size.MAX && pixelWidth.max) {
-				overrideSize = pixelWidth.max;
-			}
+	// Initializes the flyout context by communicating width constraints and resize preference.
+	// Called on mount and when flyout context becomes available.
+	initializeFlyoutContext() {
+		if (this.context && this.context.setWidthConstraints && !this.usingFlyoutContext) {
+			this.usingFlyoutContext = true;
+			const minWidth = this._getMinWidthForFlyout();
+			const maxWidth = this._getMaxWidthForFlyout();
+			const enableResize = this.props.propertiesConfig.enableResize !== false;
+			this.context.setWidthConstraints(minWidth, maxWidth, enableResize);
 		}
-		return overrideSize;
 	}
 
-	_getResizeButton() {
-		let resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.LEFT} className="properties-resize-caret-left" />;
-		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
-			if (this.state.editorSize === Size.MEDIUM) {
-				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
-			}
-		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
-			if (this.state.editorSize === Size.LARGE) {
-				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
-			}
-		} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
-			if (this.state.editorSize === Size.MAX) {
-				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
-			}
+	/**
+	 * Calculates the minimum width to communicate to the flyout context.
+	 * Uses the editor_size and pixel_width configuration from UI hints.
+	 */
+	_getMinWidthForFlyout() {
+		const pixelWidth = this.propertiesController.getForm().pixelWidth;
+		const editorSize = this.propertiesController.getForm().editorSize;
+
+		// If pixel_width.min is specified, use it
+		if (pixelWidth && pixelWidth.min) {
+			return pixelWidth.min;
 		}
-		return resizeButton;
+
+		// Otherwise use default widths based on editor_size
+		if (editorSize === Size.SMALL) {
+			return FLYOUT_WIDTH_SMALL;
+		} else if (editorSize === Size.MEDIUM) {
+			return FLYOUT_WIDTH_MEDIUM;
+		} else if (editorSize === Size.LARGE) {
+			return FLYOUT_WIDTH_LARGE;
+		}
+		return FLYOUT_WIDTH_MAX;
 	}
 
-	_isResizeButtonRequired() {
+	/**
+	 * Calculates the maximum width to communicate to the flyout context.
+	 * Uses the editor_size and pixel_width configuration from UI hints.
+	 */
+	_getMaxWidthForFlyout() {
 		const pixelWidth = this.propertiesController.getForm().pixelWidth;
+		const editorSize = this.propertiesController.getForm().editorSize;
 
-		if (this.props.propertiesConfig.enableResize !== false) {
-			if (pixelWidth) {
-				if (!pixelWidth.min && !pixelWidth.max) {
-					logger.warn("Pixel width was provided but no min or max property was found in it.");
-					return true;
-
-				} else if (this.propertiesController.getForm().editorSize === Size.SMALL) {
-					if (pixelWidth.min && !pixelWidth.max && pixelWidth.min >= FLYOUT_WIDTH_MEDIUM) {
-						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size: " + FLYOUT_WIDTH_MEDIUM);
-						return false;
-					} else if (!pixelWidth.min && pixelWidth.max && pixelWidth.max <= FLYOUT_WIDTH_SMALL) {
-						logger.warn("No resize button shown. Pixel width max size is less than or equal to default min size: " + FLYOUT_WIDTH_SMALL);
-						return false;
-					} else if (pixelWidth.min >= pixelWidth.max) {
-						logger.warn("No resize button shown. Pixel width min size is greater than or equal to pixel width max size.");
-						return false;
-					}
-
-				} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
-					if (pixelWidth.min && !pixelWidth.max && pixelWidth.min >= FLYOUT_WIDTH_LARGE) {
-						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size: " + FLYOUT_WIDTH_LARGE);
-						return false;
-					} else if (!pixelWidth.min && pixelWidth.max && pixelWidth.max <= FLYOUT_WIDTH_MEDIUM) {
-						logger.warn("No resize button shown. Pixel width max size is less than or equal to default min size: " + FLYOUT_WIDTH_MEDIUM);
-						return false;
-					} else if (pixelWidth.min >= pixelWidth.max) {
-						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size.");
-						return false;
-					}
-
-				} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
-					if (pixelWidth.min && !pixelWidth.max && pixelWidth.min >= FLYOUT_WIDTH_MAX) {
-						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size: " + FLYOUT_WIDTH_MAX);
-						return false;
-					} else if (!pixelWidth.min && pixelWidth.max && pixelWidth.max <= FLYOUT_WIDTH_LARGE) {
-						logger.warn("No resize button shown. Pixel width max size is less than or equal to default min size: " + FLYOUT_WIDTH_LARGE);
-						return false;
-					} else if (pixelWidth.min >= pixelWidth.max) {
-						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size.");
-						return false;
-					}
-
-				} else if (this.propertiesController.getForm().editorSize === Size.MAX) {
-					if (pixelWidth.min) {
-						logger.warn("No resize button shown. Pixel width min size ignored.");
-						return false;
-					}
-					return false;
-				}
-
-			} else if (this.propertiesController.getForm().editorSize === Size.MAX) {
-				return false;
-			}
-			return true;
+		// If pixel_width.max is specified, use it
+		if (pixelWidth && pixelWidth.max) {
+			return pixelWidth.max;
 		}
 
-		return false;
+		// Otherwise use default widths based on editor_size
+		if (editorSize === Size.SMALL) {
+			return FLYOUT_WIDTH_MEDIUM;
+		} else if (editorSize === Size.MEDIUM) {
+			return FLYOUT_WIDTH_LARGE;
+		} else if (editorSize === Size.LARGE) {
+			return FLYOUT_WIDTH_MAX;
+		}
+		// For MAX size, there's no expandable max
+		return null;
 	}
 
 	// options is an object of config options where
@@ -461,45 +408,10 @@ class PropertiesMain extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
-	updateEditorSize(newEditorSize) {
-		this.setState({
-			editorSize: newEditorSize
-		});
-		this.propertiesController.setEditorSize(newEditorSize);
-	}
-
-	resize() {
-		this.resizeClicked = true;
-		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
-			if (this.state.editorSize === Size.SMALL) {
-				this.updateEditorSize(Size.MEDIUM);
-			} else {
-				this.updateEditorSize(Size.SMALL);
-			}
-		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
-			if (this.state.editorSize === Size.MEDIUM) {
-				this.updateEditorSize(Size.LARGE);
-			} else {
-				this.updateEditorSize(Size.MEDIUM);
-			}
-		} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
-			if (this.state.editorSize === Size.LARGE) {
-				this.updateEditorSize(Size.MAX);
-			} else {
-				this.updateEditorSize(Size.LARGE);
-			}
-		}
-	}
-
 	detectResize(contentRect, target) {
-		if (contentRect.height === this.lastPanelHeight) {
-			// only hide resize button if resize wasn't from clicking resize button
-			if (!this.resizeClicked) {
-				this.setState({ showResizeBtn: false });
-			}
-			this.resizeClicked = false;
+		if (contentRect.height !== this.lastPanelHeight) {
+			this.lastPanelHeight = contentRect.height;
 		}
-		this.lastPanelHeight = contentRect.height;
 	}
 
 	render() {
@@ -518,7 +430,6 @@ class PropertiesMain extends React.Component {
 			let propertiesDialog = [];
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
-			let resizeBtn = null;
 			let hasHeading = false;
 
 			if (this.props.propertiesConfig.rightFlyout) {
@@ -548,21 +459,6 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
-				// Show Resize Button only under below conditions
-				// 1. Flyout is not dragged to resize its width.
-				// 2. If pixel_width is set include that to test if button should be shown.
-				if (this._isResizeButtonRequired() && this.state.showResizeBtn) {
-					const resizeIcon = this._getResizeButton();
-					// Resize button label can be "Expand" or "Contract"
-					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
-						? PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL)
-						: PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL);
-					resizeBtn = (
-						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} aria-label={resizeBtnLabel} >
-							{resizeIcon}
-						</Button>
-					);
-				}
 			}
 
 			const editorForm = (<EditorForm
@@ -632,23 +528,13 @@ class PropertiesMain extends React.Component {
 				</PropertiesModal>);
 			}
 
-			let propertiesSizeClassname = `properties-${this.state.editorSize}`;
-
-			const overrideSize = this._getOverrideSize();
-			let overrideStyle = null;
-			if (overrideSize !== null) {
-				// Add custom classname when custom editor size is set
-				propertiesSizeClassname = "properties-custom-size";
-				overrideStyle = { width: overrideSize + "px" };
-			}
-
 			const className = classNames("properties-wrapper",
 				{
 					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
 					"properties-light-enabled": this.props.light,
 					"properties-light-disabled": !this.props.light
-				},
-				propertiesSizeClassname);
+				}
+			);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<div className="properties-right-flyout-container">
@@ -658,13 +544,11 @@ class PropertiesMain extends React.Component {
 							ref={this.commonProperties}
 							className={className}
 							onBlur={this.onBlur}
-							style={overrideStyle}
 						>
 							{propertiesTitle}
 							{propertiesDialog}
 							{buttonsContainer}
 						</aside>
-						{resizeBtn}
 					</div>
 				</Provider>
 			);
@@ -672,6 +556,9 @@ class PropertiesMain extends React.Component {
 		return <div />;
 	}
 }
+
+// Enable access to FlyoutContext via this.context
+PropertiesMain.contextType = FlyoutContext;
 
 PropertiesMain.propTypes = {
 	propertiesInfo: PropTypes.object.isRequired,

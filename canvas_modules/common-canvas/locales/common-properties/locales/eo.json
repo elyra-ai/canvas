@@ -21,8 +21,6 @@
   "propertiesEdit.applyButton.label": "[Esperanto~Save~eo]",
   "propertiesEdit.rejectButton.label": "[Esperanto~Cancel~eo]",
   "propertiesEdit.revertButton.label": "[Esperanto~Revert~eo]",
-  "propertiesEdit.resizeButton.expand.label": "[Esperanto~Expand~eo]",
-  "propertiesEdit.resizeButton.contract.label": "[Esperanto~Contract~~eo]",
   "properties.revert.message": "[Esperanto~Click Revert to go back to the previous screen or click Close to exit the pane. Then try your operation again.~~~~~~~~~~~~~~~~~~~eo]",
   "properties.close.message": "[Esperanto~Click Close to exit the pane. Then try your operation again.~~~~~~~~~~eo]",
   "properties.support.message": "[Esperanto~If the problem persists, contact support.~~~~~~~~~~eo]",

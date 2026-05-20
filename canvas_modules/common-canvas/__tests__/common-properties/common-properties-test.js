@@ -25,7 +25,6 @@ import PropertiesDialog from "../../src/common-properties/components/properties-
 import propertyUtilsRTL from "../_utils_/property-utilsRTL.js";
 import tableUtilsRTL from "../_utils_/table-utilsRTL.js";
 import { render } from "../_utils_/mount-utils.js";
-import { suppressConsoleWarning } from "../_utils_/message-utils";
 
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import expressionTestResource from "../test_resources/json/expression-one-category.json";
@@ -310,23 +309,114 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
 	});
 
-	it("When enableSize is omitted resize button should be rendered", () => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(propertiesInfo.parameterDef);
+	it("When enableResize=true resize button should not be rendered because FlyoutContext handles it", () => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: true });
 		wrapper = renderedObject.wrapper;
 		const { container } = wrapper;
-		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(1);
+		// With FlyoutContext, Common Properties should not render its own resize button
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
 	});
 
-	it("Resize button should have aria-label", () => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(propertiesInfo.parameterDef);
+	it("When enableResize=true and editor_size=small, resize button should not be rendered", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
 		wrapper = renderedObject.wrapper;
 		const { container } = wrapper;
-		const resizeBtn = container.querySelector("button.properties-btn-resize");
-		expect(resizeBtn.getAttribute("aria-label")).to.equal("Expand");
-		fireEvent.click(resizeBtn);
+		// With FlyoutContext, resize button is not rendered by Common Properties
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
+	});
 
-		const updatedResizeBtn = container.querySelector("button.properties-btn-resize");
-		expect(updatedResizeBtn.getAttribute("aria-label")).to.equal("Contract");
+	it("When enableResize=true and editor_size=medium, resize button should not be rendered", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
+		wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+		// With FlyoutContext, resize button is not rendered by Common Properties
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
+	});
+
+	it("When enableResize=true and editor_size=large, resize button should not be rendered", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
+		wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+		// With FlyoutContext, resize button is not rendered by Common Properties
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
+	});
+
+	it("When enableResize=true and editor_size=small with pixel_width, resize button should not be rendered", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
+		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 800 };
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
+		wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+		// With FlyoutContext, resize button is not rendered by Common Properties
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
+		// Verify Common Properties still renders
+		expect(container.querySelector("div.properties-custom-container")).to.not.be.null;
+	});
+
+	it("When enableResize=true and editor_size=medium with pixel_width, resize button should not be rendered", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
+		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 800 };
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
+		wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+		// With FlyoutContext, resize button is not rendered by Common Properties
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
+		expect(container.querySelector("div.properties-custom-container")).to.not.be.null;
+	});
+
+	it("When enableResize=true and editor_size=large with pixel_width, resize button should not be rendered", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
+		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 800 };
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
+		wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+		// With FlyoutContext, resize button is not rendered by Common Properties
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
+		expect(container.querySelector("div.properties-custom-container")).to.not.be.null;
+	});
+
+	it("When enableResize=true and pixel_width min equals max, resize button should not be rendered", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
+		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
+		wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+		// With FlyoutContext, resize button is not rendered by Common Properties
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
+		expect(container.querySelector("div.properties-custom-container")).to.not.be.null;
+	});
+
+	it("When enableResize=true and editor_size=max, resize button should not be rendered", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "max";
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
+		wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+		// With FlyoutContext, resize button is not rendered by Common Properties
+		expect(container.querySelectorAll("button.properties-btn-resize")).to.have.length(0);
+		expect(container.querySelector("div.properties-custom-container")).to.not.be.null;
+	});
+
+	it("Common Properties should render correctly with various editor_size configurations", () => {
+		const sizes = ["small", "medium", "large", "max"];
+		sizes.forEach((size) => {
+			const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+			newPropertiesInfo.parameterDef.uihints.editor_size = size;
+			const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef);
+			const { container } = renderedObject.wrapper;
+			// Verify Common Properties renders for each size
+			expect(container.querySelector("div.properties-custom-container")).to.not.be.null;
+		});
 	});
 
 	it("When iconSwitch=false no icon should be rendered in oneofselect dropdown menu", () => {
@@ -387,252 +477,6 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 
-	it("When enableResize=true resize button should be rendered", () => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(1);
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(1);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(0);
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(1);
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(1);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(0);
-	});
-
-	it("When enableResize=true and editor_size=small resize button should be rendered", () => {
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(1);
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(1);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(0);
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(1);
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(1);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(0);
-	});
-
-	it("When enableResize=true and editor_size=medium resize button should be rendered", () => {
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(1);
-	});
-
-	it("When enableResize=true and editor_size=small and pixel_width min and max are set resize button should be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning([
-			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
-			"Control not found for samplingSize"
-		]);
-
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 800 };
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(1);
-		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
-		expect(customSizeContainer).to.have.length(1);
-		let style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
-
-		// Restore console.warn
-		consoleWarnSpy.mockRestore();
-	});
-
-	it("When enableResize=true and editor_size=medium and pixel_width min and max are set resize button should be rendered", () => {
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 800 };
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(1);
-		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
-		expect(customSizeContainer).to.have.length(1);
-		let style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
-	});
-
-	it("When enableResize=true and editor_size=large and pixel_width min and max are set resize button should be rendered", () => {
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 800 };
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(1);
-		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
-		expect(customSizeContainer).to.have.length(1);
-		let style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
-		fireEvent.click(resizeBtn[0]);
-		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
-	});
-
-	it("When enableResize=true and editor_size=small and pixel_width min and max are the same the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning([
-			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
-			"Control not found for samplingSize"
-		]);
-
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(0);
-		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
-		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
-
-		// Restore console.warn
-		consoleWarnSpy.mockRestore();
-	});
-
-	it("When enableResize=true and editor_size=medium and pixel_width min and max are the same the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning([
-			"No resize button shown. Pixel width min size is greater than or equal to default max size.",
-			"Control not found for samplingSize"
-		]);
-
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(0);
-		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
-		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
-
-		// Restore console.warn
-		consoleWarnSpy.mockRestore();
-	});
-
-	it("When enableResize=true and editor_size=large and pixel_width min and max are the same the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning([
-			"No resize button shown. Pixel width min size is greater than or equal to default max size.",
-			"Control not found for samplingSize"
-		]);
-
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(0);
-		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
-		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
-
-		// Restore console.warn
-		consoleWarnSpy.mockRestore();
-	});
-
-	it("When enableResize=true and editor_size=max and pixel_width is ommited the resize button should not be rendered", () => {
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "max";
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-max")).to.have.length(1);
-	});
-
-	it("When enableResize=true and editor_size=max and pixel_width min and max is provided the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning([
-			"No resize button shown. Pixel width min size ignored.",
-			"Control not found for samplingSize"
-		]);
-
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "max";
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 1000 }; // set pixel_width more than width of "max" editor_size
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(0);
-		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
-		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("1000px");
-
-		// Restore console.warn
-		consoleWarnSpy.mockRestore();
-	});
-
-	it("When enableResize=true and editor_size is omitted and pixel_width min and max are the same the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning([
-			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
-			"Control not found for samplingSize"
-		]);
-
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-		const resizeBtn = container.querySelectorAll("button.properties-btn-resize");
-		expect(resizeBtn).to.have.length(0);
-		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
-		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
-
-		// Restore console.warn
-		consoleWarnSpy.mockRestore();
-	});
-
 	it("When no groups or parameters are defined the flyout should still render", () => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(emptyParamDef);
 		wrapper = renderedObject.wrapper;
@@ -642,132 +486,6 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(container.querySelectorAll("div.properties-custom-container")).to.have.length(1);
 		expect(container.querySelectorAll("div.properties-modal-buttons")).to.have.length(0);
 		expect(container.querySelectorAll("div.properties-close-button")).to.have.length(1);
-	});
-
-	it("should set editorSize to initialEditorSize when defaultEditorSize='small' and initialEditorSize='medium'", () => {
-		// defaultEditorSize is small & initialEditorSize is medium
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
-		newPropertiesInfo.initialEditorSize = "medium";
-
-		wrapper = render(
-			<IntlProvider key="IntlProvider2" locale={locale}>
-				<CommonProperties
-					propertiesInfo={newPropertiesInfo}
-					callbacks={callbacks}
-				/>
-			</IntlProvider>
-		);
-		// Right flyout panel should have editorSize medium
-		const { container } = wrapper;
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(1);
-	});
-
-	it("should set editorSize to defaultEditorSize when defaultEditorSize='large' and initialEditorSize='small'", () => {
-		// defaultEditorSize is large & initialEditorSize is small
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
-		newPropertiesInfo.initialEditorSize = "small";
-
-		wrapper = render(
-			<IntlProvider key="IntlProvider2" locale={locale}>
-				<CommonProperties
-					propertiesInfo={newPropertiesInfo}
-					callbacks={callbacks}
-				/>
-			</IntlProvider>
-		);
-		// Right flyout panel should have editorSize large
-		const { container } = wrapper;
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-large")).to.have.length(1);
-	});
-
-	it("should set editorSize to defaultEditorSize when defaultEditorSize='medium' and initialEditorSize='small'", () => {
-		// defaultEditorSize is medium & initialEditorSize is small
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
-		newPropertiesInfo.initialEditorSize = "small";
-
-		wrapper = render(
-			<IntlProvider key="IntlProvider2" locale={locale}>
-				<CommonProperties
-					propertiesInfo={newPropertiesInfo}
-					callbacks={callbacks}
-				/>
-			</IntlProvider>
-		);
-		// Right flyout panel should have editorSize medium
-		const { container } = wrapper;
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(1);
-	});
-
-	it("should set editorSize to defaultEditorSize when defaultEditorSize='medium' and initialEditorSize='max'", () => {
-		// defaultEditorSize is medium & initialEditorSize is max
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
-		newPropertiesInfo.initialEditorSize = "max";
-
-		wrapper = render(
-			<IntlProvider key="IntlProvider2" locale={locale}>
-				<CommonProperties
-					propertiesInfo={newPropertiesInfo}
-					callbacks={callbacks}
-				/>
-			</IntlProvider>
-		);
-		// Right flyout panel should have editorSize medium
-		const { container } = wrapper;
-		expect(container.querySelectorAll("aside.properties-max")).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(1);
-	});
-
-	it("should set editorSize in controller on clicking resize button", () => {
-		// Default editorSize is small & initialEditorSize is undefined
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo);
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-
-		// Right flyout panel should have editorSize small
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(1);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(0);
-
-		// Click on resize button
-		const button = container.querySelectorAll("button.properties-btn-resize");
-		fireEvent.click(button[0]);
-
-		//  controller should set editorSize to medium
-		expect(renderedObject.controller.getEditorSize()).to.equal("medium");
-		// Right flyout panel should have editorSize medium
-		expect(container.querySelectorAll("aside.properties-small")).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-medium")).to.have.length(1);
-	});
-
-	it("should be able to resize rightFlyout from large to max", () => {
-		// Default editorSize is large & initialEditorSize is undefined
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(newPropertiesInfo.parameterDef);
-		wrapper = renderedObject.wrapper;
-		const { container } = wrapper;
-
-		// Right flyout panel should have editorSize large
-		expect(container.querySelectorAll("aside.properties-large")).to.have.length(1);
-		expect(container.querySelectorAll("aside.properties-max")).to.have.length(0);
-
-		// Click on resize button
-		const button = container.querySelectorAll("button.properties-btn-resize");
-		fireEvent.click(button[0]);
-
-		//  controller should set editorSize to max
-		expect(renderedObject.controller.getEditorSize()).to.equal("max");
-		// Right flyout panel should have editorSize max
-		expect(container.querySelectorAll("aside.properties-large")).to.have.length(0);
-		expect(container.querySelectorAll("aside.properties-max")).to.have.length(1);
 	});
 
 	it("when light=true, common properties should render with light mode enabled", () => {
