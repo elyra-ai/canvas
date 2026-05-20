@@ -31,8 +31,6 @@ import InformationFilled from "@carbon/icons-react/lib/InformationFilled";
 import Information from "@carbon/icons-react/lib/Information";
 import ChevronDown from "@carbon/icons-react/lib/ChevronDown";
 import ChevronUp from "@carbon/icons-react/lib/ChevronUp";
-import ChevronLeft from "@carbon/icons-react/lib/ChevronLeft";
-import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
 import AddAlt from "@carbon/icons-react/lib/AddAlt";
 import Settings from "@carbon/icons-react/lib/Settings";
 import Edit from "@carbon/icons-react/lib/Edit";
