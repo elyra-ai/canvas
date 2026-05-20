@@ -211,7 +211,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		const showViaContext =
 			this.props.widthConstraintsProvided &&
 			this.props.panelMaxWidth > 0 &&
-			(this.props.enableResizeBtnProvided !== false);
+			this.props.enableResizeBtnProvided === true;
 
 		if ((showViaConfig || showViaContext) && !this.state.isBeingDragging) {
 			const resizeIcon = this.getResizeButton();
