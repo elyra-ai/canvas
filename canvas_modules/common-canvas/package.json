@@ -16,8 +16,9 @@
       }
     },
     "./src/*": "./src/*",
-    "./locales/*/locales": "./locales/*/locales/index.js",
-    "./package.json": "./package.json"
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json",
+    "./locales/*/locales": "./locales/*/locales/index.js"
   },
   "homepage": "https://elyra-ai.github.io/canvas/",
   "repository": {
