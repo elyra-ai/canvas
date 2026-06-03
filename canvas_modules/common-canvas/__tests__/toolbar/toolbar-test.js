@@ -55,7 +55,7 @@ describe("Toolbar renders correctly", () => {
 				{ action: "zoomOut", label: "Copy", enable: false },
 				{ action: "zoomToFit", label: "Zoom To Fit", enable: false },
 				{ divider: true },
-				{ action: "notifications", label: "Notficiations", enable: true }
+				{ action: "notifications", label: "Notifications", enable: true }
 			]
 		};
 
@@ -76,7 +76,7 @@ describe("Toolbar renders correctly", () => {
 				{ action: "zoomOut", label: "Copy", enable: true },
 				{ action: "zoomToFit", label: "Zoom To Fit", enable: false },
 				{ divider: true },
-				{ action: "notifications", label: "Notficiations", enable: true }
+				{ action: "notifications", label: "Notifications", enable: true }
 			]
 		};
 		const toolbarActionHandler = sinon.spy();
@@ -95,7 +95,7 @@ describe("Toolbar renders correctly", () => {
 				{ action: "zoomOut", label: "Copy", enable: true },
 				{ action: "zoomToFit", label: "Zoom To Fit", enable: false },
 				{ divider: true },
-				{ action: "notifications", label: "Notficiations", enable: true }
+				{ action: "notifications", label: "Notifications", enable: true }
 			]
 		};
 		const toolbarActionHandler = sinon.spy();

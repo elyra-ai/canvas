@@ -34,10 +34,10 @@
 	@include carbon.theme(themes.$g10);
 }
 
-[data-carbon-theme="g90"] {
+[elyra-canvas-theme="g90"] {
 	@include carbon.theme(themes.$g90);
 }
 
-[data-carbon-theme="g10"] {
+[elyra-canvas-theme="g10"] {
 	@include carbon.theme(themes.$g10);
 }

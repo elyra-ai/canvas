@@ -2887,7 +2887,7 @@ class App extends React.Component {
 	}
 
 	handleThemeChange() {
-		document.documentElement.setAttribute("data-carbon-theme", this.state.lightTheme ? "g10" : "g90");
+		document.documentElement.setAttribute("elyra-canvas-theme", this.state.lightTheme ? "g10" : "g90");
 
 		this.setState((prevState) => ({
 			...prevState,

@@ -98,6 +98,11 @@ class PaletteContentListItem extends React.Component {
 		} else if (KeyboardUtils.previousNodeInCategory(evt) && this.props.previousNodeInCategory) {
 			this.props.previousNodeInCategory(evt);
 
+		} else if (KeyboardUtils.leaveNodeInCategory(evt) && this.props.focusOnCategoryButton) {
+			this.props.focusOnCategoryButton();
+			evt.stopPropagation();
+			evt.preventDefault();
+
 		} else if (KeyboardUtils.tabFocusOutOfPalette(evt) && this.props.tabOut) {
 			this.props.tabOut(evt);
 		}
@@ -436,7 +441,8 @@ PaletteContentListItem.propTypes = {
 	isPaletteWide: PropTypes.bool,
 	isShowRanking: PropTypes.bool,
 	createAutoNode: PropTypes.func,
-	tabOut: PropTypes.func
+	tabOut: PropTypes.func,
+	focusOnCategoryButton: PropTypes.func
 };
 
 export default PaletteContentListItem;

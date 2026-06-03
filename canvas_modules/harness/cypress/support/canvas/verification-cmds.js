@@ -988,6 +988,16 @@ Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCo
 
 });
 
+Cypress.Commands.add("verifyDataLinkBetweenPorts", (srcNodeName, srcPortId, trgNodeName, trgPortId) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
+				.then((links) => {
+					expect(links.length).to.equal(1);
+				});
+		});
+});
+
 Cypress.Commands.add("verifyLinkNodesActionOccurred", (srcNodeName, trgNodeName) => {
 	// verify that an event for a new link is in the external object model event log
 	cy.getNodeIdForLabel(srcNodeName)

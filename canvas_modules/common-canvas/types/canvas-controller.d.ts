@@ -2186,6 +2186,11 @@ export declare class CanvasController {
      */
 
     /**
+     * Toggles the palette between open and closed
+     */
+    togglePalette(): void;
+
+    /**
      * Opens the palette
      */
     openPalette(): void;
@@ -2201,6 +2206,70 @@ export declare class CanvasController {
      * indicates that the wide palette is being displayed.
      */
     isPaletteOpen(): boolean;
+
+    /**
+     * Left-flyout methods
+     * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#left-flyout-methods
+     */
+
+    /**
+     * @returns a boolean to indicate if the left-flyout is open or not
+     */
+    isLeftFlyoutOpen(): boolean;
+
+    /**
+     * Right-flyout methods
+     * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#right-flyout-methods
+     */
+
+    /**
+     * @returns a boolean to indicate if the right flyout is open or not
+     */
+    isRightFlyoutOpen(): boolean;
+
+    /**
+     * Sets the width for the right flyout
+     */
+    setRightFlyoutWidth(
+      width: number
+    ): void;
+
+    /**
+     * Sets the minimum width for the right flyout
+     */
+    setRightFlyoutMinWidth(
+      width: number
+    ): void;
+
+    /**
+     * Top panel methods
+     * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#top-panel-methods
+     */
+
+    /**
+     * @returns a boolean to indicate if the top panel is open or not
+     */
+    isTopPanelOpen(): boolean;
+
+    /**
+     * ## Bottom panel methods
+     * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#bottom-panel-methods
+     */
+
+    /**
+     * @returns a boolean to indicate if the bottom panel is open or not
+     */
+    isBottomPanelOpen(): boolean;
+
+    /**
+     * Sets the height of the bottom panel in pixels. This can be called
+     * immediately after the CanvasController has been created, if the bottom
+     * panel should be displayed at a specific height when it first opens.
+     * @param height - height in pixels
+     */
+    setBottomPanelHeight(
+      height: number
+    ): void;
 
     /**
      * ## Context menu methods
@@ -2248,59 +2317,6 @@ export declare class CanvasController {
      */
     toggleNotificationPanel(): void;
 
-    /**
-     * Right flyout methods
-     * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#right-flyout-methods
-     */
-
-    /**
-     * Sets the width for the right flyout
-     */
-    setRightFlyoutWidth(
-      width: number
-    ): void;
-
-    /**
-     * Sets the minimum width for the right flyout
-     */
-    setRightFlyoutMinWidth(
-      width: number
-    ): void;
-
-    /**
-     * @returns a boolean to indicate if the right flyout is open or not
-     */
-    isRightFlyoutOpen(): boolean;
-
-    /**
-     * Top panel methods
-     * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#top-panel-methods
-     */
-
-    /**
-     * @returns a boolean to indicate if the top panel is open or not
-     */
-    isTopPanelOpen(): boolean;
-
-    /**
-     * ## Bottom panel methods
-     * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#bottom-panel-methods
-     */
-
-    /**
-     * @returns a boolean to indicate if the bottom panel is open or not
-     */
-    isBottomPanelOpen(): boolean;
-
-    /**
-     * Sets the height of the bottom panel in pixels. This can be called
-     * immediately after the CanvasController has been created, if the bottom
-     * panel should be displayed at a specific height when it first opens.
-     * @param height - height in pixels
-     */
-    setBottomPanelHeight(
-      height: number
-    ): void;
 
     /**
      * ## Canvas/pipeline navigation methods

@@ -34,6 +34,11 @@ class PaletteFlyoutContentCategory extends React.Component {
 		this.onKeyDownCategory = this.onKeyDownCategory.bind(this);
 		this.onHeadingClick = this.onHeadingClick.bind(this);
 		this.getTitleObj = this.getTitleObj.bind(this);
+		this.focusOnCategoryButton = this.focusOnCategoryButton.bind(this);
+
+		// Create refs in constructor so they persist across renders
+		this.catRef = React.createRef();
+		this.pclRef = React.createRef();
 	}
 
 	onMouseOver(evt) {
@@ -56,6 +61,11 @@ class PaletteFlyoutContentCategory extends React.Component {
 		} else if (this.props.category.is_open &&
 					KeyboardUtils.fromCategoryToFirstNode(evt)) {
 			this.pclRef.current.setFirstNode();
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+
+		} else if (this.props.category.is_open &&
+					KeyboardUtils.closeCategory(evt)) {
+			this.props.canvasController.closePaletteCategory(this.props.category.id);
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 
 		} else if (KeyboardUtils.tabFocusOutOfPalette(evt) &&
@@ -132,7 +142,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 	getTitleObj() {
 		const itemImage = this.getItemImage();
 		const itemText = this.getItemText();
-		this.catRef = React.createRef();
 
 		return (
 			<div className="palette-flyout-category"
@@ -216,7 +225,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 	getContent() {
 		if (this.props.category.is_open) {
 			const nodeTypeInfos = this.props.category.node_types.map((nt) => ({ nodeType: nt, category: this.props.category }));
-			this.pclRef = React.createRef();
 			return (
 				<PaletteContentList
 					ref={this.pclRef}
@@ -228,10 +236,19 @@ class PaletteFlyoutContentCategory extends React.Component {
 					isPaletteWide={this.props.isPaletteWide}
 					isEditingEnabled={this.props.isEditingEnabled}
 					createAutoNode={this.props.createAutoNode}
+					focusOnCategoryButton={this.focusOnCategoryButton}
 				/>
 			);
 		}
 		return null;
+	}
+
+	// Focuses on the accordion button for this category
+	focusOnCategoryButton() {
+		const accordionButton = this.catRef.current?.closest(".cds--accordion__item")?.querySelector("button.cds--accordion__heading");
+		if (accordionButton) {
+			accordionButton.focus();
+		}
 	}
 
 	displayTip() {
