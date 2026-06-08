@@ -76,7 +76,8 @@ Cypress.Commands.add("clickValidateLinkInSubPanel", () => {
 });
 
 Cypress.Commands.add("getValidateIconInSubPanel", () => {
-	cy.getValidateButtonInSubPanel()
+	cy.get(".properties-expression-builder")
+		.find(".properties-expression-validate")
 		.find(".validateIcon");
 });
 
