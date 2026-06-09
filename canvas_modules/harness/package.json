@@ -40,7 +40,7 @@
     "@carbon/charts": "1.15.3",
     "@carbon/charts-react": "1.15.3",
     "@carbon/ibm-products": "^2.85.0",
-    "@carbon/react": "1.94.1",
+    "@carbon/react": "1.109.0",
     "@elyra/canvas": "file:../common-canvas",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.11",
     "ajv": "8.18.0",
