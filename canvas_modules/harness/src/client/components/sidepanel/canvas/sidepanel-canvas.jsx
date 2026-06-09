@@ -459,8 +459,8 @@ export default class SidePanelForms extends React.Component {
 		var canvasInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-canvas-input">
 			<Select
 				id="harness-sidepanel-canvas-dropdown"
-				labelText="Canvas Diagram"
-				aria-label="Canvas Diagram"
+				labelText="Pipeline Flow file"
+				aria-label="Pipeline Flow file"
 				onChange={this.onCanvasDropdownSelect.bind(this)}
 				disabled={this.state.disabledControls}
 				value={this.props.canvasConfig.selectedCanvasDropdownFile}
@@ -473,8 +473,8 @@ export default class SidePanelForms extends React.Component {
 		var paletteInput = (<div className="harness-sidepanel-children" id="harness-sidepanel-palette-input">
 			<Select
 				id="harness-sidepanel-palette-dropdown"
-				labelText="Canvas Palette"
-				aria-label="Canvas Palette"
+				labelText="Palette file"
+				aria-label="Palette file"
 				onChange={this.onPaletteDropdownSelect.bind(this)}
 				value={this.props.canvasConfig.selectedPaletteDropdownFile}
 			>
@@ -535,8 +535,8 @@ export default class SidePanelForms extends React.Component {
 			<Select
 				id="harness-sidepanel-canvas2-dropdown"
 				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
-				labelText="Canvas Diagram"
-				aria-label="Canvas Diagram"
+				labelText="Pipeline Flow file"
+				aria-label="Pipeline Flow file"
 				onChange={this.onCanvasDropdownSelect2.bind(this)}
 				value={this.props.canvasConfig.selectedCanvasDropdownFile2}
 			>
@@ -549,8 +549,8 @@ export default class SidePanelForms extends React.Component {
 			<Select
 				id="harness-sidepanel-palette2-dropdown"
 				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
-				labelText="Canvas Palette"
-				aria-label="Canvas Palette"
+				labelText="Palette file"
+				aria-label="Palette file"
 				onChange={this.onPaletteDropdownSelect2.bind(this)}
 				value={this.props.canvasConfig.selectedPaletteDropdownFile2}
 			>
@@ -1778,95 +1778,145 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
-		var configureNotificationCenter = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center">
-			<div className="harness-sidepanel-headers">Configure Notification Center</div>
+		var enableNotificationConfigToggle = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="enableNotificationConfig"
+				labelText="Enable Notification Config"
+				toggled={this.props.getStateValue("enableNotificationConfig")}
+				onToggle={(val) => this.setStateValue(val, "enableNotificationConfig")}
+			/>
+		</div>);
+
+		var notificationTitle = (<div className="harness-sidepanel-children">
 			<div className="harness-notification-title">
 				<TextInput
 					id="notificationHeader" // Set ID to corresponding field in App.js state
+					disabled={!this.props.getStateValue("enableNotificationConfig")}
 					labelText="Title (will show default if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig").notificationHeader}
 				/>
 			</div>
+		</div>);
+
+		var notificationSubtitle = (<div className="harness-sidepanel-children">
 			<div className="harness-notification-subtitle">
 				<TextInput
 					id="notificationSubtitle" // Set ID to corresponding field in App.js state
+					disabled={!this.props.getStateValue("enableNotificationConfig")}
 					labelText="Subtitle (will hide if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig").notificationSubtitle}
 				/>
 			</div>
+		</div>);
+
+		var notificationEmptyMessage = (<div className="harness-sidepanel-children">
 			<div className="harness-notification-empty-message">
 				<TextInput
 					id="emptyMessage" // Set ID to corresponding field in App.js state
+					disabled={!this.props.getStateValue("enableNotificationConfig")}
 					labelText="Empty Message"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig").emptyMessage}
 				/>
 			</div>
+		</div>);
+
+		var notificationClearAll = (<div className="harness-sidepanel-children">
 			<div className="harness-notification-clear-all">
 				<TextInput
 					id="clearAllMessage" // Set ID to corresponding field in App.js state
+					disabled={!this.props.getStateValue("enableNotificationConfig")}
 					labelText="Clear All button (will hide if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig").clearAllMessage}
 				/>
 			</div>
+		</div>);
+
+		var notificationKeepOpen = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="keepOpen" // Set ID to corresponding field in App.js state
+				disabled={!this.props.getStateValue("enableNotificationConfig")}
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig").keepOpen}
 				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "keepOpen", val)}
 			/>
+		</div>);
+
+		var notificationSecondaryButtonDisabled = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="secondaryButtonDisabled" // Set ID to corresponding field in App.js state
+				disabled={!this.props.getStateValue("enableNotificationConfig")}
 				labelText="Disable the notification center secondary button"
 				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
 				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "secondaryButtonDisabled", val)}
 			/>
 		</div>);
 
-		var configureNotificationCenter2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center2">
-			<div className="harness-sidepanel-headers">Configure Notification Center 2</div>
+		var enableNotificationConfigToggle2 = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="enableNotificationConfig2"
+				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+				labelText="Enable Notification Config"
+				toggled={this.props.getStateValue("enableNotificationConfig2")}
+				onToggle={(val) => this.setStateValue(val, "enableNotificationConfig2")}
+			/>
+		</div>);
+
+		var notificationTitle2 = (<div className="harness-sidepanel-children">
 			<div className="harness-notification-title">
 				<TextInput
 					id="notificationHeader2" // Set ID to corresponding field in App.js state
-					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
 					labelText="Title (will show default if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig2").notificationHeader}
 				/>
 			</div>
+		</div>);
+
+		var notificationSubtitle2 = (<div className="harness-sidepanel-children">
 			<div className="harness-notification-subtitle">
 				<TextInput
 					id="notificationSubtitle2"
-					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
 					labelText="Subtitle (will hide if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig2").notificationSubtitle}
 				/>
 			</div>
+		</div>);
+
+		var notificationEmptyMessage2 = (<div className="harness-sidepanel-children">
 			<div className="harness-notification-empty-message">
 				<TextInput
 					id="emptyMessage2"
-					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
 					labelText="Empty Message"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig2").emptyMessage}
 				/>
 			</div>
+		</div>);
+
+		var notificationClearAll2 = (<div className="harness-sidepanel-children">
 			<div className="harness-notification-clear-all">
 				<TextInput
 					id="clearAllMessage2"
-					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
 					labelText="Clear All button (will hide if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig2").clearAllMessage}
 				/>
 			</div>
+		</div>);
+
+		var notificationKeepOpen2 = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="keepOpen2"
-				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
+				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig2").keepOpen}
 				onToggle={(val) => this.notificationConfigToggle("notificationConfig2", "keepOpen", val)}
@@ -2060,7 +2110,14 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					<div className="harness-side-panel-header">Notifications</div>
 					{divider}
-					{configureNotificationCenter}
+					{enableNotificationConfigToggle}
+					{divider}
+					{notificationTitle}
+					{notificationSubtitle}
+					{notificationEmptyMessage}
+					{notificationClearAll}
+					{notificationKeepOpen}
+					{notificationSecondaryButtonDisabled}
 					{divider}
 					<div className="harness-side-panel-header">Extra Canvas</div>
 					{divider}
@@ -2068,7 +2125,13 @@ export default class SidePanelForms extends React.Component {
 					{canvasInput2}
 					{paletteInput2}
 					{divider}
-					{configureNotificationCenter2}
+					{enableNotificationConfigToggle2}
+					{divider}
+					{notificationTitle2}
+					{notificationSubtitle2}
+					{notificationEmptyMessage2}
+					{notificationClearAll2}
+					{notificationKeepOpen2}
 				</div>
 			</div>
 		);

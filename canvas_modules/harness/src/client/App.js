@@ -431,7 +431,9 @@ class App extends React.Component {
 				emptyMessage: "You don't have any notifications right now.",
 				clearAllMessage: "Clear all",
 				keepOpen: true
-			}
+			},
+			enableNotificationConfig: true,
+			enableNotificationConfig2: true
 		};
 
 		// There are several functions and variables with the identifiers name and name2. This is needed
@@ -3117,7 +3119,7 @@ class App extends React.Component {
 				tipHandler={this.tipHandler}
 				actionLabelHandler={this.actionLabelHandler}
 				toolbarConfig={toolbarConfig}
-				notificationConfig={this.state.notificationConfig}
+				notificationConfig={this.state.enableNotificationConfig ? this.state.notificationConfig : null}
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
 				leftFlyoutContent={leftFlyoutContent}
@@ -3299,7 +3301,7 @@ class App extends React.Component {
 						clickActionHandler={this.extraCanvasClickActionHandler}
 						toolbarConfig={toolbarConfig}
 						canvasController={this.canvasController2}
-						notificationConfig={this.state.notificationConfig2}
+						notificationConfig={this.state.enableNotificationConfig2 ? this.state.notificationConfig2 : null}
 						rightFlyoutContent={rightFlyoutContent2}
 						showRightFlyout={showRightFlyoutProperties2}
 						selectionChangeHandler={this.selectionChangeHandler2}
