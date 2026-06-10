@@ -1780,10 +1780,10 @@ export default class SidePanelForms extends React.Component {
 
 		var enableNotificationConfigToggle = (<div className="harness-sidepanel-children">
 			<Toggle
-				id="enableNotificationConfig"
+				id="selectedNotificationConfig"
 				labelText="Enable Notification Config"
-				toggled={this.props.getStateValue("enableNotificationConfig")}
-				onToggle={(val) => this.setStateValue(val, "enableNotificationConfig")}
+				toggled={this.props.getStateValue("selectedNotificationConfig")}
+				onToggle={(val) => this.setStateValue(val, "selectedNotificationConfig")}
 			/>
 		</div>);
 
@@ -1791,7 +1791,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-notification-title">
 				<TextInput
 					id="notificationHeader" // Set ID to corresponding field in App.js state
-					disabled={!this.props.getStateValue("enableNotificationConfig")}
+					disabled={!this.props.getStateValue("selectedNotificationConfig")}
 					labelText="Title (will show default if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig").notificationHeader}
@@ -1803,7 +1803,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-notification-subtitle">
 				<TextInput
 					id="notificationSubtitle" // Set ID to corresponding field in App.js state
-					disabled={!this.props.getStateValue("enableNotificationConfig")}
+					disabled={!this.props.getStateValue("selectedNotificationConfig")}
 					labelText="Subtitle (will hide if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig").notificationSubtitle}
@@ -1815,7 +1815,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-notification-empty-message">
 				<TextInput
 					id="emptyMessage" // Set ID to corresponding field in App.js state
-					disabled={!this.props.getStateValue("enableNotificationConfig")}
+					disabled={!this.props.getStateValue("selectedNotificationConfig")}
 					labelText="Empty Message"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig").emptyMessage}
@@ -1827,7 +1827,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-notification-clear-all">
 				<TextInput
 					id="clearAllMessage" // Set ID to corresponding field in App.js state
-					disabled={!this.props.getStateValue("enableNotificationConfig")}
+					disabled={!this.props.getStateValue("selectedNotificationConfig")}
 					labelText="Clear All button (will hide if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig").clearAllMessage}
@@ -1838,7 +1838,7 @@ export default class SidePanelForms extends React.Component {
 		var notificationKeepOpen = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="keepOpen" // Set ID to corresponding field in App.js state
-				disabled={!this.props.getStateValue("enableNotificationConfig")}
+				disabled={!this.props.getStateValue("selectedNotificationConfig")}
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig").keepOpen}
 				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "keepOpen", val)}
@@ -1848,7 +1848,7 @@ export default class SidePanelForms extends React.Component {
 		var notificationSecondaryButtonDisabled = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="secondaryButtonDisabled" // Set ID to corresponding field in App.js state
-				disabled={!this.props.getStateValue("enableNotificationConfig")}
+				disabled={!this.props.getStateValue("selectedNotificationConfig")}
 				labelText="Disable the notification center secondary button"
 				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
 				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "secondaryButtonDisabled", val)}
@@ -1857,11 +1857,11 @@ export default class SidePanelForms extends React.Component {
 
 		var enableNotificationConfigToggle2 = (<div className="harness-sidepanel-children">
 			<Toggle
-				id="enableNotificationConfig2"
+				id="selectedNotificationConfig2"
 				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
 				labelText="Enable Notification Config"
-				toggled={this.props.getStateValue("enableNotificationConfig2")}
-				onToggle={(val) => this.setStateValue(val, "enableNotificationConfig2")}
+				toggled={this.props.getStateValue("selectedNotificationConfig2")}
+				onToggle={(val) => this.setStateValue(val, "selectedNotificationConfig2")}
 			/>
 		</div>);
 
@@ -1869,7 +1869,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-notification-title">
 				<TextInput
 					id="notificationHeader2" // Set ID to corresponding field in App.js state
-					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("selectedNotificationConfig2")}
 					labelText="Title (will show default if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig2").notificationHeader}
@@ -1881,7 +1881,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-notification-subtitle">
 				<TextInput
 					id="notificationSubtitle2"
-					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("selectedNotificationConfig2")}
 					labelText="Subtitle (will hide if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig2").notificationSubtitle}
@@ -1893,7 +1893,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-notification-empty-message">
 				<TextInput
 					id="emptyMessage2"
-					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("selectedNotificationConfig2")}
 					labelText="Empty Message"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig2").emptyMessage}
@@ -1905,7 +1905,7 @@ export default class SidePanelForms extends React.Component {
 			<div className="harness-notification-clear-all">
 				<TextInput
 					id="clearAllMessage2"
-					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
+					disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("selectedNotificationConfig2")}
 					labelText="Clear All button (will hide if empty)"
 					onChange={this.notificationConfigChange}
 					value={this.props.getStateValue("notificationConfig2").clearAllMessage}
@@ -1916,7 +1916,7 @@ export default class SidePanelForms extends React.Component {
 		var notificationKeepOpen2 = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="keepOpen2"
-				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("enableNotificationConfig2")}
+				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed") || !this.props.getStateValue("selectedNotificationConfig2")}
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig2").keepOpen}
 				onToggle={(val) => this.notificationConfigToggle("notificationConfig2", "keepOpen", val)}
