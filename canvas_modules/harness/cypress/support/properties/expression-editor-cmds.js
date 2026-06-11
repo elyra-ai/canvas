@@ -72,7 +72,8 @@ Cypress.Commands.add("getValidateButtonInSubPanel", () => {
 Cypress.Commands.add("clickValidateLinkInSubPanel", () => {
 	cy.getValidateButtonInSubPanel()
 		.find(".validateLink")
-		.click();
+		.click() // Workaround added for carbon/react upgrade, first focus on button
+		.click(); // then click it
 });
 
 Cypress.Commands.add("getValidateIconInSubPanel", () => {
