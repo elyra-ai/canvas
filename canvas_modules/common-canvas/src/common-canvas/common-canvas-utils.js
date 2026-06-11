@@ -1072,9 +1072,8 @@ export default class CanvasUtils {
 
 	// Returns a source node for auto completion or null if no source node can be
 	// detected. The source node is either:
-	// 1. The selected node, if only *one* node is currently selected or
-	// 2. The most recently added node, provided it has one or more output ports or
-	// 3. The most-recent-but-one added node, provided it has one or more output ports
+	// 1. The selected node, if only *one* node is currently selected and is viable, or
+	// 2. The most recently added viable node (searching from last to first)
 	static getAutoSourceNode(autoLinkOnlyFromSelNodes, nodes, selectedNodes, links) {
 		var sourceNode = null;
 
@@ -1083,15 +1082,10 @@ export default class CanvasUtils {
 			sourceNode = selectedNodes[0];
 
 		} else if (!autoLinkOnlyFromSelNodes) {
-			if (nodes.length > 0) {
-				var lastNodeAdded = nodes[nodes.length - 1];
-				if (lastNodeAdded.outputs) {
-					sourceNode = lastNodeAdded;
-				} else if (nodes.length > 1) {
-					var lastButOneNodeAdded = nodes[nodes.length - 2];
-					if (lastButOneNodeAdded.outputs) {
-						sourceNode = lastButOneNodeAdded;
-					}
+			for (let i = nodes.length - 1; i >= 0; i--) {
+				if (this.isViableAutoSourceNode(nodes[i], links)) {
+					sourceNode = nodes[i];
+					break;
 				}
 			}
 		}

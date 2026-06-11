@@ -595,6 +595,26 @@ export default class CanvasController {
 		return this.objectModel.getSelectedNodes();
 	}
 
+	// Returns the auto source node for automatic linking based on current canvas state.
+	// This is a wrapper for CanvasUtils.getAutoSourceNode() that provides the necessary
+	// parameters from the canvas controller's current state.
+	// Parameters:
+	//   autoLinkOnlyFromSelNodes - If true, only selected nodes are considered as source
+	//   pipelineId - The ID of the pipeline (optional, defaults to primary pipeline)
+	// Returns:
+	//   The source node object for auto-linking, or null if no suitable source is found
+	getAutoSourceNode(autoLinkOnlyFromSelNodes, pipelineId) {
+		const nodes = this.getNodes(pipelineId);
+		const allSelectedNodes = this.getSelectedNodes();
+		const links = this.getLinks(pipelineId);
+
+		// Filter selected nodes to only include those from the specified pipeline
+		// (or current pipeline if pipelineId is not specified)
+		const selectedNodes = allSelectedNodes.filter((node) => nodes.some((n) => n.id === node.id));
+
+		return CanvasUtils.getAutoSourceNode(autoLinkOnlyFromSelNodes, nodes, selectedNodes, links);
+	}
+
 	// Returns the currently selected Comments.
 	getSelectedComments() {
 		return this.objectModel.getSelectedComments();
@@ -802,7 +822,7 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodes();
 	}
 
-	// Returns a new node created from the data parameter in the pipeline
+	// Returns a new node, created from the data parameter, in the pipeline
 	// identified by the pipelineId.
 	// The data parameter must contain:
 	// nodeTemplate -  a node template from the palette. The nodeTemplate
@@ -812,6 +832,16 @@ export default class CanvasController {
 	// offsetY - the y coordinate of the new node
 	createNode(data, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).createNode(data);
+	}
+
+	// Returns an automatically positioned node, created from the data parameter,
+	// in the pipeline identified by the pipelineId.
+	// The data parameter must contain:
+	// nodeTemplate -  a node template from the palette. The nodeTemplate
+	//                 can be retrieved from the palette using with Canvas
+	//                 Controller methods: getPaletteNode or getPaletteNodeById.
+	createNodeAutoPosition(data, srcNode, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).createNodeAutoPosition(data, srcNode);
 	}
 
 	// Adds a new node into the pipeline specified by the pipelineId.
