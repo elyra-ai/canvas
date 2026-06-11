@@ -983,14 +983,6 @@ export declare class CanvasController {
     ): CanvasNode;
 
     /**
-     * Adds a new node into the pipeline specified by the pipelineId.
-     * @param A node that complied withe canvas info format
-     * @param pipelineId - Optional. The ID of the pipeline of the node.
-     *                     Defaults to the currently displayed pipeline.
-     */
-    addNode(node: CanvasNode, pipelineId?: PipelineId): void;
-
-    /**
      * Returns an automatically positioned node, created from the data parameter,
      * in the pipeline identified by the pipelineId.
      * @param data - An object containing
@@ -1011,6 +1003,14 @@ export declare class CanvasController {
       srcNode?: CanvasNode | null,
       pipelineId?: PipelineId
     ): CanvasNode;
+
+    /**
+     * Adds a new node into the pipeline specified by the pipelineId.
+     * @param A node that complied withe canvas info format
+     * @param pipelineId - Optional. The ID of the pipeline of the node.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    addNode(node: CanvasNode, pipelineId?: PipelineId): void;
 
     /**
      * Creates a node using the data parameter provided in the pipeline specified
