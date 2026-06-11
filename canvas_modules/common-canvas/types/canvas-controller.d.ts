@@ -972,6 +972,7 @@ export declare class CanvasController {
      *
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
+     * @returns The newly created node
      */
     createNode(
       data: {
