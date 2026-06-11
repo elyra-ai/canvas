@@ -52,6 +52,11 @@ class ToolbarSubMenu extends React.Component {
 	}
 
 	componentDidUpdate() {
+		if (this.props.containingDivId && this.props.subMenuActions?.length > 0) {
+			adjustSubAreaPosition(this.areaRef,
+				this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
+		}
+
 		if (this.state.focusAction !== "subarea") {
 			const actionObj = this.props.subMenuActions?.find((sma) => sma?.action === this.state.focusAction);
 			if (!actionObj?.enable) {
