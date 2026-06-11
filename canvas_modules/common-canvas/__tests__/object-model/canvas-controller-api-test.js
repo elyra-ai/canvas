@@ -952,4 +952,121 @@ describe("Test multiple ports operations with cardinality enforcement", () => {
 		links = canvasController.getLinks();
 		expect(links).to.have.length(18);
 	});
+
+	it("should get auto source node using: getAutoSourceNode", () => {
+		deepFreeze(multiPortsCanvas2);
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(multiPortsCanvas2);
+
+		const primaryPipelineId = canvasController.getPrimaryPipelineId();
+
+		// Select a node with outputs to test auto source node detection
+		const nodes = canvasController.getNodes();
+		const varFileNode = nodes.find((n) => n.label === "Var. File");
+
+		// Verify the node has outputs
+		expect(varFileNode.outputs).to.not.be.undefined;
+		expect(varFileNode.outputs.length).to.be.greaterThan(0);
+
+		canvasController.setSelections([varFileNode.id], primaryPipelineId);
+
+		// Test with autoLinkOnlyFromSelNodes = true (should return selected node)
+		const autoSourceNode1 = canvasController.getAutoSourceNode(true);
+		expect(autoSourceNode1).to.not.be.undefined;
+		expect(autoSourceNode1.id).to.equal(varFileNode.id);
+
+		// Test with autoLinkOnlyFromSelNodes = false (should return any valid source node)
+		const autoSourceNode2 = canvasController.getAutoSourceNode(false);
+		expect(autoSourceNode2).to.not.be.undefined;
+
+		// Test with no selected nodes and autoLinkOnlyFromSelNodes = true (should return null)
+		canvasController.setSelections([], primaryPipelineId);
+		const autoSourceNode3 = canvasController.getAutoSourceNode(true);
+		expect(autoSourceNode3).to.be.null;
+
+		// Test with autoLinkOnlyFromSelNodes = false and no selection (should return last added node with outputs)
+		const autoSourceNode4 = canvasController.getAutoSourceNode(false);
+		expect(autoSourceNode4).to.not.be.undefined;
+
+		// Test with specific pipeline ID
+		canvasController.setSelections([varFileNode.id], primaryPipelineId);
+		const autoSourceNode5 = canvasController.getAutoSourceNode(true, primaryPipelineId);
+		expect(autoSourceNode5).to.not.be.undefined;
+		expect(autoSourceNode5.id).to.equal(varFileNode.id);
+	});
+
+	it("should create auto-positioned node using: createNodeAutoPosition", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlowPalette(commonPalette);
+
+		const primaryPipelineId = canvasController.getPrimaryPipelineId();
+
+		// Get a node template from the palette (use an execution node with inputs, not a binding node)
+		const nodeTemplate = canvasController.getPaletteNode("com.ibm.commonicons.operations.aggregate");
+		expect(nodeTemplate).to.not.be.undefined;
+
+		// Test 1: Create first node without source node (should position at initial margin)
+		const newNode1 = canvasController.createNodeAutoPosition(
+			{ nodeTemplate: nodeTemplate },
+			null,
+			primaryPipelineId
+		);
+		expect(newNode1).to.not.be.undefined;
+		expect(newNode1.id).to.not.be.undefined;
+		expect(newNode1.x_pos).to.be.greaterThan(0);
+		expect(newNode1.y_pos).to.be.greaterThan(0);
+
+		// Add the node to the pipeline
+		canvasController.addNode(newNode1, primaryPipelineId);
+		expect(canvasController.getNodes().length).to.equal(1);
+
+		// Test 2: Create second node with first node as source (should position relative to source)
+		const newNode2 = canvasController.createNodeAutoPosition(
+			{ nodeTemplate: nodeTemplate },
+			newNode1,
+			primaryPipelineId
+		);
+		expect(newNode2).to.not.be.undefined;
+		expect(newNode2.id).to.not.be.undefined;
+
+		// Add the node to the pipeline
+		canvasController.addNode(newNode2, primaryPipelineId);
+		expect(canvasController.getNodes().length).to.equal(2);
+
+		// Verify node is positioned to the right of source node
+		expect(newNode2.x_pos).to.be.greaterThan(newNode1.x_pos);
+		expect(newNode2.y_pos).to.equal(newNode1.y_pos);
+
+		// Test 3: Create third node with second node as source
+		const newNode3 = canvasController.createNodeAutoPosition(
+			{ nodeTemplate: nodeTemplate },
+			newNode2,
+			primaryPipelineId
+		);
+		expect(newNode3).to.not.be.undefined;
+		expect(newNode3.id).to.not.be.undefined;
+
+		// Add the node to the pipeline
+		canvasController.addNode(newNode3, primaryPipelineId);
+		expect(canvasController.getNodes().length).to.equal(3);
+
+		// Verify node is positioned to the right of second node
+		expect(newNode3.x_pos).to.be.greaterThan(newNode2.x_pos);
+
+		// Test 4: Verify nodes don't overlap
+		const allNodes = canvasController.getNodes();
+		for (let i = 0; i < allNodes.length; i++) {
+			for (let j = i + 1; j < allNodes.length; j++) {
+				const node1 = allNodes[i];
+				const node2 = allNodes[j];
+				const overlapping = (
+					node1.x_pos < node2.x_pos + node2.width &&
+					node1.x_pos + node1.width > node2.x_pos &&
+					node1.y_pos < node2.y_pos + node2.height &&
+					node1.y_pos + node1.height > node2.y_pos
+				);
+				expect(overlapping).to.be.false;
+			}
+		}
+	});
 });
