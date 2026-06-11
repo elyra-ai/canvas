@@ -2476,10 +2476,10 @@ export default class CanvasController {
 		}
 	}
 
-	// Automatically adds a node (nodeTemplate) to the canvas. The nodeTemplate
-	// must be in the internal format. If addLink is true a link will be created
-	// between the new node and the node it is positioned next to.
-	createAutoNodeAction(nodeTemplate, addLink = true) {
+	// Automatically adds a node (nodeTemplate) to the canvas by adding the command to the
+	// command stack. The nodeTemplate must be in the internal format. If addLink is true
+	// a link will be created between the new node and the node it is positioned next to.
+	createAutoNodeCommand(nodeTemplate, addLink = true) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
 		var data = {

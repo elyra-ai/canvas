@@ -38,15 +38,15 @@ class Palette extends React.Component {
 	// * the node is single-clicked with the allowClickToAdd property set to true
 	// * the user performs a keyboard shortcut to activate the node
 	// If the caller provided us with a createAutoNode function we call it but
-	// otherwise we call the canvasController's createAutoNodeAction function.
+	// otherwise we call the canvasController's createAutoNodeCommand function.
 	createAutoNode(nodeType, addLink) {
 		const nodeTemplate = this.props.canvasController.convertNodeTemplate(nodeType);
 
 		if (this.props.createAutoNode) {
 			this.props.createAutoNode(nodeTemplate, addLink);
 
-		} else if (this.props.canvasController.createAutoNodeAction) {
-			this.props.canvasController.createAutoNodeAction(nodeTemplate, addLink);
+		} else if (this.props.canvasController.createAutoNodeCommand) {
+			this.props.canvasController.createAutoNodeCommand(nodeTemplate, addLink);
 		}
 	}
 
