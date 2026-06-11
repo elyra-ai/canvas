@@ -42,7 +42,7 @@ export default class CreateAutoNodeAction extends Action {
 			this.objectModel.getSelectedNodes(),
 			this.apiPipeline.getLinks()
 		);
-		this.newNode = this.apiPipeline.createNodeAutoPosition(data, this.srcNode);
+		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
 		this.newLink = null;
 		if (this.data.addLink) {
 			const availablePorts = CanvasUtils.findAvailablePortsForAutoLink(this.srcNode, this.newNode, this.apiPipeline.getLinks());

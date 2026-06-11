@@ -972,6 +972,7 @@ export declare class CanvasController {
      *
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
+     * @returns The newly created node
      */
     createNode(
       data: {
@@ -983,14 +984,6 @@ export declare class CanvasController {
     ): CanvasNode;
 
     /**
-     * Adds a new node into the pipeline specified by the pipelineId.
-     * @param A node that complied withe canvas info format
-     * @param pipelineId - Optional. The ID of the pipeline of the node.
-     *                     Defaults to the currently displayed pipeline.
-     */
-    addNode(node: CanvasNode, pipelineId?: PipelineId): void;
-
-    /**
      * Returns an automatically positioned node, created from the data parameter,
      * in the pipeline identified by the pipelineId.
      * @param data - An object containing
@@ -999,19 +992,26 @@ export declare class CanvasController {
      *                 can be retrieved from the palette using with Canvas
      *                 Controller methods: getPaletteNode or getPaletteNodeById.
      *
-     * @param srcNode - The source node to link from. If provided, the new node will be
-     *                  automatically linked to this source node.
+     * @param srcNode - Optional. A node to be used for relative positioning.
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
      * @returns The newly created node
      */
-    createNodeAutoPosition(
+    createAutoNode(
       data: {
         nodeTemplate: NodeTypeDef;
       },
       srcNode?: CanvasNode | null,
       pipelineId?: PipelineId
     ): CanvasNode;
+
+    /**
+     * Adds a new node into the pipeline specified by the pipelineId.
+     * @param A node that complied withe canvas info format
+     * @param pipelineId - Optional. The ID of the pipeline of the node.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    addNode(node: CanvasNode, pipelineId?: PipelineId): void;
 
     /**
      * Creates a node using the data parameter provided in the pipeline specified
