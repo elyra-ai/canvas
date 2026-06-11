@@ -995,7 +995,7 @@ describe("Test multiple ports operations with cardinality enforcement", () => {
 		expect(autoSourceNode5.id).to.equal(varFileNode.id);
 	});
 
-	it("should create auto-positioned node using: createNodeAutoPosition", () => {
+	it("should create auto-positioned node using: createAutoNode", () => {
 		const canvasController = new CanvasController();
 		canvasController.setPipelineFlowPalette(commonPalette);
 
@@ -1006,7 +1006,7 @@ describe("Test multiple ports operations with cardinality enforcement", () => {
 		expect(nodeTemplate).to.not.be.undefined;
 
 		// Test 1: Create first node without source node (should position at initial margin)
-		const newNode1 = canvasController.createNodeAutoPosition(
+		const newNode1 = canvasController.createAutoNode(
 			{ nodeTemplate: nodeTemplate },
 			null,
 			primaryPipelineId
@@ -1021,7 +1021,7 @@ describe("Test multiple ports operations with cardinality enforcement", () => {
 		expect(canvasController.getNodes().length).to.equal(1);
 
 		// Test 2: Create second node with first node as source (should position relative to source)
-		const newNode2 = canvasController.createNodeAutoPosition(
+		const newNode2 = canvasController.createAutoNode(
 			{ nodeTemplate: nodeTemplate },
 			newNode1,
 			primaryPipelineId
@@ -1038,7 +1038,7 @@ describe("Test multiple ports operations with cardinality enforcement", () => {
 		expect(newNode2.y_pos).to.equal(newNode1.y_pos);
 
 		// Test 3: Create third node with second node as source
-		const newNode3 = canvasController.createNodeAutoPosition(
+		const newNode3 = canvasController.createAutoNode(
 			{ nodeTemplate: nodeTemplate },
 			newNode2,
 			primaryPipelineId

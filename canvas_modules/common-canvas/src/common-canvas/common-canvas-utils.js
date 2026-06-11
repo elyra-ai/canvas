@@ -1052,9 +1052,9 @@ export default class CanvasUtils {
 		});
 	}
 
-	// Returns true if the node passed in is OK to be used as a source node
-	// for a node which is to be auto-added to the canvas. A node is viable if
-	// it has at least one output port that is not at maximum cardinality.
+	// Returns true if the node passed in is OK to be used as a source node.
+	// A node is viable if it has at least one output port that is not at
+	// maximum cardinality.
 	static isViableAutoSourceNode(node, links) {
 		if (!node.outputs || node.outputs.length === 0) {
 			return false;
@@ -1070,10 +1070,12 @@ export default class CanvasUtils {
 		return false;
 	}
 
-	// Returns a source node for auto completion or null if no source node can be
-	// detected. The source node is either:
-	// 1. The selected node, if only *one* node is currently selected and is viable, or
-	// 2. The most recently added viable node (searching from last to first)
+	// Returns an appropriate source node for a new node that is being automatically added
+	// to the flow. The returned node will have at least one output port available to
+	// which a connection can be made. If autoLinkOnlyFromSelNodes is truthy the node
+	// returned will be the selected node if only one node is currently selected. If
+	// false, a node will be returned from the set of all nodes depending on which was
+	// added last to the flow and is available for connection.
 	static getAutoSourceNode(autoLinkOnlyFromSelNodes, nodes, selectedNodes, links) {
 		var sourceNode = null;
 

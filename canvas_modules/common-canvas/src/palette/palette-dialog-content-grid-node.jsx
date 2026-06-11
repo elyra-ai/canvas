@@ -105,9 +105,9 @@ class PaletteDialogContentGridNode extends React.Component {
 	}
 
 	createAutoNode() {
-		if (this.props.canvasController.createAutoNode) {
+		if (this.props.canvasController.createAutoNodeAction) {
 			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTemplate);
-			this.props.canvasController.createAutoNode(nodeTemplate);
+			this.props.canvasController.createAutoNodeAction(nodeTemplate);
 		}
 	}
 

@@ -999,13 +999,12 @@ export declare class CanvasController {
      *                 can be retrieved from the palette using with Canvas
      *                 Controller methods: getPaletteNode or getPaletteNodeById.
      *
-     * @param srcNode - The source node to link from. If provided, the new node will be
-     *                  automatically linked to this source node.
+     * @param srcNode - Optional. A node to be used for relative positioning.
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
      * @returns The newly created node
      */
-    createNodeAutoPosition(
+    createAutoNode(
       data: {
         nodeTemplate: NodeTypeDef;
       },
