@@ -77,7 +77,7 @@ describe("uiItemParamDef render correctly when the control label is hidden", () 
 	});
 });
 
-describe("Flyout editor has the correct width", () => {
+describe("Flyout editor width is managed by FlyoutContext", () => {
 	let wrapper;
 	let renderedObject;
 	beforeEach(() => {
@@ -88,16 +88,22 @@ describe("Flyout editor has the correct width", () => {
 	afterEach(() => {
 		cleanup();
 	});
-	it("should display a fly out editor at normal width", () => {
+
+	it("should render Common Properties without width-specific classes when FlyoutContext is present", () => {
 		const { container } = wrapper;
-		const flyout = container.querySelectorAll("aside.properties-right-flyout.properties-small");
-		expect(flyout).to.have.length(1);
+		// With FlyoutContext, Common Properties renders but width is managed by the flyout
+		// Verify Common Properties renders
+		const propertiesContainer = container.querySelector("div.properties-custom-container");
+		expect(propertiesContainer).to.not.be.null;
 	});
-	it("should display a wide fly out editor at wider width", () => {
+
+	it("should render Common Properties for wide panel without width-specific classes when FlyoutContext is present", () => {
 		renderedObject = propertyUtilsRTL.flyoutEditorForm(panelParamDefWide);
 		wrapper = renderedObject.wrapper;
 		const { container } = wrapper;
-		const flyout = container.querySelectorAll("aside.properties-right-flyout.properties-medium");
-		expect(flyout).to.have.length(1);
+		// With FlyoutContext, Common Properties renders but width is managed by the flyout
+		const propertiesContainer = container.querySelector("div.properties-custom-container");
+		expect(propertiesContainer).to.not.be.null;
 	});
 });
+

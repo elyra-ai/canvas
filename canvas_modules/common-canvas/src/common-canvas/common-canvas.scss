@@ -94,6 +94,48 @@ $panel-border-color: carbon.$border-subtle-01;
 	}
 }
 
+// Resize button container and button styles
+.right-flyout-container {
+	display: flex;
+	position: relative;
+
+	.right-flyout-btn-resize {
+		transition: visibility carbon.$duration-moderate-01, opacity carbon.$duration-moderate-01;
+		opacity: 0;
+		visibility: hidden;
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		min-height: carbon.$spacing-06;
+		min-width: carbon.$spacing-06;
+		background-color: carbon.$layer-01;
+		border: 1px carbon.$border-strong-01 solid;
+		padding: carbon.$spacing-01;
+		justify-content: center;
+		align-items: center;
+		z-index: 2; // Make sure resize btn appears over other elements
+		&:hover {
+			background-color: carbon.$layer-accent-01;
+			visibility: visible;
+			opacity: 1;
+		}
+		svg {
+			fill: carbon.$icon-primary;
+			width: carbon.$spacing-05;
+			height: carbon.$spacing-05;
+		}
+	}
+}
+
+// Show resize button when hovering over the right flyout container
+.common-canvas .right-flyout-container:hover {
+	.right-flyout-btn-resize {
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
 .bottom-panel {
 	display: flex;
 	flex-direction: column;

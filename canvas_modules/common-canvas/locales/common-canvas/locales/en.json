@@ -106,5 +106,7 @@
   "texttoolbar.colorBackground": "Color background",
   "texttoolbar.outline": "Outline",
   "texttoolbar.outlineNone": "No outline",
-  "texttoolbar.outlineSolid": "Solid outline"
+  "texttoolbar.outlineSolid": "Solid outline",
+  "flyout.resizeButton.expand": "Expand",
+  "flyout.resizeButton.contract": "Contract"
 }

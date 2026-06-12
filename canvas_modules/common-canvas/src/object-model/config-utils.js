@@ -88,6 +88,7 @@ export default class ConfigUtils {
 			enableLeftFlyoutUnderToolbar: false,
 			enableRightFlyoutUnderToolbar: false,
 			enableRightFlyoutDragToResize: false,
+			enableRightFlyoutResizeButton: false,
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,
@@ -193,7 +194,8 @@ export default class ConfigUtils {
 			"enableStateTag",
 			"enablePaletteHeader",
 			"enableKeyboardNavigation",
-			"enableRightFlyoutDragToResize"
+			"enableRightFlyoutDragToResize",
+			"enableRightFlyoutResizeButton"
 		]);
 	}
 
