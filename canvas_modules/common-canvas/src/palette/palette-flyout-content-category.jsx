@@ -68,9 +68,14 @@ class PaletteFlyoutContentCategory extends React.Component {
 			this.props.canvasController.closePaletteCategory(this.props.category.id);
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 
-		} else if (KeyboardUtils.tabFocusOutOfPalette(evt) &&
-					this.props.tabOut) {
-			this.props.tabOut(evt);
+		} else if (KeyboardUtils.tabFocusOutOfPalette(evt)) {
+			this.props.canvasController.closeTip();
+			 if (this.props.tabOut) {
+				this.props.tabOut(evt);
+			 }
+
+		} else if (KeyboardUtils.shiftTabFocusOutOfPalette(evt)) {
+			this.props.canvasController.closeTip();
 		}
 	}
 
