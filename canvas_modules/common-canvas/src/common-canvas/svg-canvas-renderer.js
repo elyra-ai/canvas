@@ -5041,9 +5041,8 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableKeyboardNavigation) {
 					this.setFocusObject(d, d3Event, false, true);
 				}
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE &&
-						!this.config.enableDragWithoutSelect) {
-					const clickType = this.getClickType(d3Event);
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					const clickType = this.config.enableDragWithoutSelect ? SINGLE_CLICK : this.getClickType(d3Event);
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
