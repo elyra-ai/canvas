@@ -277,6 +277,10 @@ $link-highlight-color: carbon.$support-info;
 	fill: $node-body-fill;
 }
 
+.d3-node-image {
+	fill: carbon.$icon-primary;
+}
+
 @mixin d3-node-label-mixin {
 	color: $node-label-color;
 	font-size: $node-label-font-size;
