@@ -473,4 +473,231 @@ export default class SvgCanvasNodes {
 		});
 		return node;
 	}
+
+	/**
+	 * Returns an SVG path that draws the shape for a rectangle node. This is
+	 * drawn as a path rather than an SVG rect element to keep calling code generic.
+	 * highlightGap may be a number (uniform gap on all sides) or an object with
+	 * leftGap, rightGap, topGap, bottomGap properties for per-side control.
+	 *
+	 * @param {Object} data - Node data with width and height properties.
+	 * @param {number|Object} highlightGap - Outward inflation applied to all sides.
+	 * @returns {string} SVG path string.
+	 */
+	static getRectangleNodeShapePath(data, highlightGap = 0) {
+		const gaps = typeof highlightGap === "object"
+			? highlightGap
+			: {
+				leftGap: highlightGap,
+				rightGap: highlightGap,
+				topGap: highlightGap,
+				bottomGap: highlightGap
+			};
+
+		const l = 0 - gaps.leftGap;
+		const t = 0 - gaps.topGap;
+		const r = data.width + gaps.rightGap;
+		const b = data.height + gaps.bottomGap;
+
+		return "M " + l + " " + t + " L " + r + " " + t + " " + r + " " + b + " " + l + " " + b + " Z";
+	}
+
+	/**
+	 * Returns an SVG path that draws a rectangle-with-rounded-corners node shape.
+	 *
+	 * @param {Object} data - Node data with width and height properties.
+	 * @param {number} highlightGap - Uniform outward inflation applied to all sides.
+	 * @returns {string} SVG path string.
+	 */
+	static getRectRoundCornersShapePath(data, highlightGap = 0) {
+		const c = 10; // Corner size
+		const l = 0 - highlightGap;
+		const t = 0 - highlightGap;
+		const r = data.width + highlightGap;
+		const b = data.height + highlightGap;
+		const lc = l + c;
+		const rc = r - c;
+		const tc = t + c;
+		const bc = b - c;
+
+		return "M " + lc + " " + t + " L " + rc + " " + t + " " +
+			"Q " + r + " " + t + " " + r + " " + tc + " " +
+			"L " + r + " " + bc + " " +
+			"Q " + r + " " + b + " " + rc + " " + b + " " +
+			"L " + lc + " " + b + " " +
+			"Q " + l + " " + b + " " + l + " " + bc + " " +
+			"L " + l + " " + tc + " " +
+			"Q " + l + " " + t + " " + lc + " " + t +
+			" Z";
+	}
+
+	/**
+	 * Returns an SVG path for the 'port-arcs' outline shape that encloses both
+	 * the node body and all ports regardless of where the ports are positioned.
+	 * The highlightGap uniformly inflates the outline away from the node and ports.
+	 *
+	 * The path is built by walking each side of the inflated node rectangle in
+	 * order and inserting an outward circular arc bump wherever a port's arc
+	 * circle protrudes through that side. Port arcs are emitted sorted along the
+	 * walking direction so the path never doubles back.
+	 *
+	 * @param {Object} data - Node data object with width, height, inputs, outputs, layout.
+	 * @param {number} highlightGap - Additional outward offset applied to the whole outline.
+	 * @returns {string} SVG path string.
+	 */
+	static getPortArcsNodeShapePath(data, highlightGap = 0) {
+		const gap = highlightGap || 0;
+		const arcR = data.layout.portArcRadius;
+		const allPorts = [...(data.inputs || []), ...(data.outputs || [])];
+
+		// Inflated rectangle bounds
+		const L = -gap;
+		const T = -gap;
+		const R = data.width + gap;
+		const B = data.height + gap;
+
+		// Returns the two y-intercepts where a port's arc circle crosses a
+		// vertical edge at xEdge, or null if it does not reach the edge.
+		const verticalEdgeIntercepts = (port, xEdge) => {
+			const dx = xEdge - port.cx;
+			const disc = (arcR * arcR) - (dx * dx);
+			if (disc < 0) {
+				return null;
+			}
+			const half = Math.sqrt(disc);
+			return [port.cy - half, port.cy + half];
+		};
+
+		// Returns the two x-intercepts where a port's arc circle crosses a
+		// horizontal edge at yEdge, or null if it does not reach the edge.
+		const horizEdgeIntercepts = (port, yEdge) => {
+			const dy = yEdge - port.cy;
+			const disc = (arcR * arcR) - (dy * dy);
+			if (disc < 0) {
+				return null;
+			}
+			const half = Math.sqrt(disc);
+			return [port.cx - half, port.cx + half];
+		};
+
+		// Builds the segment of the path that walks along a vertical edge
+		// (left or right) inserting outward arc bumps for ports that protrude.
+		// xEdge     - x coordinate of the inflated edge line.
+		// fromY/toY - start and end y along the edge (fromY < toY when going
+		//             downward; toY < fromY when going upward).
+		// outwardSweep - SVG arc sweep-flag (1 = clockwise, 0 = anti-clockwise).
+		const verticalEdgeWithBumps = (xEdge, fromY, toY, outwardSweep) => {
+			const goingDown = toY > fromY;
+			const exterior = goingDown ? "right" : "left";
+
+			// Collect ports whose arc circles protrude through this edge, keeping
+			// only those whose centre is on the exterior side (or on the edge
+			// itself) so that interior ports don't create outward bumps.
+			const bumps = [];
+			allPorts.forEach((port) => {
+				if (!verticalEdgeIntercepts(port, xEdge)) {
+					return;
+				}
+				const isExterior = exterior === "right"
+					? port.cx >= data.width - data.layout.portArcRadius
+					: port.cx <= data.layout.portArcRadius;
+				if (!isExterior) {
+					return;
+				}
+				// Arc endpoints are always the full diameter span centred on port.cy,
+				// clamped to the edge's travel range so arcs near corners don't overshoot.
+				const yMin = Math.min(fromY, toY);
+				const yMax = Math.max(fromY, toY);
+				const entryY = Math.max(port.cy - arcR, yMin);
+				const exitY = Math.min(port.cy + arcR, yMax);
+				if (exitY > entryY) {
+					bumps.push({ entryY, exitY, port });
+				}
+			});
+
+			// Sort bumps in the direction of travel.
+			bumps.sort((a, b) => (goingDown ? a.entryY - b.entryY : b.entryY - a.entryY));
+
+			let segment = "";
+			let cursor = fromY;
+			bumps.forEach((bump) => {
+				const bumpEntry = goingDown ? bump.entryY : bump.exitY;
+				const bumpExit = goingDown ? bump.exitY : bump.entryY;
+				if (goingDown ? bumpEntry > cursor : bumpEntry < cursor) {
+					segment += ` L ${xEdge} ${bumpEntry}`;
+				}
+				segment += ` A ${arcR} ${arcR} 180 0 ${outwardSweep} ${xEdge} ${bumpExit}`;
+				cursor = bumpExit;
+			});
+
+			// Final straight segment to the corner.
+			if (goingDown ? cursor < toY : cursor > toY) {
+				segment += ` L ${xEdge} ${toY}`;
+			}
+			return segment;
+		};
+
+		// Builds the segment of the path that walks along a horizontal edge
+		// (top or bottom) inserting outward arc bumps for ports that protrude.
+		// yEdge       - y coordinate of the inflated edge line.
+		// fromX/toX   - start and end x along the edge.
+		// outwardSweep - SVG arc sweep-flag (1 = clockwise, 0 = anti-clockwise).
+		const horizEdgeWithBumps = (yEdge, fromX, toX, outwardSweep) => {
+			const goingRight = toX > fromX;
+			const exterior = goingRight ? "top" : "bottom";
+
+			const bumps = [];
+			allPorts.forEach((port) => {
+				if (!horizEdgeIntercepts(port, yEdge)) {
+					return;
+				}
+				const isExterior = exterior === "top"
+					? port.cy <= data.layout.portArcRadius
+					: port.cy >= data.height - data.layout.portArcRadius;
+				if (!isExterior) {
+					return;
+				}
+				// Arc endpoints are always the full diameter span centred on port.cx,
+				// clamped to the edge's travel range so arcs near corners don't overshoot.
+				const xMin = Math.min(fromX, toX);
+				const xMax = Math.max(fromX, toX);
+				const entryX = Math.max(port.cx - arcR, xMin);
+				const exitX = Math.min(port.cx + arcR, xMax);
+				if (exitX > entryX) {
+					bumps.push({ entryX, exitX, port });
+				}
+			});
+
+			bumps.sort((a, b) => (goingRight ? a.entryX - b.entryX : b.entryX - a.entryX));
+
+			let segment = "";
+			let cursor = fromX;
+			bumps.forEach((bump) => {
+				const bumpEntry = goingRight ? bump.entryX : bump.exitX;
+				const bumpExit = goingRight ? bump.exitX : bump.entryX;
+				if (goingRight ? bumpEntry > cursor : bumpEntry < cursor) {
+					segment += ` L ${bumpEntry} ${yEdge}`;
+				}
+				segment += ` A ${arcR} ${arcR} 180 0 ${outwardSweep} ${bumpExit} ${yEdge}`;
+				cursor = bumpExit;
+			});
+
+			if (goingRight ? cursor < toX : cursor > toX) {
+				segment += ` L ${toX} ${yEdge}`;
+			}
+			return segment;
+		};
+
+		// Assemble the full closed path walking clockwise around the inflated rectangle.
+		// All four edges use sweep=1 to produce outward-facing bulges. In SVG's y-down
+		// coordinate system with the entry/exit reversal logic in horizEdgeWithBumps,
+		// sweep=1 consistently bows away from the node centre for all sides.
+		let path = `M ${L} ${T}`;
+		path += horizEdgeWithBumps(T, L, R, 1); // top edge, left-to-right, bumps upward
+		path += verticalEdgeWithBumps(R, T, B, 1); // right edge, top-to-bottom, bumps rightward
+		path += horizEdgeWithBumps(B, R, L, 1); // bottom edge, right-to-left, bumps downward
+		path += verticalEdgeWithBumps(L, B, T, 1); // left edge, bottom-to-top, bumps leftward
+		path += " Z";
+		return path;
+	}
 }

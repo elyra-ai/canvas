@@ -59,8 +59,8 @@ $node-port-output-fill-color: $node-body-fill;
 $node-port-output-connected-stroke-color: carbon.$background-inverse;
 $node-port-output-connected-fill-color: $node-body-fill;
 
-$node-port-output-hover-stroke: carbon.$background-inverse;
-$node-port-output-hover-fill: carbon.$background-inverse;
+$node-port-output-hover-stroke: carbon.$link-inverse;
+$node-port-output-hover-fill: carbon.$link-inverse;
 
 // Input port styles
 
@@ -265,8 +265,8 @@ $link-highlight-color: carbon.$support-info;
 
 .d3-node-selection-highlight[data-selected="yes"] {
 	stroke: $node-selection-color;
-	stroke-dasharray: none; /* Solid line */
-	stroke-width: 5;
+	stroke-dasharray: 5, 5;
+	stroke-width: 2;
 	fill: transparent;
 }
 
@@ -877,8 +877,8 @@ g.bkg-col-cyan-50 {
 
 .d3-comment-selection-highlight[data-selected="yes"] {
 	stroke: $node-selection-color;
-	stroke-dasharray: none; /* Solid line */
-	stroke-width: 3;
+	stroke-dasharray: 5, 5;
+	stroke-width: 2;
 	fill: transparent;
 	pointer-events: none;
 }
