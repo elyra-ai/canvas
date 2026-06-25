@@ -2342,7 +2342,7 @@ class App extends React.Component {
 			enableLinkMethod: this.state.selectedLinkMethod,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
-			enableParentClass: this.getParentClass(),
+			enableParentClass: "",
 			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
 			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
 			enableExternalPipelineFlows: this.state.selectedExternalPipelineFlows,
@@ -2415,7 +2415,7 @@ class App extends React.Component {
 			enableInteractionType: this.state.selectedInteractionType,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
-			enableParentClass: this.getParentClass(),
+			enableParentClass: "",
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
@@ -2428,14 +2428,6 @@ class App extends React.Component {
 		};
 
 		return canvasConfig2;
-	}
-
-	getParentClass() {
-		let parentClass = "";
-		if (this.state.selectedNodeFormatType === "Vertical") {
-			parentClass = "classic-vertical";
-		}
-		return parentClass;
 	}
 
 	getToolbarConfig() {

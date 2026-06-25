@@ -19,28 +19,6 @@
 @use "../../assets/styles/carbon.scss";
 
 
-/* The test harness adds 'classic-vertical' as the 'enableParentClass'
-    when the vertical node format is selected.
-*/
-
-.classic-vertical {
-	.d3-node-port-output {
-		fill: carbon.$layer-01;
-		stroke-width: 1;
-
-		&:hover {
-			fill: carbon.$link-inverse;
-			stroke: carbon.$link-inverse;
-		}
-	}
-
-	.d3-node-selection-highlight[data-selected="yes"],
-	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke-dasharray: 5, 5;
-		stroke-width: 2;
-	}
-}
-
 /* Drop zone customized text style */
 .dropzone-canvas-text {
 	position: absolute;
