@@ -1295,6 +1295,10 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_CONFIG", data: { config: { panelMinWidth: wd } } });
 	}
 
+	setRightFlyoutMaxWidth(wd) {
+		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_CONFIG", data: { config: { panelMaxWidth: wd } } });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Bottom panel methods
 	// ---------------------------------------------------------------------------

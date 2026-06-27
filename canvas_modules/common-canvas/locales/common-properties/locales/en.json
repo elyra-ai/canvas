@@ -21,8 +21,6 @@
   "propertiesEdit.applyButton.label": "Save",
   "propertiesEdit.rejectButton.label": "Cancel",
   "propertiesEdit.revertButton.label": "Revert",
-  "propertiesEdit.resizeButton.expand.label": "Expand",
-  "propertiesEdit.resizeButton.contract.label": "Contract",
   "properties.revert.message": "Click Revert to go back to the previous screen or click Close to exit the pane. Then try your operation again.",
   "properties.close.message": "Click Close to exit the pane. Then try your operation again.",
   "properties.support.message": "If the problem persists, contact support.",

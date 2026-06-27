@@ -106,5 +106,7 @@
 	"texttoolbar.colorBackground": "[Esperanto~Color background~~eo]",
 	"texttoolbar.outline": "[Esperanto~Outline~~eo]",
 	"texttoolbar.outlineNone": "[Esperanto~No outline~~eo]",
-	"texttoolbar.outlineSolid": "[Esperanto~Solid outline~~eo]"
+	"texttoolbar.outlineSolid": "[Esperanto~Solid outline~~eo]",
+	"flyout.resizeButton.expand": "[Esperanto~Expand~~eo]",
+	"flyout.resizeButton.contract": "[Esperanto~Contract~~eo]"
 }

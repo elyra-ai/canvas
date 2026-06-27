@@ -164,6 +164,9 @@ export default class FlowsProperties extends React.Component {
 	closePropertiesEditorDialog() {
 		this.currentEditorId = null;
 		this.props.canvasController.setSelections([]); // clear selection
+		this.props.canvasController.setRightFlyoutMaxWidth(null);
+		this.props.canvasController.setRightFlyoutMinWidth(null);
+		this.props.canvasController.setRightFlyoutWidth(null);
 		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
 	}
 
