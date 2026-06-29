@@ -58,6 +58,8 @@ export const MESSAGE_KEYS = {
 	DATETIME_FORMAT_ERROR: "datetime.format.error",
 	INVALID_FIELD_ERROR: "invalid.field.error",
 	INVALID_NUMBER_ERROR: "invalid.number.error",
+	// Error key used when a decimal is entered into a field declared as type integer or long
+	INVALID_INTEGER_ERROR: "invalid.integer.error",
 	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
 	EXPRESSION_VALIDATING_LABEL: "expression.validating.label",
 	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
