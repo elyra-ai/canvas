@@ -30,6 +30,7 @@ import defaultMessages from "../../../../locales/common-properties/locales/en.js
 
 const COLUMN_PADDING_BUFFER = 12;
 const DEFAULT_COL_MIN_WIDTH = 40; // Carbon table standard to display minimum 1 character
+const HORIZONTAL_SCROLLBAR_HEIGHT = 15; // Height of the horizontal scrollbar when visible
 
 class FlexibleTable extends React.Component {
 
@@ -120,6 +121,12 @@ class FlexibleTable extends React.Component {
 		if (prevState.tableWidth !== this.state.tableWidth ||
 			prevState.availableWidth !== this.state.availableWidth) {
 			this.updateExcessWidth();
+		}
+
+		// Re-adjust table height when tableWidth changes, since horizontal overflow
+		// state may have changed (a horizontal scrollbar may now appear or disappear)
+		if (prevState.tableWidth !== this.state.tableWidth) {
+			this._adjustTableHeight();
 		}
 
 		// Calculate if checkedAllRows is true
@@ -328,6 +335,12 @@ class FlexibleTable extends React.Component {
 		let dynamicH = this.state.dynamicHeight;
 		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
 			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT) * ONE_REM_HEIGHT;
+			// When the table content is wider than the container, a horizontal scrollbar appears.
+			// Its height reduces the available vertical space, which causes an unwanted vertical
+			// scrollbar even when the row count is small. Expand the height to accommodate it.
+			if (this.state.availableWidth > 0 && this.state.tableWidth > this.state.availableWidth) {
+				newHeight += HORIZONTAL_SCROLLBAR_HEIGHT;
+			}
 		} else if (this.state.rows > 0) {
 			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT) * ONE_REM_HEIGHT;
 		} else if (this.state.rows === 0) { // only display header
