@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { OverflowMenu, OverflowMenuItem } from "@carbon/react";
+import { MenuButton, MenuItem } from "@carbon/react";
 
 class CustomOverflowAction {
 	static id() {
@@ -33,17 +33,18 @@ class CustomOverflowAction {
 	}
 
 	renderAction() {
+		const menuAlignment = this.data?.parameter_ref === "oneofselect-custom-action-right"
+			? "bottom-end" : "bottom-start";
 		return (
-			<OverflowMenu
-				data-floating-menu-container
-				flipped={this.data?.parameter_ref === "oneofselect-custom-action-right"}
-				aria-label="Overflow menu"
+			<MenuButton
+				label="Actions"
 				size="sm"
+				menuAlignment={menuAlignment}
 				className="harness-custom-action"
 			>
-				<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 1" onClick={() => this.changeReadonlyText("Menu item 1")} />
-				<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 2" onClick={() => this.changeReadonlyText("Menu item 2")} />
-			</OverflowMenu>
+				<MenuItem label="Menu item 1" onClick={() => this.changeReadonlyText("Menu item 1")} />
+				<MenuItem label="Menu item 2" onClick={() => this.changeReadonlyText("Menu item 2")} />
+			</MenuButton>
 		);
 	}
 }
