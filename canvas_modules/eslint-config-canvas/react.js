@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import jsxA11y from "eslint-plugin-jsx-a11y";
+
 // View link below for react rules documentation
 // https://github.com/yannickcr/eslint-plugin-react#list-of-supported-rules
 const rules = {
@@ -166,6 +168,9 @@ const reactConfigs = [
         }
     },
 	{
+		plugins: {
+			"jsx-a11y": jsxA11y
+		},
 		languageOptions: {
 			ecmaVersion: "latest",
 			sourceType: "module",
@@ -178,7 +183,20 @@ const reactConfigs = [
 				}
 			}
 		},
-		rules: rules
+		rules: {
+			...Object.fromEntries(
+				Object.entries(jsxA11y.flatConfigs.recommended.rules).map(([k, v]) => {
+					if (v === "error") {
+						return [k, "warn"];
+					}
+					if (Array.isArray(v) && v[0] === "error") {
+						return [k, ["warn", ...v.slice(1)]];
+					}
+					return [k, v];
+				})
+			),
+			...rules
+		}
 	}
 ];
 

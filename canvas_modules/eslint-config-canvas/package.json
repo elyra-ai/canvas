@@ -8,5 +8,8 @@
     "node": ">= 12",
     "npm": ">= 6"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "eslint-plugin-jsx-a11y": "^6.10.2"
+  }
 }
