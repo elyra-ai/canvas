@@ -87,6 +87,7 @@ const control = {
 	]
 };
 const propertyId = { name: "keys" };
+const controlItem = <span>Test Label</span>;
 
 function genUIItem() {
 	return <div />;
@@ -112,6 +113,7 @@ describe("readonlytable control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 				buildUIItem={genUIItem}
 				rightFlyout
 			/>
@@ -121,6 +123,7 @@ describe("readonlytable control renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 			"buildUIItem": genUIItem,
 			"rightFlyout": true
 		});
@@ -135,6 +138,7 @@ describe("readonlytable control renders correctly", () => {
 					control={control}
 					controller={renderedObject.controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					buildUIItem={genUIItem}
 					rightFlyout
 				/>

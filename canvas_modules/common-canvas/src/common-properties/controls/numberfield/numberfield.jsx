@@ -209,7 +209,7 @@ NumberfieldControl.propTypes = {
 	controlItem: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.element
-	]), // list control passes string
+	]).isRequired, // list control passes string
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.number, // pass in by redux

@@ -110,7 +110,7 @@ ToggletextControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.element.isRequired,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux

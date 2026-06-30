@@ -85,7 +85,7 @@ ToggleControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.element.isRequired,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.bool, // pass in by redux
