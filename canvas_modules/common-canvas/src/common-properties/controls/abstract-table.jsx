@@ -653,9 +653,10 @@ export default class AbstractTable extends React.Component {
 		}
 
 		// ReadonlyTable with single row selection is non-interactive. rowClickCallback should be undefined.
+		// Tables with row_selection "none" also have no row selection callback.
 		let rowClickCallback;
 		const singleRowSelectionReadonlyTable = this.isReadonlyTable() && this.props.control.rowSelection === ROW_SELECTION.SINGLE;
-		if (!singleRowSelectionReadonlyTable) {
+		if (!singleRowSelectionReadonlyTable && this.props.control.rowSelection !== ROW_SELECTION.NONE) {
 			rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
 		}
 

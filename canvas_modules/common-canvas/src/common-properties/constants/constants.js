@@ -241,7 +241,8 @@ export const SORT_DIRECTION = {
 
 export const ROW_SELECTION = {
 	SINGLE: "single",
-	MULTIPLE: "multiple-edit"
+	MULTIPLE: "multiple-edit",
+	NONE: "none"
 };
 
 
