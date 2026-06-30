@@ -181,6 +181,24 @@ class ExpressionControl extends React.Component {
 		}
 	}
 
+	// Resolve the current variable completions from the handler.
+	// Called on every autocomplete trigger so variables always reflect the latest app state.
+	getExpressionVariables() {
+		const expressionVariablesHandler = this.props.controller.getHandlers().expressionVariablesHandler;
+		if (typeof expressionVariablesHandler === "function") {
+			try {
+				const vars = expressionVariablesHandler(this.props.propertyId, this.props.control.language);
+				return Array.isArray(vars)
+					? vars.map((v) => (typeof v === "string" ? { label: v, type: "variable" } : v))
+					: [];
+			} catch (err) {
+				console.error("expressionVariablesHandler threw an error — returning empty completions:", err);
+				return [];
+			}
+		}
+		return [];
+	}
+
 	// Add the dataset field names to the autocomplete list
 	addonHints(context) {
 		const word = context.matchBefore(/\w*/);
@@ -189,7 +207,7 @@ class ExpressionControl extends React.Component {
 		}
 		return {
 			from: word.from,
-			options: concat(this.origHint, this.getDatasetFields())
+			options: concat(this.origHint, this.getDatasetFields(), this.getExpressionVariables())
 		};
 	}
 
@@ -211,25 +229,45 @@ class ExpressionControl extends React.Component {
 		// This hack allows use to capture the "sql" autocomplete handler and subsitute our custom handler
 		// Same has been done for Python and R
 		let language = this.props.control.language;
-		switch (this.props.control.language) {
-		case "text/x-hive":
-			language = sql();
-			break;
-		case "text/x-python":
-			language = python();
-			this.origHint = getPythonHints();
-			break;
-		case "text/x-rsrc":
-			language = rLanguage(); // custom language
-			break;
-		case "javascript":
-			language = javascript();
-			break;
-		case "json":
-			language = json();
-			break;
-		default:
-			language = clem(); // custom language
+		let languageHandled = false;
+
+		// If the app registered expressionLanguageHandler, call it first.
+		// A non-null return value replaces the built-in language resolution entirely.
+		const expressionLanguageHandler = this.props.controller.getHandlers().expressionLanguageHandler;
+		if (typeof expressionLanguageHandler === "function") {
+			try {
+				const customLanguage = expressionLanguageHandler(this.props.propertyId, this.props.control.language);
+				if (customLanguage !== null && typeof customLanguage === "object" && customLanguage.language) {
+					language = customLanguage;
+					languageHandled = true;
+				}
+			} catch (err) {
+				console.error("expressionLanguageHandler threw an error — falling back to built-in language resolution:", err);
+			}
+		}
+
+		// Only run the built-in switch when the handler did not supply a language.
+		if (!languageHandled) {
+			switch (this.props.control.language) {
+			case "text/x-hive":
+				language = sql();
+				break;
+			case "text/x-python":
+				language = python();
+				this.origHint = getPythonHints();
+				break;
+			case "text/x-rsrc":
+				language = rLanguage(); // custom language
+				break;
+			case "javascript":
+				language = javascript();
+				break;
+			case "json":
+				language = json();
+				break;
+			default:
+				language = clem(); // custom language
+			}
 		}
 
 		// Custom completions add to the language completions
