@@ -72,6 +72,7 @@ const moveableRowControl = {
 
 propertyUtilsRTL.setControls(controller, [control, moveableRowControl]);
 const propertyId = { name: "test-columnSelect" };
+const controlItem = <span>Test Label</span>;
 
 function setPropertyValue() {
 	controller.setPropertyValues(
@@ -103,6 +104,7 @@ describe("selectcolumns renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					openFieldPicker={openFieldPickerSpy}
 				/>
 			</Provider>
@@ -112,6 +114,7 @@ describe("selectcolumns renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 			"openFieldPicker": openFieldPickerSpy
 		});
 	});

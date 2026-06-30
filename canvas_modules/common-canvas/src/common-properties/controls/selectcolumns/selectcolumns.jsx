@@ -206,7 +206,7 @@ SelectColumnsControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.element.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux

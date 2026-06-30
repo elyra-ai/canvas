@@ -83,6 +83,7 @@ const listLongStringCurrentValues = [propertyUtilsRTL.genLongString(TRUNCATE_LIM
 const listStringPopertyId = { name: "test-list-string" };
 const listIntegerPopertyId = { name: "test-list-integer" };
 const listEmptyPopertyId = { name: "test-list-empty" };
+const controlItem = <span>Test Label</span>;
 
 const mockList = jest.fn();
 jest.mock("../../../src/common-properties/controls/list",
@@ -114,6 +115,7 @@ describe("list renders correctly for array[string]", () => {
 					control={controlString}
 					controller={controller}
 					propertyId={listStringPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -122,6 +124,7 @@ describe("list renders correctly for array[string]", () => {
 			"controller": controller,
 			"control": controlString,
 			"propertyId": listStringPopertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -133,6 +136,7 @@ describe("list renders correctly for array[string]", () => {
 					control={controlString}
 					controller={controller}
 					propertyId={listStringPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -158,6 +162,7 @@ describe("list renders correctly for array[string]", () => {
 					control={controlString}
 					controller={controller}
 					propertyId={listStringPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -183,6 +188,7 @@ describe("list renders correctly for array[string]", () => {
 					control={controlString}
 					controller={controller}
 					propertyId={listStringPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -216,6 +222,7 @@ describe("list renders correctly for array[string]", () => {
 					control={controlString}
 					controller={controller}
 					propertyId={listStringPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -235,6 +242,7 @@ describe("list renders correctly for array[string]", () => {
 					control={controlString}
 					controller={controller}
 					propertyId={listStringPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -256,6 +264,7 @@ describe("list renders correctly for array[string]", () => {
 					control={controlString}
 					controller={controller}
 					propertyId={listStringPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -279,6 +288,7 @@ describe("list renders correctly for array[string]", () => {
 					control={controlEmpty}
 					controller={renderedObject.controller}
 					propertyId={listEmptyPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -310,6 +320,7 @@ describe("list renders correctly for array[integer]", () => {
 					control={controlString}
 					controller={controller}
 					propertyId={listStringPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -318,6 +329,7 @@ describe("list renders correctly for array[integer]", () => {
 			"controller": controller,
 			"control": controlString,
 			"propertyId": listStringPopertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -329,6 +341,7 @@ describe("list renders correctly for array[integer]", () => {
 					control={controlInteger}
 					controller={controller}
 					propertyId={listIntegerPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -359,6 +372,7 @@ describe("list renders correctly for array[integer]", () => {
 					control={controlInteger}
 					controller={controller}
 					propertyId={listIntegerPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -384,6 +398,7 @@ describe("list renders correctly for array[integer]", () => {
 					control={controlInteger}
 					controller={controller}
 					propertyId={listIntegerPopertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);

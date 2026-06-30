@@ -206,7 +206,7 @@ MultiSelectControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.element.isRequired,
 	tableControl: PropTypes.bool,
 	controlOpts: PropTypes.object, // pass in by redux
 	state: PropTypes.string, // pass in by redux
