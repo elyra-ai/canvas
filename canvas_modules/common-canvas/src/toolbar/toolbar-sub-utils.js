@@ -49,6 +49,16 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 				: -(outsideBottom);
 
 			subAreaRef.style.top = newTop + "px";
+
+			// Clamp the menu height so it never overflows the containing div.
+			// This is needed when zoomed in far: neither above nor below the toolbar
+			// may have enough room to show the full menu.
+			const menuTop = actionItemRect.bottom + newTop;
+			const availableHeight = containingDivRect.bottom - Math.max(menuTop, containingDivRect.top);
+			if (availableHeight < subAreaRect.height) {
+				subAreaRef.style.maxHeight = availableHeight + "px";
+				subAreaRef.style.overflowY = "auto";
+			}
 		}
 
 		if (outsideRight > 0) {
