@@ -79,6 +79,7 @@ class FlexibleTable extends React.Component {
 		this.handleCheckedRow = this.handleCheckedRow.bind(this);
 		this.handleCheckedAllRows = this.handleCheckedAllRows.bind(this);
 		this.handleCheckedMultipleRows = this.handleCheckedMultipleRows.bind(this);
+		this.handleColumnResize = this.handleColumnResize.bind(this);
 	}
 
 	componentDidMount() {
@@ -472,6 +473,12 @@ class FlexibleTable extends React.Component {
 	}
 
 
+	handleColumnResize(totalWidth) {
+		if (this.state.tableWidth !== totalWidth) {
+			this.setState({ tableWidth: totalWidth });
+		}
+	}
+
 	/**
 	* Generate the table header specs from this.props.columns
 	* this.props.columns: array of objects
@@ -666,6 +673,7 @@ class FlexibleTable extends React.Component {
 									tableDisabled={disabled}
 									light={this.props.light}
 									readOnly={this.props.readOnly}
+									onColumnResize={this.handleColumnResize}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex })}
 								/>
 							</div>
