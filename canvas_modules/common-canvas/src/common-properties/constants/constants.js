@@ -37,8 +37,6 @@ export const MESSAGE_KEYS = {
 	PROPERTIESEDIT_APPLYBUTTON_LABEL: "propertiesEdit.applyButton.label",
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "propertiesEdit.rejectButton.label",
 	PROPERTIESEDIT_REVERTBUTTON_LABEL: "propertiesEdit.revertButton.label",
-	PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL: "propertiesEdit.resizeButton.expand.label",
-	PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL: "propertiesEdit.resizeButton.contract.label",
 	PROPERTIES_REVERT_MESSAGE: "properties.revert.message",
 	PROPERTIES_CLOSE_MESSAGE: "properties.close.message",
 	PROPERTIES_SUPPORT_MESSAGE: "properties.support.message",

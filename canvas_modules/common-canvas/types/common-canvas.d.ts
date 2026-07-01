@@ -587,6 +587,7 @@ export interface CanvasConfig {
   enableNarrowPalette?: boolean;
   enableContextToolbar?: boolean;
   enableRightFlyoutDragToResize?: boolean;
+  enableRightFlyoutResizeButton?: boolean;
   enableFocusOnMount?: boolean;
   emptyCanvasContent?: ReactNode;
   dropZoneCanvasContent?: ReactNode;
