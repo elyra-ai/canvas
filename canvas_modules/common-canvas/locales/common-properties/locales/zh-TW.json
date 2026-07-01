@@ -45,6 +45,7 @@
   "datetime.format.error": "{role} 無效。 格式應為 {format}。",
   "invalid.field.error": "{label} 無效，在資料集裡找不到欄位。",
   "invalid.number.error": "數字無效。",
+  "invalid.integer.error": "值必須為整數。",
   "expression.validate.label": "驗證",
   "expression.validating.label": "正在驗證",
   "expression.builder.title": "表示式建置器",
