@@ -34,6 +34,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 
 	handleSearchStringChange(evt) {
 		const value = evt.target.value || "";
+		this.props.canvasController.closeTip();
 		this.setState({ searchString: value },
 			() => this.props.handleSearchStringChange(value)
 		);

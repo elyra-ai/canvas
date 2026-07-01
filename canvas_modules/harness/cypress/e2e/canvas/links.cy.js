@@ -522,6 +522,18 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
+	it("Test a link can be selected when enableDragWithoutSelect is true", function() {
+		cy.setCanvasConfig({
+			"selectedDragWithoutSelect": true,
+			"selectedLinkSelection": "Handles",
+			"selectedLinkType": "Curve"
+		});
+		cy.openCanvasDefinition("allTypesCanvas.json");
+
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
+	});
+
 	it("Test if a link end handle is dragged to the canvas it has no effect", function() {
 		// Check the link from execution node to supernode exists
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(

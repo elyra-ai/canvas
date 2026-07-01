@@ -1052,9 +1052,9 @@ export default class CanvasUtils {
 		});
 	}
 
-	// Returns true if the node passed in is OK to be used as a source node
-	// for a node which is to be auto-added to the canvas. A node is viable if
-	// it has at least one output port that is not at maximum cardinality.
+	// Returns true if the node passed in is OK to be used as a source node.
+	// A node is viable if it has at least one output port that is not at
+	// maximum cardinality.
 	static isViableAutoSourceNode(node, links) {
 		if (!node.outputs || node.outputs.length === 0) {
 			return false;
@@ -1070,11 +1070,12 @@ export default class CanvasUtils {
 		return false;
 	}
 
-	// Returns a source node for auto completion or null if no source node can be
-	// detected. The source node is either:
-	// 1. The selected node, if only *one* node is currently selected or
-	// 2. The most recently added node, provided it has one or more output ports or
-	// 3. The most-recent-but-one added node, provided it has one or more output ports
+	// Returns an appropriate source node for a new node that is being automatically added
+	// to the flow. The returned node will have at least one output port available to
+	// which a connection can be made. If autoLinkOnlyFromSelNodes is truthy the node
+	// returned will be the selected node if only one node is currently selected. If
+	// false, a node will be returned from the set of all nodes depending on which was
+	// added last to the flow and is available for connection.
 	static getAutoSourceNode(autoLinkOnlyFromSelNodes, nodes, selectedNodes, links) {
 		var sourceNode = null;
 
@@ -1083,15 +1084,10 @@ export default class CanvasUtils {
 			sourceNode = selectedNodes[0];
 
 		} else if (!autoLinkOnlyFromSelNodes) {
-			if (nodes.length > 0) {
-				var lastNodeAdded = nodes[nodes.length - 1];
-				if (lastNodeAdded.outputs) {
-					sourceNode = lastNodeAdded;
-				} else if (nodes.length > 1) {
-					var lastButOneNodeAdded = nodes[nodes.length - 2];
-					if (lastButOneNodeAdded.outputs) {
-						sourceNode = lastButOneNodeAdded;
-					}
+			for (let i = nodes.length - 1; i >= 0; i--) {
+				if (this.isViableAutoSourceNode(nodes[i], links)) {
+					sourceNode = nodes[i];
+					break;
 				}
 			}
 		}

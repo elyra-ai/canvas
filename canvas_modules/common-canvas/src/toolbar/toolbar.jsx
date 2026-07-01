@@ -96,7 +96,7 @@ class Toolbar extends React.Component {
 	// toolbar config is updated and the current focusAction item is removed.
 	componentDidUpdate() {
 		const focusableItems = this.getFocusableItemRefs();
-		const index = focusableItems.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+		const index = this.getFocusActionIndex(focusableItems);
 
 		if (focusableItems.length === 0 && this.state.focusAction !== "disabled") {
 			this.setFocusOnFirstDisabledItem();
@@ -122,15 +122,16 @@ class Toolbar extends React.Component {
 		this.isFocusInToolbar = true;
 
 		// If focus occurs because of a click on the toolbar body
-		// (not on a button) and no button has focus move focus to
-		// the first item otherwise just keep focus the same.
+		// (not on a button), move focus to the first item only if
+		// no button currently has focus (focusAction === "toolbar").
+		// Otherwise, maintain focus on the button specified by focusAction.
 		if (evt.target?.classList?.contains("toolbar-div")) {
 			if (this.state.focusAction === "toolbar") {
 				this.setFocusOnFirstItem();
-
-
 			} else {
-				this.setFocusOnItem(); // Reset focus on current focusAction.
+				// Keep focus on the button specified by this.state.focusAction
+				const currentFocusRef = this.getFocusActionRef();
+				currentFocusRef?.current?.buttonItemRef?.current?.setButtonFocus();
 			}
 		}
 	}
@@ -279,7 +280,7 @@ class Toolbar extends React.Component {
 	}
 
 	getPreviousItemRef(focusableItemRefs) {
-		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+		const index = this.getFocusActionIndex(focusableItemRefs);
 		if (index === 0) {
 			return focusableItemRefs[focusableItemRefs.length - 1];
 		}
@@ -287,11 +288,22 @@ class Toolbar extends React.Component {
 	}
 
 	getNextItemRef(focusableItemRefs) {
-		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+		const index = this.getFocusActionIndex(focusableItemRefs);
 		if (index === focusableItemRefs.length - 1) {
 			return focusableItemRefs[0];
 		}
 		return focusableItemRefs[index + 1];
+	}
+
+	// Returns the index of the item in focusableItemRefs that matches this.state.focusAction
+	getFocusActionIndex(focusableItemRefs) {
+		return focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+	}
+
+	// Returns the ref of the item that matches this.state.focusAction
+	getFocusActionRef() {
+		const focusableItemRefs = this.getFocusableItemRefs();
+		return focusableItemRefs.find((ref) => this.getRefAction(ref) === this.state.focusAction);
 	}
 
 	getRefAction(ref) {

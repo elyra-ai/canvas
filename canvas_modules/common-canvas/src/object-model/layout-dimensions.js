@@ -120,7 +120,7 @@ const horizontalDefaultLayout = {
 		dropShadow: true,
 
 		// The gap between a node and its selection highlight rectangle
-		nodeHighlightGap: 1,
+		nodeHighlightGap: 4,
 
 		// Allows the user to resize the node.
 		nodeResizable: false,
@@ -444,7 +444,7 @@ const horizontalDefaultLayout = {
 		commentCornerResizeArea: 10,
 
 		// The gap between a comment and its selection highlight rectangle
-		commentHighlightGap: 1,
+		commentHighlightGap: 4,
 
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,

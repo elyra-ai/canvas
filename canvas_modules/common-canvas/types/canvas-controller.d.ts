@@ -555,6 +555,19 @@ export declare class CanvasController {
     autoLayout(layoutDirection: "horizontal" | "vertical", pipelineId?: PipelineId): void;
 
     /**
+     * Returns the auto source node for automatic linking based on current canvas state.
+     * This is a wrapper for CanvasUtils.getAutoSourceNode() that provides the necessary
+     * parameters from the canvas controller's current state.
+     * @param autoLinkOnlyFromSelNodes - If true, only selected nodes are considered
+     *                                   as source
+     * @param pipelineId - Optional. The ID of the pipeline.
+     *                     Defaults to the currently displayed pipeline.
+     * @returns The source node object for auto-linking, or null if no suitable source
+     *          was found.
+     */
+    getAutoSourceNode(autoLinkOnlyFromSelNodes: boolean, pipelineId?: PipelineId): CanvasNode | null;
+
+    /**
      * ## Palette methods
      * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#palette-methods
      */
@@ -959,6 +972,7 @@ export declare class CanvasController {
      *
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
+     * @returns The newly created node
      */
     createNode(
       data: {
@@ -966,6 +980,28 @@ export declare class CanvasController {
         offsetX: CanvasDistance;
         offsetY: CanvasDistance;
       },
+      pipelineId?: PipelineId
+    ): CanvasNode;
+
+    /**
+     * Returns an automatically positioned node, created from the data parameter,
+     * in the pipeline identified by the pipelineId.
+     * @param data - An object containing
+     *
+     * `nodeTemplate` - a node template from the palette. The nodeTemplate
+     *                 can be retrieved from the palette using with Canvas
+     *                 Controller methods: getPaletteNode or getPaletteNodeById.
+     *
+     * @param srcNode - Optional. A node to be used for relative positioning.
+     * @param pipelineId - Optional. The ID of the pipeline of the node.
+     *                     Defaults to the currently displayed pipeline.
+     * @returns The newly created node
+     */
+    createAutoNode(
+      data: {
+        nodeTemplate: NodeTypeDef;
+      },
+      srcNode?: CanvasNode | null,
       pipelineId?: PipelineId
     ): CanvasNode;
 

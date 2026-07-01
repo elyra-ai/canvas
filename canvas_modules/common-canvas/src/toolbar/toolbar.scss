@@ -370,7 +370,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	&.disabled.default {
-		color: carbon.$button-disabled;
+		color: carbon.$icon-disabled;
 		fill: carbon.$button-disabled; // For custom svg images
 		& .toolbar-tick-mark {
 			fill: carbon.$button-disabled;

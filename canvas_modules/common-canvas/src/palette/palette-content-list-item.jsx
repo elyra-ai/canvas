@@ -103,8 +103,11 @@ class PaletteContentListItem extends React.Component {
 			evt.stopPropagation();
 			evt.preventDefault();
 
-		} else if (KeyboardUtils.tabFocusOutOfPalette(evt) && this.props.tabOut) {
-			this.props.tabOut(evt);
+		} else if (KeyboardUtils.tabFocusOutOfPalette(evt)) {
+			this.props.canvasController.closeTip();
+			if (this.props.tabOut) {
+				this.props.tabOut(evt);
+			}
 		}
 	}
 

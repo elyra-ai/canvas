@@ -83,6 +83,7 @@ class ExpressionControl extends React.Component {
 		};
 		this.editable = new Compartment; // eslint-disable-line new-parens
 		this.editorRef = React.createRef();
+		this.wrapperRef = React.createRef();
 		this.origHint = [];
 		this.expressionInfo = this.props.controller.getExpressionInfo();
 		this.handleValidate = this.handleValidate.bind(this);
@@ -162,7 +163,13 @@ class ExpressionControl extends React.Component {
 	}
 
 	setTheme() {
-		const element = document.querySelector(".properties-expression-editor-wrapper");
+		// Use ref instead of querySelector for better performance and reliability
+		const element = this.wrapperRef.current;
+
+		// Check if element exists before calling getComputedStyle
+		if (!element) {
+			return;
+		}
 
 		const colorScheme = getComputedStyle(element)
 			.getPropertyValue("--cds-color-scheme")
@@ -522,7 +529,7 @@ class ExpressionControl extends React.Component {
 		const codemirrorClassName = classNames(`elyra-CodeMirror ${messageType} ${this.props.state}`);
 
 		return (
-			<div className="properties-expression-editor-wrapper" >
+			<div className="properties-expression-editor-wrapper" ref={this.wrapperRef}>
 				{this.props.controlItem}
 				{flyout}
 				<div className="properties-editor-container">

@@ -1793,11 +1793,11 @@ export default class SVGCanvasRenderer {
 				.each((d, i, nodeGrps) => {
 					if (d.isSupernodeInputBinding) {
 						this.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-output-main");
-						this.updateOutputPortArrowPath(nodeGrps[i], "d3-node-port-output-arrow");
+						this.updateOutputPortArrowPath(nodeGrps[i], d, "d3-node-port-output-arrow");
 					}
 					if (d.isSupernodeOutputBinding) {
 						this.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-input-main");
-						this.updateInputPortArrowPath(nodeGrps[i], "d3-node-port-input-arrow");
+						this.updateInputPortArrowPath(nodeGrps[i], d, "d3-node-port-input-arrow");
 					}
 				});
 		}
@@ -2190,7 +2190,7 @@ export default class SVGCanvasRenderer {
 				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
 				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
 					obj
-						.attr("d", this.getPortArrowPath())
+						.attr("d", this.getPortArrowPath(this.getPortRadius(node)))
 						.attr("transform", this.getInputPortArrowPathTransform(port));
 				}
 			});
@@ -2302,7 +2302,7 @@ export default class SVGCanvasRenderer {
 				const portDisplayInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
 				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
 					obj
-						.attr("d", this.getPortArrowPath())
+						.attr("d", this.getPortArrowPath(this.getPortRadius(node)))
 						.attr("transform", this.getOutputPortArrowPathTransform(port));
 				}
 			});
@@ -3656,17 +3656,17 @@ export default class SVGCanvasRenderer {
 			.attr("cy", (port) => port.cy); // Port position may change for binding nodes with multiple-ports.
 	}
 
-	updateInputPortArrowPath(nodeObj, portArrowClassName) {
+	updateInputPortArrowPath(nodeObj, node, portArrowClassName) {
 		const nodeGrp = d3.select(nodeObj);
 		nodeGrp.selectAll("." + portArrowClassName)
-			.attr("d", this.getPortArrowPath())
+			.attr("d", this.getPortArrowPath(this.getPortRadius(node)))
 			.attr("transform", (port) => this.getInputPortArrowPathTransform(port));
 	}
 
-	updateOutputPortArrowPath(nodeObj, portArrowClassName) {
+	updateOutputPortArrowPath(nodeObj, node, portArrowClassName) {
 		const nodeGrp = d3.select(nodeObj);
 		nodeGrp.selectAll("." + portArrowClassName)
-			.attr("d", this.getPortArrowPath())
+			.attr("d", this.getPortArrowPath(this.getPortRadius(node)))
 			.attr("transform", (port) => this.getOutputPortArrowPathTransform(port));
 	}
 
@@ -3890,7 +3890,7 @@ export default class SVGCanvasRenderer {
 	// invisible area out beyond the highlight sizing line to improve usability
 	// when sizing.
 	getNodeShapePathSizing(data) {
-		return this.getRectangleNodeShapePath(data, data.layout.nodeSizingArea);
+		return SvgCanvasNodes.getRectangleNodeShapePath(data, data.layout.nodeSizingArea);
 	}
 
 	// Returns an SVG path string that will draw the selection outline shape of the node.
@@ -3902,13 +3902,13 @@ export default class SVGCanvasRenderer {
 			return data.layout.selectionPath;
 
 		} else if (data.layout.nodeShape === SHAPE_PORT_ARCS) {
-			return this.getPortArcsNodeShapePath(data); // Port-arc outline does not have a highlight gap
+			return SvgCanvasNodes.getPortArcsNodeShapePath(data, data.layout.nodeHighlightGap);
 
 		} else if (data.layout.nodeShape === SHAPE_RECTANGLE_ROUNDED_CORNERS) {
-			return this.getRectRoundCornersShapePath(data, data.layout.nodeHighlightGap);
+			return SvgCanvasNodes.getRectRoundCornersShapePath(data, data.layout.nodeHighlightGap);
 		}
 
-		return this.getRectangleNodeShapePath(data, data.layout.nodeHighlightGap);
+		return SvgCanvasNodes.getRectangleNodeShapePath(data, data.layout.nodeHighlightGap);
 	}
 
 	// Returns an SVG path string that will draw the body shape of the node.
@@ -3921,194 +3921,13 @@ export default class SVGCanvasRenderer {
 			return data.layout.bodyPath;
 
 		} else if (data.layout.nodeShape === SHAPE_PORT_ARCS) {
-			return this.getPortArcsNodeShapePath(data);
+			return SvgCanvasNodes.getPortArcsNodeShapePath(data);
 
 		} else if (data.layout.nodeShape === SHAPE_RECTANGLE_ROUNDED_CORNERS) {
-			return this.getRectRoundCornersShapePath(data);
+			return SvgCanvasNodes.getRectRoundCornersShapePath(data);
 		}
 
-		return this.getRectangleNodeShapePath(data);
-	}
-
-	// Returns an SVG path that will draw the shape for a rectangle node
-	// display. This is drawn as a path rather than an SVG rectangle to make the
-	// calling code more generic.
-	getRectangleNodeShapePath(data, highlightGap = 0) {
-		const gaps = typeof highlightGap === "object"
-			? highlightGap
-			: {
-				leftGap: highlightGap,
-				rightGap: highlightGap,
-				topGap: highlightGap,
-				bottomGap: highlightGap
-			};
-
-		const l = 0 - gaps.leftGap;
-		const t = 0 - gaps.topGap;
-		const r = data.width + gaps.rightGap;
-		const b = data.height + gaps.bottomGap;
-
-		return "M " + l + " " + t + " L " + r + " " + t + " " + r + " " + b + " " + l + " " + b + " Z";
-	}
-
-	// Returns an SVG path that will draw a shape for a
-	// rectangle-with-rounded-corners node shape display.
-	getRectRoundCornersShapePath(data, highlightGap = 0) {
-		const c = 10; // Corner size
-		const l = 0 - highlightGap;
-		const t = 0 - highlightGap;
-		const r = data.width + highlightGap;
-		const b = data.height + highlightGap;
-		const lc = l + c;
-		const rc = r - c;
-		const tc = t + c;
-		const bc = b - c;
-
-		return "M " + lc + " " + t + " L " + rc + " " + t + " " +
-			"Q " + r + " " + t + " " + r + " " + tc + " " +
-			"L " + r + " " + bc + " " +
-			"Q " + r + " " + b + " " + rc + " " + b + " " +
-			"L " + lc + " " + b + " " +
-			"Q " + l + " " + b + " " + l + " " + bc + " " +
-			"L " + l + " " + tc + " " +
-			"Q " + l + " " + t + " " + lc + " " + t +
-			" Z";
-	}
-
-	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
-	// display which shows arcs around each of the node circles.
-	getPortArcsNodeShapePath(data) {
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			return this.getPortArcsNodeShapePathVertical(data, data.inputs, data.inputPortsWidth, data.outputs, data.outputPortsWidth);
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			return this.getPortArcsNodeShapePathVertical(data, data.outputs, data.outputPortsWidth, data.inputs, data.inputPortsWidth);
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
-			return this.getPortArcsNodeShapePathHoriz(data, data.outputs, data.outputPortsHeight, data.inputs, data.inputPortsHeight);
-		}
-
-		return this.getPortArcsNodeShapePathHoriz(data, data.inputs, data.inputPortsHeight, data.outputs, data.outputPortsHeight);
-	}
-
-	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
-	//  display which shows arcs around each of the node circles for the horizontal
-	// (LeftRight and RightLeft) directions.
-	getPortArcsNodeShapePathHoriz(data, leftPorts, leftPortsHeight, rightPorts, rightPortsHeight) {
-		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
-
-		if (rightPorts && rightPorts.length > 0) {
-			let endPoint = data.layout.portArcOffset;
-
-			// Draw straight segment down to ports (if needed)
-			if (rightPortsHeight < data.height) {
-				endPoint = rightPorts[0].cy - data.layout.portArcRadius;
-			}
-
-			path += " L " + data.width + " " + endPoint;
-
-			// Draw port arcs
-			rightPorts.forEach((port, index) => {
-				endPoint += (data.layout.portArcRadius * 2);
-				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 1 " + data.width + " " + endPoint;
-				if (index < rightPorts.length - 1) {
-					endPoint += data.layout.portArcSpacing;
-					path += " L " + data.width + " " + endPoint;
-				}
-			});
-
-			// Draw finishing segment to bottom right corner
-			path += " L " + data.width + " " + data.height;
-
-		// If no right-side ports just draw a straight line.
-		} else {
-			path += " L " + data.width + " " + data.height;
-		}
-
-		path += " L 0 " + data.height; // Draw line across the bottom of the node
-
-		if (leftPorts && leftPorts.length > 0) {
-			let endPoint2 = data.height - data.layout.portArcOffset;
-
-			if (leftPortsHeight < data.height) {
-				endPoint2 = leftPorts[leftPorts.length - 1].cy + data.layout.portArcRadius;
-			}
-
-			path += " L 0 " + endPoint2;
-
-			leftPorts.forEach((port, index) => {
-				endPoint2 -= (data.layout.portArcRadius * 2);
-				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 1 0 " + endPoint2;
-				if (index < leftPorts.length - 1) {
-					endPoint2 -= data.layout.portArcSpacing;
-					path += " L 0 " + endPoint2;
-				}
-			});
-
-			path += " Z"; // Draw finishing segment back to origin
-		} else {
-			path += " Z"; // If no left-side ports just draw a straight line.
-		}
-		return path;
-	}
-
-	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
-	// display which shows arcs around each of the node circles for vertical
-	// (TopBottom and BottomTop) directions.
-	getPortArcsNodeShapePathVertical(data, topPorts, topPortsWidth, bottomPorts, bottomPortsWidth) {
-		let path = "M 0 0 L 0 " + data.height; // Draw line down the left of the node
-
-		if (bottomPorts && bottomPorts.length > 0) {
-			let endPoint = data.layout.portArcOffset;
-
-			// Draw straight segment across to ports (if needed)
-			if (bottomPortsWidth < data.width) {
-				endPoint = bottomPorts[0].cx - data.layout.portArcRadius;
-			}
-
-			path += " L " + endPoint + " " + data.height;
-
-			// Draw port arcs
-			bottomPorts.forEach((port, index) => {
-				endPoint += (data.layout.portArcRadius * 2);
-				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 0 " + endPoint + " " + data.height;
-				if (index < bottomPorts.length - 1) {
-					endPoint += data.layout.portArcSpacing;
-					path += " L " + endPoint + " " + data.height;
-				}
-			});
-
-			// Draw finishing segment to bottom right corner
-			path += " L " + data.width + " " + data.height;
-
-		// If no bottom ports just draw a straight line.
-		} else {
-			path += " L " + data.width + " " + data.height;
-		}
-
-		path += " L " + data.width + " 0 "; // Draw line up the right side of the node
-
-		if (topPorts && topPorts.length > 0) {
-			let endPoint2 = data.width - data.layout.portArcOffset;
-
-			if (topPortsWidth < data.width) {
-				endPoint2 = topPorts[topPorts.length - 1].cx + data.layout.portArcRadius;
-			}
-
-			path += " L " + endPoint2 + " 0 ";
-
-			topPorts.forEach((port, index) => {
-				endPoint2 -= (data.layout.portArcRadius * 2);
-				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 0 " + endPoint2 + " 0 ";
-				if (index < topPorts.length - 1) {
-					endPoint2 -= data.layout.portArcSpacing;
-					path += " L " + endPoint2 + " 0 ";
-				}
-			});
-
-			path += " Z"; // Draw finishing segment back to origin
-		} else {
-			path += " Z"; // If no top ports just draw a straight line.
-		}
-		return path;
+		return SvgCanvasNodes.getRectangleNodeShapePath(data);
 	}
 
 	// Sets the port positions on nodes for use when displaying nodes and links
@@ -5041,9 +4860,8 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableKeyboardNavigation) {
 					this.setFocusObject(d, d3Event, false, true);
 				}
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE &&
-						!this.config.enableDragWithoutSelect) {
-					const clickType = this.getClickType(d3Event);
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					const clickType = this.config.enableDragWithoutSelect ? SINGLE_CLICK : this.getClickType(d3Event);
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
@@ -6203,11 +6021,14 @@ export default class SVGCanvasRenderer {
 		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
 	}
 
-	// Returns path for arrow head displayed within an port circle. It is
-	// draw so the tip is 2px in front of the origin 0,0 so it appears nicely in
-	// the port circle.
-	getPortArrowPath() {
-		return "M -2 3 L 2 0 -2 -3";
+	// Returns a chevron arrow path scaled proportionally to the port circle radius.
+	// The proportions match the original hardcoded arrow (tip=2, halfHeight=3) which
+	// was designed for the vertical layout default portRadius of 6.
+	getPortArrowPath(radius) {
+		const r = radius || 6;
+		const tip = (r / 3).toFixed(2);
+		const halfH = (r / 2).toFixed(2);
+		return `M -${tip} ${halfH} L ${tip} 0 -${tip} -${halfH}`;
 	}
 
 	// Returns the transform to position and, if necessary, rotate the port
@@ -6532,7 +6353,7 @@ export default class SVGCanvasRenderer {
 				objSel.insert("path", ":first-child")
 					.attr("class", "d3-focus-path")
 					.attr("d", (d) =>
-						this.getRectangleNodeShapePath(d, this.getNodeFocusIncrements(d, objSel)));
+						SvgCanvasNodes.getRectangleNodeShapePath(d, this.getNodeFocusIncrements(d, objSel)));
 
 			} else {
 				// This may happen when objects are being created.

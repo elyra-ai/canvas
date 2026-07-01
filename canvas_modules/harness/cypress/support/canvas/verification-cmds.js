@@ -1499,6 +1499,14 @@ Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	}
 });
 
+Cypress.Commands.add("verifyNotificationPanelButtonExists", () => {
+	cy.get(".toolbar-item.notificationCounterIcon").should("exist");
+});
+
+Cypress.Commands.add("verifyNotificationPanelButtonDoesNotExist", () => {
+	cy.get(".toolbar-item.notificationCounterIcon").should("not.exist");
+});
+
 Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue, categoryLabel) => {
 	cy.findNodeInCategory(nodeLabel, categoryLabel)
 		.invoke("attr", "data-id")

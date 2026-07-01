@@ -103,6 +103,20 @@ describe("Test of notification center configuration", function() {
 		cy.verifyNotificationCenterContent("clear-all");
 
 	});
+
+	it("Test notification panel button is hidden when selectedNotificationConfig is false", function() {
+		// Set canvas config to disable notification config
+		cy.setCanvasConfig({ selectedNotificationConfig: false });
+
+		// Verify the notification panel button does not exist in the toolbar
+		cy.verifyNotificationPanelButtonDoesNotExist();
+
+		// Enable notification config
+		cy.setCanvasConfig({ selectedNotificationConfig: true });
+
+		// Verify the notification panel button now exists in the toolbar
+		cy.verifyNotificationPanelButtonExists();
+	});
 });
 
 function verifyNotificationMessagesCallbackInConsole(id) {

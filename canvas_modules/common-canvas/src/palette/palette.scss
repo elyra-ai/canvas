@@ -158,7 +158,7 @@ $palette-dialog-list-item-height: 46px;
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			color: carbon.$text-secondary;
+			fill: carbon.$icon-primary;
 		}
 
 		.palette-list-item-text-div {
@@ -432,7 +432,7 @@ $palette-dialog-list-item-height: 46px;
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
 			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
-			color: carbon.$text-secondary;
+			fill: carbon.$icon-primary;
 			margin-left: 0;
 			margin-right: 10px;
 		}
@@ -542,6 +542,7 @@ $palette-dialog-list-item-height: 46px;
 .palette-dialog-grid-node-icon .node-icon {
 	width: carbon.$spacing-10;
 	height: carbon.$spacing-10;
+	fill: carbon.$icon-primary;
 }
 
 .palette-dialog-grid-node-icon-warning {

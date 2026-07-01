@@ -319,7 +319,7 @@ export default class APIPipeline {
 		return node;
 	}
 
-	// Returns a newly created 'auto node' whose position is based on the
+	// Returns a newly created node whose position is based on the
 	// source node (if one is provided) and the the other nodes on the canvas.
 	createAutoNode(data, sourceNode) {
 		const initialMarginX = this.objectModel.getCanvasLayout().autoLayoutInitialMarginX;
