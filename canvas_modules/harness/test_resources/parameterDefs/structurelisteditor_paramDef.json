@@ -47,6 +47,18 @@
         "Age >= 55"
       ]
     ],
+    "inlineEditingTableRowSelectionNone": [
+      [
+        1,
+        1.234,
+        "Age >= 55"
+      ],
+      [
+        2,
+        2.345,
+        "Age < 55"
+      ]
+    ],
     "inlineEditingTableNoButtons": [
       [
         1,
@@ -247,6 +259,11 @@
       "default": []
     },
     {
+      "id": "inlineEditingTableRowSelectionNone",
+      "type": "array[inlineEditingTableRowSelectionNone]",
+      "default": []
+    },
+    {
       "id": "inlineEditingTableNoButtons",
       "type": "array[inlineEditingTableNoButtons]",
       "default": []
@@ -395,6 +412,28 @@
           "type": "string",
           "default": "",
           "role": "expression"
+        }
+      ]
+    },
+    {
+      "id": "inlineEditingTableRowSelectionNone",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": 1,
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": 1.2,
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": ""
         }
       ]
     },
@@ -932,6 +971,15 @@
         "rows": -1
       },
       {
+        "parameter_ref": "inlineEditingTableRowSelectionNone",
+        "label": {
+          "default": "Row Selection None"
+        },
+        "description": {
+          "default": "Table with row_selection set to none — no radio buttons or checkboxes rendered"
+        }
+      },
+      {
         "parameter_ref": "inlineEditingTableNoButtons",
         "label": {
           "default": "Values"
@@ -1192,6 +1240,54 @@
             },
             "width": 15,
             "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "inlineEditingTableRowSelectionNone",
+        "row_selection": "none",
+        "add_remove_rows": true,
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "inline",
             "place_holder_text": {
               "default": "Enter condition expression"
             }
@@ -2080,6 +2176,21 @@
                 "id": "Inline editing1",
                 "parameter_refs": [
                   "inlineEditingTable"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "Row Selection None",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure Row Selection None Table"
+            },
+            "group_info": [
+              {
+                "id": "Row Selection None editing",
+                "parameter_refs": [
+                  "inlineEditingTableRowSelectionNone"
                 ]
               }
             ]

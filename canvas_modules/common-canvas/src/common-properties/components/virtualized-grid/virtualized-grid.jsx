@@ -191,6 +191,11 @@ const VirtualizedGrid = (props) => {
 			return <div className="properties-vt-row-checkbox" />;
 		}
 
+		// Do not render any selection UI when row_selection is "none"
+		if (props.rowSelection === ROW_SELECTION.NONE) {
+			return "";
+		}
+
 		let selectOption = "";
 		if (props.selectable) {
 			const rowSelected = isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
