@@ -43,6 +43,7 @@ import {
 	LIST_PROPS_INFO,
 	PASSWORD_FIELD_PROPS_INFO,
 	EXPRESSION_PROPS_INFO,
+	EXPRESSION_JUEL_PROPS_INFO,
 	CODE_PROPS_INFO,
 	READONLY_PROPS_INFO,
 	HIDDEN_PROPS_INFO,
@@ -109,8 +110,10 @@ class CommonPropertiesComponents extends React.Component {
 		this.buttonHandler = () => {
 			// empty callback handler
 		};
+		this.expressionVariablesHandler = this.expressionVariablesHandler.bind(this);
 		this.callbacks = {
-			buttonHandler: this.buttonHandler
+			buttonHandler: this.buttonHandler,
+			expressionVariablesHandler: this.expressionVariablesHandler
 		};
 
 		this.jsonReplacer = this.jsonReplacer.bind(this);
@@ -174,6 +177,18 @@ class CommonPropertiesComponents extends React.Component {
 
 	tearsheetControllerHandler(propertiesController) {
 		this.tearsheetPropertiesController = propertiesController;
+	}
+
+	expressionVariablesHandler(propertyId, language) {
+		if (language === "juel") {
+			return [
+				"${customer.name}",
+				"${customer.age}",
+				"${order.total}",
+				"${order.status}"
+			];
+		}
+		return [];
 	}
 
 	actionHandler(actionId, appData, data) {
@@ -1016,6 +1031,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={expressionInfoProps}
 								propertiesConfig={this.propertiesConfig}
+								callbacks={this.callbacks}
 								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(expressionInfoProps)}
@@ -1023,6 +1039,26 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(expressionInfoProps.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+					<h4 className="harness-section-subtitle">Custom language variable passing (<code>expressionVariablesHandler</code>)</h4>
+					<p>When <span className="harness-highlight">language</span> is set to a custom value (e.g. <span className="harness-highlight">juel</span>),
+						there are no built-in completions. Variables are supplied entirely by the
+					<span className="harness-highlight"> expressionVariablesHandler</span> callback registered by the host application.
+						Press <span className="harness-highlight">Ctrl+Space</span> inside the editor below to see the injected variables.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={EXPRESSION_JUEL_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								callbacks={this.callbacks}
+								light={this.state.light}
+							/>
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(EXPRESSION_JUEL_PROPS_INFO.parameterDef, "control")}
 							</pre>
 						</div>
 					</div>
