@@ -20,7 +20,10 @@
 	// 8px spacing between action image and the control beside image.
 	padding: 0 0 0 carbon.$spacing-03;
 	cursor: pointer;
-	align-self: flex-end;
+	align-self: flex-start;
+	// Offset by label height (label-01 line + Carbon label margin-bottom) to align with the input field.
+	// Matches the same offset used by numberfield's number generator.
+	margin-top: carbon.$spacing-05 + carbon.$spacing-03;
 	&.left {
 		order: -1;
 		padding: 0 carbon.$spacing-03 0 0;
