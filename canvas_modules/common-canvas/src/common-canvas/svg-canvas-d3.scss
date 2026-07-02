@@ -471,6 +471,7 @@ g.d3-link-dec-group:focus {
 }
 
 .d3-node-dec-label,
+.d3-comment-dec-label,
 .d3-link-dec-label {
 	@include d3-dec-label-mixin;
 	border-width: $node-label-display-border;
@@ -494,6 +495,7 @@ g.d3-link-dec-group:focus {
 }
 
 .d3-node-dec-path,
+.d3-comment-dec-path,
 .d3-link-dec-path {
 	fill: $node-decoration-outline;
 	stroke: $node-decoration-outline;
@@ -504,6 +506,7 @@ g.d3-link-dec-group:focus {
 }
 
 .d3-node-dec-image,
+.d3-comment-dec-image,
 .d3-link-dec-image {
 	stroke-width: 1;
 	stroke-dasharray: 0; // Override the dasharray from the link line

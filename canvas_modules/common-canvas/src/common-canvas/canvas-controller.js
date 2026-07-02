@@ -3200,6 +3200,7 @@ export default class CanvasController {
 		} else if (data.editType !== "setCommentEditingMode" &&
 					data.editType !== "setNodeLabelEditingMode" &&
 					data.editType !== "setNodeDecorationLabelEditingMode" &&
+					data.editType !== "setCommentDecorationLabelEditingMode" &&
 					data.editType !== "setLinkDecorationLabelEditingMode" &&
 					data.editType !== "togglePalette" &&
 					data.editType !== "openPalette" &&

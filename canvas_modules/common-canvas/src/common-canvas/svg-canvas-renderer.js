@@ -1712,7 +1712,7 @@ export default class SVGCanvasRenderer {
 			}
 		} else {
 			this.superRenderers.forEach((renderer) => {
-				renderer.setLinkDecorationLabelEditingMode(decId, nodeId, pipelineId);
+				renderer.setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId);
 			});
 		}
 	}
@@ -2903,7 +2903,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Displays the edit icon for an editable decoration label.
-	// obj can be either DEC_NODE or DEC_LINK.
+	// objType can be DEC_NODE, DEC_COMMENT, or DEC_LINK.
 	displayDecLabelEditIcon(spanObj, dec, obj, objType) {
 		const labelObj = spanObj.parentElement;
 		const foreignObj = labelObj.parentElement;
@@ -2921,7 +2921,12 @@ export default class SVGCanvasRenderer {
 	// Returns the appropriate editType string (for changing to edit mode)
 	// for the objType passed in.
 	getDecorationLabelEditType(objType) {
-		return objType === DEC_NODE ? "setNodeDecorationLabelEditingMode" : "setLinkDecorationLabelEditingMode";
+		if (objType === DEC_NODE) {
+			return "setNodeDecorationLabelEditingMode";
+		} else if (objType === DEC_COMMENT) {
+			return "setCommentDecorationLabelEditingMode";
+		}
+		return "setLinkDecorationLabelEditingMode";
 	}
 
 	// Displays the edit icon (which can be clicked to start editing) next
