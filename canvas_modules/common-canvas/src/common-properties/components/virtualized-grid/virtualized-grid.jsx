@@ -320,7 +320,7 @@ const VirtualizedGrid = (props) => {
 							tabIndex={sortIcon ? 0 : null}
 							role={sortIcon ? "button" : null}
 							aria-label={sortIcon ? props.intl.formatMessage(
-								{ id: "table.sort.column.label" },
+								{ id: "table.sort.column.label", defaultMessage: defaultMessages["table.sort.column.label"] },
 								{ column_name: headerLabel }
 							) : null}
 							onKeyDown={sortIcon ? (evt) => {
