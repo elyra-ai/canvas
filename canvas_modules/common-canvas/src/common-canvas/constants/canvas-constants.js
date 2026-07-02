@@ -141,6 +141,7 @@ export const ASSOC_VAR_DOUBLE_BACK_LEFT = "doubleBackLeft";
 // The type of object to which decorations are to be attached.
 export const DEC_NODE = "node";
 export const DEC_LINK = "link";
+export const DEC_COMMENT = "comment";
 
 export const DAGRE_HORIZONTAL = "LR";
 export const DAGRE_VERTICAL = "TB";
