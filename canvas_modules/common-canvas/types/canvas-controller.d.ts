@@ -339,6 +339,15 @@ export interface NotificationMsg {
  */
 export type DecorationId = string;
 
+/** Decoration can be applied to canvas objects to add extra images, text etc to
+ * enhance their appearance or depict special attributes of the object.
+ * Note: This is created and exported in the TypeScript file because json2ts
+ * doesn't create a combined Decoration object even though the JSON schema uses
+ * the "oneOf" keyword. This seems to be because the decoration definitions are
+ * in a child schema of pipeline-flow-v3-schema.json.
+ */
+export type Decoration = NodeDecorationDef | CommentDecorationDef | LinkDecorationDef;
+
 /** An entry in the context menu representing a option that can be clicked or
  * a divider.
  */
