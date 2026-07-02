@@ -937,6 +937,15 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeDecorations(nodeId, newDecorations);
 	}
 
+	// Sets the decorations on a comment. The decorations array passed in
+	// will replace any decorations currently applied to the comment.
+	// commentId - The ID of the comment
+	// newDecorations - An array of decoration objects.
+	// pipelineId - The ID of the pipeline
+	setCommentDecorations(commentId, newDecorations, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setCommentDecorations(commentId, newDecorations);
+	}
+
 	// Sets the input ports on a node. The inputs array of ports provided will
 	// replace any input ports for a node.
 	// nodeId - The ID of the node
@@ -966,6 +975,18 @@ export default class CanvasController {
 	//   ]
 	setNodesMultiDecorations(pipelineNodeDecorations) {
 		this.objectModel.setNodesMultiDecorations(pipelineNodeDecorations);
+	}
+
+	// Sets the decorations of multiple comments at once. The decorations array
+	// passed in will replace any decorations currently applied to the comments.
+	// pipelineCommentDecorations - Specifies the comments and their decorations.
+	// It is a javascript array like this:
+	//   [
+	//     { pipelineId: <pipelineId>, decorations: [{ commentId: <commentId>, decorations: <decoration_spec>}]},
+	//     { pipelineId: <pipelineId>, decorations: [{ commentId: <commentId>, decorations: <decoration_spec>}]}
+	//   ]
+	setCommentsMultiDecorations(pipelineCommentDecorations) {
+		this.objectModel.setCommentsMultiDecorations(pipelineCommentDecorations);
 	}
 
 	// Sets the input port label on a node
@@ -1047,6 +1068,13 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	getNodeDecorations(nodeId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeDecorations(nodeId);
+	}
+
+	// Gets an array of decorations for a comment
+	// commentId - The ID of the comment
+	// pipelineId - The ID of the pipeline
+	getCommentDecorations(commentId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getCommentDecorations(commentId);
 	}
 
 	// Gets the class name associated with the node specified by nodeId in the
@@ -1159,6 +1187,15 @@ export default class CanvasController {
 	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
 		if (this.canvasContents) {
 			this.getSVGCanvasD3().setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId);
+		}
+	}
+
+	// Sets the decoration label, for the decoration in the comment identified, to edit
+	// mode, provided the decoration label is editable. This allows the user to edit the
+	// label text.
+	setCommentDecorationLabelEditingMode(decId, commentId, pipelineId) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setCommentDecorationLabelEditingMode(decId, commentId, pipelineId);
 		}
 	}
 
@@ -2798,6 +2835,10 @@ export default class CanvasController {
 			this.setNodeDecorationLabelEditingMode(data.decId, data.id, data.pipelineId);
 			break;
 		}
+		case "setCommentDecorationLabelEditingMode": {
+			this.setCommentDecorationLabelEditingMode(data.decId, data.id, data.pipelineId);
+			break;
+		}
 		case "setLinkDecorationLabelEditingMode": {
 			this.setLinkDecorationLabelEditingMode(data.decId, data.id, data.pipelineId);
 			break;
@@ -3159,6 +3200,7 @@ export default class CanvasController {
 		} else if (data.editType !== "setCommentEditingMode" &&
 					data.editType !== "setNodeLabelEditingMode" &&
 					data.editType !== "setNodeDecorationLabelEditingMode" &&
+					data.editType !== "setCommentDecorationLabelEditingMode" &&
 					data.editType !== "setLinkDecorationLabelEditingMode" &&
 					data.editType !== "togglePalette" &&
 					data.editType !== "openPalette" &&

@@ -216,6 +216,11 @@ export default class SVGCanvasPipeline {
 		return (typeof link === "undefined") ? null : link;
 	}
 
+	// Returns the node, comment or link object identified by the id passed in.
+	getActiveObject(id) {
+		return this.getNode(id) || this.getComment(id) || this.getLink(id);
+	}
+
 	getLinks(linkIds) {
 		const links = [];
 		linkIds.forEach((lId) => {

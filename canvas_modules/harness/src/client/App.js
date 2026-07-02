@@ -493,6 +493,7 @@ class App extends React.Component {
 		this.setNodeLabel = this.setNodeLabel.bind(this);
 		this.setPortLabel = this.setPortLabel.bind(this);
 		this.setNodeDecorations = this.setNodeDecorations.bind(this);
+		this.setCommentDecorations = this.setCommentDecorations.bind(this);
 		this.setLinkDecorations = this.setLinkDecorations.bind(this);
 		this.getZoomToReveal = this.getZoomToReveal.bind(this);
 		this.zoomCanvasForObj = this.zoomCanvasForObj.bind(this);
@@ -1011,6 +1012,15 @@ class App extends React.Component {
 		}
 		this.canvasController.setLinkDecorations(linkId, newDecs);
 		this.log("Set new link decorations", { linkId: linkId, newDecorations: newDecs });
+	}
+
+	setCommentDecorations(commentId, newDecorations) {
+		let newDecs = JSON.parse(newDecorations);
+		if (isEmpty(newDecs)) {
+			newDecs = null;
+		}
+		this.canvasController.setCommentDecorations(commentId, newDecs);
+		this.log("Set new comment decorations", { commentId: commentId, newDecorations: newDecs });
 	}
 
 	getZoomToReveal(nodeId, xOffset, yOffset) {
@@ -2854,6 +2864,7 @@ class App extends React.Component {
 			setNodeLabel: this.setNodeLabel,
 			setPortLabel: this.setPortLabel,
 			setNodeDecorations: this.setNodeDecorations,
+			setCommentDecorations: this.setCommentDecorations,
 			setLinkDecorations: this.setLinkDecorations,
 			getZoomToReveal: this.getZoomToReveal,
 			zoomCanvasForObj: this.zoomCanvasForObj,

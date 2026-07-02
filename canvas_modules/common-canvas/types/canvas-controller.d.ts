@@ -21,6 +21,7 @@ import type {
   PipelineDef,
   NodeTypeDef,
   NodeDecorationDef,
+  CommentDecorationDef,
   LinkDecorationDef,
   // Shared declarations
   ZoomObjectDef,
@@ -61,6 +62,7 @@ export type InternalAction =
   | "setCommentEditingMode"
   | "setNodeLabelEditingMode"
   | "setNodeDecorationLabelEditingMode"
+  | "setCommentDecorationLabelEditingMode"
   | "setLinkDecorationLabelEditingMode"
   | "setZoom"
   | "togglePalette"
@@ -344,7 +346,7 @@ export type DecorationId = string;
  * the "oneOf" keyword. This seems to be because the decoration definitions are
  * in a child schema of pipeline-flow-v3-schema.json.
  */
-export type Decoration = NodeDecorationDef | LinkDecorationDef;
+export type Decoration = NodeDecorationDef | CommentDecorationDef | LinkDecorationDef;
 
 /** An entry in the context menu representing a option that can be clicked or
  * a divider.
@@ -1175,7 +1177,21 @@ export declare class CanvasController {
      */
     setNodeDecorations(
       nodeId: CanvasNodeId,
-      newDecorations: Decoration[],
+      newDecorations: NodeDecorationDef[],
+      pipelineId?: PipelineId
+    ): void;
+
+    /**
+     * Sets the decorations on a comment. The decorations array passed in
+     * will replace any decorations currently applied to the comment.
+     * @param commentId - The ID of the comment
+     * @param newDecorations - An array of decoration objects.
+     * @param pipelineId - Optional. The ID of the pipeline of the comment.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    setCommentDecorations(
+      commentId: CanvasCommentId,
+      newDecorations: CommentDecorationDef[],
       pipelineId?: PipelineId
     ): void;
 
@@ -1225,7 +1241,30 @@ export declare class CanvasController {
       pipelineNodeDecorations: {
         pipelineId: PipelineId;
         nodeId: CanvasNodeId;
-        decorations: Decoration[];
+        decorations: NodeDecorationDef[];
+      }[]
+    ): void;
+
+    /**
+     * Sets the decorations of multiple comments at once. The decorations array
+     * passed in will replace any decorations currently applied to the comments.
+     * @param pipelineCommentDecorations - Specifies the comments and their decorations.
+     *
+     * ```javascript
+     * It is a JavaScript array like this:
+     *   [
+     *     { pipelineId: <pipelineId>, decorations: [{ commentId: <commentId>, decorations: <decoration_spec_array>}]},
+     *     { pipelineId: <pipelineId>, decorations: [{ commentId: <commentId>, decorations: <decoration_spec_array>}]}
+     *   ]
+     * ```
+     */
+    setCommentsMultiDecorations(
+      pipelineCommentDecorations: {
+        pipelineId: PipelineId;
+        decorations: {
+          commentId: CanvasCommentId;
+          decorations: CommentDecorationDef[];
+        }[];
       }[]
     ): void;
 
@@ -1363,7 +1402,7 @@ export declare class CanvasController {
     getNodeDecorations(
       nodeId: CanvasNodeId,
       pipelineId?: PipelineId
-    ): Decoration[] | null;
+    ): NodeDecorationDef[] | null;
 
     /**
      * Gets the class name associated with the node specified by nodeId in the
@@ -1730,6 +1769,33 @@ export declare class CanvasController {
     ): void;
 
     /**
+     * Gets an array of decorations for a comment.
+     * @param commentId - The ID of the comment
+     * @param pipelineId - Optional. The ID of the pipeline of the comment.
+     *                     Defaults to the currently displayed pipeline.
+     * @returns An array of decorations, or null if the comment is not found.
+     */
+    getCommentDecorations(
+      commentId: CanvasCommentId,
+      pipelineId?: PipelineId
+    ): CommentDecorationDef[] | null;
+
+    /**
+     * Sets the decoration label, for the decoration in the comment identified, to
+     * edit mode, provided the decoration label is editable. This allows the user to
+     * edit the label text.
+     * @param decId - The ID of the label decoration on the comment.
+     * @param commentId - The ID of the comment
+     * @param pipelineId - Optional. The ID of the pipeline of the comment.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    setCommentDecorationLabelEditingMode(
+      decId: DecorationId,
+      commentId: CanvasCommentId,
+      pipelineId?: PipelineId
+    ): void;
+
+    /**
      * Link methods
      * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#link-methods
      */
@@ -2081,7 +2147,7 @@ export declare class CanvasController {
      */
     setLinkDecorations(
       linkId: CanvasLinkId,
-      newDecorations: Decoration[],
+      newDecorations: LinkDecorationDef[],
       pipelineId?: PipelineId
     ): void;
 
@@ -2103,7 +2169,7 @@ export declare class CanvasController {
       pipelineLinkDecorations: {
         pipelineId: PipelineId;
         linkId: CanvasLinkId;
-        decorations: Decoration[];
+        decorations: LinkDecorationDef[];
       }[]
     ): void;
 
@@ -2117,7 +2183,7 @@ export declare class CanvasController {
     getLinkDecorations(
       linkId: CanvasLinkId,
       pipelineId?: PipelineId
-    ): Decoration[];
+    ): LinkDecorationDef[];
 
     /**
      * Sets the decoration label, for the decoration in the link identified, to edit

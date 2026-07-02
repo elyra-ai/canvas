@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
-import { DEC_LINK, DEC_NODE }	from "../common-canvas/constants/canvas-constants";
+import { DEC_NODE, DEC_COMMENT, DEC_LINK } from "../common-canvas/constants/canvas-constants";
 
 export default class EditDecorationLabelAction extends Action {
 	constructor(data, canvasController) {
@@ -23,10 +23,12 @@ export default class EditDecorationLabelAction extends Action {
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(this.data.pipelineId);
-		if (this.data.objType === DEC_LINK) {
-			this.previousDecorations = this.apiPipeline.getLinkDecorations(this.data.objId) || [];
-		} else if (this.data.objType === DEC_NODE) {
+		if (this.data.objType === DEC_NODE) {
 			this.previousDecorations = this.apiPipeline.getNodeDecorations(this.data.objId) || [];
+		} else if (this.data.objType === DEC_COMMENT) {
+			this.previousDecorations = this.apiPipeline.getCommentDecorations(this.data.objId) || [];
+		} else if (this.data.objType === DEC_LINK) {
+			this.previousDecorations = this.apiPipeline.getLinkDecorations(this.data.objId) || [];
 		}
 		this.newDecorations = this.previousDecorations.map((dec) => {
 			if (dec.id === this.data.decId) {
@@ -38,19 +40,23 @@ export default class EditDecorationLabelAction extends Action {
 
 	// Standard methods
 	do() {
-		if (this.data.objType === DEC_LINK) {
-			this.apiPipeline.setLinkDecorations(this.data.objId, this.newDecorations);
-		} else if (this.data.objType === DEC_NODE) {
+		if (this.data.objType === DEC_NODE) {
 			this.apiPipeline.setNodeDecorations(this.data.objId, this.newDecorations);
+		} else if (this.data.objType === DEC_COMMENT) {
+			this.apiPipeline.setCommentDecorations(this.data.objId, this.newDecorations);
+		} else if (this.data.objType === DEC_LINK) {
+			this.apiPipeline.setLinkDecorations(this.data.objId, this.newDecorations);
 		}
 		this.focusObject = this.data.selectedObjects[0];
 	}
 
 	undo() {
-		if (this.data.objType === DEC_LINK) {
-			this.apiPipeline.setLinkDecorations(this.data.objId, this.previousDecorations);
-		} else if (this.data.objType === DEC_NODE) {
+		if (this.data.objType === DEC_NODE) {
 			this.apiPipeline.setNodeDecorations(this.data.objId, this.previousDecorations);
+		} else if (this.data.objType === DEC_COMMENT) {
+			this.apiPipeline.setCommentDecorations(this.data.objId, this.previousDecorations);
+		} else if (this.data.objType === DEC_LINK) {
+			this.apiPipeline.setLinkDecorations(this.data.objId, this.previousDecorations);
 		}
 		this.focusObject = this.data.selectedObjects[0];
 	}
@@ -60,7 +66,9 @@ export default class EditDecorationLabelAction extends Action {
 	}
 
 	getLabel() {
-		if (this.data.objType === DEC_LINK) {
+		if (this.data.objType === DEC_COMMENT) {
+			return this.labelUtil.getActionLabel(this, "action.editCommentDecorationLabel");
+		} else if (this.data.objType === DEC_LINK) {
 			return this.labelUtil.getActionLabel(this, "action.editLinkDecorationLabel");
 		}
 		return this.labelUtil.getActionLabel(this, "action.editNodeDecorationLabel");
