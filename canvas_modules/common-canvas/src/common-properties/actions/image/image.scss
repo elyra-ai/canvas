@@ -21,9 +21,12 @@
 	padding: 0 0 0 carbon.$spacing-03;
 	cursor: pointer;
 	align-self: flex-start;
-	// Offset by label height (label-01 line + Carbon label margin-bottom) to align with the input field.
-	// Matches the same offset used by numberfield's number generator.
+	display: flex;
+	align-items: center;
+	// Offset by label height (label-01 line-height 1rem + Carbon label margin-bottom 0.5rem).
 	margin-top: carbon.$spacing-05 + carbon.$spacing-03;
+	// Match Carbon TextInput md height so the image centers within the input field.
+	height: carbon.$spacing-08;
 	&.left {
 		order: -1;
 		padding: 0 carbon.$spacing-03 0 0;
