@@ -42,6 +42,7 @@ import multiPortsCanvas3 from "../../../harness/test_resources/diagrams/multiPor
 
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
+import PasteAction from "../../src/command-actions/pasteAction.js";
 
 describe("Test canvas controller methods", () => {
 	it("should get the current pipeline using: getCurretPipeline", () => {
@@ -357,6 +358,117 @@ describe("Test canvas controller methods", () => {
 
 		// There should be no decorations property
 		expect(typeof link2.decorations === "undefined").to.be.true;
+	});
+
+	it("should set and get decorations for a comment using: setCommentDecorations and getCommentDecorations", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		const commentId = "id42ESQA3VPXB";
+		const newDecorations = [{ id: "dec1", position: "topRight", label: "My label" }];
+
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setCommentDecorations(commentId, newDecorations);
+
+		const actualDecorations = canvasController.getCommentDecorations(commentId);
+
+		expect(actualDecorations).to.have.length(1);
+		expect(actualDecorations[0].id).to.equal("dec1");
+		expect(actualDecorations[0].position).to.equal("topRight");
+		expect(actualDecorations[0].label).to.equal("My label");
+	});
+
+	it("should not save a decoration for a comment when temporary property is true", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		const commentId = "id42ESQA3VPXB";
+
+		// First save a decoration with 'temporary' property not set
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setCommentDecorations(commentId, [{ id: 123, position: "topRight" }]);
+
+		const pf = canvasController.getPipelineFlow();
+		canvasController.setPipelineFlow(pf);
+		const comment = canvasController.getComment(commentId);
+
+		// There should be one decoration
+		expect(comment.decorations.length === 1).to.be.true;
+
+		// Now save a decoration with 'temporary' property set to true
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(allTypesCanvas);
+		canvasController2.setCommentDecorations(commentId, [{ id: 123, position: "topRight", temporary: true }]);
+
+		const pf2 = canvasController2.getPipelineFlow();
+		canvasController2.setPipelineFlow(pf2);
+		const comment2 = canvasController2.getComment(commentId);
+
+		// There should be no decorations property
+		expect(typeof comment2.decorations === "undefined").to.be.true;
+	});
+
+	it("should set decorations on multiple comments at once using: setCommentsMultiDecorations", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		const pipelineId = allTypesCanvas.primary_pipeline;
+		const commentId1 = "id42ESQA3VPXB";
+		const commentId2 = ">.9?/`~!@#$%^&*()_+=-{}][|:;<,";
+
+		canvasController.setPipelineFlow(allTypesCanvas);
+
+		canvasController.setCommentsMultiDecorations([
+			{ pipelineId: pipelineId, commentId: commentId1, decorations: [{ id: "dec1", position: "topRight" }] },
+			{ pipelineId: pipelineId, commentId: commentId2, decorations: [{ id: "dec2", position: "topLeft" }, { id: "dec3", position: "bottomLeft" }] }
+		]);
+
+		const decorations1 = canvasController.getCommentDecorations(commentId1);
+		const decorations2 = canvasController.getCommentDecorations(commentId2);
+
+		expect(decorations1).to.have.length(1);
+		expect(decorations1[0].id).to.equal("dec1");
+		expect(decorations1[0].position).to.equal("topRight");
+
+		expect(decorations2).to.have.length(2);
+		expect(decorations2[0].id).to.equal("dec2");
+		expect(decorations2[0].position).to.equal("topLeft");
+		expect(decorations2[1].id).to.equal("dec3");
+		expect(decorations2[1].position).to.equal("bottomLeft");
+	});
+
+	it("should preserve comment decorations when a comment is copied and pasted", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		const commentId = "id42ESQA3VPXB";
+		const newDecorations = [{ id: "dec1", position: "topRight", label: "My label" }];
+
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setCommentDecorations(commentId, newDecorations);
+
+		const comment = canvasController.getComment(commentId);
+		const pipelineId = allTypesCanvas.primary_pipeline;
+
+		const existingIds = new Set(canvasController.getComments().map((c) => c.id));
+
+		const cloneData = { pipelineId, objects: { comments: [comment] } };
+
+		// Simulate the objects copying from the clipboard by making a copy of them.
+		const copyCloneData = JSON.parse(JSON.stringify(cloneData));
+
+		canvasController.getViewPortDimensions = () => ({ x: 0, y: 0, width: 1100, height: 640 });
+
+		const pasteAction = new PasteAction(copyCloneData, canvasController);
+		pasteAction.do();
+
+		const pastedComment = canvasController.getComments().find((c) => !existingIds.has(c.id));
+
+		expect(pastedComment).to.not.be.undefined;
+		expect(pastedComment.decorations).to.have.length(1);
+		expect(pastedComment.decorations[0].id).to.equal("dec1");
+		expect(pastedComment.decorations[0].position).to.equal("topRight");
+		expect(pastedComment.decorations[0].label).to.equal("My label");
 	});
 
 	it("should retrieve and get input ports using: getNodeInputPorts and setNodeInputPorts", () => {

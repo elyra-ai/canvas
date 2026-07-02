@@ -107,6 +107,7 @@ const isEditingAction = (action) =>
 	action === "setCommentEditingMode" ||
 	action === "setNodeLabelEditingMode" ||
 	action === "setNodeDecorationLabelEditingMode" ||
+	action === "setCommentDecorationLabelEditingMode" ||
 	action === "setLinkDecorationLabelEditingMode" ||
 	action === "cut" ||
 	action === "copy" ||
