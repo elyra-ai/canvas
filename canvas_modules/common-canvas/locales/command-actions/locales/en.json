@@ -28,6 +28,7 @@
 	"action.displayPreviousPipeline": "Display previous pipeline",
 	"action.displaySubPipeline": "Display supernode full page",
 	"action.editComment": "Edit comment",
+	"action.editCommentDecorationLabel": "Edit comment decoration label",
 	"action.editLinkDecorationLabel": "Edit link decoration label",
 	"action.editNodeDecorationLabel": "Edit node decoration label",
 	"action.expandSuperNodeInPlace": "Expand {node_label} supernode in place",

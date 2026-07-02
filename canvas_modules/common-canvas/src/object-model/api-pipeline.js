@@ -635,6 +635,12 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_NODE_DECORATIONS", data: { nodeId: nodeId, decorations: this.ensureDecorationsHaveIds(newDecorations) }, pipelineId: this.pipelineId });
 	}
 
+	setCommentDecorations(commentId, newDecorations) {
+		this.store.dispatch({ type: "SET_COMMENT_DECORATIONS",
+			data: { commentId: commentId, decorations: this.ensureDecorationsHaveIds(newDecorations) },
+			pipelineId: this.pipelineId });
+	}
+
 	setInputPortLabel(nodeId, portId, newLabel) {
 		this.store.dispatch({ type: "SET_INPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.pipelineId });
 	}
@@ -714,6 +720,11 @@ export default class APIPipeline {
 	getNodeDecorations(nodeId) {
 		var node = this.getNode(nodeId);
 		return (node ? node.decorations : null);
+	}
+
+	getCommentDecorations(commentId) {
+		var comment = this.getComment(commentId);
+		return (comment ? comment.decorations : null);
 	}
 
 	getNodeMessages(nodeId) {

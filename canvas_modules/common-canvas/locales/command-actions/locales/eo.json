@@ -28,6 +28,7 @@
 	"action.displayPreviousPipeline": "[Esperanto~Display previous pipeline~~~~~eo]",
 	"action.displaySubPipeline": "[Esperanto~Display supernode full page~~~~~~~eo]",
 	"action.editComment": "[Esperanto~Edit comment~eo]",
+	"action.editCommentDecorationLabel": "[Esperanto~Edit comment decoration label~~~~~~eo]",
 	"action.editLinkDecorationLabel": "[Esperanto~Edit link decoration label~~~~~~eo]",
 	"action.editNodeDecorationLabel": "[Esperanto~Edit node decoration label~~~~~~eo]",
 	"action.expandSuperNodeInPlace": "[Esperanto~Expand {node_label} supernode in place~~~~~~~~eo]",

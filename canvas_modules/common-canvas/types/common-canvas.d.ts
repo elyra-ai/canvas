@@ -71,6 +71,7 @@ export type {
   BoundPortDef,
   PortUiDef,
   NodeDecorationDef,
+  CommentDecorationDef,
   LinkDecorationDef,
   ImageDecorationDef,
   LabelDecorationDef,
@@ -1261,7 +1262,7 @@ export interface CommonCanvasProps {
    * https://elyra-ai.github.io/canvas/03.03.05-decoration-action-handler/
    */
   decorationActionHandler?: (
-    object: CanvasNode | CanvasLink,
+    object: CanvasNode | CanvasComment | CanvasLink,
     id: DecorationId,
     pipelineId: PipelineId
   ) => void;

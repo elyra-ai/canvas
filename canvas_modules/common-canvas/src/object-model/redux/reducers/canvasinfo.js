@@ -166,6 +166,7 @@ export default (state = {}, action) => {
 	case "SET_NODE_MESSAGE":
 	case "SET_NODE_MESSAGES":
 	case "SET_NODE_DECORATIONS":
+	case "SET_COMMENT_DECORATIONS":
 	case "SET_LINK_DECORATIONS":
 	case "SET_LINK_PARAMETERS":
 	case "ADD_NODE_ATTR":
@@ -514,6 +515,21 @@ export default (state = {}, action) => {
 					nodes: pipeline.nodes,
 					comments: pipeline.comments,
 					links: links(pipeline.links, action) });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+
+	}
+
+	case "SET_COMMENTS_MULTI_DECORATIONS": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			if (action.data.pipelineCommentDecorations.findIndex((entry) => entry.pipelineId === pipeline.id) > -1) {
+				action.data.pipelineId = pipeline.id;
+				return Object.assign({}, pipeline, {
+					nodes: pipeline.nodes,
+					comments: comments(pipeline.comments, action),
+					links: pipeline.links });
 			}
 			return pipeline;
 		});

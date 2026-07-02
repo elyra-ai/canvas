@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /* eslint no-undef: "error" */
-/* eslint complexity: ["error", 23] */
+/* eslint complexity: ["error", 25] */
 
 import React from "react";
 import PropTypes from "prop-types";
@@ -28,6 +28,7 @@ import {
 	API_SET_INPUT_PORT_LABEL,
 	API_SET_OUTPUT_PORT_LABEL,
 	API_SET_NODE_DECORATIONS,
+	API_SET_COMMENT_DECORATIONS,
 	API_SET_LINK_DECORATIONS,
 	API_ADD_NOTIFICATION_MESSAGE,
 	API_ZOOM_TO_REVEAL_NODE,
@@ -75,12 +76,14 @@ export default class SidePanelAPI extends React.Component {
 			isValidPaletteItem: true,
 			nodeId: "",
 			portId: "",
+			commentId: "",
 			linkId: "",
 			newLabel: "",
 			newDecorations: "",
 			nodes: [],
 			ports: [],
 			links: [],
+			comments: [],
 			appendTimestamp: false,
 			attachCallback: false,
 			appendLink: false,
@@ -106,9 +109,11 @@ export default class SidePanelAPI extends React.Component {
 		let nodes = [];
 		let ports = [];
 		let links = [];
+		let comments = [];
 		let nodeId = "";
 		let portId = "";
 		let linkId = "";
+		let commentId = "";
 		let newLabel = "";
 		let newDecorations = "";
 		let newZoomObj = "";
@@ -136,6 +141,17 @@ export default class SidePanelAPI extends React.Component {
 			if (!isEmpty(links)) {
 				linkId = links[0].value;
 				const decorations = this.props.apiConfig.getCanvasInfo().links[0].decorations || [];
+				if (decorations) {
+					newDecorations = JSON.stringify(decorations, null, 2);
+				}
+			}
+		} else if (operation === API_SET_COMMENT_DECORATIONS) {
+			// when selecting operation to set comment decorations, build list of comments and select the first one by default
+			const canvasComments = this.props.apiConfig.getCanvasInfo().comments;
+			comments = this.getCommentList(canvasComments);
+			if (!isEmpty(comments)) {
+				commentId = comments[0].value;
+				const decorations = canvasComments[0].decorations;
 				if (decorations) {
 					newDecorations = JSON.stringify(decorations, null, 2);
 				}
@@ -178,10 +194,12 @@ export default class SidePanelAPI extends React.Component {
 			selectedOperation: operation,
 			nodeId: nodeId,	// id of selected node
 			portId: portId, // id of selected port
+			commentId: commentId, // id of selected comment
 			linkId: linkId, // id of selected link
 			nodes: nodes, // list of nodes in format { value: label, id: nodeId }
 			ports: ports, // list of input or output ports in format { value: label, id: portId }
 			links: links, // list links in format { value: label, id: linkId }
+			comments: comments, // list of comments in format { value: label, id: commentId }
 			newLabel: newLabel,
 			newDecorations: newDecorations,
 			zoomObject: newZoomObj
@@ -340,6 +358,20 @@ export default class SidePanelAPI extends React.Component {
 		this.setState({ closeMessage: checked });
 	}
 
+	onCommentSelect(evt) {
+		const commentItem = this.state.comments.find((comment) => comment.label === evt.selectedItem.value);
+		const commentId = commentItem.value;
+		const newState = { commentId: commentId, newDecorations: "" };
+		const existingComment = this.props.apiConfig.getCanvasInfo().comments.find((c) => c.id === commentId);
+		if (existingComment && existingComment.decorations) {
+			newState.newDecorations = JSON.stringify(existingComment.decorations, null, 2);
+		} else {
+			newState.newDecorations = "[]";
+		}
+		this.setState(newState);
+		this.props.log("Comment selected", commentId);
+	}
+
 	getNodePortList(items) {
 		return items.map(function(item) {
 			return ({ label: item.label, value: item.id });
@@ -364,6 +396,21 @@ export default class SidePanelAPI extends React.Component {
 		return this.props.apiConfig.getCanvasInfo().nodes.find((n) => n.id === nodeId);
 	}
 
+	getCommentList(items) {
+		const emptyLabelCounts = {};
+		return items.map((item) => {
+			let label = (item.content || "").trim().substring(0, 30);
+			if (item.content && item.content.trim().length > 30) {
+				label += "\u2026";
+			}
+			if (!label) {
+				const key = "New Comment";
+				emptyLabelCounts[key] = (emptyLabelCounts[key] || 0) + 1;
+				label = emptyLabelCounts[key] === 1 ? key : `${key} ${emptyLabelCounts[key]}`;
+			}
+			return { label: label, value: item.id };
+		});
+	}
 
 	refreshPipeline() {
 		this.setState({ pipelineFlow: JSON.stringify(this.props.apiConfig.getPipelineFlow()),
@@ -381,6 +428,8 @@ export default class SidePanelAPI extends React.Component {
 			return (this.state.nodeId && this.state.newLabel.length > 0);
 		case API_SET_NODE_DECORATIONS:
 			return (this.state.nodeId && this.state.newDecorations.length > 0);
+		case API_SET_COMMENT_DECORATIONS:
+			return (this.state.commentId && this.state.newDecorations.length > 0);
 		case API_SET_INPUT_PORT_LABEL:
 		case API_SET_OUTPUT_PORT_LABEL:
 			return (this.state.nodeId && this.state.portId && this.state.newLabel.length > 0);
@@ -445,6 +494,13 @@ export default class SidePanelAPI extends React.Component {
 				this.state.nodeId,
 				this.state.newDecorations);
 			this.setState({ nodes: this.getNodePortList(this.props.apiConfig.getCanvasInfo().nodes) });
+			break;
+		}
+		case API_SET_COMMENT_DECORATIONS: {
+			this.props.apiConfig.setCommentDecorations(
+				this.state.commentId,
+				this.state.newDecorations);
+			this.setState({ comments: this.getCommentList(this.props.apiConfig.getCanvasInfo().comments) });
 			break;
 		}
 		case API_SET_LINK_DECORATIONS: {
@@ -535,6 +591,7 @@ export default class SidePanelAPI extends React.Component {
 			API_SET_INPUT_PORT_LABEL,
 			API_SET_OUTPUT_PORT_LABEL,
 			API_SET_NODE_DECORATIONS,
+			API_SET_COMMENT_DECORATIONS,
 			API_SET_LINK_DECORATIONS,
 			API_ADD_NOTIFICATION_MESSAGE,
 			API_ZOOM_TO_REVEAL_NODE,
@@ -709,6 +766,33 @@ export default class SidePanelAPI extends React.Component {
 				<div className="harness-sidepanel-spacer" />
 				<TextArea
 					id="harness-link-decorations"
+					labelText="Decorations JSON"
+					rows={10}
+					onChange={this.onFieldChange.bind(this, "newDecorations")}
+					value={this.state.newDecorations}
+				/>
+			</div>);
+		}
+
+		let setCommentDecorationsSection = <div />;
+		if (this.props.apiConfig.selectedOperation === API_SET_COMMENT_DECORATIONS) {
+			setCommentDecorationsSection = (<div className="harness-sidepanel-children"
+				id="harness-sidepanel-api-comment-decorations"
+			>
+				<div id="harness-sidepanel-api-commentSelection">
+					<Dropdown
+						id="harness-sidepanel-api-cs-dropdown"
+						disabled={isEmpty(this.state.comments)}
+						onChange={this.onCommentSelect.bind(this)}
+						label="Comment Selection"
+						aria-label="Comment Selection"
+						titleText="Comment Selection"
+						items={this.dropdownOptions(this.state.comments)}
+					/>
+				</div>
+				<div className="harness-sidepanel-spacer" />
+				<TextArea
+					id="harness-comment-decorations"
 					labelText="Decorations JSON"
 					rows={10}
 					onChange={this.onFieldChange.bind(this, "newDecorations")}
@@ -923,6 +1007,7 @@ export default class SidePanelAPI extends React.Component {
 				{setNodePortLabelSection}
 				{setNodeDecorationsSection}
 				{setLinkDecorationsSection}
+				{setCommentDecorationsSection}
 				{setNotificationMessages}
 				{zoomCanvas}
 				{commentHighlightText}
@@ -946,6 +1031,7 @@ SidePanelAPI.propTypes = {
 		setPortLabel: PropTypes.func,
 		setNodeDecorations: PropTypes.func,
 		setLinkDecorations: PropTypes.func,
+		setCommentDecorations: PropTypes.func,
 		setCommentHighlightText: PropTypes.func,
 		appendNotificationMessages: PropTypes.func,
 		clearNotificationMessages: PropTypes.func,

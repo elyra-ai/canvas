@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,6 +260,10 @@ export default class PipelineInHandler {
 
 			if (has(comment, "style")) {
 				newComment.style = comment.style;
+			}
+
+			if (has(comment, "decorations")) {
+				newComment.decorations = this.convertDecorations(comment.decorations);
 			}
 
 			return newComment;

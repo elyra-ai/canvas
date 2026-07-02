@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1902,6 +1902,10 @@ export default class ObjectModel {
 
 	setNodesMultiDecorations(pipelineNodeDecorations) {
 		this.store.dispatch({ type: "SET_NODES_MULTI_DECORATIONS", data: { pipelineNodeDecorations: pipelineNodeDecorations } });
+	}
+
+	setCommentsMultiDecorations(pipelineCommentDecorations) {
+		this.store.dispatch({ type: "SET_COMMENTS_MULTI_DECORATIONS", data: { pipelineCommentDecorations: pipelineCommentDecorations } });
 	}
 
 	setLinksMultiDecorations(pipelineLinkDecorations) {

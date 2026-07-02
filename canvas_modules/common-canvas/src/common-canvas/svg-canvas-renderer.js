@@ -31,7 +31,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_RIGHT_LEFT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
-	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
+	CONTEXT_MENU_BUTTON, DEC_NODE, DEC_COMMENT, DEC_LINK, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON,
 	PORT_DISPLAY_CIRCLE, PORT_DISPLAY_CIRCLE_WITH_ARROW, PORT_DISPLAY_IMAGE, PORT_DISPLAY_JSX,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
@@ -707,6 +707,12 @@ export default class SVGCanvasRenderer {
 	getLinkEndHandleGrpSelectionById(linkId) {
 		const linkSel = this.getLinkGroupSelectionById(linkId);
 		return linkSel.selectAll(".d3-link-handle-end-group");
+	}
+
+	getCommentDecSelectionById(decId, commentId) {
+		const commentSel = this.getCommentGroupSelectionById(commentId);
+		const selector = this.getSelectorForId("comment_dec_group", decId);
+		return commentSel.selectAll(selector);
 	}
 
 	getLinkDecSelectionById(decId, linkId) {
@@ -1707,6 +1713,24 @@ export default class SVGCanvasRenderer {
 		} else {
 			this.superRenderers.forEach((renderer) => {
 				renderer.setLinkDecorationLabelEditingMode(decId, nodeId, pipelineId);
+			});
+		}
+	}
+
+	setCommentDecorationLabelEditingMode(decId, commentId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const comment = this.activePipeline.getComment(commentId);
+			if (comment && comment.decorations) {
+				const dec = comment.decorations.find((d) => d.id === decId);
+				if (dec && typeof dec.label !== "undefined" && dec.label_editable && this.config.enableEditingActions) {
+					const commentDecSel = this.getCommentDecSelectionById(decId, commentId);
+					const commentDecDomObj = commentDecSel.node();
+					this.displayDecLabelTextArea(dec, comment, DEC_COMMENT, commentDecDomObj);
+				}
+			}
+		} else {
+			this.superRenderers.forEach((renderer) => {
+				renderer.setCommentDecorationLabelEditingMode(decId, commentId, pipelineId);
 			});
 		}
 	}
@@ -3177,23 +3201,23 @@ export default class SVGCanvasRenderer {
 			});
 	}
 
+	// Returns the current node, comment or link object from the active pipeline
+	// that is the parent of a decoration identified by the data object d.
+	getActiveObject(d) {
+		return this.activePipeline.getActiveObject(d.id);
+	}
+
 	attachDecGroupListeners(d, objType, decGrps) {
 		decGrps
 			.on("keydown", (d3Event, dec) => {
 				if (this.config.enableKeyboardNavigation) {
 					if (KeyboardUtils.nextSubObject(d3Event)) {
-						// Get updated node from activePipeline that will contain focusFunction - if one exists
-						const parentObj = CanvasUtils.getObjectTypeName(d) === "node"
-							? this.activePipeline.getNode(d.id)
-							: this.activePipeline.getLink(d.id);
-						this.setFocusNextSubObject(parentObj, d3Event);
+						// Get updated object from activePipeline that will contain focusFunction - if one exists
+						this.setFocusNextSubObject(this.getActiveObject(d), d3Event);
 
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
-						// Get updated node from activePipeline that will contain focusFunction - if one exists
-						const parentObj = CanvasUtils.getObjectTypeName(d) === "node"
-							? this.activePipeline.getNode(d.id)
-							: this.activePipeline.getLink(d.id);
-						this.setFocusPreviousSubObject(parentObj, d3Event);
+						// Get updated object from activePipeline that will contain focusFunction - if one exists
+						this.setFocusPreviousSubObject(this.getActiveObject(d), d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
@@ -4106,6 +4130,13 @@ export default class SVGCanvasRenderer {
 
 			.html((d) => this.getCommentHTMLStr(d));
 
+		// Display Decorations
+		joinedCommentGrps.each((d, i, elements) => {
+			const commentGrp = d3.select(elements[i]);
+			const decorations = CanvasUtils.getCombinedDecorations([], d.decorations);
+			this.displayDecorations(d, DEC_COMMENT, commentGrp, decorations);
+		});
+
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
 			const handler = this.dragObjectUtils.getDragObjectHandler();
@@ -4152,7 +4183,13 @@ export default class SVGCanvasRenderer {
 					if (this.svgCanvasTextArea.isEditingText()) {
 						return;
 					}
-					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
+					if (KeyboardUtils.focusSubObject(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.clearSubObject();
+						const comment = this.activePipeline.getComment(d.id);
+						this.setFocusNextSubObject(comment, d3Event);
+
+					} else if (KeyboardUtils.nextObjectInGroup(d3Event)) {
 						const linkInfos = this.activePipeline.getNextLinksFromComment(d);
 						if (linkInfos.length > 0) {
 							linkInfos.forEach((li) => (li.link.navObject = d));
@@ -6504,9 +6541,13 @@ export default class SVGCanvasRenderer {
 			objSel = this.getLinkEndHandleGrpSelectionById(subObject.obj.id);
 
 		} else if (subObject.type === "decoration") {
-			objSel = CanvasUtils.getObjectTypeName(parentObj) === "node"
-				? this.getNodeDecSelectionById(subObject.obj.id, parentObj.id)
-				: this.getLinkDecSelectionById(subObject.obj.id, parentObj.id);
+			if (CanvasUtils.getObjectTypeName(parentObj) === "node") {
+				objSel = this.getNodeDecSelectionById(subObject.obj.id, parentObj.id);
+			} else if (CanvasUtils.getObjectTypeName(parentObj) === "comment") {
+				objSel = this.getCommentDecSelectionById(subObject.obj.id, parentObj.id);
+			} else {
+				objSel = this.getLinkDecSelectionById(subObject.obj.id, parentObj.id);
+			}
 		}
 
 		if (objSel) {
