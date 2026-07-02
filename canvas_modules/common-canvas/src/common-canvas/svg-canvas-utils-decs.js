@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { has } from "lodash";
 import CanvasUtils from "./common-canvas-utils.js";
 import {
-	DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT,
+	DEC_COMMENT, DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT,
 	FLOW_IN, FLOW_OUT,
 } from "./constants/canvas-constants";
 
@@ -69,6 +69,8 @@ export default class SvgCanvasDecs {
 	getDecPosX(dec, data, objType) {
 		if (objType === DEC_LINK) {
 			return this.getLinkDecPosX(dec, data, objType);
+		} else if (objType === DEC_COMMENT) {
+			return this.getCommentDecPosX(dec, data);
 		}
 		return this.getNodeDecPosX(dec, data);
 	}
@@ -82,6 +84,19 @@ export default class SvgCanvasDecs {
 			x = (node.width / 2) + (typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : node.layout.decoratorCenterX);
 		} else if (position === "topRight" || position === "middleRight" || position === "bottomRight") {
 			x = node.width + (typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : node.layout.decoratorRightX);
+		}
+		return x;
+	}
+
+	getCommentDecPosX(dec, comment) {
+		const position = dec.position || "topLeft";
+		let x = 0;
+		if (position === "topLeft" || position === "middleLeft" || position === "bottomLeft") {
+			x = typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : 0;
+		} else if (position === "topCenter" || position === "middleCenter" || position === "bottomCenter") {
+			x = (comment.width / 2) + (typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : 0);
+		} else if (position === "topRight" || position === "middleRight" || position === "bottomRight") {
+			x = comment.width + (typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : 0);
 		}
 		return x;
 	}
@@ -116,6 +131,8 @@ export default class SvgCanvasDecs {
 	getDecPosY(dec, data, objType) {
 		if (objType === DEC_LINK) {
 			return this.getLinkDecPosY(dec, data);
+		} else if (objType === DEC_COMMENT) {
+			return this.getCommentDecPosY(dec, data);
 		}
 		return this.getNodeDecPosY(dec, data);
 	}
@@ -129,6 +146,19 @@ export default class SvgCanvasDecs {
 			y = (node.height / 2) + (typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : node.layout.decoratorMiddleY);
 		} else if (position === "bottomLeft" || position === "bottomCenter" || position === "bottomRight") {
 			y = node.height + (typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : node.layout.decoratorBottomY);
+		}
+		return y;
+	}
+
+	getCommentDecPosY(dec, comment) {
+		const position = dec.position || "topLeft";
+		let y = 0;
+		if (position === "topLeft" || position === "topCenter" || position === "topRight") {
+			y = typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : 0;
+		} else if (position === "middleLeft" || position === "middleCenter" || position === "middleRight") {
+			y = (comment.height / 2) + (typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : 0);
+		} else if (position === "bottomLeft" || position === "bottomCenter" || position === "bottomRight") {
+			y = comment.height + (typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : 0);
 		}
 		return y;
 	}
@@ -161,7 +191,7 @@ export default class SvgCanvasDecs {
 		if (dec.outline === false) {
 			return 0;
 		}
-		if (objType === DEC_LINK) {
+		if (objType === DEC_LINK || objType === DEC_COMMENT) {
 			return this.canvasLayout.linkDecoratorPadding;
 		}
 		return obj.layout.decoratorPadding;
@@ -170,7 +200,7 @@ export default class SvgCanvasDecs {
 	getDecWidth(dec, obj, objType) {
 		if (typeof dec.width !== "undefined") {
 			return Number(dec.width);
-		} else if (objType === DEC_LINK) {
+		} else if (objType === DEC_LINK || objType === DEC_COMMENT) {
 			return this.canvasLayout.linkDecoratorWidth;
 		}
 		return obj.layout.decoratorWidth;
@@ -179,7 +209,7 @@ export default class SvgCanvasDecs {
 	getDecHeight(dec, obj, objType) {
 		if (typeof dec.height !== "undefined") {
 			return Number(dec.height);
-		} else if (objType === DEC_LINK) {
+		} else if (objType === DEC_LINK || objType === DEC_COMMENT) {
 			return this.canvasLayout.linkDecoratorHeight;
 		}
 		return obj.layout.decoratorHeight;
@@ -220,7 +250,7 @@ export default class SvgCanvasDecs {
 	getDecLabelWidth(dec, obj, objType) {
 		if (typeof dec.width !== "undefined") {
 			return Number(dec.width);
-		} else if (objType === DEC_LINK) {
+		} else if (objType === DEC_LINK || objType === DEC_COMMENT) {
 			return this.canvasLayout.linkDecoratorLabelWidth;
 		}
 		return obj.layout.decoratorLabelWidth;
@@ -229,7 +259,7 @@ export default class SvgCanvasDecs {
 	getDecLabelHeight(dec, obj, objType) {
 		if (typeof dec.height !== "undefined") {
 			return Number(dec.height);
-		} else if (objType === DEC_LINK) {
+		} else if (objType === DEC_LINK || objType === DEC_COMMENT) {
 			return this.canvasLayout.linkDecoratorLabelHeight;
 		}
 		return obj.layout.decoratorLabelHeight;
