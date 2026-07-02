@@ -3349,9 +3349,9 @@
 
 
 <h1 id="decorations">Decorations<a class="headerlink" href="#decorations" title="Permanent link">&para;</a></h1>
-<p>Your application can add Decorations &ndash; additional icons, text labels, shapes or JSX objects &ndash; to nodes or links in the canvas to indicate special status or attributes of the node or link. Decorations can be static (for display only) or interactive (a hotspot) so the user can click them to initiate some action.</p>
+<p>Your application can add Decorations &ndash; additional icons, text labels, shapes or JSX objects &ndash; to nodes, links, or comments in the canvas to indicate special status or attributes of the object. Decorations can be static (for display only) or interactive (a hotspot) so the user can click them to initiate some action.</p>
 <h2 id="adding-decorations">Adding Decorations<a class="headerlink" href="#adding-decorations" title="Permanent link">&para;</a></h2>
-<p>Decorations can be added to the nodes and/or links in four different ways:</p>
+<p>Decorations can be added to nodes, links, and/or comments in the following ways:</p>
 <ol>
 <li>
 <p>By using the following <code>CanvasController</code> methods:
@@ -3359,10 +3359,13 @@
 <span class="nx">setNodesMultiDecorations</span><span class="p">(</span><span class="nx">pipelineNodeDecorations</span><span class="p">)</span>
 <span class="nx">setLinkDecorations</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">newDecorations</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 <span class="nx">setLinksMultiDecorations</span><span class="p">(</span><span class="nx">pipelineLinkDecorations</span><span class="p">)</span>
+<span class="nx">setCommentDecorations</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">newDecorations</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+<span class="nx">setCommentsMultiDecorations</span><span class="p">(</span><span class="nx">pipelineCommentDecorations</span><span class="p">)</span>
 </code></pre></div>
     and can be retrieved using these <code>CanvasController</code> methods:
     <div class="highlight"><pre><span></span><code><span class="nx">getNodeDecorations</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 <span class="nx">getLinkDecorations</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+<span class="nx">getCommentDecorations</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 </code></pre></div>
     See the <a href="../03.04-canvas-controller/">CanvasController API documentation</a> for more details.</p>
 </li>
@@ -3370,7 +3373,7 @@
 <p>Node decorations can be specified in the <a href="../03.02.01-canvas-config/#enablenodelayout">nodeLayout object</a> in the canvas config. Decorations specified in this way are applied to all nodes on the canvas.</p>
 </li>
 <li>
-<p>Decorations can be applied to, and retrieved from, nodes or links in the pipelineFlow in the <code>app_data.ui_data</code> section for the node or link. (Note: JSX objects are not supported in the pipelineFlow document).</p>
+<p>Decorations can be applied to, and retrieved from, nodes, links, or comments in the pipelineFlow in the <code>app_data.ui_data</code> section for the node, link, or comment. (Note: JSX objects are not supported in the pipelineFlow document).</p>
 </li>
 <li>
 <p>Decorations can be returned in the layout information returned from the <a href="../03.03-callbacks/#layouthandler">layoutHandler</a>  CommonCanvas callback method.</p>
@@ -3457,7 +3460,7 @@ These properties are applicable to a JSX decoration:
 </code></pre></div></p>
 <p>where:</p>
 <h4 id="id"><strong>id</strong><a class="headerlink" href="#id" title="Permanent link">&para;</a></h4>
-<p>A unique ID for the decoration within the context of the node or link to which the decorator is attached.</p>
+<p>A unique ID for the decoration within the context of the node, link, or comment to which the decorator is attached.</p>
 <h4 id="image"><strong>image</strong><a class="headerlink" href="#image" title="Permanent link">&para;</a></h4>
 <p>A reference to an image to display for the decoration. If an image is specified the image is displayed within an outline rectangle unless <code>outline</code> is set to false. The image should be a reference to your image like: &ldquo;/images/decorations/zoom-in_32.svg&rdquo;. Do not set label or path or jsx when this field is set.</p>
 <h4 id="path"><strong>path</strong><a class="headerlink" href="#path" title="Permanent link">&para;</a></h4>
@@ -3480,7 +3483,7 @@ These properties are applicable to a JSX decoration:
 <h4 id="label_allow_return_key"><strong>label_allow_return_key</strong><a class="headerlink" href="#label_allow_return_key" title="Permanent link">&para;</a></h4>
 <p>A boolean that defaults to <code>false</code>. When <code>false</code>, if the user presses the return key nothing will happen. This means multi-line labels will only word-wrap at the <code>width</code> of the decorator. Preventing newline insertion is useful if the label text appears elsewhere in the UI which is not able to show text with newline characters. When set to <code>"save"</code>, if the user presses the return key, the editing will be completed and the label saved &ndash; this is the equivalent of clicking on the canvas background to complete the edit. If set to <code>true</code>, a new line character will be inserted in the label when the user presses return.</p>
 <h4 id="position"><strong>position</strong><a class="headerlink" href="#position" title="Permanent link">&para;</a></h4>
-<p>This is the anchor point to which the decoration is attached.  For a node, this can be one of these 9 enumerated values:
+<p>This is the anchor point to which the decoration is attached.  For a node or comment, this can be one of these 9 enumerated values:
 <div class="highlight"><pre><span></span><code>   &quot;topLeft&quot;, &quot;topCenter&quot;, &quot;topRight&quot;,
    &quot;middleLeft&quot;, &quot;middleCenter&quot;, &quot;middleRight&quot;,
    &quot;bottomLeft&quot;, &quot;bottomCenter&quot;, &quot;bottomRight&quot;.

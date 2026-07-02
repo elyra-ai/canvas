@@ -4463,6 +4463,28 @@ Note:</p>
 <span class="cm"> */</span>
 <span class="nx">setCommentsClassName</span><span class="p">(</span><span class="nx">commentIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newClassName</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
+<span class="c1">// Sets the decorations on a comment. The decorations array passed in</span>
+<span class="c1">// will replace any decorations currently applied to the comment.</span>
+<span class="c1">// commentId - The ID of the comment</span>
+<span class="c1">// newDecorations - An array of decoration objects.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setCommentDecorations</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">newDecorations</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the decorations of multiple comments at once. The decorations array</span>
+<span class="c1">// passed in will replace any decorations currently applied to the comments.</span>
+<span class="c1">// pipelineCommentDecorations - Specifies the comments and their decorations.</span>
+<span class="c1">// It is a JavaScript array like this:</span>
+<span class="c1">//   [</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, decorations: [{ commentId: &lt;commentId&gt;, decorations: &lt;decoration_spec_array&gt;}]},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, decorations: [{ commentId: &lt;commentId&gt;, decorations: &lt;decoration_spec_array&gt;}]}</span>
+<span class="c1">//   ]</span>
+<span class="nx">setCommentsMultiDecorations</span><span class="p">(</span><span class="nx">pipelineCommentDecorations</span><span class="p">)</span>
+
+<span class="c1">// Gets an array of decorations for a comment</span>
+<span class="c1">// commentId - The ID of the comment</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getCommentDecorations</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
 <span class="c1">// Deletes a comment</span>
 <span class="c1">// comId - The ID of the comment</span>
 <span class="c1">// pipelineId - The ID of the pipeline</span>
@@ -4493,6 +4515,11 @@ Note:</p>
 <span class="c1">// pipelineId is optional. If highlightText is a falsy value, the highlighting will</span>
 <span class="c1">// be removed from the comments.</span>
 <span class="nx">setCommentHighlightText</span><span class="p">(</span><span class="nx">commentIds</span><span class="p">,</span><span class="w"> </span><span class="nx">highlightText</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the decoration label, for the decoration in the comment identified, to edit</span>
+<span class="c1">// mode provided the decoration label is editable. This allows the user to edit the</span>
+<span class="c1">// label text.</span>
+<span class="nx">setCommentDecorationLabelEditingMode</span><span class="p">(</span><span class="nx">decId</span><span class="p">,</span><span class="w"> </span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Sets the comment identified, to edit mode so the user can</span>
 <span class="c1">// edit the comment.</span>

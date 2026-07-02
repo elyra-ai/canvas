@@ -3349,16 +3349,16 @@
 
 
 <h1 id="decoration-action-handler">Decoration Action Handler<a class="headerlink" href="#decoration-action-handler" title="Permanent link">&para;</a></h1>
-<p>Decorations are small images that can be displayed on or near to your nodes and links. They can be for display only or actionable (so the user can click on them). See the canvas JSON schema for information on how to define decorations for your nodes.</p>
-<p>This callback is called when the user clicks on an actionable decoration. You don&rsquo;t need to implement anything for this callback unless you added actionable decorations to your nodes. It doesn&rsquo;t return anything. It is called whenever the user clicks on a decoration that you added to a node in the canvas JSON.</p>
+<p>Decorations are small images that can be displayed on or near to your nodes, links, and comments. They can be for display only or actionable (so the user can click on them). See the canvas JSON schema for information on how to define decorations for your nodes.</p>
+<p>This callback is called when the user clicks on an actionable decoration. You don&rsquo;t need to implement anything for this callback unless you added actionable decorations to your nodes, links, or comments. It doesn&rsquo;t return anything. It is called whenever the user clicks on a decoration that you added to a node, link, or comment in the canvas JSON.</p>
 <h2 id="decorationactionhandler">decorationActionHandler<a class="headerlink" href="#decorationactionhandler" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">decorationActionHandler</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 </code></pre></div>
 <p>It is provided with these parameters:</p>
 <ul>
-<li>object &ndash; the node or link with which the decoration is associated.</li>
+<li>object &ndash; the node, link, or comment with which the decoration is associated.</li>
 <li>id &ndash; the ID of the decoration that you provided in the canvas JSON or through the canvas-controller API</li>
-<li>pipelineId &ndash; the ID of the pipeline for the node or link.</li>
+<li>pipelineId &ndash; the ID of the pipeline for the node, link, or comment.</li>
 </ul>
 
 
