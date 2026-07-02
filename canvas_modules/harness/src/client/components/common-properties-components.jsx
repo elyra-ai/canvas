@@ -2017,12 +2017,11 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
-				<h4 id="--row_selection" className="harness-section-row-title section-subtitle">row_selection</h4>
+					<h4 id="--row_selection" className="harness-section-row-title section-subtitle">row_selection</h4>
 					<p><span className="harness-highlight">row_selection</span> is a string attribute that can be set
 						in <span className="harness-highlight">complex_type_definition</span> sections. Valid values
 						for <span className="harness-highlight">row_selection</span> are <span className="harness-highlight">single</span>,<span> </span>
-						<span className="harness-highlight">multiple</span>,<span> </span>
-						or <span className="harness-highlight">none</span>.
+					<span className="harness-highlight">multiple</span>, or <span className="harness-highlight">none</span>.
 						If set to <span className="harness-highlight">single</span> then
 						one and only one row may be selected at one time.
 						If set to <span className="harness-highlight">none</span> then
