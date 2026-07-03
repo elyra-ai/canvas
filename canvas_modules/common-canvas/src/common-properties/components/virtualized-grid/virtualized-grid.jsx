@@ -119,9 +119,9 @@ const VirtualizedGrid = (props) => {
 			return;
 		}
 		if (props.onColumnResize) {
-			const totalWidth = table.getLeafHeaders().reduce((sum, header, idx) => {
-				return sum + Math.max(header.column.getSize(), props.columns[idx]?.width || 0);
-			}, 0);
+			const totalWidth = table.getLeafHeaders().reduce((sum, header, idx) =>
+				sum + Math.max(header.column.getSize(), props.columns[idx]?.width || 0)
+			, 0);
 			props.onColumnResize(totalWidth);
 		}
 	}, [table.getState().columnSizingInfo]);
