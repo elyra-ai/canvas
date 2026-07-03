@@ -104,6 +104,7 @@ class FlexibleTable extends React.Component {
 		if (this.tableRef.current) {
 			this.resizeObserver.observe(this.tableRef.current);
 		}
+
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -122,12 +123,6 @@ class FlexibleTable extends React.Component {
 		if (prevState.tableWidth !== this.state.tableWidth ||
 			prevState.availableWidth !== this.state.availableWidth) {
 			this.updateExcessWidth();
-		}
-
-		// Re-adjust table height when tableWidth changes, since horizontal overflow
-		// state may have changed (a horizontal scrollbar may now appear or disappear)
-		if (prevState.tableWidth !== this.state.tableWidth) {
-			this._adjustTableHeight();
 		}
 
 		// Calculate if checkedAllRows is true
@@ -327,19 +322,17 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
-	_adjustTableHeight() {
-		if (this.props.noAutoSize) {
-			return;
-		}
-
+	_computeNewTableHeight() {
 		let newHeight = this.state.tableHeight;
 		let dynamicH = this.state.dynamicHeight;
 		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
 			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT) * ONE_REM_HEIGHT;
-			// When the table content is wider than the container, a horizontal scrollbar appears.
-			// Its height reduces the available vertical space, which causes an unwanted vertical
-			// scrollbar even when the row count is small. Expand the height to accommodate it.
-			if (this.state.availableWidth > 0 && this.state.tableWidth > this.state.availableWidth) {
+			// Reserve space for a potential horizontal scrollbar when columns are resizable.
+			// Without this, resizing a column wider than the container triggers a horizontal
+			// scrollbar whose height causes a spurious vertical scrollbar.
+			const hasResizableColumns = Array.isArray(this.props.columns) &&
+				this.props.columns.some((col) => col.resizable);
+			if (hasResizableColumns) {
 				newHeight += HORIZONTAL_SCROLLBAR_HEIGHT;
 			}
 		} else if (this.state.rows > 0) {
@@ -361,6 +354,14 @@ class FlexibleTable extends React.Component {
 				}
 			}
 		}
+		return { newHeight, dynamicH };
+	}
+
+	_adjustTableHeight() {
+		if (this.props.noAutoSize) {
+			return;
+		}
+		const { newHeight, dynamicH } = this._computeNewTableHeight();
 		if (newHeight !== this.state.tableHeight) {
 			this.setState({ tableHeight: newHeight, dynamicHeight: dynamicH });
 		}
