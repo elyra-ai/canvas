@@ -39,6 +39,9 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST,
 	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
+	ACTION_SET_NODE_LABEL_EDIT, ACTION_SET_COMMENT_EDIT_MODE,
+	ACTION_SET_NODE_DECORATION_LABEL_EDIT, ACTION_SET_COMMENT_DECORATION_LABEL_EDIT,
+	ACTION_SET_LINK_DECORATION_LABEL_EDIT,
 	FLOW_IN, FLOW_OUT,
 	SHAPE_PORT_ARCS, SHAPE_RECTANGLE_ROUNDED_CORNERS,
 	SINGLE_CLICK, SINGLE_CLICK_CONTEXTMENU, DOUBLE_CLICK,
@@ -2682,7 +2685,7 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Node Label - double click");
 				if (d.layout.labelEditable && this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.canvasController.textActionHandler("setNodeLabelEditingMode", "textdoubleclick",
+					this.canvasController.textActionHandler(ACTION_SET_NODE_LABEL_EDIT, "textdoubleclick",
 						{ id: d.id, pipelineId: this.activePipeline.id });
 				}
 			});
@@ -2899,7 +2902,7 @@ export default class SVGCanvasRenderer {
 			this.zoomUtils.getZoomScale(), this.config.enableDisplayFullLabelOnHover);
 
 		this.displayEditIcon(spanObj, nodeGrpSel, transform,
-			(d3Event, d) => this.canvasController.textActionHandler("setNodeLabelEditingMode", "editicon",
+			(d3Event, d) => this.canvasController.textActionHandler(ACTION_SET_NODE_LABEL_EDIT, "editicon",
 				{ id: d.id, pipelineId: this.activePipeline.id }));
 	}
 
@@ -2923,11 +2926,11 @@ export default class SVGCanvasRenderer {
 	// for the objType passed in.
 	getDecorationLabelEditType(objType) {
 		if (objType === OBJ_NODE) {
-			return "setNodeDecorationLabelEditingMode";
+			return ACTION_SET_NODE_DECORATION_LABEL_EDIT;
 		} else if (objType === OBJ_COMMENT) {
-			return "setCommentDecorationLabelEditingMode";
+			return ACTION_SET_COMMENT_DECORATION_LABEL_EDIT;
 		}
-		return "setLinkDecorationLabelEditingMode";
+		return ACTION_SET_LINK_DECORATION_LABEL_EDIT;
 	}
 
 	// Displays the edit icon (which can be clicked to start editing) next
@@ -4353,7 +4356,7 @@ export default class SVGCanvasRenderer {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					this.deleteCommentPort(d3Event.currentTarget);
-					this.canvasController.textActionHandler("setCommentEditingMode", "textdoubleclick",
+					this.canvasController.textActionHandler(ACTION_SET_COMMENT_EDIT_MODE, "textdoubleclick",
 						{ id: d.id, pipelineId: this.activePipeline.id });
 
 					this.canvasController.clickActionHandler({

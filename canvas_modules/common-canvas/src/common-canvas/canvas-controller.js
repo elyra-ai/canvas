@@ -61,7 +61,36 @@ import { CANVAS_FOCUS,
 	CONNECTED_BRANCH, CONNECTED_UPSTREAM, CONNECTED_DOWNSTREAM,
 	TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_NODE,
 	TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK, TIP_TYPE_STATE_TAG,
-	HORIZONTAL, VERTICAL
+	HORIZONTAL, VERTICAL,
+	ACTION_UNDO, ACTION_REDO, ACTION_CUT, ACTION_COPY, ACTION_PASTE,
+	ACTION_DELETE_SELECTED_OBJECTS, ACTION_EXPAND_SUPERNODE_IN_PLACE,
+	ACTION_EXPAND_SUPERNODE_FULL_PAGE, ACTION_ZOOM_IN, ACTION_ZOOM_OUT,
+	ACTION_ZOOM_FIT, ACTION_SHOW_COMMENTS, ACTION_HIDE_COMMENTS,
+	ACTION_SET_COMMENT_EDIT_MODE, ACTION_SET_NODE_LABEL_EDIT,
+	ACTION_TOGGLE_PALETTE, ACTION_OPEN_PALETTE, ACTION_CLOSE_PALETTE,
+	ACTION_TOGGLE_NOTIFICATION_PANEL, ACTION_CONNECT_FROM_PORT, ACTION_CONNECT_TO_PORT,
+	ACTION_CREATE_COMMENT, ACTION_CREATE_WYSIWYG_COMMENT,
+	ACTION_CREATE_AUTO_COMMENT, ACTION_CREATE_AUTO_WYSIWYG_COMMENT,
+	ACTION_DELETE_LINK, ACTION_ARRANGE_HORIZONTALLY, ACTION_ARRANGE_VERTICALLY,
+	ACTION_COLLAPSE_SUPERNODE_IN_PLACE,
+	ACTION_SET_NODE_DECORATION_LABEL_EDIT, ACTION_SET_COMMENT_DECORATION_LABEL_EDIT,
+	ACTION_SET_LINK_DECORATION_LABEL_EDIT, ACTION_SELECT_ALL, ACTION_DESELECT_ALL,
+	ACTION_TOGGLE_COMMENTS, ACTION_SET_ZOOM, ACTION_OPEN_NOTIFICATION_PANEL,
+	ACTION_CLOSE_NOTIFICATION_PANEL, ACTION_LOAD_PIPELINE_FLOW,
+	ACTION_DISPLAY_PREVIOUS_PIPELINE, ACTION_COLOR_SELECTED_OBJECTS,
+	ACTION_DISCONNECT_NODE, ACTION_SAVE_TO_PALETTE,
+	ACTION_CREATE_NODE, ACTION_CREATE_AUTO_NODE, ACTION_CREATE_NODE_ON_LINK,
+	ACTION_CREATE_NODE_ATTACH_LINKS, ACTION_CREATE_SUPERNODE,
+	ACTION_CREATE_SUPERNODE_EXTERNAL, ACTION_DECONSTRUCT_SUPERNODE,
+	ACTION_CONVERT_SUPERNODE_EXTERNAL_TO_LOCAL, ACTION_CONVERT_SUPERNODE_LOCAL_TO_EXTERNAL,
+	ACTION_INSERT_NODE_INTO_LINK, ACTION_ATTACH_NODE_TO_LINKS,
+	ACTION_MOVE_OBJECTS, ACTION_RESIZE_OBJECTS, ACTION_SET_OBJECTS_STYLE,
+	ACTION_SET_LINKS_STYLE, ACTION_UPDATE_LINK, ACTION_SET_NODE_LABEL,
+	ACTION_EDIT_COMMENT, ACTION_EDIT_DECORATION_LABEL,
+	ACTION_LINK_NODES, ACTION_LINK_NODES_AND_REPLACE, ACTION_LINK_COMMENT,
+	ACTION_CREATE_DETACHED_LINK,
+	ACTION_HIGHLIGHT_BRANCH, ACTION_HIGHLIGHT_UPSTREAM, ACTION_HIGHLIGHT_DOWNSTREAM,
+	ACTION_UNHIGHLIGHT
 } from "./constants/canvas-constants";
 
 import { cloneDeep } from "lodash";
@@ -1644,7 +1673,7 @@ export default class CanvasController {
 	// method which will cause the app's editActionHandler to be called.
 	undo() {
 		if (this.canUndo()) {
-			this.editActionHandler({ editType: "undo", editSource: "controller" });
+			this.editActionHandler({ editType: ACTION_UNDO, editSource: "controller" });
 		}
 	}
 
@@ -1655,7 +1684,7 @@ export default class CanvasController {
 	// the app's editActionHandler to be called.
 	undoMulti(count) {
 		for (let i = 0; i < count && this.canUndo(); i++) {
-			this.editActionHandler({ editType: "undo", editSource: "controller" });
+			this.editActionHandler({ editType: ACTION_UNDO, editSource: "controller" });
 		}
 	}
 
@@ -1665,7 +1694,7 @@ export default class CanvasController {
 	// method which will cause the app's editActionHandler to be called.
 	redo() {
 		if (this.canRedo()) {
-			this.editActionHandler({ editType: "redo", editSource: "controller" });
+			this.editActionHandler({ editType: ACTION_REDO, editSource: "controller" });
 		}
 	}
 
@@ -1676,7 +1705,7 @@ export default class CanvasController {
 	// the app's editActionHandler to be called.
 	redoMulti(count) {
 		for (let i = 0; i < count && this.canRedo(); i++) {
-			this.editActionHandler({ editType: "redo", editSource: "controller" });
+			this.editActionHandler({ editType: ACTION_REDO, editSource: "controller" });
 		}
 	}
 
@@ -1987,7 +2016,7 @@ export default class CanvasController {
 			const supernode = this.getSupernodeFromBreadcrumb(breadcrumbs[index]);
 
 			const data = {
-				editType: "displaySubPipeline",
+				editType: ACTION_EXPAND_SUPERNODE_FULL_PAGE,
 				editSource: "canvas",
 				targetObject: supernode,
 				breadcrumbIndex: index
@@ -2017,7 +2046,7 @@ export default class CanvasController {
 		const supernode = this.getSupernodeFromBreadcrumb(lastBreadcrumb);
 
 		const data = {
-			editType: "displaySubPipeline",
+			editType: ACTION_EXPAND_SUPERNODE_FULL_PAGE,
 			editSource: "canvas",
 			targetObject: supernode,
 			addBreadcrumbs: addBreadcrumbs
@@ -2037,7 +2066,7 @@ export default class CanvasController {
 	}
 
 	displayPreviousPipeline() {
-		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb(), editSource: "canvas" };
+		const data = { editType: ACTION_DISPLAY_PREVIOUS_PIPELINE, pipelineInfo: this.objectModel.getPreviousBreadcrumb(), editSource: "canvas" };
 		this.editActionHandler(data);
 	}
 
@@ -2310,7 +2339,7 @@ export default class CanvasController {
 	// Cuts the currently selected objects to the internal clipboard.
 	cutToClipboard() {
 		this.editActionHandler({
-			editType: "cut",
+			editType: ACTION_CUT,
 			editSource: "api"
 		});
 	}
@@ -2318,14 +2347,14 @@ export default class CanvasController {
 	// Copies the currently selected objects to the internal clipboard.
 	copyToClipboard() {
 		this.editActionHandler({
-			editType: "copy",
+			editType: ACTION_COPY,
 			editSource: "api"
 		});
 	}
 
 	pasteFromClipboard(pipelineId) {
 		this.editActionHandler({
-			editType: "paste",
+			editType: ACTION_PASTE,
 			editSource: "api",
 			pipelineId: pipelineId
 		});
@@ -2520,7 +2549,7 @@ export default class CanvasController {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
 		var data = {
-			editType: "createAutoNode",
+			editType: ACTION_CREATE_AUTO_NODE,
 			editSource: "canvas",
 			addLink: addLink,
 			nodeTemplate: nodeTemplate,
@@ -2534,7 +2563,7 @@ export default class CanvasController {
 	// nodeTemplate is in the internal format.
 	createNodeFromTemplateAt(nodeTemplate, pos, pipelineId) {
 		var data = {
-			editType: "createNode",
+			editType: ACTION_CREATE_NODE,
 			editSource: "canvas",
 			nodeTemplate: nodeTemplate,
 			offsetX: pos.x,
@@ -2551,7 +2580,7 @@ export default class CanvasController {
 	createNodeFromTemplateOnLinkAt(nodeTemplate, link, pos, pipelineId) {
 		if (this.canNewNodeBeDroppedOnLink(nodeTemplate)) {
 			var data = {
-				editType: "createNodeOnLink",
+				editType: ACTION_CREATE_NODE_ON_LINK,
 				editSource: "canvas",
 				nodeTemplate: nodeTemplate,
 				offsetX: pos.x,
@@ -2571,7 +2600,7 @@ export default class CanvasController {
 		if (detachedLinks &&
 				this.canNewNodeBeAttachedToLinks(nodeTemplate)) {
 			var data = {
-				editType: "createNodeAttachLinks",
+				editType: ACTION_CREATE_NODE_ATTACH_LINKS,
 				editSource: "canvas",
 				nodeTemplate: nodeTemplate,
 				offsetX: pos.x,
@@ -2587,7 +2616,7 @@ export default class CanvasController {
 	// Called when a node is dragged from the 'output' window (in WML) onto the canvas
 	createNodeFromObjectAt(sourceId, sourceObjectTypeId, label, x, y, pipelineId) {
 		var data = {
-			editType: "createNode",
+			editType: ACTION_CREATE_NODE,
 			editSource: "canvas",
 			label: label, // label will be passed through to the external object model
 			offsetX: x,
@@ -2722,20 +2751,20 @@ export default class CanvasController {
 
 		// Generate a dummy external URL when an external sub-flow is being
 		// created.
-		if (data.editType === "createSuperNodeExternal" ||
-				data.editType === "convertSuperNodeLocalToExternal") {
+		if (data.editType === ACTION_CREATE_SUPERNODE_EXTERNAL ||
+				data.editType === ACTION_CONVERT_SUPERNODE_LOCAL_TO_EXTERNAL) {
 			data.externalUrl = "";
 			data.externalPipelineFlowId = "";
 
 		// Pre-process for handling external pipeline flows.
-		} else if (data.editType === "loadPipelineFlow" ||
-				data.editType === "expandSuperNodeInPlace" ||
-				data.editType === "displaySubPipeline" ||
-				data.editType === "deconstructSuperNode" ||
-				data.editType === "convertSuperNodeExternalToLocal") {
+		} else if (data.editType === ACTION_LOAD_PIPELINE_FLOW ||
+				data.editType === ACTION_EXPAND_SUPERNODE_IN_PLACE ||
+				data.editType === ACTION_EXPAND_SUPERNODE_FULL_PAGE ||
+				data.editType === ACTION_DECONSTRUCT_SUPERNODE ||
+				data.editType === ACTION_CONVERT_SUPERNODE_EXTERNAL_TO_LOCAL) {
 			data = this.preProcessForExternalPipelines(data);
 
-		} else if (data.editType === "paste") {
+		} else if (data.editType === ACTION_PASTE) {
 			const pasteObjects = this.objectModel.getObjectsToPaste();
 			if (pasteObjects) {
 				data.objects = pasteObjects;
@@ -2748,9 +2777,9 @@ export default class CanvasController {
 		// and also let the application modify the command input data if required.
 		if (this.handlers.beforeEditActionHandler) {
 			let cmnd = null;
-			if (data.editType === "undo") {
+			if (data.editType === ACTION_UNDO) {
 				cmnd = this.getCommandStack().getUndoCommand();
-			} else if (data.editType === "redo") {
+			} else if (data.editType === ACTION_REDO) {
 				cmnd = this.getCommandStack().getRedoCommand();
 			}
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
@@ -2783,103 +2812,103 @@ export default class CanvasController {
 		// Only execute the delete or cut if there are some selections.
 		// This prevents an 'empty' command being added to the command stack when
 		// 'delete' or 'cut' is pressed on the keyboard.
-		if ((data.editType === "deleteSelectedObjects" ||
-				data.editType === "cut") &&
+		if ((data.editType === ACTION_DELETE_SELECTED_OBJECTS ||
+				data.editType === ACTION_CUT) &&
 				data.selectedObjectIds.length === 0) {
 			return false;
 		}
 
 		// These commands are supported for the external AND internal object models.
 		switch (data.editType) {
-		case "selectAll": {
+		case ACTION_SELECT_ALL: {
 			this.selectAll(data.pipelineId);
 			break;
 		}
-		case "deselectAll": {
+		case ACTION_DESELECT_ALL: {
 			this.deselectAll(data.pipelineId);
 			break;
 		}
-		case "zoomIn": {
+		case ACTION_ZOOM_IN: {
 			this.zoomIn();
 			break;
 		}
-		case "zoomOut": {
+		case ACTION_ZOOM_OUT: {
 			this.zoomOut();
 			break;
 		}
-		case "zoomToFit": {
+		case ACTION_ZOOM_FIT: {
 			this.zoomToFit();
 			break;
 		}
-		case "commentsToggle": {
+		case ACTION_TOGGLE_COMMENTS: {
 			this.toggleComments();
 			break;
 		}
-		case "commentsHide": {
+		case ACTION_HIDE_COMMENTS: {
 			this.hideComments();
 			break;
 		}
-		case "commentsShow": {
+		case ACTION_SHOW_COMMENTS: {
 			this.showComments();
 			break;
 		}
-		case "setCommentEditingMode": {
+		case ACTION_SET_COMMENT_EDIT_MODE: {
 			this.setCommentEditingMode(data.id, data.pipelineId);
 			break;
 		}
-		case "setNodeLabelEditingMode": {
+		case ACTION_SET_NODE_LABEL_EDIT: {
 			this.setNodeLabelEditingMode(data.id, data.pipelineId);
 			break;
 		}
-		case "setNodeDecorationLabelEditingMode": {
+		case ACTION_SET_NODE_DECORATION_LABEL_EDIT: {
 			this.setNodeDecorationLabelEditingMode(data.decId, data.id, data.pipelineId);
 			break;
 		}
-		case "setCommentDecorationLabelEditingMode": {
+		case ACTION_SET_COMMENT_DECORATION_LABEL_EDIT: {
 			this.setCommentDecorationLabelEditingMode(data.decId, data.id, data.pipelineId);
 			break;
 		}
-		case "setLinkDecorationLabelEditingMode": {
+		case ACTION_SET_LINK_DECORATION_LABEL_EDIT: {
 			this.setLinkDecorationLabelEditingMode(data.decId, data.id, data.pipelineId);
 			break;
 		}
-		case "setZoom": {
+		case ACTION_SET_ZOOM: {
 			this.objectModel.setZoom(data.zoom, data.pipelineId);
 			break;
 		}
-		case "togglePalette": {
+		case ACTION_TOGGLE_PALETTE: {
 			this.togglePalette();
 			break;
 		}
-		case "openPalette": {
+		case ACTION_OPEN_PALETTE: {
 			this.openPalette();
 			break;
 		}
-		case "closePalette": {
+		case ACTION_CLOSE_PALETTE: {
 			this.closePalette();
 			break;
 		}
-		case "toggleNotificationPanel": {
+		case ACTION_TOGGLE_NOTIFICATION_PANEL: {
 			this.toggleNotificationPanel();
 			break;
 		}
-		case "openNotificationPanel": {
+		case ACTION_OPEN_NOTIFICATION_PANEL: {
 			this.openNotificationPanel();
 			break;
 		}
-		case "closeNotificationPanel": {
+		case ACTION_CLOSE_NOTIFICATION_PANEL: {
 			this.closeNotificationPanel();
 			break;
 		}
-		case "loadPipelineFlow": {
+		case ACTION_LOAD_PIPELINE_FLOW: {
 			this.objectModel.ensurePipelineIsLoaded(data);
 			break;
 		}
-		case "connectFromPort": {
+		case ACTION_CONNECT_FROM_PORT: {
 			this.setPortConnectFrom(data.id, data.port.id, data.pipelineId);
 			break;
 		}
-		case "connectToPort": {
+		case ACTION_CONNECT_TO_PORT: {
 			const connectFromInfo = this.getConnectFromInfo(data.pipelineId);
 			if (connectFromInfo) {
 				const srcNode = connectFromInfo.node;
@@ -2908,39 +2937,39 @@ export default class CanvasController {
 
 		if (this.getCanvasConfig().enableInternalObjectModel) {
 			switch (data.editType) {
-			case "createNode": {
+			case ACTION_CREATE_NODE: {
 				command = new CreateNodeAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "createNodeOnLink": {
+			case ACTION_CREATE_NODE_ON_LINK: {
 				command = new CreateNodeOnLinkAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "createNodeAttachLinks": {
+			case ACTION_CREATE_NODE_ATTACH_LINKS: {
 				command = new CreateNodeAttachLinksAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "createAutoNode": {
+			case ACTION_CREATE_AUTO_NODE: {
 				command = new CreateAutoNodeAction(data, this);
 				this.commandStack.do(command);
 				this.panToReveal(data);
 				data = command.getData();
 				break;
 			}
-			case "createComment": {
+			case ACTION_CREATE_COMMENT: {
 				data.pos = data.mousePos;
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "createWYSIWYGComment": {
+			case ACTION_CREATE_WYSIWYG_COMMENT: {
 				data.pos = data.mousePos;
 				data.contentType = WYSIWYG;
 				data.formats = [];
@@ -2949,14 +2978,14 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
-			case "createAutoComment": {
+			case ACTION_CREATE_AUTO_COMMENT: {
 				data.pos = this.getNewCommentPosition(data.pipelineId);
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "createAutoWYSIWYGComment": {
+			case ACTION_CREATE_AUTO_WYSIWYG_COMMENT: {
 				data.pos = this.getNewCommentPosition(data.pipelineId);
 				data.contentType = WYSIWYG;
 				data.formats = [];
@@ -2965,180 +2994,180 @@ export default class CanvasController {
 				data = command.getData();
 				break;
 			}
-			case "insertNodeIntoLink": {
+			case ACTION_INSERT_NODE_INTO_LINK: {
 				command = new InsertNodeIntoLinkAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "attachNodeToLinks": {
+			case ACTION_ATTACH_NODE_TO_LINKS: {
 				command = new AttachNodeToLinksAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "moveObjects": {
+			case ACTION_MOVE_OBJECTS: {
 				command = new MoveObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "resizeObjects": {
+			case ACTION_RESIZE_OBJECTS: {
 				command = new SizeAndPositionObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "setObjectsStyle": {
+			case ACTION_SET_OBJECTS_STYLE: {
 				command = new SetObjectsStyleAction(data);
 				this.commandStack.do(command);
 				break;
 			}
-			case "setLinksStyle": {
+			case ACTION_SET_LINKS_STYLE: {
 				command = new SetLinksStyleAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "updateLink": {
+			case ACTION_UPDATE_LINK: {
 				command = new UpdateLinkAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "setNodeLabel": {
+			case ACTION_SET_NODE_LABEL: {
 				command = new SetNodeLabelAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "editComment": {
+			case ACTION_EDIT_COMMENT: {
 				command = new EditCommentAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "editDecorationLabel": {
+			case ACTION_EDIT_DECORATION_LABEL: {
 				command = new EditDecorationLabelAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "linkNodes": {
+			case ACTION_LINK_NODES: {
 				command = new CreateNodeLinkAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "linkNodesAndReplace": {
+			case ACTION_LINK_NODES_AND_REPLACE: {
 				command = new CreateNodeLinkAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "linkComment": {
+			case ACTION_LINK_COMMENT: {
 				command = new CreateCommentLinkAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "createDetachedLink": {
+			case ACTION_CREATE_DETACHED_LINK: {
 				command = new CreateNodeLinkDetachedAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "colorSelectedObjects": {
+			case ACTION_COLOR_SELECTED_OBJECTS: {
 				command = new ColorSelectedObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "deleteSelectedObjects": {
+			case ACTION_DELETE_SELECTED_OBJECTS: {
 				command = new DeleteObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "displaySubPipeline": {
+			case ACTION_EXPAND_SUPERNODE_FULL_PAGE: {
 				command = new DisplaySubPipelineAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "displayPreviousPipeline": {
+			case ACTION_DISPLAY_PREVIOUS_PIPELINE: {
 				command = new DisplayPreviousPipelineAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "arrangeHorizontally": {
+			case ACTION_ARRANGE_HORIZONTALLY: {
 				data.layoutDirection = HORIZONTAL;
 				command = new ArrangeLayoutAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "arrangeVertically": {
+			case ACTION_ARRANGE_VERTICALLY: {
 				data.layoutDirection = VERTICAL;
 				command = new ArrangeLayoutAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "createSuperNode":
-			case "createSuperNodeExternal": {
+			case ACTION_CREATE_SUPERNODE:
+			case ACTION_CREATE_SUPERNODE_EXTERNAL: {
 				command = new CreateSuperNodeAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "deconstructSuperNode": {
+			case ACTION_DECONSTRUCT_SUPERNODE: {
 				command = new DeconstructSuperNodeAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "expandSuperNodeInPlace": {
+			case ACTION_EXPAND_SUPERNODE_IN_PLACE: {
 				command = new ExpandSuperNodeInPlaceAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "collapseSuperNodeInPlace": {
+			case ACTION_COLLAPSE_SUPERNODE_IN_PLACE: {
 				command = new CollapseSuperNodeInPlaceAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "convertSuperNodeExternalToLocal": {
+			case ACTION_CONVERT_SUPERNODE_EXTERNAL_TO_LOCAL: {
 				command = new ConvertSuperNodeExternalToLocal(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "convertSuperNodeLocalToExternal": {
+			case ACTION_CONVERT_SUPERNODE_LOCAL_TO_EXTERNAL: {
 				command = new ConvertSuperNodeLocalToExternal(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "deleteLink": {
+			case ACTION_DELETE_LINK: {
 				command = new DeleteLinkAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "disconnectNode": {
+			case ACTION_DISCONNECT_NODE: {
 				command = new DisconnectObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "saveToPalette": {
+			case ACTION_SAVE_TO_PALETTE: {
 				command = new SaveToPaletteAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "cut": {
+			case ACTION_CUT: {
 				this.objectModel.copyToClipboard(this.areDetachableLinksInUse());
 				command = new DeleteObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
-			case "copy": {
+			case ACTION_COPY: {
 				this.objectModel.copyToClipboard(this.areDetachableLinksInUse());
 				break;
 			}
-			case "paste": {
+			case ACTION_PASTE: {
 				command = new PasteAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
-			case "undo": {
+			case ACTION_UNDO: {
 				command = this.getCommandStack().getUndoCommand();
 				this.commandStack.undo();
 				this.objectModel.refreshToolbar();
 				break;
 			}
-			case "redo": {
+			case ACTION_REDO: {
 				command = this.getCommandStack().getRedoCommand();
 				this.commandStack.redo();
 				this.objectModel.refreshToolbar();
@@ -3146,16 +3175,16 @@ export default class CanvasController {
 			}
 
 			// Commands which are not added to the command stack.
-			case "highlightBranch":
+			case ACTION_HIGHLIGHT_BRANCH:
 				data.highlightedObjectIds = this.highlightBranch(this.objectModel.getSelectedNodesIds(), data.pipelineId);
 				break;
-			case "highlightDownstream":
+			case ACTION_HIGHLIGHT_DOWNSTREAM:
 				data.highlightedObjectIds = this.highlightDownstream(this.objectModel.getSelectedNodesIds(), data.pipelineId);
 				break;
-			case "highlightUpstream":
+			case ACTION_HIGHLIGHT_UPSTREAM:
 				data.highlightedObjectIds = this.highlightUpstream(this.objectModel.getSelectedNodesIds(), data.pipelineId);
 				break;
-			case "unhighlight":
+			case ACTION_UNHIGHLIGHT:
 				this.unsetAllBranchHighlight();
 				this.branchHighlighted = false;
 				break;
@@ -3197,18 +3226,18 @@ export default class CanvasController {
 
 		// When keyboard navigation is NOT activated we restore focus (which will
 		// put focus on the canvas background) except in these cases.
-		} else if (data.editType !== "setCommentEditingMode" &&
-					data.editType !== "setNodeLabelEditingMode" &&
-					data.editType !== "setNodeDecorationLabelEditingMode" &&
-					data.editType !== "setCommentDecorationLabelEditingMode" &&
-					data.editType !== "setLinkDecorationLabelEditingMode" &&
-					data.editType !== "togglePalette" &&
-					data.editType !== "openPalette" &&
-					data.editType !== "closePalette" &&
-					data.editType !== "toggleNotificationPanel" &&
-					data.editType !== "openNotificationPanel" &&
-					data.editType !== "closeNotificationPanel" &&
-					data.editType !== "loadPipelineFlow") {
+		} else if (data.editType !== ACTION_SET_COMMENT_EDIT_MODE &&
+				data.editType !== ACTION_SET_NODE_LABEL_EDIT &&
+				data.editType !== ACTION_SET_NODE_DECORATION_LABEL_EDIT &&
+				data.editType !== ACTION_SET_COMMENT_DECORATION_LABEL_EDIT &&
+				data.editType !== ACTION_SET_LINK_DECORATION_LABEL_EDIT &&
+				data.editType !== ACTION_TOGGLE_PALETTE &&
+				data.editType !== ACTION_OPEN_PALETTE &&
+				data.editType !== ACTION_CLOSE_PALETTE &&
+				data.editType !== ACTION_TOGGLE_NOTIFICATION_PANEL &&
+				data.editType !== ACTION_OPEN_NOTIFICATION_PANEL &&
+				data.editType !== ACTION_CLOSE_NOTIFICATION_PANEL &&
+				data.editType !== ACTION_LOAD_PIPELINE_FLOW) {
 			this.restoreFocus();
 		}
 
@@ -3249,7 +3278,7 @@ export default class CanvasController {
 		const expandedSupernodes = this.objectModel.getVisibleExpandedExternalSupernodes();
 		if (expandedSupernodes && expandedSupernodes.length > 0) {
 			this.editActionHandler({
-				editType: "loadPipelineFlow",
+				editType: ACTION_LOAD_PIPELINE_FLOW,
 				targetObject: expandedSupernodes[0]
 			});
 		}

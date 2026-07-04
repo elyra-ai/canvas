@@ -17,7 +17,23 @@
 import { get } from "lodash";
 import { LINK_SELECTION_NONE, SUPER_NODE, WYSIWYG, CAUSE_KEYBOARD,
 	OBJ_NODE, OBJ_LINK, OBJ_COMMENT, OBJ_CANVAS,
-	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT } from "./constants/canvas-constants";
+	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT,
+	ACTION_CREATE_COMMENT, ACTION_CREATE_WYSIWYG_COMMENT,
+	ACTION_CREATE_AUTO_COMMENT, ACTION_CREATE_AUTO_WYSIWYG_COMMENT,
+	ACTION_COLOR_BACKGROUND, ACTION_SET_COMMENT_EDIT_MODE, ACTION_SET_NODE_LABEL_EDIT,
+	ACTION_CUT, ACTION_COPY, ACTION_PASTE, ACTION_UNDO, ACTION_REDO,
+	ACTION_DELETE_SELECTED_OBJECTS, ACTION_COLLAPSE_SUPERNODE_IN_PLACE,
+	ACTION_EXPAND_SUPERNODE_IN_PLACE, ACTION_EXPAND_SUPERNODE_FULL_PAGE,
+	ACTION_DELETE_LINK, ACTION_CONNECT_FROM_PORT, ACTION_CONNECT_TO_PORT,
+	ACTION_CLIPBOARD,
+	ACTION_SET_NODE_DECORATION_LABEL_EDIT, ACTION_SET_COMMENT_DECORATION_LABEL_EDIT,
+	ACTION_SET_LINK_DECORATION_LABEL_EDIT, ACTION_SELECT_ALL, ACTION_DESELECT_ALL,
+	ACTION_DISCONNECT_NODE, ACTION_SAVE_TO_PALETTE,
+	ACTION_CREATE_SUPERNODE, ACTION_CREATE_SUPERNODE_EXTERNAL,
+	ACTION_DECONSTRUCT_SUPERNODE, ACTION_CONVERT_SUPERNODE_EXTERNAL_TO_LOCAL,
+	ACTION_CONVERT_SUPERNODE_LOCAL_TO_EXTERNAL,
+	ACTION_HIGHLIGHT_BRANCH, ACTION_HIGHLIGHT_UPSTREAM, ACTION_HIGHLIGHT_DOWNSTREAM,
+	ACTION_UNHIGHLIGHT } from "./constants/canvas-constants";
 import CanvasUtils from "./common-canvas-utils";
 
 // Global temporary variable to handle the canvas controller.
@@ -100,34 +116,34 @@ const filterOutUnwantedDividers = (menuDef) => {
 // that would alter the canvas objects. This is useful for filtering
 // out editing actions that should be unavailable with a read-only canvas.
 const isEditingAction = (action) =>
-	action === "createComment" ||
-	action === "createWYSIWYGComment" ||
-	action === "createAutoComment" ||
-	action === "createAutoWYSIWYGComment" ||
-	action === "colorBackground" ||
-	action === "disconnectNode" ||
-	action === "setCommentEditingMode" ||
-	action === "setNodeLabelEditingMode" ||
-	action === "setNodeDecorationLabelEditingMode" ||
-	action === "setCommentDecorationLabelEditingMode" ||
-	action === "setLinkDecorationLabelEditingMode" ||
-	action === "cut" ||
-	action === "copy" ||
-	action === "paste" ||
-	action === "undo" ||
-	action === "redo" ||
-	action === "deleteSelectedObjects" ||
-	action === "createSuperNode" ||
-	action === "createSuperNodeExternal" ||
-	action === "deconstructSuperNode" ||
-	action === "collapseSuperNodeInPlace" ||
-	action === "expandSuperNodeInPlace" ||
-	action === "convertSuperNodeExternalToLocal" ||
-	action === "convertSuperNodeLocalToExternal" ||
-	action === "deleteLink" ||
-	action === "saveToPalette" ||
-	action === "connectFromPort" ||
-	action === "connectToPort"
+	action === ACTION_CREATE_COMMENT ||
+	action === ACTION_CREATE_WYSIWYG_COMMENT ||
+	action === ACTION_CREATE_AUTO_COMMENT ||
+	action === ACTION_CREATE_AUTO_WYSIWYG_COMMENT ||
+	action === ACTION_COLOR_BACKGROUND ||
+	action === ACTION_DISCONNECT_NODE ||
+	action === ACTION_SET_COMMENT_EDIT_MODE ||
+	action === ACTION_SET_NODE_LABEL_EDIT ||
+	action === ACTION_SET_NODE_DECORATION_LABEL_EDIT ||
+	action === ACTION_SET_COMMENT_DECORATION_LABEL_EDIT ||
+	action === ACTION_SET_LINK_DECORATION_LABEL_EDIT ||
+	action === ACTION_CUT ||
+	action === ACTION_COPY ||
+	action === ACTION_PASTE ||
+	action === ACTION_UNDO ||
+	action === ACTION_REDO ||
+	action === ACTION_DELETE_SELECTED_OBJECTS ||
+	action === ACTION_CREATE_SUPERNODE ||
+	action === ACTION_CREATE_SUPERNODE_EXTERNAL ||
+	action === ACTION_DECONSTRUCT_SUPERNODE ||
+	action === ACTION_COLLAPSE_SUPERNODE_IN_PLACE ||
+	action === ACTION_EXPAND_SUPERNODE_IN_PLACE ||
+	action === ACTION_CONVERT_SUPERNODE_EXTERNAL_TO_LOCAL ||
+	action === ACTION_CONVERT_SUPERNODE_LOCAL_TO_EXTERNAL ||
+	action === ACTION_DELETE_LINK ||
+	action === ACTION_SAVE_TO_PALETTE ||
+	action === ACTION_CONNECT_FROM_PORT ||
+	action === ACTION_CONNECT_TO_PORT
 ;
 
 // Returns a default context menu definition for the source object and canvas
@@ -149,13 +165,13 @@ const createDefaultContextMenu = (source) => {
 	// Rename node
 	if (source.type === OBJ_NODE && get(source, "targetObject.layout.labelEditable", false)) {
 		menuDefinition = menuDefinition.concat(
-			{ action: "setNodeLabelEditingMode", label: getLabel("node.renameNode"), toolbarItem: true }
+			{ action: ACTION_SET_NODE_LABEL_EDIT, label: getLabel("node.renameNode"), toolbarItem: true }
 		);
 	}
 	// Edit comment
 	if (source.type === OBJ_COMMENT) {
 		menuDefinition = menuDefinition.concat(
-			{ action: "setCommentEditingMode", label: getLabel("comment.editComment"), toolbarItem: true }
+			{ action: ACTION_SET_COMMENT_EDIT_MODE, label: getLabel("comment.editComment"), toolbarItem: true }
 		);
 	}
 	// Color objects
@@ -163,7 +179,7 @@ const createDefaultContextMenu = (source) => {
 			source.targetObject?.contentType !== WYSIWYG &&
 			get(cc, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
 		menuDefinition = menuDefinition.concat(
-			{ action: "colorBackground", label: getLabel("comment.colorBackground") },
+			{ action: ACTION_COLOR_BACKGROUND, label: getLabel("comment.colorBackground") },
 			{ divider: true }
 		);
 	}
@@ -173,7 +189,7 @@ const createDefaultContextMenu = (source) => {
 		const linksFound = cc.objectModel.getAPIPipeline(source.pipelineId).getLinksContainingIds(objectAry);
 		if (linksFound.length > 0) {
 			menuDefinition = menuDefinition.concat(
-				{ action: "disconnectNode", label: getLabel("node.disconnectNode") },
+				{ action: ACTION_DISCONNECT_NODE, label: getLabel("node.disconnectNode") },
 				{ divider: true }
 			);
 		}
@@ -185,15 +201,15 @@ const createDefaultContextMenu = (source) => {
 			source.type === OBJ_CANVAS) {
 		const editSubMenu = createEditMenu(source, source.type === OBJ_CANVAS);
 		menuDefinition = menuDefinition.concat(
-			{ action: "clipboard", submenu: true, menu: editSubMenu, label: getLabel("node.editMenu") },
+			{ action: ACTION_CLIPBOARD, submenu: true, menu: editSubMenu, label: getLabel("node.editMenu") },
 			{ divider: true }
 		);
 	}
 	// Undo and redo
 	if (source.type === OBJ_CANVAS) {
 		menuDefinition = menuDefinition.concat(
-			{ action: "undo", label: getLabel("canvas.undo"), enable: cc.canUndo() },
-			{ action: "redo", label: getLabel("canvas.redo"), enable: cc.canRedo() },
+			{ action: ACTION_UNDO, label: getLabel("canvas.undo"), enable: cc.canUndo() },
+			{ action: ACTION_REDO, label: getLabel("canvas.redo"), enable: cc.canRedo() },
 			{ divider: true }
 		);
 	}
@@ -201,7 +217,7 @@ const createDefaultContextMenu = (source) => {
 	if (source.type === OBJ_NODE || source.type === OBJ_COMMENT ||
 			(cc.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE && source.type === OBJ_LINK)) {
 		menuDefinition = menuDefinition.concat(
-			{ action: "deleteSelectedObjects", label: getLabel("canvas.deleteObject"), toolbarItem: true },
+			{ action: ACTION_DELETE_SELECTED_OBJECTS, label: getLabel("canvas.deleteObject"), toolbarItem: true },
 			{ divider: true }
 		);
 	}
@@ -212,11 +228,11 @@ const createDefaultContextMenu = (source) => {
 					get(cc, "contextMenuConfig.enableCreateSupernodeNonContiguous", false) ||
 					(menuForNonSelectedObj && source.type === OBJ_NODE))) {
 			menuDefinition = menuDefinition.concat(
-				{ action: "createSuperNode", label: getLabel("node.createSupernode") }
+				{ action: ACTION_CREATE_SUPERNODE, label: getLabel("node.createSupernode") }
 			);
 			if (cc.getCanvasConfig().enableExternalPipelineFlows) {
 				menuDefinition = menuDefinition.concat(
-					{ action: "createSuperNodeExternal", label: getLabel("node.createSupernodeExternal") }
+					{ action: ACTION_CREATE_SUPERNODE_EXTERNAL, label: getLabel("node.createSupernodeExternal") }
 				);
 			}
 			menuDefinition = menuDefinition.concat(
@@ -232,26 +248,26 @@ const createDefaultContextMenu = (source) => {
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
 		// Deconstruct supernode
 		menuDefinition = menuDefinition.concat(
-			{ action: "deconstructSuperNode", label: getLabel("node.deconstructSupernode") },
+			{ action: ACTION_DECONSTRUCT_SUPERNODE, label: getLabel("node.deconstructSupernode") },
 			{ divider: true }
 		);
 
 		// Collapse supernode
 		if (cc.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
 			menuDefinition = menuDefinition.concat(
-				{ action: "collapseSuperNodeInPlace", label: getLabel("node.collapseSupernodeInPlace") }
+				{ action: ACTION_COLLAPSE_SUPERNODE_IN_PLACE, label: getLabel("node.collapseSupernodeInPlace") }
 			);
 		// Expand supernode
 		} else {
 			menuDefinition = menuDefinition.concat(
-				{ action: "expandSuperNodeInPlace", label: getLabel("node.expandSupernode") }
+				{ action: ACTION_EXPAND_SUPERNODE_IN_PLACE, label: getLabel("node.expandSupernode") }
 			);
 		}
 
 		// Expand supernode to full page display
 		if (get(cc, "contextMenuConfig.defaultMenuEntries.displaySupernodeFullPage")) {
 			menuDefinition = menuDefinition.concat(
-				{ action: "displaySubPipeline", label: getLabel("node.displaySupernodeFullPage"), toolbarItem: true }
+				{ action: ACTION_EXPAND_SUPERNODE_FULL_PAGE, label: getLabel("node.displaySupernodeFullPage"), toolbarItem: true }
 			);
 		}
 
@@ -266,14 +282,14 @@ const createDefaultContextMenu = (source) => {
 				// Supernodes inside an external sub-flow cannot be made local.
 				if (!cc.isPipelineExternal(source.pipelineId)) {
 					menuDefinition = menuDefinition.concat(
-						{ action: "convertSuperNodeExternalToLocal", label: getLabel("node.convertSupernodeExternalToLocal") },
+						{ action: ACTION_CONVERT_SUPERNODE_EXTERNAL_TO_LOCAL, label: getLabel("node.convertSupernodeExternalToLocal") },
 						{ divider: true }
 					);
 				}
 			// Convert Local to External
 			} else {
 				menuDefinition = menuDefinition.concat(
-					{ action: "convertSuperNodeLocalToExternal", label: getLabel("node.convertSupernodeLocalToExternal") },
+					{ action: ACTION_CONVERT_SUPERNODE_LOCAL_TO_EXTERNAL, label: getLabel("node.convertSupernodeLocalToExternal") },
 					{ divider: true }
 				);
 			}
@@ -283,7 +299,7 @@ const createDefaultContextMenu = (source) => {
 	if (source.type === OBJ_LINK &&
 			cc.getCanvasConfig().enableLinkSelection === LINK_SELECTION_NONE) {
 		menuDefinition = menuDefinition.concat(
-			{ action: "deleteLink", label: getLabel("canvas.deleteObject"), toolbarItem: true }
+			{ action: ACTION_DELETE_LINK, label: getLabel("canvas.deleteObject"), toolbarItem: true }
 		);
 	}
 	// Highlight submenu (Highlight Branch | Upstream | Downstream, Unhighlight)
@@ -294,14 +310,14 @@ const createDefaultContextMenu = (source) => {
 	}
 	if (source.type === OBJ_CANVAS) {
 		menuDefinition = menuDefinition.concat(
-			{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
+			{ action: ACTION_UNHIGHLIGHT, label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
 		);
 	}
 	if (source.type === OBJ_NODE &&
 			get(cc, "contextMenuConfig.defaultMenuEntries.saveToPalette", false)) {
 		menuDefinition = menuDefinition.concat(
 			{ divider: true },
-			{ action: "saveToPalette", label: getLabel("node.saveToPalette") }
+			{ action: ACTION_SAVE_TO_PALETTE, label: getLabel("node.saveToPalette") }
 		);
 	}
 	// Mark output port for creating links
@@ -312,7 +328,7 @@ const createDefaultContextMenu = (source) => {
 		const isCardinalityAtMax = CanvasUtils.isSrcCardinalityAtMax(source.port.id, node, links);
 
 		menuDefinition = menuDefinition.concat(
-			{ action: "connectFromPort", label: getLabel("port.markForOutput"), enable: !isCardinalityAtMax, toolbarItem: true }
+			{ action: ACTION_CONNECT_FROM_PORT, label: getLabel("port.markForOutput"), enable: !isCardinalityAtMax, toolbarItem: true }
 		);
 	}
 	// Connect to input port from marked output port
@@ -329,7 +345,7 @@ const createDefaultContextMenu = (source) => {
 		const isEnabled = hasMarkedPort && !isCardinalityAtMax;
 
 		menuDefinition = menuDefinition.concat(
-			{ action: "connectToPort", label: getLabel("port.connectTo"), enable: isEnabled, toolbarItem: true }
+			{ action: ACTION_CONNECT_TO_PORT, label: getLabel("port.connectTo"), enable: isEnabled, toolbarItem: true }
 		);
 	}
 
@@ -337,20 +353,20 @@ const createDefaultContextMenu = (source) => {
 };
 
 const createCommentMenu = () => {
-	const menu = [{ action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true }];
+	const menu = [{ action: ACTION_CREATE_COMMENT, label: getLabel("canvas.addComment"), toolbarItem: true }];
 	if (cc.getCanvasConfig().enableWYSIWYGComments) {
 		menu.push(
-			{ action: "createWYSIWYGComment", label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
+			{ action: ACTION_CREATE_WYSIWYG_COMMENT, label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
 		);
 	}
 	return menu;
 };
 
 const createAutoCommentMenu = () => {
-	const menu = [{ action: "createAutoComment", label: getLabel("canvas.addComment"), toolbarItem: true }];
+	const menu = [{ action: ACTION_CREATE_AUTO_COMMENT, label: getLabel("canvas.addComment"), toolbarItem: true }];
 	if (cc.getCanvasConfig().enableWYSIWYGComments) {
 		menu.push(
-			{ action: "createAutoWYSIWYGComment", label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
+			{ action: ACTION_CREATE_AUTO_WYSIWYG_COMMENT, label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
 		);
 	}
 	return menu;
@@ -360,13 +376,13 @@ const createSelectAllMenu = () => {
 	const menu = [];
 	if (!cc.isPrimaryPipelineEmpty() && !cc.areAllObjectsSelected()) {
 		menu.push(
-			{ action: "selectAll", label: getLabel("canvas.selectAll") },
+			{ action: ACTION_SELECT_ALL, label: getLabel("canvas.selectAll") },
 			{ divider: true }
 		);
 	}
 	if (cc.getSelectedObjectIds().length > 0) {
 		menu.push(
-			{ action: "deselectAll", label: getLabel("canvas.deselectAll") },
+			{ action: ACTION_DESELECT_ALL, label: getLabel("canvas.deselectAll") },
 			{ divider: true }
 		);
 	}
@@ -375,20 +391,20 @@ const createSelectAllMenu = () => {
 
 const createEditMenu = (source, includePaste) => {
 	const editSubMenu = [
-		{ action: "cut", label: getLabel("edit.cutSelection"), enable: source.type === OBJ_CANVAS ? source.selectedObjectIds.length > 0 : true },
-		{ action: "copy", label: getLabel("edit.copySelection"), enable: source.type === OBJ_CANVAS ? source.selectedObjectIds.length > 0 : true }
+		{ action: ACTION_CUT, label: getLabel("edit.cutSelection"), enable: source.type === OBJ_CANVAS ? source.selectedObjectIds.length > 0 : true },
+		{ action: ACTION_COPY, label: getLabel("edit.copySelection"), enable: source.type === OBJ_CANVAS ? source.selectedObjectIds.length > 0 : true }
 	];
 	if (includePaste) {
-		editSubMenu.push({ action: "paste", label: getLabel("edit.pasteSelection"), enable: !cc.isClipboardEmpty() });
+		editSubMenu.push({ action: ACTION_PASTE, label: getLabel("edit.pasteSelection"), enable: !cc.isClipboardEmpty() });
 	}
 	return editSubMenu;
 };
 
 const createHighlightSubMenu = (source) => {
 	let highlightSubMenuDef = [
-		{ action: "highlightBranch", label: getLabel("menu.highlightBranch") },
-		{ action: "highlightUpstream", label: getLabel("menu.highlightUpstream") },
-		{ action: "highlightDownstream", label: getLabel("menu.highlightDownstream") }
+		{ action: ACTION_HIGHLIGHT_BRANCH, label: getLabel("menu.highlightBranch") },
+		{ action: ACTION_HIGHLIGHT_UPSTREAM, label: getLabel("menu.highlightUpstream") },
+		{ action: ACTION_HIGHLIGHT_DOWNSTREAM, label: getLabel("menu.highlightDownstream") }
 	];
 	highlightSubMenuDef.push({ divider: true });
 	highlightSubMenuDef = highlightSubMenuDef.concat(createUnhighlightMenu(source));
@@ -398,7 +414,7 @@ const createHighlightSubMenu = (source) => {
 // This should only appear in menu if highlight is true.
 const createUnhighlightMenu = (source) => {
 	const unhighlightSubMenu = [
-		{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
+		{ action: ACTION_UNHIGHLIGHT, label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
 	];
 	return unhighlightSubMenu;
 };
