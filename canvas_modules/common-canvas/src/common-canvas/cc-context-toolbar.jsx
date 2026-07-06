@@ -22,7 +22,8 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import ColorPicker from "../color-picker";
 import { CAUSE_KEYBOARD, OBJ_NODE, OBJ_LINK, OBJ_CANVAS,
-	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT } from "./constants/canvas-constants.js";
+	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT,
+	ACTION_COLOR_BACKGROUND } from "./constants/canvas-constants.js";
 
 const CM_TOOLBAR_GAP = 2;
 const CM_ICON_SIZE = 32; // Icon size for small size toolbar
@@ -81,7 +82,7 @@ class CommonCanvasContextToolbar extends React.Component {
 	}
 
 	getSubPanelInfo(menuItem) {
-		if (menuItem.action === "colorBackground") {
+		if (menuItem.action === ACTION_COLOR_BACKGROUND) {
 			return { subPanel: ColorPicker, subPanelData: { clickActionHandler: (color, evt) => this.colorClicked(color, evt) } };
 		}
 		return {};
