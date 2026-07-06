@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
-import { DEC_NODE, DEC_COMMENT, DEC_LINK } from "../common-canvas/constants/canvas-constants";
+import { OBJ_NODE, OBJ_COMMENT, OBJ_LINK } from "../common-canvas/constants/canvas-constants";
 
 export default class EditDecorationLabelAction extends Action {
 	constructor(data, canvasController) {
@@ -23,11 +23,11 @@ export default class EditDecorationLabelAction extends Action {
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(this.data.pipelineId);
-		if (this.data.objType === DEC_NODE) {
+		if (this.data.objType === OBJ_NODE) {
 			this.previousDecorations = this.apiPipeline.getNodeDecorations(this.data.objId) || [];
-		} else if (this.data.objType === DEC_COMMENT) {
+		} else if (this.data.objType === OBJ_COMMENT) {
 			this.previousDecorations = this.apiPipeline.getCommentDecorations(this.data.objId) || [];
-		} else if (this.data.objType === DEC_LINK) {
+		} else if (this.data.objType === OBJ_LINK) {
 			this.previousDecorations = this.apiPipeline.getLinkDecorations(this.data.objId) || [];
 		}
 		this.newDecorations = this.previousDecorations.map((dec) => {
@@ -40,22 +40,22 @@ export default class EditDecorationLabelAction extends Action {
 
 	// Standard methods
 	do() {
-		if (this.data.objType === DEC_NODE) {
+		if (this.data.objType === OBJ_NODE) {
 			this.apiPipeline.setNodeDecorations(this.data.objId, this.newDecorations);
-		} else if (this.data.objType === DEC_COMMENT) {
+		} else if (this.data.objType === OBJ_COMMENT) {
 			this.apiPipeline.setCommentDecorations(this.data.objId, this.newDecorations);
-		} else if (this.data.objType === DEC_LINK) {
+		} else if (this.data.objType === OBJ_LINK) {
 			this.apiPipeline.setLinkDecorations(this.data.objId, this.newDecorations);
 		}
 		this.focusObject = this.data.selectedObjects[0];
 	}
 
 	undo() {
-		if (this.data.objType === DEC_NODE) {
+		if (this.data.objType === OBJ_NODE) {
 			this.apiPipeline.setNodeDecorations(this.data.objId, this.previousDecorations);
-		} else if (this.data.objType === DEC_COMMENT) {
+		} else if (this.data.objType === OBJ_COMMENT) {
 			this.apiPipeline.setCommentDecorations(this.data.objId, this.previousDecorations);
-		} else if (this.data.objType === DEC_LINK) {
+		} else if (this.data.objType === OBJ_LINK) {
 			this.apiPipeline.setLinkDecorations(this.data.objId, this.previousDecorations);
 		}
 		this.focusObject = this.data.selectedObjects[0];
@@ -66,9 +66,9 @@ export default class EditDecorationLabelAction extends Action {
 	}
 
 	getLabel() {
-		if (this.data.objType === DEC_COMMENT) {
+		if (this.data.objType === OBJ_COMMENT) {
 			return this.labelUtil.getActionLabel(this, "action.editCommentDecorationLabel");
-		} else if (this.data.objType === DEC_LINK) {
+		} else if (this.data.objType === OBJ_LINK) {
 			return this.labelUtil.getActionLabel(this, "action.editLinkDecorationLabel");
 		}
 		return this.labelUtil.getActionLabel(this, "action.editNodeDecorationLabel");

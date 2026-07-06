@@ -18,7 +18,7 @@
 import { isEmpty } from "lodash";
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { COMMENT_LINK, NODE_LINK } from "./constants/canvas-constants";
+import { COMMENT_LINK, NODE_LINK, OBJ_NODE, OBJ_LINK, OBJ_COMMENT } from "./constants/canvas-constants";
 import SvgCanvasAccessibility from "./svg-canvas-utils-accessibility.js";
 
 
@@ -140,11 +140,11 @@ export default class SVGCanvasPipeline {
 	// Returns the name of the type of object d.
 	getObjectTypeName(d) {
 		if (this.getComment(d.id)) {
-			return "comment";
+			return OBJ_COMMENT;
 		} else if (this.getNode(d.id)) {
-			return "node";
+			return OBJ_NODE;
 		}
-		return "link";
+		return OBJ_LINK;
 	}
 
 	getNode(nodeId) {

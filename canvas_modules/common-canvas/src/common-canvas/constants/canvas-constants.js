@@ -138,10 +138,13 @@ export const ASSOC_VAR_CURVE_LEFT = "curveLeft";
 export const ASSOC_VAR_DOUBLE_BACK_RIGHT = "doubleBackRight";
 export const ASSOC_VAR_DOUBLE_BACK_LEFT = "doubleBackLeft";
 
-// The type of object to which decorations are to be attached.
-export const DEC_NODE = "node";
-export const DEC_LINK = "link";
-export const DEC_COMMENT = "comment";
+// Object type names
+export const OBJ_NODE = "node";
+export const OBJ_LINK = "link";
+export const OBJ_COMMENT = "comment";
+export const OBJ_CANVAS = "canvas";
+export const OBJ_INPUT_PORT = "input_port";
+export const OBJ_OUTPUT_PORT = "output_port";
 
 export const DAGRE_HORIZONTAL = "LR";
 export const DAGRE_VERTICAL = "TB";

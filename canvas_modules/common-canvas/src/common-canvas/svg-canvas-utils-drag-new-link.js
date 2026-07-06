@@ -29,7 +29,8 @@ import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	FLOW_IN, FLOW_OUT,
 	PORT_DISPLAY_CIRCLE,
 	LINK_METHOD_PORTS,
-	SINGLE_CLICK
+	SINGLE_CLICK,
+	OBJ_COMMENT
 } from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations to
@@ -75,7 +76,7 @@ export default class SVGCanvasUtilsDragNewLink {
 			this.beginNewLinkCallback(d, node);
 			this.startInputPortNewLink(d3Event, d, node);
 
-		} else if (this.ren.activePipeline.getObjectTypeName(d) === "comment") {
+		} else if (this.ren.activePipeline.getObjectTypeName(d) === OBJ_COMMENT) {
 			this.startCommentNewLink(d3Event, d);
 		}
 	}

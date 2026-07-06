@@ -15,7 +15,9 @@
  */
 
 import { get } from "lodash";
-import { LINK_SELECTION_NONE, SUPER_NODE, WYSIWYG, CAUSE_KEYBOARD } from "./constants/canvas-constants";
+import { LINK_SELECTION_NONE, SUPER_NODE, WYSIWYG, CAUSE_KEYBOARD,
+	OBJ_NODE, OBJ_LINK, OBJ_COMMENT, OBJ_CANVAS,
+	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT } from "./constants/canvas-constants";
 import CanvasUtils from "./common-canvas-utils";
 
 // Global temporary variable to handle the canvas controller.
@@ -135,7 +137,7 @@ const createDefaultContextMenu = (source) => {
 	const menuForNonSelectedObj = cc.isContextToolbarForNonSelectedObj(source);
 
 	// Select all & add comment: canvas only
-	if (source.type === "canvas") {
+	if (source.type === OBJ_CANVAS) {
 		const commentMenu = source.cause === CAUSE_KEYBOARD
 			? createAutoCommentMenu()
 			: createCommentMenu();
@@ -145,19 +147,19 @@ const createDefaultContextMenu = (source) => {
 		);
 	}
 	// Rename node
-	if (source.type === "node" && get(source, "targetObject.layout.labelEditable", false)) {
+	if (source.type === OBJ_NODE && get(source, "targetObject.layout.labelEditable", false)) {
 		menuDefinition = menuDefinition.concat(
 			{ action: "setNodeLabelEditingMode", label: getLabel("node.renameNode"), toolbarItem: true }
 		);
 	}
 	// Edit comment
-	if (source.type === "comment") {
+	if (source.type === OBJ_COMMENT) {
 		menuDefinition = menuDefinition.concat(
 			{ action: "setCommentEditingMode", label: getLabel("comment.editComment"), toolbarItem: true }
 		);
 	}
 	// Color objects
-	if (source.type === "comment" &&
+	if (source.type === OBJ_COMMENT &&
 			source.targetObject?.contentType !== WYSIWYG &&
 			get(cc, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
 		menuDefinition = menuDefinition.concat(
@@ -166,7 +168,7 @@ const createDefaultContextMenu = (source) => {
 		);
 	}
 	// Disconnect node
-	if (source.type === "node" || source.type === "comment") {
+	if (source.type === OBJ_NODE || source.type === OBJ_COMMENT) {
 		const objectAry = menuForNonSelectedObj ? [source.targetObject.id] : source.selectedObjectIds;
 		const linksFound = cc.objectModel.getAPIPipeline(source.pipelineId).getLinksContainingIds(objectAry);
 		if (linksFound.length > 0) {
@@ -177,18 +179,18 @@ const createDefaultContextMenu = (source) => {
 		}
 	}
 	// Edit submenu (cut, copy, paste)
-	if (source.type === "node" ||
-			source.type === "comment" ||
-			(source.type === "link" && cc.areDetachableLinksInUse()) ||
-			source.type === "canvas") {
-		const editSubMenu = createEditMenu(source, source.type === "canvas");
+	if (source.type === OBJ_NODE ||
+			source.type === OBJ_COMMENT ||
+			(source.type === OBJ_LINK && cc.areDetachableLinksInUse()) ||
+			source.type === OBJ_CANVAS) {
+		const editSubMenu = createEditMenu(source, source.type === OBJ_CANVAS);
 		menuDefinition = menuDefinition.concat(
 			{ action: "clipboard", submenu: true, menu: editSubMenu, label: getLabel("node.editMenu") },
 			{ divider: true }
 		);
 	}
 	// Undo and redo
-	if (source.type === "canvas") {
+	if (source.type === OBJ_CANVAS) {
 		menuDefinition = menuDefinition.concat(
 			{ action: "undo", label: getLabel("canvas.undo"), enable: cc.canUndo() },
 			{ action: "redo", label: getLabel("canvas.redo"), enable: cc.canRedo() },
@@ -196,19 +198,19 @@ const createDefaultContextMenu = (source) => {
 		);
 	}
 	// Delete objects
-	if (source.type === "node" || source.type === "comment" ||
-			(cc.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE && source.type === "link")) {
+	if (source.type === OBJ_NODE || source.type === OBJ_COMMENT ||
+			(cc.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE && source.type === OBJ_LINK)) {
 		menuDefinition = menuDefinition.concat(
 			{ action: "deleteSelectedObjects", label: getLabel("canvas.deleteObject"), toolbarItem: true },
 			{ divider: true }
 		);
 	}
 	// Create supernode
-	if (source.type === "node" || source.type === "comment") {
+	if (source.type === OBJ_NODE || source.type === OBJ_COMMENT) {
 		if (get(cc, "contextMenuConfig.defaultMenuEntries.createSupernode", false) &&
 				(cc.areSelectedNodesContiguous() ||
 					get(cc, "contextMenuConfig.enableCreateSupernodeNonContiguous", false) ||
-					(menuForNonSelectedObj && source.type === "node"))) {
+					(menuForNonSelectedObj && source.type === OBJ_NODE))) {
 			menuDefinition = menuDefinition.concat(
 				{ action: "createSuperNode", label: getLabel("node.createSupernode") }
 			);
@@ -224,7 +226,7 @@ const createDefaultContextMenu = (source) => {
 	}
 	// Supernode options - only applicable with a single supernode selected
 	// which is opened by the "canvas" (default) editor.
-	if (source.type === "node" &&
+	if (source.type === OBJ_NODE &&
 			source.targetObject.type === SUPER_NODE &&
 			(source.selectedObjectIds.length === 1 || menuForNonSelectedObj) &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
@@ -278,24 +280,24 @@ const createDefaultContextMenu = (source) => {
 		}
 	}
 	// Delete link
-	if (source.type === "link" &&
+	if (source.type === OBJ_LINK &&
 			cc.getCanvasConfig().enableLinkSelection === LINK_SELECTION_NONE) {
 		menuDefinition = menuDefinition.concat(
 			{ action: "deleteLink", label: getLabel("canvas.deleteObject"), toolbarItem: true }
 		);
 	}
 	// Highlight submenu (Highlight Branch | Upstream | Downstream, Unhighlight)
-	if (source.type === "node") {
+	if (source.type === OBJ_NODE) {
 		menuDefinition = menuDefinition.concat(
 			{ action: "highlight", submenu: true, menu: createHighlightSubMenu(source), label: getLabel("menu.highlight") }
 		);
 	}
-	if (source.type === "canvas") {
+	if (source.type === OBJ_CANVAS) {
 		menuDefinition = menuDefinition.concat(
 			{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
 		);
 	}
-	if (source.type === "node" &&
+	if (source.type === OBJ_NODE &&
 			get(cc, "contextMenuConfig.defaultMenuEntries.saveToPalette", false)) {
 		menuDefinition = menuDefinition.concat(
 			{ divider: true },
@@ -303,7 +305,7 @@ const createDefaultContextMenu = (source) => {
 		);
 	}
 	// Mark output port for creating links
-	if (source.type === "output_port") {
+	if (source.type === OBJ_OUTPUT_PORT) {
 		// Check if the port can accept more connections based on cardinality
 		const node = cc.getNode(source.id, source.pipelineId);
 		const links = cc.getLinks(source.pipelineId);
@@ -314,7 +316,7 @@ const createDefaultContextMenu = (source) => {
 		);
 	}
 	// Connect to input port from marked output port
-	if (source.type === "input_port") {
+	if (source.type === OBJ_INPUT_PORT) {
 		const connectFromInfo = cc.getConnectFromInfo(source.pipelineId);
 		const hasMarkedPort = connectFromInfo !== null;
 
@@ -373,8 +375,8 @@ const createSelectAllMenu = () => {
 
 const createEditMenu = (source, includePaste) => {
 	const editSubMenu = [
-		{ action: "cut", label: getLabel("edit.cutSelection"), enable: source.type === "canvas" ? source.selectedObjectIds.length > 0 : true },
-		{ action: "copy", label: getLabel("edit.copySelection"), enable: source.type === "canvas" ? source.selectedObjectIds.length > 0 : true }
+		{ action: "cut", label: getLabel("edit.cutSelection"), enable: source.type === OBJ_CANVAS ? source.selectedObjectIds.length > 0 : true },
+		{ action: "copy", label: getLabel("edit.copySelection"), enable: source.type === OBJ_CANVAS ? source.selectedObjectIds.length > 0 : true }
 	];
 	if (includePaste) {
 		editSubMenu.push({ action: "paste", label: getLabel("edit.pasteSelection"), enable: !cc.isClipboardEmpty() });

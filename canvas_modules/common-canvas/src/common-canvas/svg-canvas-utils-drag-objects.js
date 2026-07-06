@@ -25,7 +25,8 @@ import KeyboardUtils from "./keyboard-utils.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import { SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING, LINK_SELECTION_DETACHABLE,
 	NORTH, SOUTH, EAST, WEST,
-	SINGLE_CLICK }
+	SINGLE_CLICK,
+	OBJ_NODE }
 	from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations to move
@@ -197,7 +198,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 		if (!this.isSizing()) {
 			const objType = CanvasUtils.getObjectTypeName(d);
-			if (objType === "node") {
+			if (objType === OBJ_NODE) {
 				this.nodeSizing = true;
 			} else {
 				this.commentSizing = true;

@@ -21,7 +21,8 @@ import { findLastIndex } from "lodash";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import ColorPicker from "../color-picker";
-import { CAUSE_KEYBOARD } from "./constants/canvas-constants.js";
+import { CAUSE_KEYBOARD, OBJ_NODE, OBJ_LINK, OBJ_CANVAS,
+	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT } from "./constants/canvas-constants.js";
 
 const CM_TOOLBAR_GAP = 2;
 const CM_ICON_SIZE = 32; // Icon size for small size toolbar
@@ -170,11 +171,11 @@ class CommonCanvasContextToolbar extends React.Component {
 	shouldCenterJustifyToolbar() {
 		const objType = this.props.contextSource.type;
 		return (
-			objType === "link" ||
-			objType === "canvas" ||
-			objType === "input_port" ||
-			objType === "output_port" ||
-			objType === "node" &&
+			objType === OBJ_LINK ||
+			objType === OBJ_CANVAS ||
+			objType === OBJ_INPUT_PORT ||
+			objType === OBJ_OUTPUT_PORT ||
+			objType === OBJ_NODE &&
 				this.props.contextSource.targetObject.layout.contextToolbarPosition === "topCenter" &&
 				!this.props.contextSource.targetObject.is_expanded);
 	}
