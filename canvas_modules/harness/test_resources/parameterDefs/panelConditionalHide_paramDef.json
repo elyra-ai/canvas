@@ -1,0 +1,102 @@
+{
+    "titleDefinition": {
+      "title": "Twisty Panel Test"
+    },
+    "current_parameters": {
+    },
+    "parameters": [
+      {
+        "id": "checkboxSingle",
+        "type": "boolean",
+        "enum": ["Single Checkbox Label"]
+      },
+      {
+        "id": "textfieldControlName",
+        "type": "string",
+        "role": "new_column",
+        "required": true,
+        "default": "textfieldControlNamePlaceholderText"
+      }
+    ],
+    "complex_types": [],
+    "uihints": {
+      "id": "Twist.test",
+      "icon": "images/modelbuildspark.svg",
+      "label": {
+        "default": "Twisty Test"
+      },
+      "description": {
+        "default": "Test Twisty Panel"
+      },
+      "parameter_info": [
+        {
+          "parameter_ref": "checkboxSingle",
+          "label": {
+            "default": "Checkbox Control Name"
+          }
+        },
+        {
+          "parameter_ref": "textfieldControlName",
+          "label": {
+            "default": "Textfield Control Name"
+          },
+          "description": {
+            "default": "Textfield test"
+          }
+        }
+      ],
+      "action_info": [],
+      "complex_type_info": [],
+      "group_info": [
+        {
+          "id": "TwistyPanel",
+          "label": {
+            "default": "Twisty Panel Test"
+          },
+          "type": "panels",
+          "group_info": [
+            {
+              "id": "TwistyPanel1",
+              "label": {
+                "default": "Controls"
+              },
+              "type": "twistyPanel",
+              "group_info": [
+                {
+                  "id": "hiddenControls",
+                  "parameter_refs": ["checkboxSingle"]
+                }
+              ]
+            },
+            {
+              "id": "TableTwisty",
+              "label": {
+                "default": "Hidden Controls"
+              },
+              "type": "twistyPanel",
+              "group_info": [
+                {
+                  "id": "controls",
+                  "parameter_refs": ["textfieldControlName"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "conditions": [
+      {
+        "visible": {
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "checkboxSingle",
+              "op": "equals",
+              "value": true
+            }
+          },
+          "parameter_refs": ["textfieldControlName"]
+        }
+      }
+    ]
+  }

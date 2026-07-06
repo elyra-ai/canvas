@@ -18,6 +18,7 @@ import sinon from "sinon";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import twistypanelParamDef from "./../../test_resources/paramDefs/twistyPanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import panelConditionalHideParamDef from "./../../test_resources/paramDefs/panelConditionalHide_paramDef.json";
 import { expect } from "chai";
 import { cleanup, fireEvent, waitFor } from "@testing-library/react";
 
@@ -167,6 +168,54 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 	});
 });
 
+
+describe("twisty panel auto-hides when all children are hidden", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionalHideParamDef);
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("panel should be hidden on load when all of its children are hidden", () => {
+		const { container } = wrapper;
+		// checkbox is unchecked by default so the textfield is hidden and its panel should auto-hide
+		expect(controller.getControlState({ name: "textfieldControlName" })).to.equal("hidden");
+		expect(controller.getPanelState({ name: "TableTwisty" })).to.equal("hidden");
+		const twistyPanel = container.querySelector("div[data-id='properties-TableTwisty']");
+		expect(twistyPanel.classList.contains("hide")).to.equal(true);
+		// panel with a visible child is not affected
+		expect(controller.getPanelState({ name: "TwistyPanel1" })).to.not.equal("hidden");
+	});
+
+	it("panel should show and hide as its only child becomes visible and hidden", async() => {
+		const { container } = wrapper;
+		const checkbox = container.querySelector("div[data-id='properties-checkboxSingle'] input[type='checkbox']");
+
+		// check the checkbox: textfield becomes visible so the panel should reappear
+		fireEvent.click(checkbox);
+		await waitFor(() => {
+			expect(controller.getControlState({ name: "textfieldControlName" })).to.equal("visible");
+			expect(controller.getPanelState({ name: "TableTwisty" })).to.equal("visible");
+			const twistyPanel = container.querySelector("div[data-id='properties-TableTwisty']");
+			expect(twistyPanel.classList.contains("hide")).to.equal(false);
+		});
+
+		// uncheck the checkbox: textfield hidden again so the panel should auto-hide
+		fireEvent.click(checkbox);
+		await waitFor(() => {
+			expect(controller.getControlState({ name: "textfieldControlName" })).to.equal("hidden");
+			expect(controller.getPanelState({ name: "TableTwisty" })).to.equal("hidden");
+			const twistyPanel = container.querySelector("div[data-id='properties-TableTwisty']");
+			expect(twistyPanel.classList.contains("hide")).to.equal(true);
+		});
+	});
+});
 
 describe("twisty panel custom title renders correctly", () => {
 	let mockPanelTitleHandler;
