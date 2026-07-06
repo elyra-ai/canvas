@@ -19,8 +19,7 @@ import React from "react";
 import { IntlProvider } from "react-intl";
 import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json" with { type: "json" };
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json" with { type: "json" };
-// Note use "@elyra/canvas" instead of "common-canvas" here, if you are importing from the NPM module.
-import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
 class App extends React.Component {
 	constructor(props) {

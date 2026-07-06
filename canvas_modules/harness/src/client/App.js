@@ -167,7 +167,7 @@ import {
 	PALETTE_LAYOUT_FLYOUT,
 	TOOLBAR_LAYOUT_TOP,
 	LAYOUT_LIBRARY_DAGRE
-} from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+} from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";

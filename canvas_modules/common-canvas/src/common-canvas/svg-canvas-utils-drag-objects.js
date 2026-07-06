@@ -25,8 +25,10 @@ import KeyboardUtils from "./keyboard-utils.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import { SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING, LINK_SELECTION_DETACHABLE,
 	NORTH, SOUTH, EAST, WEST,
-	SINGLE_CLICK }
-	from "./constants/canvas-constants.js";
+	SINGLE_CLICK,
+	OBJ_NODE,
+	ACTION_INSERT_NODE_INTO_LINK, ACTION_ATTACH_NODE_TO_LINKS, ACTION_MOVE_OBJECTS,
+	ACTION_RESIZE_OBJECTS } from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations to move
 // and resize nodes and comments. Also, it provides utility functions to handle
@@ -197,7 +199,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 		if (!this.isSizing()) {
 			const objType = CanvasUtils.getObjectTypeName(d);
-			if (objType === "node") {
+			if (objType === OBJ_NODE) {
 				this.nodeSizing = true;
 			} else {
 				this.commentSizing = true;
@@ -533,7 +535,7 @@ export default class SVGCanvasUtilsDragObjects {
 			}
 
 			this.ren.canvasController.editActionHandler({
-				editType: "resizeObjects",
+				editType: ACTION_RESIZE_OBJECTS,
 				editSource: "canvas",
 				objectsInfo: this.nodeSizingObjectsInfo,
 				detachedLinksInfo: this.nodeSizingDetLinksInfo,
@@ -569,7 +571,7 @@ export default class SVGCanvasUtilsDragObjects {
 			};
 
 			const data = {
-				editType: "resizeObjects",
+				editType: ACTION_RESIZE_OBJECTS,
 				editSource: "canvas",
 				objectsInfo: commentSizingObjectsInfo,
 				detachedLinksInfo: {}, // Comments cannot have detached links
@@ -810,7 +812,7 @@ export default class SVGCanvasUtilsDragObjects {
 				if (this.existingNodeInsertableIntoLink &&
 						this.ren.dragOverLink) {
 					this.ren.canvasController.editActionHandler({
-						editType: "insertNodeIntoLink",
+						editType: ACTION_INSERT_NODE_INTO_LINK,
 						editSource: "canvas",
 						node: movingObjectData.objects[0],
 						link: this.ren.dragOverLink,
@@ -821,7 +823,7 @@ export default class SVGCanvasUtilsDragObjects {
 				} else if (this.existingNodeAttachableToDetachedLinks &&
 							this.ren.dragOverDetachedLinks.length > 0) {
 					this.ren.canvasController.editActionHandler({
-						editType: "attachNodeToLinks",
+						editType: ACTION_ATTACH_NODE_TO_LINKS,
 						editSource: "canvas",
 						node: movingObjectData.objects[0],
 						detachedLinks: this.ren.dragOverDetachedLinks,
@@ -831,7 +833,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 				} else {
 					this.ren.canvasController.editActionHandler({
-						editType: "moveObjects",
+						editType: ACTION_MOVE_OBJECTS,
 						editSource: "canvas",
 						nodes: movingObjectData.objects.map((o) => o.id),
 						links: this.ren.activePipeline.getSelectedDetachedLinks(),

@@ -31,13 +31,17 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_RIGHT_LEFT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
-	CONTEXT_MENU_BUTTON, DEC_NODE, DEC_COMMENT, DEC_LINK, EDIT_ICON,
+	CONTEXT_MENU_BUTTON, OBJ_NODE, OBJ_COMMENT, OBJ_LINK, OBJ_CANVAS,
+	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON,
 	PORT_DISPLAY_CIRCLE, PORT_DISPLAY_CIRCLE_WITH_ARROW, PORT_DISPLAY_IMAGE, PORT_DISPLAY_JSX,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST,
 	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
+	ACTION_SET_NODE_LABEL_EDIT, ACTION_SET_COMMENT_EDIT_MODE,
+	ACTION_SET_NODE_DECORATION_LABEL_EDIT, ACTION_SET_COMMENT_DECORATION_LABEL_EDIT,
+	ACTION_SET_LINK_DECORATION_LABEL_EDIT,
 	FLOW_IN, FLOW_OUT,
 	SHAPE_PORT_ARCS, SHAPE_RECTANGLE_ROUNDED_CORNERS,
 	SINGLE_CLICK, SINGLE_CLICK_CONTEXTMENU, DOUBLE_CLICK,
@@ -1725,7 +1729,7 @@ export default class SVGCanvasRenderer {
 				if (dec && typeof dec.label !== "undefined" && dec.label_editable && this.config.enableEditingActions) {
 					const commentDecSel = this.getCommentDecSelectionById(decId, commentId);
 					const commentDecDomObj = commentDecSel.node();
-					this.displayDecLabelTextArea(dec, comment, DEC_COMMENT, commentDecDomObj);
+					this.displayDecLabelTextArea(dec, comment, OBJ_COMMENT, commentDecDomObj);
 				}
 			}
 		} else {
@@ -2051,7 +2055,7 @@ export default class SVGCanvasRenderer {
 
 				// Display Decorators
 				const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
-				this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
+				this.displayDecorations(d, OBJ_NODE, nodeGrp, decorations);
 			}
 		});
 
@@ -2681,7 +2685,7 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Node Label - double click");
 				if (d.layout.labelEditable && this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.canvasController.textActionHandler("setNodeLabelEditingMode", "textdoubleclick",
+					this.canvasController.textActionHandler(ACTION_SET_NODE_LABEL_EDIT, "textdoubleclick",
 						{ id: d.id, pipelineId: this.activePipeline.id });
 				}
 			});
@@ -2898,12 +2902,12 @@ export default class SVGCanvasRenderer {
 			this.zoomUtils.getZoomScale(), this.config.enableDisplayFullLabelOnHover);
 
 		this.displayEditIcon(spanObj, nodeGrpSel, transform,
-			(d3Event, d) => this.canvasController.textActionHandler("setNodeLabelEditingMode", "editicon",
+			(d3Event, d) => this.canvasController.textActionHandler(ACTION_SET_NODE_LABEL_EDIT, "editicon",
 				{ id: d.id, pipelineId: this.activePipeline.id }));
 	}
 
 	// Displays the edit icon for an editable decoration label.
-	// objType can be DEC_NODE, DEC_COMMENT, or DEC_LINK.
+	// objType can be either OBJ_NODE, OBJ_COMMENT or OBJ_LINK.
 	displayDecLabelEditIcon(spanObj, dec, obj, objType) {
 		const labelObj = spanObj.parentElement;
 		const foreignObj = labelObj.parentElement;
@@ -2921,12 +2925,12 @@ export default class SVGCanvasRenderer {
 	// Returns the appropriate editType string (for changing to edit mode)
 	// for the objType passed in.
 	getDecorationLabelEditType(objType) {
-		if (objType === DEC_NODE) {
-			return "setNodeDecorationLabelEditingMode";
-		} else if (objType === DEC_COMMENT) {
-			return "setCommentDecorationLabelEditingMode";
+		if (objType === OBJ_NODE) {
+			return ACTION_SET_NODE_DECORATION_LABEL_EDIT;
+		} else if (objType === OBJ_COMMENT) {
+			return ACTION_SET_COMMENT_DECORATION_LABEL_EDIT;
 		}
-		return "setLinkDecorationLabelEditingMode";
+		return ACTION_SET_LINK_DECORATION_LABEL_EDIT;
 	}
 
 	// Displays the edit icon (which can be clicked to start editing) next
@@ -3031,7 +3035,7 @@ export default class SVGCanvasRenderer {
 
 	// Displays a set of decorations on either a node or link object.
 	// d       - This is a node or link object.
-	// objType - A string set to either DEC_NODE or DEC_LINK.
+	// objType - A string set to either OBJ_NODE, OBJ_COMMENT or OBJ_LINK.
 	// trgGrp  - A D3 selection object that references the node or link to
 	//           which the decorations are to be attached.
 	// decs    - An array of decorations to be applied to the node or link.
@@ -3531,15 +3535,15 @@ export default class SVGCanvasRenderer {
 	}
 
 	getDefaultContextToolbarPos(objType, d, port) {
-		if (objType === "link") {
+		if (objType === OBJ_LINK) {
 			return { ...d.pathInfo.centerPoint };
 
-		} else if (objType === "input_port" || objType === "output_port") {
+		} else if (objType === OBJ_INPUT_PORT || objType === OBJ_OUTPUT_PORT) {
 			// For ports, d is the node and port contains cx/cy coordinates relative to the node
 			// Convert to absolute canvas coordinates by adding node position
 			return { x: d.x_pos + port.cx, y: d.y_pos + port.cy };
 
-		} else if (objType === "node" && d.layout.contextToolbarPosition === "topCenter" && !d.is_expanded) {
+		} else if (objType === OBJ_NODE && d.layout.contextToolbarPosition === "topCenter" && !d.is_expanded) {
 			return { x: d.x_pos + (d.width / 2), y: d.y_pos };
 
 		}
@@ -3767,8 +3771,8 @@ export default class SVGCanvasRenderer {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
 			type: type,
-			targetObject: type === "canvas" ? null : d,
-			id: type === "canvas" ? null : d.id, // For historical purposes, we pass d.id as well as d as targetObject.
+			targetObject: type === OBJ_CANVAS ? null : d,
+			id: type === OBJ_CANVAS ? null : d.id, // For historical purposes, we pass d.id as well as d as targetObject.
 			pipelineId: this.activePipeline.id,
 			cmPos: pos
 				? pos
@@ -4139,7 +4143,7 @@ export default class SVGCanvasRenderer {
 		joinedCommentGrps.each((d, i, elements) => {
 			const commentGrp = d3.select(elements[i]);
 			const decorations = CanvasUtils.getCombinedDecorations([], d.decorations);
-			this.displayDecorations(d, DEC_COMMENT, commentGrp, decorations);
+			this.displayDecorations(d, OBJ_COMMENT, commentGrp, decorations);
 		});
 
 		// Add or remove drag object behavior for the comment groups.
@@ -4352,7 +4356,7 @@ export default class SVGCanvasRenderer {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					this.deleteCommentPort(d3Event.currentTarget);
-					this.canvasController.textActionHandler("setCommentEditingMode", "textdoubleclick",
+					this.canvasController.textActionHandler(ACTION_SET_COMMENT_EDIT_MODE, "textdoubleclick",
 						{ id: d.id, pipelineId: this.activePipeline.id });
 
 					this.canvasController.clickActionHandler({
@@ -4699,7 +4703,7 @@ export default class SVGCanvasRenderer {
 				const decorations = this.shouldDisplayAltDecorations(d)
 					? this.canvasLayout.linkAltDecorations
 					: d.decorations;
-				this.displayDecorations(d, DEC_LINK, linkGrp, decorations);
+				this.displayDecorations(d, OBJ_LINK, linkGrp, decorations);
 			}
 		});
 
@@ -6388,7 +6392,7 @@ export default class SVGCanvasRenderer {
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
 
 		let objSel = null;
-		if (type === "node") {
+		if (type === OBJ_NODE) {
 			if (this.activePipeline.getNode(obj.id)) {
 				objSel = this.getNodeGroupSelectionById(obj.id);
 
@@ -6403,7 +6407,7 @@ export default class SVGCanvasRenderer {
 				return;
 			}
 
-		} else if (type === "comment") {
+		} else if (type === OBJ_COMMENT) {
 			if (this.activePipeline.getComment(obj.id)) {
 				objSel = this.getCommentGroupSelectionById(obj.id);
 
@@ -6419,7 +6423,7 @@ export default class SVGCanvasRenderer {
 				return;
 			}
 
-		} else if (type === "link") {
+		} else if (type === OBJ_LINK) {
 			if (this.activePipeline.getLink(obj.id)) {
 				objSel = this.getLinkGroupSelectionById(obj.id);
 
@@ -6477,9 +6481,9 @@ export default class SVGCanvasRenderer {
 	// 2. The object is a binding node -- because they are always in a fixed position.
 	shouldObjectCauseZoom(obj, type) {
 		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
-			if (type === "link") {
+			if (type === OBJ_LINK) {
 				return false;
-			} else if (type === "node" && CanvasUtils.isSuperBindingNode(obj)) {
+			} else if (type === OBJ_NODE && CanvasUtils.isSuperBindingNode(obj)) {
 				return false;
 			}
 		}
@@ -6546,9 +6550,9 @@ export default class SVGCanvasRenderer {
 			objSel = this.getLinkEndHandleGrpSelectionById(subObject.obj.id);
 
 		} else if (subObject.type === "decoration") {
-			if (CanvasUtils.getObjectTypeName(parentObj) === "node") {
+			if (CanvasUtils.getObjectTypeName(parentObj) === OBJ_NODE) {
 				objSel = this.getNodeDecSelectionById(subObject.obj.id, parentObj.id);
-			} else if (CanvasUtils.getObjectTypeName(parentObj) === "comment") {
+			} else if (CanvasUtils.getObjectTypeName(parentObj) === OBJ_COMMENT) {
 				objSel = this.getCommentDecSelectionById(subObject.obj.id, parentObj.id);
 			} else {
 				objSel = this.getLinkDecSelectionById(subObject.obj.id, parentObj.id);
@@ -6559,7 +6563,7 @@ export default class SVGCanvasRenderer {
 			// If the parent object is a link, raise it to the top of the display
 			// because it may have been lowered during the setCanvasInfoRender
 			// call following a change to the flow.
-			if (CanvasUtils.getObjectTypeName(parentObj) === "link") {
+			if (CanvasUtils.getObjectTypeName(parentObj) === OBJ_LINK) {
 				this.getLinkGroupSelectionById(parentObj.id).raise();
 			}
 

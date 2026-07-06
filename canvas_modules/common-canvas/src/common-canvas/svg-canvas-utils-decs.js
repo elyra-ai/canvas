@@ -17,7 +17,7 @@
 import { has } from "lodash";
 import CanvasUtils from "./common-canvas-utils.js";
 import {
-	DEC_COMMENT, DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT,
+	OBJ_COMMENT, OBJ_LINK, TEXT_AREA_BORDER_ADJUSTMENT,
 	FLOW_IN, FLOW_OUT,
 } from "./constants/canvas-constants";
 
@@ -56,7 +56,7 @@ export default class SvgCanvasDecs {
 	// Returns a rotate transform for a decoration, if the decoration is applied to
 	// a link, and the link's rotate property is set to true, or empty sting otherwise.
 	getDecRotateTransform(dec, d, objType) {
-		if (objType === "link" && dec.rotate) {
+		if (objType === OBJ_LINK && dec.rotate) {
 			const angle = (dec.position === "source")
 				? CanvasUtils.getLinkEndAngle(d, FLOW_OUT, this.canvasLayout)
 				: CanvasUtils.getLinkEndAngle(d, FLOW_IN, this.canvasLayout);
@@ -67,9 +67,9 @@ export default class SvgCanvasDecs {
 	}
 
 	getDecPosX(dec, data, objType) {
-		if (objType === DEC_LINK) {
+		if (objType === OBJ_LINK) {
 			return this.getLinkDecPosX(dec, data, objType);
-		} else if (objType === DEC_COMMENT) {
+		} else if (objType === OBJ_COMMENT) {
 			return this.getCommentDecPosX(dec, data);
 		}
 		return this.getNodeDecPosX(dec, data);
@@ -129,9 +129,9 @@ export default class SvgCanvasDecs {
 	}
 
 	getDecPosY(dec, data, objType) {
-		if (objType === DEC_LINK) {
+		if (objType === OBJ_LINK) {
 			return this.getLinkDecPosY(dec, data);
-		} else if (objType === DEC_COMMENT) {
+		} else if (objType === OBJ_COMMENT) {
 			return this.getCommentDecPosY(dec, data);
 		}
 		return this.getNodeDecPosY(dec, data);
@@ -191,7 +191,7 @@ export default class SvgCanvasDecs {
 		if (dec.outline === false) {
 			return 0;
 		}
-		if (objType === DEC_LINK || objType === DEC_COMMENT) {
+		if (objType === OBJ_LINK || objType === OBJ_COMMENT) {
 			return this.canvasLayout.linkDecoratorPadding;
 		}
 		return obj.layout.decoratorPadding;
@@ -200,7 +200,7 @@ export default class SvgCanvasDecs {
 	getDecWidth(dec, obj, objType) {
 		if (typeof dec.width !== "undefined") {
 			return Number(dec.width);
-		} else if (objType === DEC_LINK || objType === DEC_COMMENT) {
+		} else if (objType === OBJ_LINK || objType === OBJ_COMMENT) {
 			return this.canvasLayout.linkDecoratorWidth;
 		}
 		return obj.layout.decoratorWidth;
@@ -209,7 +209,7 @@ export default class SvgCanvasDecs {
 	getDecHeight(dec, obj, objType) {
 		if (typeof dec.height !== "undefined") {
 			return Number(dec.height);
-		} else if (objType === DEC_LINK || objType === DEC_COMMENT) {
+		} else if (objType === OBJ_LINK || objType === OBJ_COMMENT) {
 			return this.canvasLayout.linkDecoratorHeight;
 		}
 		return obj.layout.decoratorHeight;
@@ -250,7 +250,7 @@ export default class SvgCanvasDecs {
 	getDecLabelWidth(dec, obj, objType) {
 		if (typeof dec.width !== "undefined") {
 			return Number(dec.width);
-		} else if (objType === DEC_LINK || objType === DEC_COMMENT) {
+		} else if (objType === OBJ_LINK || objType === OBJ_COMMENT) {
 			return this.canvasLayout.linkDecoratorLabelWidth;
 		}
 		return obj.layout.decoratorLabelWidth;
@@ -259,7 +259,7 @@ export default class SvgCanvasDecs {
 	getDecLabelHeight(dec, obj, objType) {
 		if (typeof dec.height !== "undefined") {
 			return Number(dec.height);
-		} else if (objType === DEC_LINK || objType === DEC_COMMENT) {
+		} else if (objType === OBJ_LINK || objType === OBJ_COMMENT) {
 			return this.canvasLayout.linkDecoratorLabelHeight;
 		}
 		return obj.layout.decoratorLabelHeight;
