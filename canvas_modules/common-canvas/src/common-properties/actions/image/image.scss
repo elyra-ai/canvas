@@ -23,10 +23,10 @@
 	align-self: flex-start;
 	display: flex;
 	align-items: center;
-	// Offset by label height (label-01 line-height 1rem + Carbon label margin-bottom 0.5rem).
-	margin-top: carbon.$spacing-05 + carbon.$spacing-03;
-	// Match Carbon TextInput md height so the image centers within the input field.
+	// Match Carbon TextInput md height and offset past the label so the icon sits beside the input.
+	// The inline style from ImageAction overrides this when a description is present (see image.jsx).
 	height: carbon.$spacing-08;
+	margin-top: carbon.$spacing-05 + carbon.$spacing-03;
 	&.left {
 		order: -1;
 		padding: 0 carbon.$spacing-03 0 0;

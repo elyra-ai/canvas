@@ -26,10 +26,12 @@ class ImageAction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			marginTop: null
 		};
 		this.applyAction = this.applyAction.bind(this);
 		this.renderIcon = this.renderIcon.bind(this);
 		this.getIcon = this.getIcon.bind(this);
+		this.imageRef = React.createRef();
 
 		this.imageDimensions = this.props.action?.image?.size
 			? {
@@ -37,6 +39,14 @@ class ImageAction extends React.Component {
 				width: `${this.props.action.image.size.width}px`
 			}
 			: {};
+	}
+
+	componentDidMount() {
+		this.updateMarginTop();
+	}
+
+	componentDidUpdate() {
+		this.updateMarginTop();
 	}
 
 	getIcon(filePath) {
@@ -55,6 +65,36 @@ class ImageAction extends React.Component {
 			{...this.imageDimensions}
 		/>);
 	}
+
+	// For accessible controls the action image lives in .properties-ctrl-wrapper.action beside
+	// the Carbon TextInput. Carbon renders the label + any on-panel description inside
+	// .cds--label, so we measure its rendered height (plus its 8px margin-bottom) and apply
+	// that as margin-top so the icon stays aligned with the input regardless of description length.
+	updateMarginTop() {
+		const el = this.imageRef.current;
+		if (!el) {
+			return;
+		}
+		const wrapper = el.closest(".properties-ctrl-wrapper.action");
+		if (!wrapper) {
+			return; // non-accessible controls: margin-top is handled by SCSS
+		}
+		const labelEl = wrapper.querySelector(".cds--label");
+		if (!labelEl) {
+			return;
+		}
+		const labelContentHeight = Math.round(labelEl.getBoundingClientRect().height);
+		if (labelContentHeight <= 0) {
+			return; // not yet laid out or hidden
+		}
+		// .cds--label has margin-bottom: $spacing-03 (8px) which also separates label from input
+		const cdslLabelMarginBottom = 8;
+		const newMarginTop = labelContentHeight + cdslLabelMarginBottom;
+		if (newMarginTop !== this.state.marginTop) {
+			this.setState({ marginTop: newMarginTop });
+		}
+	}
+
 	applyAction() {
 		if (this.props.state !== STATES.DISABLED) { // this is needed to mimic disabled action button
 			// fire event and let the application determine how to handle the action
@@ -97,8 +137,10 @@ class ImageAction extends React.Component {
 		);
 
 
+		const marginStyle = this.state.marginTop !== null ? { marginTop: `${this.state.marginTop}px` } : {};
+
 		return (
-			<div className={className}>
+			<div ref={this.imageRef} className={className} style={marginStyle}>
 				{image}
 			</div>
 		);
