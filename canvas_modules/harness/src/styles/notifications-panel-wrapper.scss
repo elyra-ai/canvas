@@ -24,7 +24,10 @@
 		width: 350px;
 		min-width: 350px;
 		min-height: 0;
-		max-height: 500px;
+		// Cap at 500px normally, but shrink to the viewport when zoomed in far
+		// (a fixed pixel height cannot fit a small zoomed viewport). The panel's
+		// own message list scrolls within whatever height it is given.
+		max-height: min(500px, calc(100vh - 120px));
 		box-shadow: none;
 		border-block-end: none;
 		border-inline-start: none;
