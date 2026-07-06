@@ -3507,6 +3507,10 @@
 <td>Puts a comment into editing mode</td>
 </tr>
 <tr>
+<td>colorBackground</td>
+<td>Used to manage the color picker; not passed to <code>beforeEditActionHandler</code> nor <code>editActionHandler</code></td>
+</tr>
+<tr>
 <td><strong>Canvas Objects</strong></td>
 <td></td>
 </tr>
@@ -3537,6 +3541,10 @@
 <tr>
 <td>deselectAll</td>
 <td>Deselects all canvas objects</td>
+</tr>
+<tr>
+<td>createFromExternalObject</td>
+<td>Indicates an external object was dropped onto the canvas to create a new node in the flow.</td>
 </tr>
 <tr>
 <td><strong>Links</strong></td>
@@ -3575,6 +3583,10 @@
 <td>Deletes a link</td>
 </tr>
 <tr>
+<td>beginNewLink</td>
+<td>Fired when the user starts dragging a new link from a port. Doesn&rsquo;t alter any of the flow objects.</td>
+</tr>
+<tr>
 <td><strong>Decorations</strong></td>
 <td></td>
 </tr>
@@ -3611,15 +3623,15 @@
 <td></td>
 </tr>
 <tr>
-<td>paletteToggle</td>
+<td>togglePalette</td>
 <td>Toggles the palette between opened and closed</td>
 </tr>
 <tr>
-<td>paletteOpen</td>
+<td>openPalette</td>
 <td>Opens the palette (left flyout)</td>
 </tr>
 <tr>
-<td>paletteClose</td>
+<td>closePalette</td>
 <td>Closes the palette (left flyout)</td>
 </tr>
 <tr>
