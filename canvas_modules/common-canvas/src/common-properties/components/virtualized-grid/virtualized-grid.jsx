@@ -48,6 +48,7 @@ const VirtualizedGrid = (props) => {
 	const [keyBoardEventCalled, setKeyBoardEventCalledState] = useState(false);
 	const [lastChecked, setLastCheckedState] = useState(isEmpty(props.rowsSelected) ? null : props.rowsSelected.slice(-1).pop());
 
+	const isFirstRender = useRef(true);
 	const parentRef = useRef(null);
 	const rowVirtualizer = useVirtualizer({
 		count: props.rowCount,
@@ -111,6 +112,19 @@ const VirtualizedGrid = (props) => {
 		});
 		return colSizeDefs;
 	}, [table.getState().columnSizingInfo, columns, props.excessWidth]);
+
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		if (props.onColumnResize) {
+			const totalWidth = table.getLeafHeaders().reduce((sum, header, idx) =>
+				sum + Math.max(header.column.getSize(), props.columns[idx]?.width || 0)
+			, 0);
+			props.onColumnResize(totalWidth);
+		}
+	}, [table.getState().columnSizingInfo]);
 
 	useEffect(() => {
 		if (props.onSort && table.getState().sorting.length > 0) {
@@ -523,7 +537,8 @@ VirtualizedGrid.propTypes = {
 	tableDisabled: PropTypes.bool,
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired,
-	readOnly: PropTypes.bool
+	readOnly: PropTypes.bool,
+	onColumnResize: PropTypes.func
 };
 
 export default injectIntl(VirtualizedGrid);
