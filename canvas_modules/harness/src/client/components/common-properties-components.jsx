@@ -82,6 +82,7 @@ import {
 	STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO,
 	STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO,
 	STRUCTURETABLE_ROW_SELECTION_PROPS_INFO,
+	STRUCTURETABLE_ROW_SELECTION_NONE_PROPS_INFO,
 	STRUCTURELISTEDITOR_PROPS_INFO,
 	STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO,
 	STRUCTURETABLE_MOVEABLE_PROPS_INFO,
@@ -2019,9 +2020,14 @@ class CommonPropertiesComponents extends React.Component {
 					<h4 id="--row_selection" className="harness-section-row-title section-subtitle">row_selection</h4>
 					<p><span className="harness-highlight">row_selection</span> is a string attribute that can be set
 						in <span className="harness-highlight">complex_type_definition</span> sections. Valid values
-						for <span className="harness-highlight">row_selection</span> are <span className="harness-highlight">single</span><span> </span>
-						or <span className="harness-highlight">multiple</span>.  If set to <span className="harness-highlight">single</span> then
-						one and only one row may be selected at one time.</p>
+						for <span className="harness-highlight">row_selection</span> are <span className="harness-highlight">single</span>,<span> </span>
+					<span className="harness-highlight">multiple</span>, or <span className="harness-highlight">none</span>.
+						If set to <span className="harness-highlight">single</span> then
+						one and only one row may be selected at one time.
+						If set to <span className="harness-highlight">none</span> then
+						no row selection UI is shown and clicking a row does not select it.
+						This is useful for tables that have inline delete and edit buttons
+						but do not require row reordering.</p>
 					<p>In this example, the <span className="harness-highlight">row_selection</span> attribute
 						is set <span className="harness-highlight">single</span>. Such that only one row will be selected at a time.</p>
 					<div className="harness-section-row">
@@ -2036,6 +2042,25 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(STRUCTURETABLE_ROW_SELECTION_PROPS_INFO.parameterDef, "custom",
+									["uihints", "complex_type_info", "row_selection"])}
+							</pre>
+						</div>
+					</div>
+					<p>In this example, the <span className="harness-highlight">row_selection</span> attribute
+						is set <span className="harness-highlight">none</span>. No radio buttons or checkboxes are
+						rendered, and clicking a row does not change selection state.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={STRUCTURETABLE_ROW_SELECTION_NONE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_ROW_SELECTION_NONE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(STRUCTURETABLE_ROW_SELECTION_NONE_PROPS_INFO.parameterDef, "custom",
 									["uihints", "complex_type_info", "row_selection"])}
 							</pre>
 						</div>

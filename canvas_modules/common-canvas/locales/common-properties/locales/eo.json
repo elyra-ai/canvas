@@ -44,6 +44,7 @@
   "datetime.format.error": "[Esperanto~Invalid {role}. Format should be {format}.~~~~~~~~~~~eo]",
   "invalid.field.error": "[Esperanto~Invalid {label}, field not found in data set.~~~~~~~~~~~~~eo]",
   "invalid.number.error": "[Esperanto~Number is not valid.~~~~~~eo]",
+  "invalid.integer.error": "[Esperanto~Value must be an integer.~~~~~~eo]",
   "expression.validate.label": "[Esperanto~Validate~~eo]",
   "expression.validating.label": "[Esperanto~Validating~~~~~~eo]",
   "expression.builder.title": "[Esperanto~Expression Builder~~~~eo]",

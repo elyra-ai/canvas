@@ -205,6 +205,11 @@ const VirtualizedGrid = (props) => {
 			return <div className="properties-vt-row-checkbox" />;
 		}
 
+		// Do not render any selection UI when row_selection is "none"
+		if (props.rowSelection === ROW_SELECTION.NONE) {
+			return "";
+		}
+
 		let selectOption = "";
 		if (props.selectable) {
 			const rowSelected = isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
@@ -334,7 +339,7 @@ const VirtualizedGrid = (props) => {
 							tabIndex={sortIcon ? 0 : null}
 							role={sortIcon ? "button" : null}
 							aria-label={sortIcon ? props.intl.formatMessage(
-								{ id: "table.sort.column.label" },
+								{ id: "table.sort.column.label", defaultMessage: defaultMessages["table.sort.column.label"] },
 								{ column_name: headerLabel }
 							) : null}
 							onKeyDown={sortIcon ? (evt) => {

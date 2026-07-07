@@ -27,7 +27,8 @@ import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasMarkdown from "./svg-canvas-utils-markdown.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import {
-	MARKDOWN, WYSIWYG
+	MARKDOWN, WYSIWYG,
+	ACTION_EDIT_COMMENT, ACTION_SET_NODE_LABEL, ACTION_EDIT_DECORATION_LABEL
 } from "./constants/canvas-constants.js";
 
 const BACKSPACE_KEY = 8;
@@ -436,7 +437,7 @@ export default class SvgCanvasTextArea {
 	saveCommentChanges(taData, newText, newHeight) {
 		const comment = this.activePipeline.getComment(taData.id);
 		const data = {
-			editType: "editComment",
+			editType: ACTION_EDIT_COMMENT,
 			editSource: "canvas",
 			id: comment.id,
 			content: newText,
@@ -511,7 +512,7 @@ export default class SvgCanvasTextArea {
 
 	saveNodeLabelChanges(taData, newText) {
 		const data = {
-			editType: "setNodeLabel",
+			editType: ACTION_SET_NODE_LABEL,
 			editSource: "canvas",
 			nodeId: taData.id,
 			label: newText,
@@ -564,7 +565,7 @@ export default class SvgCanvasTextArea {
 	// Handles saved changes to editable text decorations.
 	saveDecLabelChanges(taData, newText) {
 		const data = {
-			editType: "editDecorationLabel",
+			editType: ACTION_EDIT_DECORATION_LABEL,
 			editSource: "canvas",
 			decId: taData.id,
 			objId: taData.objId,
