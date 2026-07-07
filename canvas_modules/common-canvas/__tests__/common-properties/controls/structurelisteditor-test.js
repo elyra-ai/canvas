@@ -1148,3 +1148,60 @@ describe("structurelisteditor columns resize correctly", () => {
 		expect(animalsColumn.querySelectorAll(".properties-vt-header-resize")).to.have.length(1);
 	});
 });
+
+describe("structurelisteditor with row_selection 'none' renders no selection UI", () => {
+	let wrapper;
+	let renderedController;
+
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureListEditorParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	it("should not render radio buttons when row_selection is 'none'", () => {
+		propertyUtilsRTL.openSummaryPanel(wrapper, "Row Selection None");
+		const tableWrapper = wrapper.container.querySelectorAll(
+			"div[data-id='properties-ci-inlineEditingTableRowSelectionNone']"
+		);
+		expect(tableWrapper).to.have.length(1);
+		// No radio buttons should be present
+		expect(tableWrapper[0].querySelectorAll(".properties-vt-row-radio")).to.have.length(0);
+	});
+
+	it("should not render checkboxes for row selection when row_selection is 'none'", () => {
+		propertyUtilsRTL.openSummaryPanel(wrapper, "Row Selection None");
+		const tableWrapper = wrapper.container.querySelectorAll(
+			"div[data-id='properties-ci-inlineEditingTableRowSelectionNone']"
+		);
+		expect(tableWrapper).to.have.length(1);
+		// No selection checkboxes should be present (data rows only; there may be content checkboxes)
+		expect(tableWrapper[0].querySelectorAll(".properties-vt-row-checkbox")).to.have.length(0);
+	});
+
+	it("should not select any rows when a row is clicked and row_selection is 'none'", () => {
+		propertyUtilsRTL.openSummaryPanel(wrapper, "Row Selection None");
+		const tableWrapper = wrapper.container.querySelectorAll(
+			"div[data-id='properties-ci-inlineEditingTableRowSelectionNone']"
+		);
+		expect(tableWrapper).to.have.length(1);
+		// Click on the first data row
+		const rows = tableUtilsRTL.getTableRows(tableWrapper[0]);
+		expect(rows.length).to.be.greaterThan(0);
+		fireEvent.click(rows[0]);
+		// Selected rows should remain empty
+		const selectedRows = renderedController.getSelectedRows({ name: "inlineEditingTableRowSelectionNone" });
+		expect(selectedRows).to.have.length(0);
+	});
+
+	it("should still render add/remove row buttons when row_selection is 'none'", () => {
+		propertyUtilsRTL.openSummaryPanel(wrapper, "Row Selection None");
+		const tableWrapper = wrapper.container.querySelectorAll(
+			"div[data-id='properties-ci-inlineEditingTableRowSelectionNone']"
+		);
+		expect(tableWrapper).to.have.length(1);
+		// Add button should be present since add_remove_rows is true
+		const addButton = tableWrapper[0].querySelectorAll("button.properties-add-fields-button");
+		expect(addButton).to.have.length(1);
+	});
+});

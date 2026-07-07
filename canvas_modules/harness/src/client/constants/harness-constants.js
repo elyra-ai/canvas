@@ -69,6 +69,7 @@ export const API_SET_INPUT_PORT_LABEL = "Set Input Port Label";
 export const API_SET_OUTPUT_PORT_LABEL = "Set Output Port Label";
 export const API_SET_NODE_DECORATIONS = "Set Node Decorations";
 export const API_SET_LINK_DECORATIONS = "Set Link Decorations";
+export const API_SET_COMMENT_DECORATIONS = "Set Comment Decorations";
 export const API_ADD_NOTIFICATION_MESSAGE = "Add Notification Message";
 export const API_ZOOM_TO_REVEAL_NODE = "Zoom To Reveal Node";
 export const API_ZOOM_TO_REVEAL_LINK = "Zoom To Reveal Link";

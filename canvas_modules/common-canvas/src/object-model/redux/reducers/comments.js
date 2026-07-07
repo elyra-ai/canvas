@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -222,6 +222,27 @@ export default (state = [], action) => {
 			return comment;
 		});
 
+	case "SET_COMMENT_DECORATIONS":
+		return state.map((comment) => {
+			if (action.data.commentId === comment.id) {
+				const newComment = Object.assign({}, comment);
+				newComment.decorations = action.data.decorations;
+				return newComment;
+			}
+			return comment;
+		});
+
+	case "SET_COMMENTS_MULTI_DECORATIONS":
+		return state.map((comment) => {
+			const pipelineCommentDec =
+				action.data.pipelineCommentDecorations.find((entry) => entry.pipelineId === action.data.pipelineId && entry.commentId === comment.id);
+			if (pipelineCommentDec) {
+				const newComment = Object.assign({}, comment, { decorations: pipelineCommentDec.decorations });
+				return newComment;
+			}
+			return comment;
+		});
+
 	case "REPLACE_COMMENTS": {
 		return action.data;
 	}
@@ -271,6 +292,9 @@ function getCommentFromData(data) {
 	}
 	if (typeof data.formats !== "undefined") {
 		newComment.formats = data.formats;
+	}
+	if (typeof data.decorations !== "undefined") {
+		newComment.decorations = data.decorations;
 	}
 	return newComment;
 }
