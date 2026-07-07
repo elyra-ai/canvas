@@ -54,6 +54,7 @@
     "numberfield2": 2,
     "hideTwistyPanel": false,
     "numberfield3": 3,
+    "hideNumberfield3": false,
     "disablePanelLevel1": false,
     "hidePanelLevel1": false,
     "disablePanelLevel2": false,
@@ -205,6 +206,10 @@
     {
       "id": "numberfield3",
       "type": "integer"
+    },
+    {
+      "id": "hideNumberfield3",
+      "type": "boolean"
     },
     {
       "id": "disablePanelLevel1",
@@ -599,6 +604,15 @@
         "parameter_ref": "numberfield3",
         "label": {
           "default": "numberfield3"
+        }
+      },
+      {
+        "parameter_ref": "hideNumberfield3",
+        "label": {
+          "default": "Hide 'numberfield3'"
+        },
+        "description": {
+          "default": "Hides numberfield3, the only control in Twisty Panel2, so the panel auto-hides"
         }
       },
       {
@@ -1331,7 +1345,8 @@
             "id": "hidetwistypanels",
             "type": "controls",
             "parameter_refs": [
-              "hideTwistyPanel"
+              "hideTwistyPanel",
+              "hideNumberfield3"
             ],
             "group_info": [
               {
@@ -1777,6 +1792,20 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hideTwistyPanel",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "numberfield3"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideNumberfield3",
             "op": "equals",
             "value": false
           }
