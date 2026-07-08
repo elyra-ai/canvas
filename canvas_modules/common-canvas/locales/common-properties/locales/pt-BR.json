@@ -45,6 +45,7 @@
   "datetime.format.error": "{role} inválida. Formato deve ser {format}.",
   "invalid.field.error": "{label} inválido, campo não localizado no conjunto de dados.",
   "invalid.number.error": "Número inválido.",
+  "invalid.integer.error": "O valor deve ser um número inteiro.",
   "expression.validate.label": "Validar",
   "expression.validating.label": "Validando",
   "expression.builder.title": "Construtor de Expressões",
