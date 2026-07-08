@@ -56,3 +56,13 @@
 		padding-bottom: 0; // Removes bottom padding when only the Carbon wrapper is present without actual control.
 	}
 }
+
+// Used when an image action control has a description. The description renders above
+// this row so the action image only needs a fixed margin-top equal to the label height.
+.properties-ctrl-action-row {
+	display: flex;
+	> div:first-child {
+		width: 100%;
+		min-width: 0;
+	}
+}

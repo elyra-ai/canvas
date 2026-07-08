@@ -166,12 +166,20 @@ export default class ControlFactory {
 		props.controller = this.controller;
 		props.propertyId = propertyId;
 		props.readOnly = isReadOnly || control.readOnly;
+		// For accessible controls with an image action and any description, render the description
+		// separately above the input row (see return below) so that Carbon's label area stays a
+		// fixed height (label text only). This keeps the action image's fixed margin-top aligned
+		// with the input regardless of whether the description is on_panel or tooltip-style.
+		const hasImageAction = has(control, "action.image.placement");
+		const extractDesc = hasImageAction && Boolean(control.description?.text) &&
+			accessibleControls.includes(control.controlType) && !tableInfo;
+		const controlForLabel = extractDesc ? { ...control, description: null } : control;
 		props.controlItem = (
 			<ControlItem
 				key={"ctrl-item-" + control.name}
 				controller={this.controller}
 				propertyId={propertyId}
-				control={control}
+				control={controlForLabel}
 				accessibleControls={accessibleControls}
 				tableControl = {tableControls.includes(control.controlType)}
 			/>
@@ -367,12 +375,30 @@ export default class ControlFactory {
 				return createdControl;
 			}
 			const className = control.className ? control.className : "";
+
+			// Image action with description: render the description above the flex row so the
+			// action image only needs to offset past the label (fixed height), not past the
+			// variable-height description too. Applies to both on_panel and tooltip descriptions.
+			if (extractDesc) {
+				return (
+					<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
+						className={classNames("properties-ctrl-wrapper", { "hide": hidden }, className)}
+					>
+						<div className="properties-control-description">{control.description.text}</div>
+						<div className="properties-ctrl-action-row">
+							{createdControlLayered}
+							{action}
+						</div>
+					</div>
+				);
+			}
+
 			// Add "action" class for "image" and "custom" actions
 			return (
 				<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
 					className={classNames(
 						"properties-ctrl-wrapper",
-						{ "hide": hidden, "action": has(control, "action.image.placement") || !isUndefined(control?.action?.customActionId) },
+						{ "hide": hidden, "action": hasImageAction || !isUndefined(control?.action?.customActionId) },
 						className
 					)}
 				>
