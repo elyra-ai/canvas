@@ -339,7 +339,8 @@
           "default": "Accessible control - action image right"
         },
         "description": {
-          "default": "oneofselect control with action image placement right"
+          "default": "oneofselect control with action image placement right",
+          "placement": "on_panel"
         },
         "class_name": "oneofselect-control-class",
         "action_ref": "moon"
@@ -380,7 +381,8 @@
           "default": "Accessible control - action image left"
         },
         "description": {
-          "default": "oneofselect control with action image placement left"
+          "default": "oneofselect control with action image placement left",
+          "placement": "on_panel"
         },
         "action_ref": "moon1"
       },
@@ -1186,7 +1188,8 @@
     {
       "visible": {
         "action_refs": [
-          "image_cond_hide"
+          "image_cond_hide",
+          "moon"
         ],
         "evaluate": {
           "condition": {
@@ -1200,10 +1203,12 @@
     {
       "enabled": {
         "action_refs": [
-          "image_cond_disable"
+          "image_cond_disable",
+          "moon1"
         ],
         "parameter_refs": [
-          "disable_image_text"
+          "disable_image_text",
+          "oneofselect_null"
         ],
         "evaluate": {
           "condition": {
