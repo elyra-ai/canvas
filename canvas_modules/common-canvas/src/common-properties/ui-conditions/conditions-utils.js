@@ -251,8 +251,13 @@ function validateConditions(inPropertyId, controller, runCount = 0) {
 	} else {
 		_validateConditionsByType(propertyId, newStates, controller);
 	}
-	// re-evaluate panels that hide themselves when all their children are hidden
-	_propagateChildrenPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
+	// Re-evaluate panels that hide themselves when all their children are hidden.
+	// If condition: only walk the panel tree when this property is an operand of
+	// a visible condition.
+	const visibleDfns = controller.getDefinitions(propertyId, CONDITION_TYPE.VISIBLE, CONDITION_DEFINITION_INDEX.CONTROLS);
+	if (visibleDfns.length > 0) {
+		_propagateChildrenPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
+	}
 	// get property values before any states have been updated
 	const prevPropertyValues = _getConditionPropertyValues(controller);
 
