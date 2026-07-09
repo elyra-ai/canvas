@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,6 @@ import sinon from "sinon";
 import { adjustSubAreaPosition, generateSubAreaStyle } from "../../src/toolbar/toolbar-sub-utils.js";
 
 const CONTAINING_DIV_ID = "canvas-div";
-
-// Helper to control the viewport size the util clamps against. By default use a
-// very large viewport so the existing tests exercise the containing-div logic
-// only; the viewport-clamp tests set a small viewport explicitly.
-function setViewport(height, width) {
-	Object.defineProperty(window, "innerHeight", { value: height, configurable: true, writable: true });
-	Object.defineProperty(window, "innerWidth", { value: width, configurable: true, writable: true });
-}
-setViewport(10000, 10000);
 
 // Builds a fake sub-area ref that models an absolutely positioned element.
 // Its viewport top is originTop + whatever "top" is currently set in its style,
@@ -146,24 +137,6 @@ describe("adjustSubAreaPosition keeps a vertical sub-menu inside the containing 
 		expect(subAreaRef.style.maxHeight).to.equal("260px");
 	});
 
-	it("clamps a menu to the visible viewport when the containing div extends below it", () => {
-		// At high zoom the containing div can reach below the visible viewport. The
-		// menu must be clamped to the viewport, not the (taller) containing div.
-		setViewport(400, 10000);
-		stubContainingDiv({ top: 0, bottom: 2000, left: 0, right: 1000 });
-		const actionItemRect = { top: 0, bottom: 40, left: 100, right: 140 };
-		const originTop = actionItemRect.top;
-		const subAreaRef = makeSubAreaRef({ originTop, height: 500, width: 150 });
-
-		adjustSubAreaPosition(subAreaRef, CONTAINING_DIV_ID, "vertical", actionItemRect);
-
-		const rect = resolveRect(subAreaRef, originTop);
-		expect(rect.top).to.equal(actionItemRect.bottom);
-		expect(subAreaRef.style.maxHeight).to.equal("360px"); // viewport(400) - item bottom(40)
-		expect(rect.bottom).to.be.at.most(400);
-		setViewport(10000, 10000);
-	});
-
 	it("leaves a menu that fits below the item unclamped", () => {
 		const containingDivRect = { top: 0, bottom: 1000, left: 0, right: 1000 };
 		stubContainingDiv(containingDivRect);
@@ -239,23 +212,6 @@ describe("adjustSubAreaPosition positions a cascade fly-out (horizontal) in view
 		expect(subAreaRef.style.top).to.equal("0px");
 		expect(subAreaRef.style.maxHeight).to.equal("300px");
 		expect(subAreaRef.style.overflowY).to.equal("auto");
-	});
-
-	it("keeps a fly-out within the visible viewport when the containing div extends below it", () => {
-		// Containing div extends well below the visible viewport (as happens at high
-		// zoom). The fly-out must be clamped to the viewport, not the containing div.
-		setViewport(400, 10000);
-		stubContainingDiv({ top: 0, bottom: 2000, left: 0, right: 1000 });
-		const actionItemRect = { top: 100, bottom: 140, left: 200, right: 240 };
-		const subAreaRef = makeSubAreaRef({ originTop: 0, height: 500, width: 150 });
-
-		adjustSubAreaPosition(subAreaRef, CONTAINING_DIV_ID, "horizontal", actionItemRect);
-
-		// Pinned to the top and clamped to the viewport height (400), not 2000.
-		expect(subAreaRef.style.top).to.equal("0px");
-		expect(subAreaRef.style.maxHeight).to.equal("400px");
-		expect(subAreaRef.style.overflowY).to.equal("auto");
-		setViewport(10000, 10000);
 	});
 
 	it("generateSubAreaStyle marks cascade sub-areas as position:fixed", () => {

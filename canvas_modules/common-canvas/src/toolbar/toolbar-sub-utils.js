@@ -43,19 +43,6 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 		? containingDiv.getBoundingClientRect()
 		: { top: -1000, bottom: 1000, left: -1000, right: 1000 }; // To enable Jest tests.
 
-	// Constrain to the intersection of the containing div and the visible viewport.
-	// At high zoom the containing div (or an overlay within it) can extend past the
-	// visible area, so clamping only to the containing div would let a sub-area run
-	// off-screen. Clamping to the viewport too keeps it within the visible screen.
-	const viewportHeight = (typeof window !== "undefined" && window.innerHeight) || containingDivRect.bottom;
-	const viewportWidth = (typeof window !== "undefined" && window.innerWidth) || containingDivRect.right;
-	const bounds = {
-		top: Math.max(containingDivRect.top, 0),
-		bottom: Math.min(containingDivRect.bottom, viewportHeight),
-		left: Math.max(containingDivRect.left, 0),
-		right: Math.min(containingDivRect.right, viewportWidth)
-	};
-
 	if (expandDirection === "vertical") {
 		// The menu's natural (unclamped) content height. Reading scrollHeight means
 		// we never have to clear an existing maxHeight clamp in order to measure -
@@ -70,8 +57,8 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 		const originRect = subAreaRef.getBoundingClientRect();
 		const originTop = originRect.top;
 
-		const spaceBelow = bounds.bottom - actionItemRect.bottom;
-		const spaceAbove = actionItemRect.top - bounds.top;
+		const spaceBelow = containingDivRect.bottom - actionItemRect.bottom;
+		const spaceAbove = actionItemRect.top - containingDivRect.top;
 
 		// Decide where to put the menu so that it always stays fully within the
 		// containing div, scrolling internally when it is too tall to fit.
@@ -91,7 +78,7 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 			} else {
 				// There is more room above: pin the menu to the top of the
 				// containing div, above the item, and clamp it so it scrolls.
-				targetTop = bounds.top;
+				targetTop = containingDivRect.top;
 				maxHeight = spaceAbove;
 			}
 		}
@@ -108,7 +95,7 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 			setStyle(subAreaRef, "overflowY", "auto");
 		}
 
-		const outsideRight = actionItemRect.left + originRect.width - bounds.right;
+		const outsideRight = actionItemRect.left + originRect.width - containingDivRect.right;
 		if (outsideRight > 0) {
 			// If one of our parent objects contains the "floating-toolbar" class, we assume
 			// the toolbar is displayed in an 'absolute' position. This changes the offset calculations
@@ -117,7 +104,7 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 
 			const newLeft = floatingToolbar
 				? actionItemRect.left - floatingToolbar.getBoundingClientRect().left - outsideRight
-				: actionItemRect.left - bounds.left - outsideRight;
+				: actionItemRect.left - containingDivRect.left - outsideRight;
 			subAreaRef.style.left = newLeft + "px";
 		}
 
@@ -130,7 +117,7 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 		const menuHeight = subAreaRef.scrollHeight;
 
 		// Open to the right of the item, or flip to the left when there isn't room.
-		const spaceRight = bounds.right - actionItemRect.right;
+		const spaceRight = containingDivRect.right - actionItemRect.right;
 		const left = (subAreaRect.width > spaceRight)
 			? actionItemRect.left - subAreaRect.width
 			: actionItemRect.right;
@@ -139,14 +126,14 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 		// Top-align with the item, then shift up if the bottom would overflow the
 		// containing div - but never above the containing div's top.
 		let topPos = actionItemRect.top - 1;
-		const overflowBottom = (topPos + menuHeight) - bounds.bottom;
+		const overflowBottom = (topPos + menuHeight) - containingDivRect.bottom;
 		if (overflowBottom > 0) {
-			topPos = Math.max(topPos - overflowBottom, bounds.top);
+			topPos = Math.max(topPos - overflowBottom, containingDivRect.top);
 		}
 		setStyle(subAreaRef, "top", topPos + "px");
 
 		// If the cascade is itself taller than the available space, clamp and scroll.
-		const availableHeight = bounds.bottom - topPos;
+		const availableHeight = containingDivRect.bottom - topPos;
 		if (menuHeight > availableHeight) {
 			setStyle(subAreaRef, "maxHeight", Math.max(availableHeight, 0) + "px");
 			setStyle(subAreaRef, "overflowY", "auto");
