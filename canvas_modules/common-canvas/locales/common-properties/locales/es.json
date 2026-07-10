@@ -45,6 +45,7 @@
   "datetime.format.error": "{role} no válido. El formato debe ser {format}.",
   "invalid.field.error": "No se ha encontrado el campo {label} no válido en el conjunto de datos.",
   "invalid.number.error": "El número no es válido.",
+  "invalid.integer.error": "El valor debe ser un número entero.",
   "expression.validate.label": "Validar",
   "expression.validating.label": "Validando",
   "expression.builder.title": "Generador de expresiones",

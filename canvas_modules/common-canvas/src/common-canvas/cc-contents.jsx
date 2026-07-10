@@ -31,7 +31,11 @@ import { Button } from "@carbon/react";
 // Carbon icons - direct imports for tree-shaking optimization
 import FlowData from "@carbon/icons-react/lib/FlowData";
 import ArrowLeft from "@carbon/icons-react/lib/ArrowLeft";
-import { CANVAS_FOCUS, DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
+import { CANVAS_FOCUS, DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY,
+	ACTION_DELETE_SELECTED_OBJECTS, ACTION_UNDO, ACTION_REDO,
+	ACTION_COPY, ACTION_CUT, ACTION_PASTE,
+	ACTION_SELECT_ALL, ACTION_DESELECT_ALL,
+	ACTION_CREATE_FROM_EXTERNAL_OBJECT } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
@@ -215,37 +219,37 @@ class CanvasContents extends React.Component {
 			if (KeyboardUtils.delete(evt) && actions.delete) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
 				this.props.canvasController.autoSelectFocusObj(() =>
-					this.props.canvasController.keyboardActionHandler("deleteSelectedObjects"));
+					this.props.canvasController.keyboardActionHandler(ACTION_DELETE_SELECTED_OBJECTS));
 
 			} else if (KeyboardUtils.undo(evt) && actions.undo) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				if (this.props.canvasController.canUndo()) {
-					this.props.canvasController.keyboardActionHandler("undo");
+					this.props.canvasController.keyboardActionHandler(ACTION_UNDO);
 				}
 
 			} else if (KeyboardUtils.redo(evt) && actions.redo) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				if (this.props.canvasController.canRedo()) {
-					this.props.canvasController.keyboardActionHandler("redo");
+					this.props.canvasController.keyboardActionHandler(ACTION_REDO);
 				}
 
 			} else if (KeyboardUtils.copyToClipboard(evt) && actions.copyToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				this.props.canvasController.autoSelectFocusObj(() =>
-					this.props.canvasController.keyboardActionHandler("copy"));
+					this.props.canvasController.keyboardActionHandler(ACTION_COPY));
 
 			} else if (KeyboardUtils.cutToClipboard(evt) && actions.cutToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				this.props.canvasController.autoSelectFocusObj(() =>
-					this.props.canvasController.keyboardActionHandler("cut"));
+					this.props.canvasController.keyboardActionHandler(ACTION_CUT));
 
 			} else if (KeyboardUtils.pasteFromClipboard(evt) && actions.pasteFromClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				if (this.mousePos) {
 					const mousePos = this.svgCanvasD3.convertPageCoordsToSnappedCanvasCoords(this.mousePos);
-					this.props.canvasController.keyboardActionHandler("paste", mousePos);
+					this.props.canvasController.keyboardActionHandler(ACTION_PASTE, mousePos);
 				} else {
-					this.props.canvasController.keyboardActionHandler("paste");
+					this.props.canvasController.keyboardActionHandler(ACTION_PASTE);
 				}
 			}
 		}
@@ -253,11 +257,11 @@ class CanvasContents extends React.Component {
 		// do not need to check this.config.enableEditingActions before calling them.
 		if (KeyboardUtils.selectAll(evt) && actions.selectAll) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
-			this.props.canvasController.keyboardActionHandler("selectAll");
+			this.props.canvasController.keyboardActionHandler(ACTION_SELECT_ALL);
 
 		} else if (KeyboardUtils.deselectAll(evt) && actions.deselectAll) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
-			this.props.canvasController.keyboardActionHandler("deselectAll");
+			this.props.canvasController.keyboardActionHandler(ACTION_DESELECT_ALL);
 
 		} else if (KeyboardUtils.spaceKey(evt)) {
 			if (!this.svgCanvasD3.isSpaceKeyPressed()) {
@@ -616,14 +620,14 @@ class CanvasContents extends React.Component {
 		} else {
 			let dropData = this.getDNDJson(event);
 			// If no drop data is found (which complies with the calling protocol
-			// described in the wiki) we just pass through the dataTransfer data and
+			// described in the documentation) we just pass through the dataTransfer data and
 			// set an appropriate operation.
 			if (!dropData) {
 				dropData = {
 					operation: "addToCanvas",
 					data: {
 						dataTransfer: event.dataTransfer,
-						editType: "createFromExternalObject"
+						editType: ACTION_CREATE_FROM_EXTERNAL_OBJECT
 					}
 				};
 			}

@@ -45,6 +45,7 @@
   "datetime.format.error": "Ogiltig {role}. Formatet ska vara {format}.",
   "invalid.field.error": "Ogiltig {label}, fältet finns inte i datauppsättningen.",
   "invalid.number.error": "Siffran är ogiltig.",
+  "invalid.integer.error": "Värdet måste vara ett heltal.",
   "expression.validate.label": "Validera",
   "expression.validating.label": "Validerar",
   "expression.builder.title": "Uttrycksassistenten",

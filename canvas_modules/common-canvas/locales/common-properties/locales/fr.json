@@ -45,6 +45,7 @@
   "datetime.format.error": "Rôle {role} non valide. Le format doit être {format}.",
   "invalid.field.error": "La zone {label} non valide est introuvable dans l'ensemble de données.",
   "invalid.number.error": "Nombre non valide.",
+  "invalid.integer.error": "La valeur doit être un entier.",
   "expression.validate.label": "Valider",
   "expression.validating.label": "Validation en cours",
   "expression.builder.title": "générateur de formules",
