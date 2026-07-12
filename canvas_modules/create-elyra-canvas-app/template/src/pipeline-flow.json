@@ -1,0 +1,161 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "elyra-canvas-minimal-app-flow",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "runtime_ref": "default-runtime",
+      "nodes": [
+        {
+          "id": "database-input-node",
+          "type": "binding",
+          "op": "database-input-node",
+          "app_data": {
+            "ui_data": {
+              "label": "Database",
+              "x_pos": 100,
+              "y_pos": 100,
+              "description": "Read data from database",
+              "image": "/icons/database.svg"
+            }
+          },
+          "inputs": [],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Output"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "sort-node",
+          "type": "execution_node",
+          "op": "sort-node",
+          "app_data": {
+            "ui_data": {
+              "label": "Sort",
+              "x_pos": 300,
+              "y_pos": 100,
+              "description": "Sort data by specified columns",
+              "image": "/icons/sort.svg"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Input"
+                }
+              },
+              "links": [
+                {
+                  "id": "input-to-sort",
+                  "node_id_ref": "database-input-node",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Output"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "filter-node",
+          "type": "execution_node",
+          "op": "filter-node",
+          "app_data": {
+            "ui_data": {
+              "label": "Filter",
+              "x_pos": 500,
+              "y_pos": 100,
+              "description": "Filter data based on conditions",
+              "image": "/icons/filter.svg"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Input"
+                }
+              },
+              "links": [
+                {
+                  "id": "sort-to-filter",
+                  "node_id_ref": "sort-node",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Output"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "pdf-output",
+          "type": "binding",
+          "op": "pdf-output-node",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Input"
+                }
+              },
+              "links": [
+                {
+                  "id": "filter-to-pdf",
+                  "node_id_ref": "filter-node",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [],
+          "app_data": {
+            "ui_data": {
+              "label": "PDF File",
+              "x_pos": 700,
+              "y_pos": 100,
+              "description": "Export data to PDF file",
+              "image": "/icons/pdf.svg"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "default-runtime",
+      "name": "Default Runtime"
+    }
+  ]
+}
