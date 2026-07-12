@@ -1,0 +1,186 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "id": "data-sources",
+      "label": "Data Sources",
+      "description": "Input nodes for reading data",
+      "image": "/icons/category-data-operations.svg",
+      "node_types": [
+        {
+          "id": "database-input",
+          "op": "database-input-node",
+          "type": "binding",
+          "inputs": [],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "ui_data": {
+              "label": "Database",
+              "description": "Read data from database",
+              "image": "/icons/database.svg"
+            }
+          }
+        },
+        {
+          "id": "spreadsheet-input",
+          "op": "spreadsheet-input-node",
+          "type": "binding",
+          "inputs": [],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "ui_data": {
+              "label": "Spreadsheet",
+              "description": "Read data from spreadsheet file",
+              "image": "/icons/spreadsheet.svg"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "transformations",
+      "label": "Transformations",
+      "description": "Data transformation operations",
+      "image": "/icons/category-transformations.svg",
+      "node_types": [
+        {
+          "id": "sort",
+          "op": "sort-node",
+          "type": "execution_node",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Input"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "ui_data": {
+              "label": "Sort",
+              "description": "Sort data by specified columns",
+              "image": "/icons/sort.svg"
+            }
+          }
+        },
+        {
+          "id": "filter",
+          "op": "filter-node",
+          "type": "execution_node",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Input"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "ui_data": {
+              "label": "Filter",
+              "description": "Filter data based on conditions",
+              "image": "/icons/filter.svg"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-destinations",
+      "label": "Data Destinations",
+      "description": "Output nodes for writing data",
+      "image": "/icons/category-data-operations.svg",
+      "node_types": [
+        {
+          "id": "database-output",
+          "op": "database-output-node",
+          "type": "binding",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Input"
+                }
+              }
+            }
+          ],
+          "outputs": [],
+          "app_data": {
+            "ui_data": {
+              "label": "Database",
+              "description": "Write data to database",
+              "image": "/icons/database.svg"
+            }
+          }
+        },
+        {
+          "id": "pdf-output",
+          "op": "pdf-output-node",
+          "type": "binding_exit_node",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "label": "Input"
+                }
+              }
+            }
+          ],
+          "outputs": [],
+          "app_data": {
+            "ui_data": {
+              "label": "PDF File",
+              "description": "Export data to PDF file",
+              "image": "/icons/pdf.svg"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
