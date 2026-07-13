@@ -77,29 +77,29 @@ const themeG90 = "theme-g90";
 // Colors mirror the values from expression.scss lines 35-61 (now removed).
 // themeType gates each style so CM6 activates the correct one based on EditorView.darkTheme.
 const lightHighlightStyle = syntaxHighlighting(HighlightStyle.define([
-	{ tag: tags.keyword, color: "#7922FC" },
-	{ tag: tags.number, color: "#177233" },
-	{ tag: tags.definition(tags.name), color: "#755D06" },
-	{ tag: tags.comment, color: "#187233" },
-	{ tag: tags.variableName, color: "#0152E9" },
-	{ tag: tags.punctuation, color: "#636363" },
-	{ tag: tags.propertyName, color: "#006C7A" },
-	{ tag: tags.operator, color: "#636363" },
-	{ tag: tags.string, color: "#161616" },
-	{ tag: tags.meta, color: "#197132" }
+	{ tag: tags.keyword, color: "#7922FC" }, // From $syntax-control-keyword
+	{ tag: tags.number, color: "#177233" }, // From $syntax-number
+	{ tag: tags.definition(tags.name), color: "#755D06" }, // From $syntax-definition
+	{ tag: tags.comment, color: "#187233" }, // From $syntax-comment
+	{ tag: tags.variableName, color: "#0152E9" }, // From $syntax-variable
+	{ tag: tags.punctuation, color: "#636363" }, // From $syntax-punctuation
+	{ tag: tags.propertyName, color: "#006C7A" }, // From $syntax-property-name
+	{ tag: tags.operator, color: "#636363" }, // From $syntax-operator
+	{ tag: tags.string, color: "#161616" }, // From $syntax-string
+	{ tag: tags.meta, color: "#197132" } // From $syntax-meta
 ], { themeType: "light" }));
 
 const darkHighlightStyle = syntaxHighlighting(HighlightStyle.define([
-	{ tag: tags.keyword, color: "#E6D6FF" },
-	{ tag: tags.number, color: "#A9EAB9" },
-	{ tag: tags.definition(tags.name), color: "#F8D968" },
-	{ tag: tags.comment, color: "#B1E7BE" },
-	{ tag: tags.variableName, color: "#CCDEFF" },
-	{ tag: tags.punctuation, color: "#e0e0e0" },
-	{ tag: tags.propertyName, color: "#9EE6F0" },
-	{ tag: tags.operator, color: "#e0e0e0" },
-	{ tag: tags.string, color: "#f4f4f4" },
-	{ tag: tags.meta, color: "#B6E7C3" }
+	{ tag: tags.keyword, color: "#E6D6FF" }, // From $syntax-control-keyword
+	{ tag: tags.number, color: "#A9EAB9" }, // From $syntax-number
+	{ tag: tags.definition(tags.name), color: "#F8D968" }, // From $syntax-definition
+	{ tag: tags.comment, color: "#B1E7BE" }, // From $syntax-comment
+	{ tag: tags.variableName, color: "#CCDEFF" }, // From $syntax-variable
+	{ tag: tags.punctuation, color: "#e0e0e0" }, // From $syntax-punctuation
+	{ tag: tags.propertyName, color: "#9EE6F0" }, // From $syntax-property-name
+	{ tag: tags.operator, color: "#e0e0e0" }, // From $syntax-operator
+	{ tag: tags.string, color: "#f4f4f4" }, // From $syntax-string
+	{ tag: tags.meta, color: "#B6E7C3" } // From $syntax-meta
 ], { themeType: "dark" }));
 
 class ExpressionControl extends React.Component {

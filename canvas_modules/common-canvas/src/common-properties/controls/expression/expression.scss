@@ -18,6 +18,9 @@
 @forward "./expression-builder/expression-builder";
 @forward "./expression-toggle/expression-toggle";
 
+// Note: syntax highlighting colors for the CodeMirror editor (keywords, strings, comments, etc.)
+// are defined as CodeMirror HighlightStyle themes in expression.jsx, not here.
+
 .elyra-CodeMirror {
 	.cm-editor {
 		height: inherit;
