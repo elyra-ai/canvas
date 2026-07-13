@@ -73,35 +73,34 @@ const minLineHeight = 4 * pxPerLine; // 4 lines
 const themeG10 = "theme-g10";
 const themeG90 = "theme-g90";
 
-// Syntax highlight colors for the light theme (:root / theme-g10).
-// Values mirror the CSS custom properties defined in expression.scss lines 35-47.
-const LIGHT_THEME_COLORS = {
-	keyword: "#7922FC", // --cm-keyword-color
-	number: "#177233", // --cm-number-color
-	def: "#755D06", // --cm-def-color
-	comment: "#187233", // --cm-comment-color
-	variable: "#0152E9", // --cm-variable-color
-	punctuation: "#636363", // --cm-punctuation-color
-	property: "#006C7A", // --cm-property-color
-	operator: "#636363", // --cm-operator-color
-	string: "#161616", // --cm-string-color: var(--cds-syntax-string, #161616)
-	meta: "#197132" // --cm-meta--color
-};
+// Syntax highlighting styles for light and dark themes.
+// Colors mirror the values from expression.scss lines 35-61 (now removed).
+// themeType gates each style so CM6 activates the correct one based on EditorView.darkTheme.
+const lightHighlightStyle = syntaxHighlighting(HighlightStyle.define([
+	{ tag: tags.keyword, color: "#7922FC" },
+	{ tag: tags.number, color: "#177233" },
+	{ tag: tags.definition(tags.name), color: "#755D06" },
+	{ tag: tags.comment, color: "#187233" },
+	{ tag: tags.variableName, color: "#0152E9" },
+	{ tag: tags.punctuation, color: "#636363" },
+	{ tag: tags.propertyName, color: "#006C7A" },
+	{ tag: tags.operator, color: "#636363" },
+	{ tag: tags.string, color: "#161616" },
+	{ tag: tags.meta, color: "#197132" }
+], { themeType: "light" }));
 
-// Syntax highlight colors for the dark theme (theme-g90).
-// Values mirror the CSS custom properties defined in expression.scss lines 50-61.
-const DARK_THEME_COLORS = {
-	keyword: "#E6D6FF", // --cm-keyword-color
-	number: "#A9EAB9", // --cm-number-color
-	def: "#F8D968", // --cm-def-color
-	comment: "#B1E7BE", // --cm-comment-color
-	variable: "#CCDEFF", // --cm-variable-color
-	punctuation: "#e0e0e0", // --cm-punctuation-color: var(--cds-syntax-punctuation) → g90 runtime value
-	property: "#9EE6F0", // --cm-property-color
-	operator: "#e0e0e0", // --cm-operator-color: var(--cds-syntax-operator) → g90 runtime value
-	string: "#f4f4f4", // --cm-string-color: var(--cds-syntax-string) → g90 runtime value
-	meta: "#B6E7C3" // --cm-meta--color
-};
+const darkHighlightStyle = syntaxHighlighting(HighlightStyle.define([
+	{ tag: tags.keyword, color: "#E6D6FF" },
+	{ tag: tags.number, color: "#A9EAB9" },
+	{ tag: tags.definition(tags.name), color: "#F8D968" },
+	{ tag: tags.comment, color: "#B1E7BE" },
+	{ tag: tags.variableName, color: "#CCDEFF" },
+	{ tag: tags.punctuation, color: "#e0e0e0" },
+	{ tag: tags.propertyName, color: "#9EE6F0" },
+	{ tag: tags.operator, color: "#e0e0e0" },
+	{ tag: tags.string, color: "#f4f4f4" },
+	{ tag: tags.meta, color: "#B6E7C3" }
+], { themeType: "dark" }));
 
 class ExpressionControl extends React.Component {
 	constructor(props) {
@@ -113,7 +112,7 @@ class ExpressionControl extends React.Component {
 			expressionEditorHeight: 0
 		};
 		this.editable = new Compartment; // eslint-disable-line new-parens
-		this.highlightCompartment = new Compartment; // eslint-disable-line new-parens
+		this.themeCompartment = new Compartment; // eslint-disable-line new-parens
 		this.editorRef = React.createRef();
 		this.wrapperRef = React.createRef();
 		this.origHint = [];
@@ -212,32 +211,12 @@ class ExpressionControl extends React.Component {
 			this.setState({ theme });
 			if (this.editor) {
 				this.editor.dispatch({
-					effects: this.highlightCompartment.reconfigure(this.buildHighlightStyle(theme))
+					effects: this.themeCompartment.reconfigure(
+						EditorView.theme({}, { dark: theme === themeG90 })
+					)
 				});
 			}
 		}
-	}
-
-	/**
-		* Builds a CodeMirror HighlightStyle using the color constants that mirror the
-		* CSS custom properties in expression.scss lines 35-61.
-		* @param {string} theme - One of themeG10 or themeG90.
-		* @returns {Extension} A syntaxHighlighting extension for the given theme.
-		*/
-	buildHighlightStyle(theme) {
-		const c = (theme === themeG90) ? DARK_THEME_COLORS : LIGHT_THEME_COLORS;
-		return syntaxHighlighting(HighlightStyle.define([
-			{ tag: tags.keyword, color: c.keyword },
-			{ tag: tags.number, color: c.number },
-			{ tag: tags.definition(tags.name), color: c.def },
-			{ tag: tags.comment, color: c.comment },
-			{ tag: tags.variableName, color: c.variable },
-			{ tag: tags.punctuation, color: c.punctuation },
-			{ tag: tags.propertyName, color: c.property },
-			{ tag: tags.operator, color: c.operator },
-			{ tag: tags.string, color: c.string },
-			{ tag: tags.meta, color: c.meta }
-		]));
 	}
 
 	// Add the dataset field names to the autocomplete list
@@ -296,10 +275,6 @@ class ExpressionControl extends React.Component {
 			autocomplete: this.addonHints
 		});
 
-		// Syntax highlighting — colors are sourced from LIGHT_THEME_COLORS / DARK_THEME_COLORS
-		// which mirror the CSS custom properties defined in expression.scss lines 35-61.
-		// The compartment allows the theme to be swapped at runtime via setTheme().
-
 		const linterExtension = this.props.control.language === "json" ? linter(jsonParseLinter()) : [];
 
 		this.editor = new EditorView({
@@ -307,7 +282,9 @@ class ExpressionControl extends React.Component {
 			extensions: [
 				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // This should be before basicSetup to insertNewLine on "Enter"
 				customCompletions,
-				this.highlightCompartment.of(this.buildHighlightStyle(this.state.theme)),
+				lightHighlightStyle,
+				darkHighlightStyle,
+				this.themeCompartment.of(EditorView.theme({}, { dark: this.state.theme === themeG90 })),
 				lineNumbers(), // basicSetup start
 				highlightActiveLineGutter(),
 				highlightSpecialChars(),
