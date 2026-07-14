@@ -34,15 +34,17 @@ class CustomOverflowAction {
 
 	renderAction() {
 		return (
-			<OverflowMenu
-				flipped={this.data?.parameter_ref === "oneofselect-custom-action-right"}
-				aria-label="Overflow menu"
-				size="sm"
-				className="harness-custom-action"
-			>
-				<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 1" onClick={() => this.changeReadonlyText("Menu item 1")} />
-				<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 2" onClick={() => this.changeReadonlyText("Menu item 2")} />
-			</OverflowMenu>
+			<div data-floating-menu-container style={{ display: "contents" }}>
+				<OverflowMenu
+					flipped={this.data?.parameter_ref === "oneofselect-custom-action-right"}
+					aria-label="Overflow menu"
+					size="sm"
+					className="harness-custom-action"
+				>
+					<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 1" onClick={() => this.changeReadonlyText("Menu item 1")} />
+					<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 2" onClick={() => this.changeReadonlyText("Menu item 2")} />
+				</OverflowMenu>
+			</div>
 		);
 	}
 }
