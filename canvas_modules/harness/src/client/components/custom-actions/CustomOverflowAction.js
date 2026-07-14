@@ -34,7 +34,7 @@ class CustomOverflowAction {
 
 	renderAction() {
 		return (
-			<div data-floating-menu-container style={{ display: "contents" }}>
+			<div data-floating-menu-container style={{ position: "relative" }}>
 				<OverflowMenu
 					flipped={this.data?.parameter_ref === "oneofselect-custom-action-right"}
 					aria-label="Overflow menu"
