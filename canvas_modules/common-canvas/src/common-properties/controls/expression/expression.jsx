@@ -73,34 +73,45 @@ const minLineHeight = 4 * pxPerLine; // 4 lines
 const themeG10 = "theme-g10";
 const themeG90 = "theme-g90";
 
-// Syntax highlighting styles for light and dark themes.
-// Colors mirror the values from expression.scss lines 35-61 (now removed).
-// themeType gates each style so CM6 activates the correct one based on EditorView.darkTheme.
-const lightHighlightStyle = syntaxHighlighting(HighlightStyle.define([
-	{ tag: tags.keyword, color: "#7922FC" }, // From $syntax-control-keyword
-	{ tag: tags.number, color: "#177233" }, // From $syntax-number
-	{ tag: tags.definition(tags.name), color: "#755D06" }, // From $syntax-definition
-	{ tag: tags.comment, color: "#187233" }, // From $syntax-comment
-	{ tag: tags.variableName, color: "#0152E9" }, // From $syntax-variable
-	{ tag: tags.punctuation, color: "#636363" }, // From $syntax-punctuation
-	{ tag: tags.propertyName, color: "#006C7A" }, // From $syntax-property-name
-	{ tag: tags.operator, color: "#636363" }, // From $syntax-operator
-	{ tag: tags.string, color: "#161616" }, // From $syntax-string
-	{ tag: tags.meta, color: "#197132" } // From $syntax-meta
-], { themeType: "light" }));
+// Maps lezer highlight tags to stable CSS class names so tests and external
+// tooling can locate tokens by class (e.g. .cm-keyword, .cm-def).
+const highlightStyle = syntaxHighlighting(HighlightStyle.define([
+	{ tag: tags.keyword, class: "cm-keyword" }, // From $syntax-control-keyword
+	{ tag: tags.number, class: "cm-number" }, // From $syntax-number
+	{ tag: tags.definition(tags.name), class: "cm-def" }, // From $syntax-definition
+	{ tag: tags.comment, class: "cm-comment" }, // From $syntax-comment
+	{ tag: tags.variableName, class: "cm-variable" }, // From $syntax-variable
+	{ tag: tags.punctuation, class: "cm-punctuation" }, // From $syntax-punctuation
+	{ tag: tags.propertyName, class: "cm-property" }, // From $syntax-property-name
+	{ tag: tags.operator, class: "cm-operator" }, // From $syntax-operator
+	{ tag: tags.string, class: "cm-string" }, // From $syntax-string
+	{ tag: tags.meta, class: "cm-meta" } // From $syntax-meta
+]));
 
-const darkHighlightStyle = syntaxHighlighting(HighlightStyle.define([
-	{ tag: tags.keyword, color: "#E6D6FF" }, // From $syntax-control-keyword
-	{ tag: tags.number, color: "#A9EAB9" }, // From $syntax-number
-	{ tag: tags.definition(tags.name), color: "#F8D968" }, // From $syntax-definition
-	{ tag: tags.comment, color: "#B1E7BE" }, // From $syntax-comment
-	{ tag: tags.variableName, color: "#CCDEFF" }, // From $syntax-variable
-	{ tag: tags.punctuation, color: "#e0e0e0" }, // From $syntax-punctuation
-	{ tag: tags.propertyName, color: "#9EE6F0" }, // From $syntax-property-name
-	{ tag: tags.operator, color: "#e0e0e0" }, // From $syntax-operator
-	{ tag: tags.string, color: "#f4f4f4" }, // From $syntax-string
-	{ tag: tags.meta, color: "#B6E7C3" } // From $syntax-meta
-], { themeType: "dark" }));
+// Colors for those classes, split by light/dark using &light / &dark selectors.
+// Colors mirror the values from expression.scss lines 35-61 (now removed).
+const syntaxTheme = EditorView.baseTheme({
+	"&light .cm-keyword": { color: "#7922FC" }, // From $syntax-control-keyword
+	"&light .cm-number": { color: "#177233" }, // From $syntax-number
+	"&light .cm-def": { color: "#755D06" }, // From $syntax-definition
+	"&light .cm-comment": { color: "#187233" }, // From $syntax-comment
+	"&light .cm-variable": { color: "#0152E9" }, // From $syntax-variable
+	"&light .cm-punctuation": { color: "#636363" }, // From $syntax-punctuation
+	"&light .cm-property": { color: "#006C7A" }, // From $syntax-property-name
+	"&light .cm-operator": { color: "#636363" }, // From $syntax-operator
+	"&light .cm-string": { color: "#161616" }, // From $syntax-string
+	"&light .cm-meta": { color: "#197132" }, // From $syntax-meta
+	"&dark .cm-keyword": { color: "#E6D6FF" }, // From $syntax-control-keyword
+	"&dark .cm-number": { color: "#A9EAB9" }, // From $syntax-number
+	"&dark .cm-def": { color: "#F8D968" }, // From $syntax-definition
+	"&dark .cm-comment": { color: "#B1E7BE" }, // From $syntax-comment
+	"&dark .cm-variable": { color: "#CCDEFF" }, // From $syntax-variable
+	"&dark .cm-punctuation": { color: "#e0e0e0" }, // From $syntax-punctuation
+	"&dark .cm-property": { color: "#9EE6F0" }, // From $syntax-property-name
+	"&dark .cm-operator": { color: "#e0e0e0" }, // From $syntax-operator
+	"&dark .cm-string": { color: "#f4f4f4" }, // From $syntax-string
+	"&dark .cm-meta": { color: "#B6E7C3" } // From $syntax-meta
+});
 
 class ExpressionControl extends React.Component {
 	constructor(props) {
@@ -282,8 +293,8 @@ class ExpressionControl extends React.Component {
 			extensions: [
 				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // This should be before basicSetup to insertNewLine on "Enter"
 				customCompletions,
-				lightHighlightStyle,
-				darkHighlightStyle,
+				highlightStyle,
+				syntaxTheme,
 				this.themeCompartment.of(EditorView.theme({}, { dark: this.state.theme === themeG90 })),
 				lineNumbers(), // basicSetup start
 				highlightActiveLineGutter(),
