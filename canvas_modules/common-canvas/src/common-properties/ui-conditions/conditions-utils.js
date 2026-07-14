@@ -251,6 +251,13 @@ function validateConditions(inPropertyId, controller, runCount = 0) {
 	} else {
 		_validateConditionsByType(propertyId, newStates, controller);
 	}
+	// Re-evaluate panels that hide themselves when all their children are hidden.
+	// If condition: only walk the panel tree when this property is an operand of
+	// a visible condition.
+	const visibleDfns = controller.getDefinitions(propertyId, CONDITION_TYPE.VISIBLE, CONDITION_DEFINITION_INDEX.CONTROLS);
+	if (visibleDfns.length > 0) {
+		_propagateChildrenPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
+	}
 	// get property values before any states have been updated
 	const prevPropertyValues = _getConditionPropertyValues(controller);
 
@@ -611,8 +618,11 @@ function injectDefaultValidations(controls, validationDefinitions, requiredDefin
 // disable state.
 function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabledOnly) {
 	const currentPanelState = newStates.panels[currentPanel];
+	// panels hidden only because all their children are hidden must not force their
+	// children hidden, otherwise the children could never become visible again
 	const allowUpdate = (disabledOnly) ? (currentPanelState && (currentPanelState.value === STATES.DISABLED))
-		: (currentPanelState && (currentPanelState.value === STATES.HIDDEN || currentPanelState.value === STATES.DISABLED));
+		: (currentPanelState && !currentPanelState.hiddenByChildren &&
+			(currentPanelState.value === STATES.HIDDEN || currentPanelState.value === STATES.DISABLED));
 		// only propagate if parent panel is hidden or disabled
 	if (allowUpdate && panelTree[currentPanel]) {
 		// propagate panel state to children controls
@@ -654,6 +664,72 @@ function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabl
 			}
 			_propagateParentPanelStates(panelTree, newStates, panel, disabledOnly);
 		}
+	}
+}
+
+// Traverses the panel tree in post-order (children first, then parent).
+// If a panel has children and all of them are HIDDEN, the panel itself is
+// marked HIDDEN with a `hiddenByChildren` marker. When at least one child is
+// visible again, only panels carrying that marker are set back to VISIBLE, so
+// panels hidden by an explicit condition or by a hidden parent are left alone.
+function _propagateChildrenPanelStates(panelTree, newStates, currentPanel) {
+	// Recurse into child panels first (post-order)
+	if (panelTree[currentPanel] && panelTree[currentPanel].panels) {
+		for (const panel of panelTree[currentPanel].panels) {
+			_propagateChildrenPanelStates(panelTree, newStates, panel);
+		}
+	}
+
+	// A child counts as visible unless it has an explicit HIDDEN state.
+	let allHidden = true;
+	let hasAnyChildren = false;
+
+	if (panelTree[currentPanel]) {
+		if (panelTree[currentPanel].controls) {
+			for (const control of panelTree[currentPanel].controls) {
+				hasAnyChildren = true;
+				const childState = newStates.controls[control];
+				if (!childState || childState.value !== STATES.HIDDEN) {
+					allHidden = false;
+					break;
+				}
+			}
+		}
+		if (allHidden && panelTree[currentPanel].actions) {
+			for (const action of panelTree[currentPanel].actions) {
+				hasAnyChildren = true;
+				const childState = newStates.actions[action];
+				if (!childState || childState.value !== STATES.HIDDEN) {
+					allHidden = false;
+					break;
+				}
+			}
+		}
+		if (allHidden && panelTree[currentPanel].panels) {
+			for (const panel of panelTree[currentPanel].panels) {
+				hasAnyChildren = true;
+				const childState = newStates.panels[panel];
+				if (!childState || childState.value !== STATES.HIDDEN) {
+					allHidden = false;
+					break;
+				}
+			}
+		}
+	}
+
+	if (!hasAnyChildren) {
+		return;
+	}
+	const panelState = newStates.panels[currentPanel];
+	if (allHidden) {
+		// only auto-hide panels that aren't already hidden by a condition or parent
+		if (!panelState || panelState.value !== STATES.HIDDEN) {
+			updateState(newStates.panels, { name: currentPanel }, STATES.HIDDEN);
+			newStates.panels[currentPanel].hiddenByChildren = true;
+		}
+	} else if (panelState && panelState.value === STATES.HIDDEN && panelState.hiddenByChildren) {
+		updateState(newStates.panels, { name: currentPanel }, STATES.VISIBLE);
+		delete newStates.panels[currentPanel].hiddenByChildren;
 	}
 }
 
