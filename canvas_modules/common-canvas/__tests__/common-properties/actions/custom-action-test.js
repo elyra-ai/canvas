@@ -61,24 +61,24 @@ describe("custom action renders correctly", () => {
 		expect(readonlyText.textContent).to.equal(ACTION_PARAMDEF.current_parameters.readonly_text);
 		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal(ACTION_PARAMDEF.current_parameters.readonly_text);
 
-		// Select 1st item from MenuButton of custom action left
-		let menuTrigger = customActionLeft[0].querySelector("button.cds--menu-button__trigger");
-		fireEvent.click(menuTrigger);
-		let menuItems = document.body.querySelectorAll("li.cds--menu-item");
-		expect(menuItems).to.be.length(2);
-		fireEvent.click(menuItems[0]);
+		// Select 1st item from overflow menu of custom action left
+		let overflowMenuButton = customActionLeft[0].querySelector("button.harness-custom-action");
+		fireEvent.click(overflowMenuButton);
+		let dropdownList = document.body.querySelectorAll("li.cds--overflow-menu-options__option button");
+		expect(dropdownList).to.be.length(2);
+		fireEvent.click(dropdownList[0]);
 
 		// then check for the text update
 		readonlyText = container.querySelector("div[data-id='properties-ctrl-readonly_text']").querySelector(".properties-field-type");
 		expect(readonlyText.textContent).to.equal("Menu item 1");
 		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal("Menu item 1");
 
-		// Select 2nd item from MenuButton of custom action right
-		menuTrigger = customActionRight[0].querySelector("button.cds--menu-button__trigger");
-		fireEvent.click(menuTrigger);
-		menuItems = document.body.querySelectorAll("li.cds--menu-item");
-		expect(menuItems).to.be.length(2);
-		fireEvent.click(menuItems[1]);
+		// Select 2nd item from overflow menu of custom action right
+		overflowMenuButton = customActionRight[0].querySelector("button.harness-custom-action");
+		fireEvent.click(overflowMenuButton);
+		dropdownList = document.body.querySelectorAll("li.cds--overflow-menu-options__option button");
+		expect(dropdownList).to.be.length(2);
+		fireEvent.click(dropdownList[1]);
 
 		// then check for the text update
 		readonlyText = container.querySelector("div[data-id='properties-ctrl-readonly_text']").querySelector(".properties-field-type");
