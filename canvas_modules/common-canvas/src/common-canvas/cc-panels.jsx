@@ -105,7 +105,7 @@ class CommonCanvasPanels extends React.Component {
 		templateRows += this.props.bottomPanelIsOpen ? " auto" : "";
 
 		return (
-			<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
+			<div className="common-canvas-grid-vertical" style={{ "--canvas-grid-rows": templateRows }}>
 				{topPanel}
 				{centerPanel}
 				{bottomPanel}
@@ -196,7 +196,7 @@ class CommonCanvasPanels extends React.Component {
 
 				const lowerPanels = (
 					<div id={this.containingDivId} className="common-canvas-grid-horizontal"
-						style={{ gridTemplateColumns: templateCols }}
+						style={{ "--canvas-grid-cols": templateCols }}
 					>
 						{leftFlyout}
 						{topCenterBottom}
@@ -204,7 +204,7 @@ class CommonCanvasPanels extends React.Component {
 					</div>
 				);
 				panels = (
-					<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
+					<div className="common-canvas-grid-vertical" style={{ "--canvas-grid-rows": templateRows }}>
 						{canvasToolbar}
 						{lowerPanels}
 					</div>
@@ -216,10 +216,10 @@ class CommonCanvasPanels extends React.Component {
 				const templateCols = leftFlyoutIsOpen ? "auto 1fr" : "1fr";
 
 				const leftSideItems = (
-					<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
+					<div className="common-canvas-grid-vertical" style={{ "--canvas-grid-rows": templateRows }}>
 						{canvasToolbar}
 						<div id={this.containingDivId} className="common-canvas-grid-horizontal"
-							style={{ gridTemplateColumns: templateCols }}
+							style={{ "--canvas-grid-cols": templateCols }}
 						>
 							{leftFlyout}
 							{topCenterBottom}
@@ -227,7 +227,7 @@ class CommonCanvasPanels extends React.Component {
 					</div>
 				);
 				panels = (
-					<div className="common-canvas-grid-horizontal" style={{ gridTemplateColumns: templateColsMain }}>
+					<div className="common-canvas-grid-horizontal" style={{ "--canvas-grid-cols": templateColsMain }}>
 						{leftSideItems}
 						{rightFlyout}
 					</div>
@@ -241,10 +241,10 @@ class CommonCanvasPanels extends React.Component {
 				const templateCols = this.props.rightFlyoutIsOpen ? "1fr auto" : "1fr";
 
 				const rightSideItems = (
-					<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
+					<div className="common-canvas-grid-vertical" style={{ "--canvas-grid-rows": templateRows }}>
 						{canvasToolbar}
 						<div id={this.containingDivId} className="common-canvas-grid-horizontal"
-							style={{ gridTemplateColumns: templateCols }}
+							style={{ "--canvas-grid-cols": templateCols }}
 						>
 							{topCenterBottom}
 							{rightFlyout}
@@ -252,7 +252,7 @@ class CommonCanvasPanels extends React.Component {
 					</div>
 				);
 				panels = (
-					<div className="common-canvas-grid-horizontal" style={{ gridTemplateColumns: templateColsMain }}>
+					<div className="common-canvas-grid-horizontal" style={{ "--canvas-grid-cols": templateColsMain }}>
 						{leftFlyout}
 						{rightSideItems}
 					</div>
@@ -269,7 +269,7 @@ class CommonCanvasPanels extends React.Component {
 
 				const centerItems = (
 					<div className="common-canvas-grid-vertical"
-						style={{ gridTemplateRows: templateRows }}
+						style={{ "--canvas-grid-rows": templateRows }}
 					>
 						{canvasToolbar}
 						<div id={this.containingDivId}>
@@ -279,7 +279,7 @@ class CommonCanvasPanels extends React.Component {
 				);
 				panels = (
 					<div className="common-canvas-grid-horizontal"
-						style={{ gridTemplateColumns: templateCols }}
+						style={{ "--canvas-grid-cols": templateCols }}
 					>
 						{leftFlyout}
 						{centerItems}

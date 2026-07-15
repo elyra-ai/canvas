@@ -50,7 +50,7 @@ $panel-border-color: carbon.$border-subtle-01;
 	display: flex;
 	border-left: $panel-border-width solid $panel-border-color;
 	min-height: fit-content;
-	width: fit-content;
+	width: var(--right-flyout-width, fit-content);
 }
 
 .left-flyout {
@@ -98,6 +98,7 @@ $panel-border-color: carbon.$border-subtle-01;
 	display: flex;
 	flex-direction: column;
 	border-top: $panel-border-width solid $panel-border-color;
+	height: var(--bottom-panel-height, auto);
 	// Make sure the bottom panel appear above the empty canvas content
 	// (when displayed) in the flow editor div.
 	z-index: 1;
@@ -215,7 +216,7 @@ $panel-border-color: carbon.$border-subtle-01;
 	width: 100%;
 	overflow: hidden;
 	display: grid;
-	/* grid-template-rows is set dynamically in cc-panels.jsx */
+	grid-template-rows: var(--canvas-grid-rows);
 	grid-template-columns: 1fr;
 }
 
@@ -225,7 +226,7 @@ $panel-border-color: carbon.$border-subtle-01;
 	overflow: hidden;
 	display: grid;
 	grid-template-rows: 1fr;
-	/* grid-template-columns is set dynamically in cc-panels.jsx */
+	grid-template-columns: var(--canvas-grid-cols);
 }
 
 /* Styles for empty canvas objects */

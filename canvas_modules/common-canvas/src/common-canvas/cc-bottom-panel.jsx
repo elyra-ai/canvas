@@ -41,6 +41,11 @@ class CanvasBottomPanel extends React.Component {
 	componentDidMount() {
 		// Minimum height is fixed for bottom panel.
 		this.minHeight = 75;
+		this.applyHeight();
+	}
+
+	componentDidUpdate() {
+		this.applyHeight();
 	}
 
 	onMouseDown(e) {
@@ -82,17 +87,24 @@ class CanvasBottomPanel extends React.Component {
 		return height;
 	}
 
+	/** Sets --bottom-panel-height on the panel element via CSSOM to avoid an inline style attribute. */
+	applyHeight() {
+		const el = this.bottomPanelRef.current;
+		if (!el) {
+			return;
+		}
+		el.style.setProperty("--bottom-panel-height", this.limitHeight(this.props.panelHeight) + "px");
+	}
+
 	render() {
 		this.logger.log("render");
 		let bottomPanel = null;
 
 		if (this.props.bottomPanelIsOpen) {
-			const heightPx = this.limitHeight(this.props.panelHeight) + "px";
-
 			const className = "bottom-panel-drag" + (this.state.isBeingDragging ? " is-being-dragged" : "");
 
 			bottomPanel = (
-				<div ref={this.bottomPanelRef} className="bottom-panel" style={{ height: heightPx }} >
+				<div ref={this.bottomPanelRef} className="bottom-panel">
 					<div className={className} onMouseDown={this.onMouseDown} />
 					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}
