@@ -364,7 +364,7 @@ export default class SvgCanvasTextArea {
 	setWysiwygStyle(field, value) {
 		if (field === "background-color" && value === "transparent") {
 			d3.select(this.editingTextData.parentDomObj).selectAll(".d3-comment-text")
-				.style("background-color", "transparent");
+				.classed("transparent-bg", true);
 		}
 		const commentEntry = this.foreignObjectComment.selectAll(".d3-comment-text-entry");
 		commentEntry.style(field, value);
@@ -405,10 +405,10 @@ export default class SvgCanvasTextArea {
 			if (this.textAreaHeight < scrollHeight) {
 				this.textAreaHeight = scrollHeight;
 				if (this.foreignObjectLabel) {
-					this.foreignObjectLabel.style("height", this.textAreaHeight + "px");
+					this.foreignObjectLabel.node().style.setProperty("--textarea-height", this.textAreaHeight + "px");
 
 				} else if (this.foreignObjectComment) {
-					this.foreignObjectComment.style("height", this.textAreaHeight + "px");
+					this.foreignObjectComment.node().style.setProperty("--textarea-height", this.textAreaHeight + "px");
 				}
 				this.activePipeline.getComment(data.id).height = this.textAreaHeight;
 				this.displayCommentsCallback();
@@ -457,12 +457,10 @@ export default class SvgCanvasTextArea {
 	}
 
 	displayNodeLabelTextArea(node, parentDomObj) {
-		// Save the current style for the display <div> and set the style so the
-		// <div> is hidden while the text area is displayed on top of it. This
-		// prevents the <div> from protruding below the text area.
+		// Hide the display <div> while the text area is displayed on top of it.
+		// This prevents the <div> from protruding below the text area.
 		this.displayDiv = d3.select(parentDomObj).selectAll(".d3-foreign-object-node-label div");
-		this.displayDivStyle = this.displayDiv.attr("style");
-		this.displayDiv.attr("style", "display:none;");
+		this.displayDiv.classed("hidden", true);
 
 		this.editingTextData = {
 			id: node.id,
@@ -503,10 +501,10 @@ export default class SvgCanvasTextArea {
 		// the full height of the text in the textarea. This allows us to close up
 		// the text area when the lines of text reduce.
 		if (this.foreignObjectLabel) {
-			this.foreignObjectLabel.style("height", 0);
+			this.foreignObjectLabel.node().style.setProperty("--textarea-height", "0");
 			const scrollHeight = textArea.scrollHeight + SCROLL_PADDING_LABEL;
 			this.textAreaHeight = scrollHeight;
-			this.foreignObjectLabel.style("height", this.textAreaHeight + "px");
+			this.foreignObjectLabel.node().style.setProperty("--textarea-height", this.textAreaHeight + "px");
 		}
 	}
 
@@ -522,21 +520,19 @@ export default class SvgCanvasTextArea {
 	}
 
 	// Called when the node label or decoration label text area is closing.
-	// Resets the inline style of the <div>, that displays the text, back
-	// to what is was before it was hidden when the entry text area opened.
+	// Removes the hidden class from the <div> that displays the text,
+	// restoring its visibility after the entry text area closes.
 	closeEntryTextArea() {
-		this.displayDiv.attr("style", this.displayDivStyle);
+		this.displayDiv.classed("hidden", false);
 	}
 
 	// Displays a <textarea> for editable a text decoration on either a node
 	// or link.
 	displayDecLabelTextArea(dec, obj, objType, parentDomObj) {
-		// Save the current style for the display <div> and set the style so the
-		// <div> is hidden while the text area is displayed on top of it. This
-		// prevents the <div> from protruding below the text area.
+		// Hide the display <div> while the text area is displayed on top of it.
+		// This prevents the <div> from protruding below the text area.
 		this.displayDiv = d3.select(parentDomObj).selectAll(".d3-foreign-object-dec-label div");
-		this.displayDivStyle = this.displayDiv.attr("style");
-		this.displayDiv.attr("style", "display:none;");
+		this.displayDiv.classed("hidden", true);
 
 		this.editingTextData = {
 			id: dec.id,
@@ -645,7 +641,7 @@ export default class SvgCanvasTextArea {
 			data.saveTextChangesCallback(data, newText, this.textAreaHeight);
 		} else {
 			d3.select(data.parentDomObj).selectAll(".d3-comment-text")
-				.style("display", "table-cell");
+				.classed("hidden", false);
 			this.canvasController.restoreFocus();
 		}
 	}
@@ -706,7 +702,7 @@ export default class SvgCanvasTextArea {
 			// Ensure hidden foreign object used for display is visible again
 			d3.select(this.editingTextData.parentDomObj)
 				.selectAll(".d3-foreign-object-comment-text")
-				.style("display", null);
+				.classed("hidden", false);
 			// Tidy up
 			this.foreignObjectComment.remove();
 			this.foreignObjectComment = null;
@@ -746,7 +742,7 @@ export default class SvgCanvasTextArea {
 		// This change will be reversed when the canvas refreshes, when text
 		// editing is complete or, when editing ends with nothing saved.
 		d3.select(data.parentDomObj).selectAll(".d3-foreign-object-comment-text")
-			.style("display", "none");
+			.classed("hidden", true);
 
 		this.foreignObjectComment = d3.select(data.parentDomObj)
 			.append("foreignObject")

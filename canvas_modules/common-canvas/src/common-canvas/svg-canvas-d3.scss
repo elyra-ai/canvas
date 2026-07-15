@@ -111,6 +111,12 @@ $link-highlight-color: carbon.$support-info;
 	}
 }
 
+/* Utility class for hiding elements via class toggle instead of inline style */
+
+.hidden {
+	display: none;
+}
+
 .d3-foreign-object-ghost-label,
 .d3-foreign-object-node-label,
 .d3-foreign-object-dec-label,
@@ -119,6 +125,13 @@ $link-highlight-color: carbon.$support-info;
 	pointer-events: none;
 	// Allows the focus highlight to be visible
 	overflow: visible;
+}
+
+/* Dynamic height for text-entry and comment-entry foreignObject elements */
+
+.d3-foreign-object-text-entry,
+.d3-foreign-object-comment-text-entry {
+	height: var(--textarea-height);
 }
 
 // Declare our own focus highlighting for text entry.
@@ -153,6 +166,11 @@ $link-highlight-color: carbon.$support-info;
 // is being displayed.
 .d3-svg-background {
 	fill: $canvas-background-color;
+	cursor: default;
+
+	&.cursor-grab {
+		cursor: grab;
+	}
 }
 
 /* Display grid styles. */
@@ -184,6 +202,36 @@ $link-highlight-color: carbon.$support-info;
 
 .d3-temp-cursor-overlay {
 	fill: transparent;
+	cursor: var(--canvas-cursor, default);
+}
+
+/* Node and comment body outline elements respond to --canvas-cursor during resize */
+
+.d3-node-body-outline,
+.d3-comment-rect {
+	cursor: var(--canvas-cursor, default);
+}
+
+/* Debug bounding-box rectangle classes (only visible when enableBoundingRectangles is true) */
+
+.d3-debug-bounds-darkorange {
+	fill: none;
+	stroke: darkorange;
+}
+
+.d3-debug-bounds-red {
+	fill: none;
+	stroke: red;
+}
+
+.d3-debug-bounds-blue {
+	fill: none;
+	stroke: blue;
+}
+
+.d3-debug-bounds-green {
+	fill: none;
+	stroke: green;
 }
 
 /* Ghost div and node used when dragging a node from the palette */
@@ -1103,6 +1151,10 @@ g.bkg-col-cyan-50 {
 
 .d3-comment-text {
 	cursor: default;
+}
+
+.d3-comment-text.transparent-bg {
+	background-color: transparent;
 }
 
 .d3-comment-text-entry {
