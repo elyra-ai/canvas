@@ -29,7 +29,12 @@
     "radioString": "entropy",
     "radioBooleanWithEnum": true,
     "radioBooleanWithoutEnum": true,
-    "radioBooleanWithLabels": false
+    "radioBooleanWithLabels": false,
+    "text_right": "",
+    "text_left": "",
+    "text_with_desc_right": "",
+    "number_right": null,
+    "dropdown_right": null
   },
   "parameters": [
     {
@@ -188,6 +193,32 @@
       "id": "radioBooleanWithLabels",
       "type": "boolean",
       "required": true
+    },
+    {
+      "id": "text_right",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "text_left",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "text_with_desc_right",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "number_right",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "dropdown_right",
+      "type": "string",
+      "required": true,
+      "enum": ["Alpha", "Beta", "Gamma"]
     }
   ],
   "uihints": {
@@ -457,6 +488,44 @@
         "control": "radioset",
         "resource_key": "radioBooleanWithLabels",
         "action_ref": "increment2"
+      },
+      {
+        "parameter_ref": "text_right",
+        "label": {
+          "default": "Text input — action RIGHT"
+        },
+        "action_ref": "moon_right"
+      },
+      {
+        "parameter_ref": "text_left",
+        "label": {
+          "default": "Text input — action LEFT"
+        },
+        "action_ref": "moon_left"
+      },
+      {
+        "parameter_ref": "text_with_desc_right",
+        "label": {
+          "default": "Text input with description — action RIGHT"
+        },
+        "description": {
+          "default": "This field has a description, which makes the label area taller. The action image should still align with the input, not the description."
+        },
+        "action_ref": "moon_right"
+      },
+      {
+        "parameter_ref": "number_right",
+        "label": {
+          "default": "Number input — action RIGHT"
+        },
+        "action_ref": "moon_right"
+      },
+      {
+        "parameter_ref": "dropdown_right",
+        "label": {
+          "default": "Dropdown — action RIGHT"
+        },
+        "action_ref": "moon_right"
       }
     ],
     "action_info": [
@@ -888,6 +957,44 @@
         },
         "custom_action_id": "harness-custom-overflow-action",
         "class_name": "custom-action-right"
+      },
+      {
+        "id": "moon_right",
+        "label": {
+          "default": "Moon"
+        },
+        "description": {
+          "default": "Moon action tooltip"
+        },
+        "control": "image",
+        "data": {},
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "right",
+          "size": {
+            "height": 20,
+            "width": 25
+          }
+        }
+      },
+      {
+        "id": "moon_left",
+        "label": {
+          "default": "Moon"
+        },
+        "description": {
+          "default": "Moon action tooltip"
+        },
+        "control": "image",
+        "data": {},
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "left",
+          "size": {
+            "height": 20,
+            "width": 25
+          }
+        }
       }
     ],
     "group_info": [
@@ -1149,6 +1256,26 @@
             ]
           }
         ]
+      },
+      {
+        "id": "action-alignment",
+        "label": {
+          "default": "Alignment"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "alignment-controls",
+            "type": "controls",
+            "parameter_refs": [
+              "text_right",
+              "text_left",
+              "text_with_desc_right",
+              "number_right",
+              "dropdown_right"
+            ]
+          }
+        ]
       }
     ],
     "help": {}
@@ -1215,6 +1342,91 @@
             "parameter_ref": "disable_image",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "text_right",
+          "message": {
+            "default": "Text input is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "text_right",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "text_left",
+          "message": {
+            "default": "Text input is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "text_left",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "text_with_desc_right",
+          "message": {
+            "default": "Text input is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "text_with_desc_right",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "number_right",
+          "message": {
+            "default": "Number input is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "number_right",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "dropdown_right",
+          "message": {
+            "default": "A selection is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "dropdown_right",
+            "op": "isNotEmpty"
           }
         }
       }
