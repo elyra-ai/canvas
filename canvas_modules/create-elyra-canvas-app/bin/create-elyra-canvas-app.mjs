@@ -227,13 +227,16 @@ async function main() {
 	const nameArg = args.find((a) => !a.startsWith("-"));
 
 	let appName;
-	let includeSampleNodes;
+	let includeSamplePalette;
+	let includeSampleFlow;
 
 	if (useDefaults) {
 		appName = slugify(nameArg || "elyra-canvas-app");
-		includeSampleNodes = true;
-		console.log(`App name:             ${appName}`);
-		console.log(`Sample nodes & flow:  yes`);
+		includeSamplePalette = true;
+		includeSampleFlow = true;
+		console.log(`App name:        ${appName}`);
+		console.log(`Sample palette:  yes`);
+		console.log(`Sample flow:     yes`);
 	} else {
 		const rl = createInterface({ input, output });
 		try {
@@ -245,9 +248,15 @@ async function main() {
 				appName = slugify(raw);
 			}
 
-			includeSampleNodes = await confirm(
+			includeSamplePalette = await confirm(
 				rl,
-				"\nInclude sample palette nodes and pipeline flow?",
+				"\nInclude a sample palette with node types?",
+				true
+			);
+
+			includeSampleFlow = await confirm(
+				rl,
+				"\nInclude a sample pipeline flow?",
 				true
 			);
 		} finally {
@@ -292,27 +301,20 @@ async function main() {
 
 		// ── Palette & flow data ──
 		const templateSrc = join(TEMPLATE_DIR, "src");
-		if (includeSampleNodes) {
-			copyFileSync(
-				join(templateSrc, "palette.json"),
-				join(projectDir, "src", "palette.json")
-			);
-			copyFileSync(
-				join(templateSrc, "pipeline-flow.json"),
-				join(projectDir, "src", "pipeline-flow.json")
-			);
+		copyFileSync(
+			join(templateSrc, includeSamplePalette ? "palette.json" : "empty-palette.json"),
+			join(projectDir, "src", "palette.json")
+		);
+		copyFileSync(
+			join(templateSrc, includeSampleFlow ? "pipeline-flow.json" : "empty-flow.json"),
+			join(projectDir, "src", "pipeline-flow.json")
+		);
+
+		// Icons are referenced by both the palette and the flow, copy if either is included
+		if (includeSamplePalette || includeSampleFlow) {
 			copyDir(
 				join(TEMPLATE_DIR, "public", "icons"),
 				join(projectDir, "public", "icons")
-			);
-		} else {
-			copyFileSync(
-				join(templateSrc, "empty-palette.json"),
-				join(projectDir, "src", "palette.json")
-			);
-			copyFileSync(
-				join(templateSrc, "empty-flow.json"),
-				join(projectDir, "src", "pipeline-flow.json")
 			);
 		}
 
