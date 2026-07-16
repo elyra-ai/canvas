@@ -57,8 +57,8 @@
 	}
 }
 
-// Used when an image action control has a description. The description renders above
-// this row so the action image only needs a fixed margin-top equal to the label height.
+// Used when an image action control has an on_panel description. The description renders
+// above this row so the action image only needs a fixed margin-top equal to the label height.
 .properties-ctrl-action-row {
 	display: flex;
 	> div:first-child {

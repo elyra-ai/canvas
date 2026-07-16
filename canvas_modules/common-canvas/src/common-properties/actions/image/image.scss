@@ -24,8 +24,9 @@
 	display: flex;
 	align-items: center;
 	// Match Carbon TextInput md height and offset past the label so the icon sits beside the input.
-	// Descriptions are rendered above the input row (see control-factory.js), ensuring the label
-	// area is always a fixed height so this margin-top value stays correct for all cases.
+	// on_panel descriptions are rendered above the input row (see control-factory.js); tooltip-style
+	// descriptions show as an inline info icon and don't add block height, so the label area is
+	// always a fixed height and this margin-top value stays correct for both cases.
 	height: carbon.$spacing-08;
 	margin-top: carbon.$spacing-05 + carbon.$spacing-03;
 	&.left {

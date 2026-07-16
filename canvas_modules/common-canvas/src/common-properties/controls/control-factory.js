@@ -166,12 +166,14 @@ export default class ControlFactory {
 		props.controller = this.controller;
 		props.propertyId = propertyId;
 		props.readOnly = isReadOnly || control.readOnly;
-		// For accessible controls with an image action and any description, render the description
-		// separately above the input row (see return below) so that Carbon's label area stays a
-		// fixed height (label text only). This keeps the action image's fixed margin-top aligned
-		// with the input regardless of whether the description is on_panel or tooltip-style.
+		// For accessible controls with an image action and an on_panel description, render the
+		// description separately above the input row (see return below) so that Carbon's label area
+		// stays a fixed height (label text only). This keeps the action image's fixed margin-top
+		// aligned with the input. Tooltip-style descriptions (info icon, no block height) are left
+		// in the ControlItem so they continue to render as an info icon next to the label.
 		const hasImageAction = has(control, "action.image.placement");
 		const extractDesc = hasImageAction && Boolean(control.description?.text) &&
+			control.description?.placement === "on_panel" &&
 			accessibleControls.includes(control.controlType) && !tableInfo;
 		const controlForLabel = extractDesc ? { ...control, description: null } : control;
 		props.controlItem = (
