@@ -15,7 +15,7 @@
  */
 
 import { CommonCanvas, CanvasController } from "./common-canvas/index";
-import { CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints } from "./common-properties/index";
+import { CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints, expressionEditorTheme } from "./common-properties/index";
 import { CommandStack, Action } from "./command-stack/index";
 import * as FlowValidation from "./flow-validation/validate-flow";
 import ContextMenuWrapper from "./context-menu/context-menu-wrapper";
@@ -32,6 +32,6 @@ import DisconnectObjectsAction from "../src/command-actions/disconnectObjectsAct
 import PasteAction from "../src/command-actions/pasteAction";
 
 
-export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints,
+export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints, expressionEditorTheme,
 	CommandStack, Action, FlowValidation, ContextMenuWrapper, ToolTip, ColorPicker, Palette, Toolbar,
 	CreateAutoNodeAction, CreateNodeAction, CreateNodeLinkAction, DeleteObjectsAction, DisconnectObjectsAction, PasteAction };

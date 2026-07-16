@@ -20,5 +20,6 @@ import FlexibleTable from "./components/flexible-table";
 import FieldPicker from "./components/field-picker";
 import { clem } from "./controls/expression/languages/CLEM-hint";
 import { getPythonHints } from "./controls/expression/languages/python-hint";
+import { expressionEditorTheme } from "./controls/expression/expression";
 
-export { CommonProperties, PropertiesController, FlexibleTable, FieldPicker, clem, getPythonHints };
+export { CommonProperties, PropertiesController, FlexibleTable, FieldPicker, clem, getPythonHints, expressionEditorTheme };
