@@ -175,3 +175,34 @@ Data is transmitted to IBM's telemetry ingestion endpoint. The collected metrics
 By installing this package as a dependency you are agreeing to telemetry collection. To opt out, set the environment variable `IBM_TELEMETRY_DISABLED=true` in your build environment, or follow the instructions at [Opting out of IBM Telemetry data collection](https://github.com/ibm-telemetry/telemetry-js/tree/main#opting-out-of-ibm-telemetry-data-collection).
 
 For further details on what IBM Telemetry collects and how it works, see the [IBM Telemetry documentation](https://github.com/ibm-telemetry/telemetry-js/tree/main#ibm-telemetry-collection-basics).
+
+## create-elyra-canvas-app module
+
+To create a working Elyra Canvas application is to use the `create-elyra-canvas-app` tool.
+
+Run it directly without installing anything:
+
+```sh
+npx create-elyra-canvas-app
+```
+
+If no app name is specified the project will be created in a directory called `elyra-canvas-app`. You can supply a name as the first argument to use a different directory:
+
+```sh
+npx create-elyra-canvas-app my-canvas-app
+```
+
+The tool will walk you through a short set of questions (node display format, link type, snap-to-grid, etc.) and then scaffold the project in a new directory. To accept all defaults without being prompted, pass the `-y` flag:
+
+```sh
+npx create-elyra-canvas-app -y
+```
+
+Once the project has been created:
+
+```sh
+cd elyra-canvas-app
+npm run dev
+```
+
+This opens the application at `http://localhost:5173`.
