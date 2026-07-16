@@ -83,12 +83,12 @@ function generatePackageJson(appName) {
 		{
 			name: appName,
 			version: "0.1.0",
+			type: "module",
 			description: `${appName} - an Elyra Canvas application`,
 			scripts: {
-				start: "react-scripts start",
-				build: "react-scripts build",
-				test: "react-scripts test",
-				eject: "react-scripts eject",
+				dev: "vite",
+				build: "vite build",
+				preview: "vite preview",
 			},
 			dependencies: {
 				"@carbon/icons-react": "^11.78.0",
@@ -101,21 +101,12 @@ function generatePackageJson(appName) {
 				react: "^18.2.0",
 				"react-dom": "^18.2.0",
 				"react-intl": "^5.25.1",
-				"react-scripts": "5.0.1",
+			},
+			devDependencies: {
+				"@vitejs/plugin-react": "^4.3.0",
 				sass: "^1.99.0",
+				vite: "^5.0.0",
 			},
-			eslintConfig: {
-				extends: ["react-app"],
-			},
-			browserslist: {
-				production: [">0.2%", "not dead", "not op_mini all"],
-				development: [
-					"last 1 chrome version",
-					"last 1 firefox version",
-					"last 1 safari version",
-				],
-			},
-			devDependencies: { copyfiles: "^2.4.1" },
 		},
 		null,
 		2
@@ -126,28 +117,45 @@ function generateIndexHtml(appName) {
 	return `<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="${appName}" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/common-canvas.min.css" />
     <title>${appName}</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
 `;
 }
 
-function generateIndexJs() {
+function generateMainJsx() {
 	return `import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import { createRoot } from 'react-dom/client';
+import App from './App.jsx';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = createRoot(document.getElementById('root'));
 root.render(<App />);
+`;
+}
+
+function generateViteConfig() {
+	return `import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern-compiler",
+        loadPaths: ["node_modules"],
+      },
+    },
+  },
+});
 `;
 }
 
@@ -333,18 +341,18 @@ async function main() {
 		mkdirSync(join(projectDir, "public", "icons"), { recursive: true });
 		mkdirSync(join(projectDir, "src"), { recursive: true });
 
-		// ── package.json, index.html, src/index.js ──
+		// ── Root config files ──
 		writeFileSync(
 			join(projectDir, "package.json"),
 			generatePackageJson(appName)
 		);
+		writeFileSync(join(projectDir, "index.html"), generateIndexHtml(appName));
+		writeFileSync(join(projectDir, "vite.config.js"), generateViteConfig());
+
+		// ── src/ ──
+		writeFileSync(join(projectDir, "src", "main.jsx"), generateMainJsx());
 		writeFileSync(
-			join(projectDir, "public", "index.html"),
-			generateIndexHtml(appName)
-		);
-		writeFileSync(join(projectDir, "src", "index.js"), generateIndexJs());
-		writeFileSync(
-			join(projectDir, "src", "App.js"),
+			join(projectDir, "src", "App.jsx"),
 			generateAppJs(appName, nodeFormat, useContextToolbar, linkType, snapToGrid)
 		);
 
@@ -382,8 +390,8 @@ async function main() {
 		console.log(`\nDone! Your Elyra Canvas app is ready.\n`);
 		console.log("Get started:\n");
 		console.log(`  cd ${appName}`);
-		console.log(`  npm start\n`);
-		console.log("Opens http://localhost:3000 in your browser.\n");
+		console.log(`  npm run dev\n`);
+		console.log("Opens http://localhost:5173 in your browser.\n");
 	} catch (err) {
 		console.error("\nFailed to create project:", err.message);
 		process.exit(1);

@@ -1,18 +1,18 @@
 
 @use "@ibm/plex-sans-condensed/scss" as PlexSansCondensed with (
-	$font-prefix: "~@ibm/plex-sans-condensed"
+	$font-prefix: "@ibm/plex-sans-condensed"
 );
 
 @use "@ibm/plex-sans/scss" as PlexSans with (
-	$font-prefix: "~@ibm/plex-sans"
+	$font-prefix: "@ibm/plex-sans"
 );
 
 @use "@ibm/plex-serif/scss" as PlexSerif with (
-	$font-prefix: "~@ibm/plex-serif"
+	$font-prefix: "@ibm/plex-serif"
 );
 
 @use "@ibm/plex-mono/scss" as PlexMono with (
-	$font-prefix: "~@ibm/plex-mono"
+	$font-prefix: "@ibm/plex-mono"
 );
 
 @include PlexSansCondensed.all();
