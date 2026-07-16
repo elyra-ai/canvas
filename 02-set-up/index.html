@@ -1249,6 +1249,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ibm-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IBM Telemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3487,6 +3498,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ibm-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IBM Telemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3625,6 +3647,23 @@ var buildTasks = [&quot;copy:fonts&quot;];
 <ul>
 <li>react-virtualized/styles.css</li>
 </ul>
+<h2 id="ibm-telemetry">IBM Telemetry<a class="headerlink" href="#ibm-telemetry" title="Permanent link">&para;</a></h2>
+<p><code>@elyra/canvas</code> uses <a href="https://github.com/ibm-telemetry/telemetry-js">IBM Telemetry</a> to collect de-identified, anonymized usage metrics. Telemetry runs automatically via a <code>postinstall</code> hook the first time the package is installed as a dependency.</p>
+<p><strong>What is collected:</strong></p>
+<ul>
+<li>Which <code>@elyra/canvas</code> components (e.g. <code>CommonCanvas</code>, <code>CommonProperties</code>, <code>FlexibleTable</code>) are used as JSX elements in the consuming project&rsquo;s source code, along with the names of props passed to those components from an explicit allowlist. A small set of safe, enumerated string values (e.g. <code>"sm"</code>, <code>"md"</code>, <code>"top"</code>, <code>"bottom"</code>) may also be captured. No free-text user data or prop values outside this allowlist are ever collected.</li>
+<li>The names and versions of npm packages declared as dependencies in the consuming project.</li>
+</ul>
+<p><strong>What is not collected:</strong></p>
+<ul>
+<li>User-provided data, application content, or any prop values beyond the safe enumerated string allowlist defined in <code>telemetry.yml</code>.</li>
+<li>JavaScript function calls or token-level source code.</li>
+</ul>
+<p><strong>Where data is sent:</strong></p>
+<p>Data is transmitted to IBM&rsquo;s telemetry ingestion endpoint. The collected metrics are currently only available to IBM employees. Learn more at <a href="https://github.com/ibm-telemetry/telemetry-js">https://github.com/ibm-telemetry/telemetry-js</a>.</p>
+<p><strong>Opting out:</strong></p>
+<p>By installing this package as a dependency you are agreeing to telemetry collection. To opt out, set the environment variable <code>IBM_TELEMETRY_DISABLED=true</code> in your build environment, or follow the instructions at <a href="https://github.com/ibm-telemetry/telemetry-js/tree/main#opting-out-of-ibm-telemetry-data-collection">Opting out of IBM Telemetry data collection</a>.</p>
+<p>For further details on what IBM Telemetry collects and how it works, see the <a href="https://github.com/ibm-telemetry/telemetry-js/tree/main#ibm-telemetry-collection-basics">IBM Telemetry documentation</a>.</p>
 
 
 
