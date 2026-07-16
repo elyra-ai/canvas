@@ -49,3 +49,8 @@ else
     echo "publishing under latest"
     npm publish --provenance --access public
 fi
+
+cd $WORKING_DIR/canvas_modules/create-elyra-canvas-app
+npm version $release
+echo "Publishing create-elyra-canvas-app $release to npm with provenance"
+npm publish --provenance --access public
