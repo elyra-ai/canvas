@@ -147,3 +147,34 @@ var buildTasks = ["copy:fonts"];
 If you intend to configure Common Properties to use the, now superseded, React-virtualized tables by setting `enableTanstackTable` [configuration](/04.08-properties-config/#properties-config) property to `false` then you will need to also include the react-virtualized styles:
 
 - react-virtualized/styles.css
+
+## create-elyra-canvas-app module
+
+To create a working Elyra Canvas application is to use the `create-elyra-canvas-app` tool. 
+
+Run it directly without installing anything:
+
+```sh
+npx create-elyra-canvas-app
+```
+
+If no app name is specified the project will be created in a directory called `elyra-canvas-app`. You can supply a name as the first argument to use a different directory:
+
+```sh
+npx create-elyra-canvas-app my-canvas-app
+```
+
+The tool will walk you through a short set of questions (node display format, link type, snap-to-grid, etc.) and then scaffold the project in a new directory. To accept all defaults without being prompted, pass the `-y` flag:
+
+```sh
+npx create-elyra-canvas-app -y
+```
+
+Once the project has been created:
+
+```sh
+cd elyra-canvas-app
+npm run dev
+```
+
+This opens the application at `http://localhost:5173`.
