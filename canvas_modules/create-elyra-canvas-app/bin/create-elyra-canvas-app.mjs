@@ -70,32 +70,7 @@ function copyDir(src, dest) {
 
 // ─── File generators ────────────────────────────────────────────────────────
 
-function generatePackageJson(appName, includeCarbon) {
-	const deps = {
-		"@carbon/react": "^1.105.0",
-		"@elyra/canvas": "^13.46.1",
-		react: "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-intl": "^5.25.1",
-		"react-scripts": "5.0.1",
-	};
-
-	if (includeCarbon) {
-		Object.assign(deps, {
-			"@carbon/icons-react": "^11.78.0",
-			"@ibm/plex-mono": "^1.1.0",
-			"@ibm/plex-sans": "^1.1.0",
-			"@ibm/plex-sans-condensed": "^2.0.0",
-			"@ibm/plex-serif": "^2.0.0",
-			sass: "^1.99.0",
-		});
-	}
-
-	// Sort deps alphabetically for a clean output
-	const sortedDeps = Object.fromEntries(
-		Object.entries(deps).sort(([a], [b]) => a.localeCompare(b))
-	);
-
+function generatePackageJson(appName) {
 	return JSON.stringify(
 		{
 			name: appName,
@@ -107,7 +82,20 @@ function generatePackageJson(appName, includeCarbon) {
 				test: "react-scripts test",
 				eject: "react-scripts eject",
 			},
-			dependencies: sortedDeps,
+			dependencies: {
+				"@carbon/icons-react": "^11.78.0",
+				"@carbon/react": "^1.105.0",
+				"@elyra/canvas": "^13.46.1",
+				"@ibm/plex-mono": "^1.1.0",
+				"@ibm/plex-sans": "^1.1.0",
+				"@ibm/plex-sans-condensed": "^2.0.0",
+				"@ibm/plex-serif": "^2.0.0",
+				react: "^18.2.0",
+				"react-dom": "^18.2.0",
+				"react-intl": "^5.25.1",
+				"react-scripts": "5.0.1",
+				sass: "^1.99.0",
+			},
 			eslintConfig: {
 				extends: ["react-app"],
 			},
@@ -119,7 +107,7 @@ function generatePackageJson(appName, includeCarbon) {
 					"last 1 safari version",
 				],
 			},
-			...(includeCarbon ? { devDependencies: { copyfiles: "^2.4.1" } } : {}),
+			devDependencies: { copyfiles: "^2.4.1" },
 		},
 		null,
 		2
@@ -155,14 +143,13 @@ root.render(<App />);
 `;
 }
 
-function generateAppJs(appName, includeCarbon, includeSampleNodes) {
+function generateAppJs(appName) {
 	const title = appName
 		.split("-")
 		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
 		.join(" ");
 
-	if (includeCarbon) {
-		return `import React, { useRef, useEffect, useState } from 'react';
+	return `import React, { useRef, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { CommonCanvas, CanvasController } from '@elyra/canvas';
 import { Toggle } from '@carbon/react';
@@ -226,45 +213,6 @@ function App() {
 
 export default App;
 `;
-	}
-
-	// Minimal version without Carbon styling
-	return `import React, { useRef, useEffect } from 'react';
-import { IntlProvider } from 'react-intl';
-import { CommonCanvas, CanvasController } from '@elyra/canvas';
-import flowData from './pipeline-flow.json';
-import paletteData from './palette.json';
-import '@elyra/canvas/dist/styles/common-canvas.min.css';
-
-function App() {
-  const canvasController = useRef(new CanvasController());
-
-  useEffect(() => {
-    canvasController.current.setPipelineFlow(flowData);
-    canvasController.current.setPipelineFlowPalette(paletteData);
-    canvasController.current.openPalette();
-  }, []);
-
-  const canvasConfig = {
-    enablePaletteLayout: "Flyout",
-    enableToolbarLayout: "Top",
-    enableKeyboardNavigation: true
-  };
-
-  return (
-    <IntlProvider locale="en">
-      <div style={{ height: '100vh' }}>
-        <CommonCanvas
-          canvasController={canvasController.current}
-          config={canvasConfig}
-        />
-      </div>
-    </IntlProvider>
-  );
-}
-
-export default App;
-`;
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
@@ -279,15 +227,12 @@ async function main() {
 	const nameArg = args.find((a) => !a.startsWith("-"));
 
 	let appName;
-	let includeCarbon;
 	let includeSampleNodes;
 
 	if (useDefaults) {
 		appName = slugify(nameArg || "my-elyra-app");
-		includeCarbon = true;
 		includeSampleNodes = true;
 		console.log(`App name:             ${appName}`);
-		console.log(`Carbon styling:       yes`);
 		console.log(`Sample nodes & flow:  yes`);
 	} else {
 		const rl = createInterface({ input, output });
@@ -299,12 +244,6 @@ async function main() {
 				const raw = await prompt(rl, "App name", "my-elyra-app");
 				appName = slugify(raw);
 			}
-
-			includeCarbon = await confirm(
-				rl,
-				"\nInclude Carbon Design System styling (theme toggle, IBM Plex fonts)?",
-				true
-			);
 
 			includeSampleNodes = await confirm(
 				rl,
@@ -333,7 +272,7 @@ async function main() {
 		// ── package.json, index.html, src/index.js ──
 		writeFileSync(
 			join(projectDir, "package.json"),
-			generatePackageJson(appName, includeCarbon)
+			generatePackageJson(appName)
 		);
 		writeFileSync(
 			join(projectDir, "public", "index.html"),
@@ -342,22 +281,14 @@ async function main() {
 		writeFileSync(join(projectDir, "src", "index.js"), generateIndexJs());
 		writeFileSync(
 			join(projectDir, "src", "App.js"),
-			generateAppJs(appName, includeCarbon, includeSampleNodes)
+			generateAppJs(appName)
 		);
 
 		// ── Carbon styling files ──
-		if (includeCarbon) {
-			const src = join(TEMPLATE_DIR, "src");
-			copyFileSync(join(src, "App.scss"), join(projectDir, "src", "App.scss"));
-			copyFileSync(
-				join(src, "carbon.scss"),
-				join(projectDir, "src", "carbon.scss")
-			);
-			copyFileSync(
-				join(src, "common.scss"),
-				join(projectDir, "src", "common.scss")
-			);
-		}
+		const src = join(TEMPLATE_DIR, "src");
+		copyFileSync(join(src, "App.scss"), join(projectDir, "src", "App.scss"));
+		copyFileSync(join(src, "carbon.scss"), join(projectDir, "src", "carbon.scss"));
+		copyFileSync(join(src, "common.scss"), join(projectDir, "src", "common.scss"));
 
 		// ── Palette & flow data ──
 		const templateSrc = join(TEMPLATE_DIR, "src");
