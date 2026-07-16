@@ -44,6 +44,14 @@ async function confirm(rl, question, defaultYes = true) {
 	return answer.trim().toLowerCase().startsWith("y");
 }
 
+async function selectOption(rl, question, options) {
+	console.log(`\n${question}`);
+	options.forEach((opt, i) => console.log(`  ${i + 1}. ${opt}`));
+	const answer = await rl.question(`Select [1-${options.length}] (1): `);
+	const idx = parseInt(answer, 10) - 1;
+	return idx >= 0 && idx < options.length ? idx : 0;
+}
+
 function slugify(name) {
 	return (
 		name
@@ -143,7 +151,7 @@ root.render(<App />);
 `;
 }
 
-function generateAppJs(appName) {
+function generateAppJs(appName, nodeFormat, useContextToolbar, linkType, snapToGrid) {
 	const title = appName
 		.split("-")
 		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -180,7 +188,11 @@ function App() {
   const canvasConfig = {
     enablePaletteLayout: "Flyout",
     enableToolbarLayout: "Top",
-    enableKeyboardNavigation: true
+    enableKeyboardNavigation: true,
+    enableNodeFormatType: "${nodeFormat}",
+    enableContextToolbar: ${useContextToolbar},
+    enableLinkType: "${linkType}",
+    enableSnapToGridType: "${snapToGrid}"
   };
 
   return (
@@ -226,17 +238,33 @@ async function main() {
 		args.includes("--defaults") || args.includes("-y") || !process.stdin.isTTY;
 	const nameArg = args.find((a) => !a.startsWith("-"));
 
+	const NODE_FORMATS = ["Horizontal", "Vertical"];
+	const LINK_TYPES = ["Curve", "Elbow", "Parallax", "Straight"];
+	const SNAP_TYPES = ["None", "During", "After"];
+
 	let appName;
 	let includeSamplePalette;
 	let includeSampleFlow;
+	let nodeFormat;
+	let useContextToolbar;
+	let linkType;
+	let snapToGrid;
 
 	if (useDefaults) {
 		appName = slugify(nameArg || "elyra-canvas-app");
 		includeSamplePalette = true;
 		includeSampleFlow = true;
-		console.log(`App name:        ${appName}`);
-		console.log(`Sample palette:  yes`);
-		console.log(`Sample flow:     yes`);
+		nodeFormat = "Horizontal";
+		useContextToolbar = true;
+		linkType = "Curve";
+		snapToGrid = "None";
+		console.log(`App name:           ${appName}`);
+		console.log(`Sample palette:     yes`);
+		console.log(`Sample flow:        yes`);
+		console.log(`Node format:        ${nodeFormat}`);
+		console.log(`Context toolbar:    yes`);
+		console.log(`Link type:          ${linkType}`);
+		console.log(`Snap to grid:       ${snapToGrid}`);
 	} else {
 		const rl = createInterface({ input, output });
 		try {
@@ -259,6 +287,33 @@ async function main() {
 				"\nInclude a sample pipeline flow?",
 				true
 			);
+
+			const nodeFormatIdx = await selectOption(
+				rl,
+				"Node display format:",
+				NODE_FORMATS
+			);
+			nodeFormat = NODE_FORMATS[nodeFormatIdx];
+
+			useContextToolbar = await confirm(
+				rl,
+				"\nUse context toolbars instead of context menus?",
+				true
+			);
+
+			const linkTypeIdx = await selectOption(
+				rl,
+				"Link (connection) type:",
+				LINK_TYPES
+			);
+			linkType = LINK_TYPES[linkTypeIdx];
+
+			const snapIdx = await selectOption(
+				rl,
+				"Snap nodes to grid:",
+				SNAP_TYPES
+			);
+			snapToGrid = SNAP_TYPES[snapIdx];
 		} finally {
 			rl.close();
 		}
@@ -290,7 +345,7 @@ async function main() {
 		writeFileSync(join(projectDir, "src", "index.js"), generateIndexJs());
 		writeFileSync(
 			join(projectDir, "src", "App.js"),
-			generateAppJs(appName)
+			generateAppJs(appName, nodeFormat, useContextToolbar, linkType, snapToGrid)
 		);
 
 		// ── Carbon styling files ──
