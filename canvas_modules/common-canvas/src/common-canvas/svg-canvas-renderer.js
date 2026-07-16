@@ -585,7 +585,7 @@ export default class SVGCanvasRenderer {
 			.attr("width", svgRect.width)
 			.attr("x", 0)
 			.attr("y", 0)
-			.attr("class", "d3-debug-bounds-darkorange");
+			.attr("class", "d3-bounds-initial-viewport");
 
 		grp
 			.append("rect")
@@ -593,7 +593,7 @@ export default class SVGCanvasRenderer {
 			.attr("width", transformedSVGRect.width - 2)
 			.attr("x", transformedSVGRect.x)
 			.attr("y", transformedSVGRect.y)
-			.attr("class", "d3-debug-bounds-red");
+			.attr("class", "d3-bounds-viewport");
 
 		if (canv) {
 			grp
@@ -602,7 +602,7 @@ export default class SVGCanvasRenderer {
 				.attr("width", canv.width)
 				.attr("x", canv.left)
 				.attr("y", canv.top)
-				.attr("class", "d3-debug-bounds-blue");
+				.attr("class", "d3-bounds-objects");
 		}
 
 		if (canvWithPadding) {
@@ -612,7 +612,7 @@ export default class SVGCanvasRenderer {
 				.attr("width", canvWithPadding.width)
 				.attr("x", canvWithPadding.left)
 				.attr("y", canvWithPadding.top)
-				.attr("class", "d3-debug-bounds-green");
+				.attr("class", "d3-bounds-objects-padding");
 		}
 
 		if (this.config.enableBoundingRectangles &&

@@ -214,22 +214,22 @@ $link-highlight-color: carbon.$support-info;
 
 /* Debug bounding-box rectangle classes (only visible when enableBoundingRectangles is true) */
 
-.d3-debug-bounds-darkorange {
+.d3-bounds-initial-viewport {
 	fill: none;
 	stroke: darkorange;
 }
 
-.d3-debug-bounds-red {
+.d3-bounds-viewport {
 	fill: none;
 	stroke: red;
 }
 
-.d3-debug-bounds-blue {
+.d3-bounds-objects {
 	fill: none;
 	stroke: blue;
 }
 
-.d3-debug-bounds-green {
+.d3-bounds-objects-padding {
 	fill: none;
 	stroke: green;
 }
