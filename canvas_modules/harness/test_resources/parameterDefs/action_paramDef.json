@@ -370,8 +370,7 @@
           "default": "Accessible control - action image right"
         },
         "description": {
-          "default": "oneofselect control with action image placement right",
-          "placement": "on_panel"
+          "default": "oneofselect control with action image placement right"
         },
         "class_name": "oneofselect-control-class",
         "action_ref": "moon"
@@ -412,8 +411,7 @@
           "default": "Accessible control - action image left"
         },
         "description": {
-          "default": "oneofselect control with action image placement left",
-          "placement": "on_panel"
+          "default": "oneofselect control with action image placement left"
         },
         "action_ref": "moon1"
       },
