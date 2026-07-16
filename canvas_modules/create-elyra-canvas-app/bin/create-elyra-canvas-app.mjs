@@ -21,6 +21,7 @@ import {
 	mkdirSync,
 	copyFileSync,
 	writeFileSync,
+	readFileSync,
 	readdirSync,
 	existsSync,
 } from "fs";
@@ -76,163 +77,12 @@ function copyDir(src, dest) {
 	}
 }
 
-// ─── File generators ────────────────────────────────────────────────────────
-
-function generatePackageJson(appName) {
-	return JSON.stringify(
-		{
-			name: appName,
-			version: "0.1.0",
-			type: "module",
-			description: `${appName} - an Elyra Canvas application`,
-			scripts: {
-				dev: "vite",
-				build: "vite build",
-				preview: "vite preview",
-			},
-			dependencies: {
-				"@carbon/icons-react": "^11.78.0",
-				"@carbon/react": "^1.105.0",
-				"@elyra/canvas": "^13.46.1",
-				"@ibm/plex-mono": "^1.1.0",
-				"@ibm/plex-sans": "^1.1.0",
-				"@ibm/plex-sans-condensed": "^2.0.0",
-				"@ibm/plex-serif": "^2.0.0",
-				react: "^18.2.0",
-				"react-dom": "^18.2.0",
-				"react-intl": "^5.25.1",
-			},
-			devDependencies: {
-				"@vitejs/plugin-react": "^4.3.0",
-				sass: "^1.99.0",
-				vite: "^5.0.0",
-			},
-		},
-		null,
-		2
-	);
-}
-
-function generateIndexHtml(appName) {
-	return `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="${appName}" />
-    <title>${appName}</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
-`;
-}
-
-function generateMainJsx() {
-	return `import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App.jsx';
-
-const root = createRoot(document.getElementById('root'));
-root.render(<App />);
-`;
-}
-
-function generateViteConfig() {
-	return `import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-export default defineConfig({
-  plugins: [react()],
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: "modern-compiler",
-        loadPaths: ["node_modules"],
-      },
-    },
-  },
-});
-`;
-}
-
-function generateAppJs(appName, nodeFormat, useContextToolbar, linkType, snapToGrid) {
-	const title = appName
-		.split("-")
-		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-		.join(" ");
-
-	return `import React, { useRef, useEffect, useState } from 'react';
-import { IntlProvider } from 'react-intl';
-import { CommonCanvas, CanvasController } from '@elyra/canvas';
-import { Toggle } from '@carbon/react';
-import flowData from './pipeline-flow.json';
-import paletteData from './palette.json';
-import '@elyra/canvas/dist/styles/common-canvas.min.css';
-import './App.scss';
-
-function App() {
-  const title = "${title}";
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-
-  const canvasController = useRef(new CanvasController());
-
-  useEffect(() => {
-    canvasController.current.setPipelineFlow(flowData);
-    canvasController.current.setPipelineFlowPalette(paletteData);
-    canvasController.current.openPalette();
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.setAttribute(
-      'data-carbon-theme',
-      isDarkTheme ? 'g90' : 'g10'
-    );
-  }, [isDarkTheme]);
-
-  const canvasConfig = {
-    enablePaletteLayout: "Flyout",
-    enableToolbarLayout: "Top",
-    enableKeyboardNavigation: true,
-    enableNodeFormatType: "${nodeFormat}",
-    enableContextToolbar: ${useContextToolbar},
-    enableLinkType: "${linkType}",
-    enableSnapToGridType: "${snapToGrid}"
-  };
-
-  return (
-    <IntlProvider locale="en">
-      <div className="App">
-        <div className="header">
-          <h1>{title}</h1>
-          <div className="theme-toggle">
-            <Toggle
-              id="theme-toggle"
-              labelText="Theme"
-              labelA="Light"
-              labelB="Dark"
-              toggled={isDarkTheme}
-              onToggle={(checked) => setIsDarkTheme(checked)}
-              size="sm"
-            />
-          </div>
-        </div>
-        <div className="canvas-container">
-          <CommonCanvas
-            canvasController={canvasController.current}
-            config={canvasConfig}
-          />
-        </div>
-      </div>
-    </IntlProvider>
-  );
-}
-
-export default App;
-`;
+function renderTemplate(filePath, vars = {}) {
+	let content = readFileSync(filePath, "utf8");
+	for (const [key, value] of Object.entries(vars)) {
+		content = content.replaceAll(`{{${key}}}`, value);
+	}
+	return content;
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
@@ -341,19 +191,39 @@ async function main() {
 		mkdirSync(join(projectDir, "public", "icons"), { recursive: true });
 		mkdirSync(join(projectDir, "src"), { recursive: true });
 
+		const appTitle = appName
+			.split("-")
+			.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+			.join(" ");
+
 		// ── Root config files ──
 		writeFileSync(
 			join(projectDir, "package.json"),
-			generatePackageJson(appName)
+			renderTemplate(join(TEMPLATE_DIR, "package.json"), { APP_NAME: appName })
 		);
-		writeFileSync(join(projectDir, "index.html"), generateIndexHtml(appName));
-		writeFileSync(join(projectDir, "vite.config.js"), generateViteConfig());
+		writeFileSync(
+			join(projectDir, "index.html"),
+			renderTemplate(join(TEMPLATE_DIR, "index.html"), { APP_NAME: appName })
+		);
+		copyFileSync(
+			join(TEMPLATE_DIR, "vite.config.js"),
+			join(projectDir, "vite.config.js")
+		);
 
 		// ── src/ ──
-		writeFileSync(join(projectDir, "src", "main.jsx"), generateMainJsx());
+		copyFileSync(
+			join(TEMPLATE_DIR, "src", "main.jsx"),
+			join(projectDir, "src", "main.jsx")
+		);
 		writeFileSync(
 			join(projectDir, "src", "App.jsx"),
-			generateAppJs(appName, nodeFormat, useContextToolbar, linkType, snapToGrid)
+			renderTemplate(join(TEMPLATE_DIR, "src", "App.jsx"), {
+				APP_TITLE: appTitle,
+				NODE_FORMAT: nodeFormat,
+				USE_CONTEXT_TOOLBAR: useContextToolbar,
+				LINK_TYPE: linkType,
+				SNAP_TO_GRID: snapToGrid,
+			})
 		);
 
 		// ── Carbon styling files ──
