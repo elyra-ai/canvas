@@ -50,7 +50,7 @@ function slugify(name) {
 			.toLowerCase()
 			.replace(/\s+/g, "-")
 			.replace(/[^a-z0-9-]/g, "")
-			.replace(/^-+|-+$/g, "") || "my-elyra-app"
+			.replace(/^-+|-+$/g, "") || "elyra-canvas-app"
 	);
 }
 
@@ -230,7 +230,7 @@ async function main() {
 	let includeSampleNodes;
 
 	if (useDefaults) {
-		appName = slugify(nameArg || "my-elyra-app");
+		appName = slugify(nameArg || "elyra-canvas-app");
 		includeSampleNodes = true;
 		console.log(`App name:             ${appName}`);
 		console.log(`Sample nodes & flow:  yes`);
@@ -241,7 +241,7 @@ async function main() {
 				appName = slugify(nameArg);
 				console.log(`App name: ${appName}`);
 			} else {
-				const raw = await prompt(rl, "App name", "my-elyra-app");
+				const raw = await prompt(rl, "App name", "elyra-canvas-app");
 				appName = slugify(raw);
 			}
 
