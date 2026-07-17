@@ -9,7 +9,7 @@
     "npm": ">= 6"
   },
   "type": "module",
-  "devDependencies": {
+  "dependencies": {
     "eslint-plugin-jsx-a11y": "^6.10.2"
   }
 }
