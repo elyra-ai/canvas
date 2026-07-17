@@ -560,7 +560,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(tableData).to.have.length(2);
 		tableUtilsRTL.clickTableRows(summaryPanel, [1]);
 		deleteButton = summaryPanel.querySelectorAll("button.delete-button");
-		fireEvent.click(deleteButton[0]);
+		fireEvent.click(deleteButton[1]);
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(actual).to.equal(null);
 	});
