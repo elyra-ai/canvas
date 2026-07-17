@@ -80,8 +80,13 @@ class CanvasBottomPanel extends React.Component {
 		// Assume the bottom panel is zero height if it has not yet fully rendered.
 		const bottomPanelHeight = this.bottomPanelRef?.current ? this.bottomPanelRef.current.getBoundingClientRect().height : 0;
 
-		// Max Height should be a percentage of the total available height (center panel + bottom panel)
-		const maxHeight = (centerPanelHeight + bottomPanelHeight) * MAX_HEIGHT_EXTEND_PERCENT;
+		// Max Height should be a percentage of the total available height (center panel + bottom panel).
+		// If the total is zero the panels have not yet rendered so use ht unclamped.
+		const totalHeight = centerPanelHeight + bottomPanelHeight;
+		if (totalHeight === 0) {
+			return ht;
+		}
+		const maxHeight = totalHeight * MAX_HEIGHT_EXTEND_PERCENT;
 		const height = Math.min(Math.max(ht, this.minHeight), maxHeight);
 
 		return height;
