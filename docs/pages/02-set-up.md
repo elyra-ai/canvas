@@ -147,3 +147,27 @@ var buildTasks = ["copy:fonts"];
 If you intend to configure Common Properties to use the, now superseded, React-virtualized tables by setting `enableTanstackTable` [configuration](/04.08-properties-config/#properties-config) property to `false` then you will need to also include the react-virtualized styles:
 
 - react-virtualized/styles.css
+
+## IBM Telemetry
+
+`@elyra/canvas` uses [IBM Telemetry](https://github.com/ibm-telemetry/telemetry-js) to collect de-identified, anonymized usage metrics. Telemetry runs automatically via a `postinstall` hook the first time the package is installed as a dependency.
+
+**What is collected:**
+
+- Which `@elyra/canvas` components (e.g. `CommonCanvas`, `CommonProperties`, `FlexibleTable`) are used as JSX elements in the consuming project's source code, along with the names of props passed to those components from an explicit allowlist. A small set of safe, enumerated string values (e.g. `"sm"`, `"md"`, `"top"`, `"bottom"`) may also be captured. No free-text user data or prop values outside this allowlist are ever collected.
+- The names and versions of npm packages declared as dependencies in the consuming project.
+
+**What is not collected:**
+
+- User-provided data, application content, or any prop values beyond the safe enumerated string allowlist defined in `telemetry.yml`.
+- JavaScript function calls or token-level source code.
+
+**Where data is sent:**
+
+Data is transmitted to IBM's telemetry ingestion endpoint. The collected metrics are currently only available to IBM employees. Learn more at [https://github.com/ibm-telemetry/telemetry-js](https://github.com/ibm-telemetry/telemetry-js).
+
+**Opting out:**
+
+By installing this package as a dependency you are agreeing to telemetry collection. To opt out, set the environment variable `IBM_TELEMETRY_DISABLED=true` in your build environment, or follow the instructions at [Opting out of IBM Telemetry data collection](https://github.com/ibm-telemetry/telemetry-js/tree/main#opting-out-of-ibm-telemetry-data-collection).
+
+For further details on what IBM Telemetry collects and how it works, see the [IBM Telemetry documentation](https://github.com/ibm-telemetry/telemetry-js/tree/main#ibm-telemetry-collection-basics).

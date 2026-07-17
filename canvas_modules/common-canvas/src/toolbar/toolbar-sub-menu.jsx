@@ -20,7 +20,7 @@ import ToolbarSubMenuItem from "./toolbar-sub-menu-item.jsx";
 import ToolbarDividerItem from "./toolbar-divider-item";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
-import { adjustSubAreaPosition, generateSubAreaStyle } from "./toolbar-sub-utils.js";
+import { adjustSubAreaPosition, applySubAreaInitialStyle } from "./toolbar-sub-utils.js";
 
 class ToolbarSubMenu extends React.Component {
 	constructor(props) {
@@ -37,6 +37,9 @@ class ToolbarSubMenu extends React.Component {
 	}
 
 	componentDidMount() {
+		if (this.props.isCascadeMenu) {
+			applySubAreaInitialStyle(this.areaRef, this.props.expandDirection, this.props.actionItemRect);
+		}
 		if (this.props.containingDivId && this.props.subMenuActions?.length > 0) {
 			adjustSubAreaPosition(this.areaRef,
 				this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
@@ -61,6 +64,9 @@ class ToolbarSubMenu extends React.Component {
 	}
 
 	componentDidUpdate() {
+		if (this.props.isCascadeMenu) {
+			applySubAreaInitialStyle(this.areaRef, this.props.expandDirection, this.props.actionItemRect);
+		}
 		if (this.props.containingDivId && this.props.subMenuActions?.length > 0) {
 			adjustSubAreaPosition(this.areaRef,
 				this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
@@ -244,14 +250,11 @@ class ToolbarSubMenu extends React.Component {
 
 	render() {
 		if (this.props.subMenuActions?.length > 0) {
-			const style = this.props.isCascadeMenu
-				? generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect)
-				: null;
-
+			const cascadeClass = this.props.isCascadeMenu ? " subarea-cascade" : "";
 			this.subMenuItems = this.generateSubMenuItems();
 
 			return (
-				<div ref={(ref) => (this.areaRef = ref)} style={style} className={"toolbar-popover-list submenu"}
+				<div ref={(ref) => (this.areaRef = ref)} className={"toolbar-popover-list submenu" + cascadeClass}
 					tabIndex={-1} onKeyDown={this.onKeyDown}
 				>
 					{this.subMenuItems}

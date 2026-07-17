@@ -16,7 +16,7 @@
 
 import { expect } from "chai";
 import sinon from "sinon";
-import { adjustSubAreaPosition, generateSubAreaStyle } from "../../src/toolbar/toolbar-sub-utils.js";
+import { adjustSubAreaPosition, applySubAreaInitialStyle } from "../../src/toolbar/toolbar-sub-utils.js";
 
 const CONTAINING_DIV_ID = "canvas-div";
 
@@ -214,14 +214,17 @@ describe("adjustSubAreaPosition positions a cascade fly-out (horizontal) in view
 		expect(subAreaRef.style.overflowY).to.equal("auto");
 	});
 
-	it("generateSubAreaStyle marks cascade sub-areas as position:fixed", () => {
+	it("applySubAreaInitialStyle sets initial top and left on the sub-area ref", () => {
 		const actionItemRect = { top: 100, bottom: 140, left: 200, right: 240, height: 40, width: 40 };
-		const horizontal = generateSubAreaStyle("horizontal", actionItemRect);
-		expect(horizontal.position).to.equal("fixed");
-		expect(horizontal.left).to.equal(actionItemRect.right);
-		expect(horizontal.top).to.equal(actionItemRect.top - 1);
 
-		const vertical = generateSubAreaStyle("vertical", actionItemRect);
-		expect(vertical.position).to.equal("fixed");
+		const hRef = makeSubAreaRef({ originTop: 0, height: 50 });
+		applySubAreaInitialStyle(hRef, "horizontal", actionItemRect);
+		expect(hRef.style.top).to.equal((actionItemRect.top - 1) + "px");
+		expect(hRef.style.left).to.equal(actionItemRect.right + "px");
+
+		const vRef = makeSubAreaRef({ originTop: 0, height: 50 });
+		applySubAreaInitialStyle(vRef, "vertical", actionItemRect);
+		expect(vRef.style.top).to.equal((actionItemRect.bottom + 1) + "px");
+		expect(vRef.style.left).to.equal(actionItemRect.left + "px");
 	});
 });
