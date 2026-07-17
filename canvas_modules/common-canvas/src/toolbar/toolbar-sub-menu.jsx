@@ -31,6 +31,7 @@ class ToolbarSubMenu extends React.Component {
 		};
 
 		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onPageScroll = this.onPageScroll.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
 		this.setSubMenuFocus = this.setSubMenuFocus.bind(this);
 	}
@@ -39,6 +40,14 @@ class ToolbarSubMenu extends React.Component {
 		if (this.props.containingDivId && this.props.subMenuActions?.length > 0) {
 			adjustSubAreaPosition(this.areaRef,
 				this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
+		}
+
+		// A cascade sub-menu is position:fixed (so it can escape a scrollable
+		// parent menu's overflow). Because fixed positioning is relative to the
+		// viewport, we close the sub-menu if the page scrolls, otherwise it would
+		// stay pinned to the viewport while the toolbar scrolls away.
+		if (this.props.isCascadeMenu) {
+			window.addEventListener("scroll", this.onPageScroll, true);
 		}
 
 		if (this.state.focusAction === "subarea") {
@@ -65,6 +74,18 @@ class ToolbarSubMenu extends React.Component {
 					this.setFocusAction(actionToSet);
 				}
 			}
+		}
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("scroll", this.onPageScroll, true);
+	}
+
+	// Closes this (cascade) sub-menu when the page scrolls. Scrolling within the
+	// sub-menu itself (e.g. a tall menu scrolling its own items) is ignored.
+	onPageScroll(evt) {
+		if (this.areaRef && !this.areaRef.contains(evt.target)) {
+			this.props.closeSubArea();
 		}
 	}
 

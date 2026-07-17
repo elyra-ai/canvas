@@ -25,17 +25,38 @@ class ToolbarSubPanel extends React.Component {
 		super(props);
 
 		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onPageScroll = this.onPageScroll.bind(this);
 		this.closeSubPanel = this.closeSubPanel.bind(this);
 	}
 
 	componentDidMount() {
 		adjustSubAreaPosition(this.areaRef,
 			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
+
+		// A cascade sub-panel is position:fixed (so it can escape a scrollable
+		// parent menu's overflow). Because fixed positioning is relative to the
+		// viewport, we close the sub-panel if the page scrolls, otherwise it would
+		// stay pinned to the viewport while the toolbar scrolls away.
+		if (this.props.isCascadeMenu) {
+			window.addEventListener("scroll", this.onPageScroll, true);
+		}
 	}
 
 	componentDidUpdate() {
 		adjustSubAreaPosition(this.areaRef,
 			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("scroll", this.onPageScroll, true);
+	}
+
+	// Closes this (cascade) sub-panel when the page scrolls. Scrolling within the
+	// sub-panel itself is ignored.
+	onPageScroll(evt) {
+		if (this.areaRef && !this.areaRef.contains(evt.target)) {
+			this.props.closeSubArea();
+		}
 	}
 
 	onKeyDown(evt) {
