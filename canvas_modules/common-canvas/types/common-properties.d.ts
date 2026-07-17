@@ -15,6 +15,7 @@
  */
 
 import React, { ReactNode } from "react";
+import type { Extension } from "@codemirror/state";
 import type { ParameterDefinitions, ExpressionInfo } from "@elyra/pipeline-schemas/types/index.d.ts";
 import type {
   CommonPropertiesController,
@@ -506,4 +507,15 @@ export interface CommonPropertiesProps {
 export declare class CommonProperties extends React.Component<CommonPropertiesProps> {
   applyPropertiesEditing: (closeEditor: boolean) => void;
 }
+
+/**
+ * A CodeMirror theme for the expression editor combining syntax highlighting
+ * class mappings and light/dark color rules. Follows the same pattern as
+ * @codemirror/theme-one-dark.
+ *
+ * Add to a CodeMirror EditorView's extensions array to apply the theme:
+ * @example
+ * new EditorView({ extensions: [...expressionEditorTheme] })
+ */
+export declare const expressionEditorTheme: Extension[];
 

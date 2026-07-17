@@ -2218,7 +2218,7 @@ export default class SVGCanvasRenderer {
 				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
 				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
 					obj
-						.attr("d", this.getPortArrowPath(this.getPortRadius(node)))
+						.attr("d", this.getPortArrowPath(node))
 						.attr("transform", this.getInputPortArrowPathTransform(port));
 				}
 			});
@@ -2330,7 +2330,7 @@ export default class SVGCanvasRenderer {
 				const portDisplayInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
 				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
 					obj
-						.attr("d", this.getPortArrowPath(this.getPortRadius(node)))
+						.attr("d", this.getPortArrowPath(node))
 						.attr("transform", this.getOutputPortArrowPathTransform(port));
 				}
 			});
@@ -3692,14 +3692,14 @@ export default class SVGCanvasRenderer {
 	updateInputPortArrowPath(nodeObj, node, portArrowClassName) {
 		const nodeGrp = d3.select(nodeObj);
 		nodeGrp.selectAll("." + portArrowClassName)
-			.attr("d", this.getPortArrowPath(this.getPortRadius(node)))
+			.attr("d", this.getPortArrowPath(node))
 			.attr("transform", (port) => this.getInputPortArrowPathTransform(port));
 	}
 
 	updateOutputPortArrowPath(nodeObj, node, portArrowClassName) {
 		const nodeGrp = d3.select(nodeObj);
 		nodeGrp.selectAll("." + portArrowClassName)
-			.attr("d", this.getPortArrowPath(this.getPortRadius(node)))
+			.attr("d", this.getPortArrowPath(node))
 			.attr("transform", (port) => this.getOutputPortArrowPathTransform(port));
 	}
 
@@ -6067,13 +6067,20 @@ export default class SVGCanvasRenderer {
 		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
 	}
 
-	// Returns a chevron arrow path scaled proportionally to the port circle radius.
-	// The proportions match the original hardcoded arrow (tip=2, halfHeight=3) which
-	// was designed for the vertical layout default portRadius of 6.
-	getPortArrowPath(radius) {
-		const r = radius || 6;
-		const tip = (r / 3).toFixed(2);
-		const halfH = (r / 2).toFixed(2);
+	// Returns a chevron arrow path for the port circle of the given node.
+	// For nodes with the "port-arcs" nodeShape the arrow is scaled uniformly
+	// so that the tail corners touch the edge of the port circle, making the
+	// arrow fill the circle while preserving the same tip angle. The scale
+	// factor is r / sqrt((r/3)^2 + (r/2)^2) = 6/sqrt(13).
+	// For all other shapes the original proportions are used (tip = r/3,
+	// halfH = r/2) which places the arrow slightly inside the circle.
+	getPortArrowPath(node) {
+		const r = this.getPortRadius(node);
+		const scale = node.layout.nodeShape === SHAPE_PORT_ARCS
+			? (6 / Math.sqrt(13))
+			: 1;
+		const tip = (r / 3 * scale).toFixed(2);
+		const halfH = (r / 2 * scale).toFixed(2);
 		return `M -${tip} ${halfH} L ${tip} 0 -${tip} -${halfH}`;
 	}
 
