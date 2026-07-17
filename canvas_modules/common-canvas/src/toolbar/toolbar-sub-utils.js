@@ -110,9 +110,9 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 
 	} else {
 		// Horizontal expansion is used by cascade sub-menus and sub-panels. They
-		// are position:fixed (see generateSubAreaStyle) so that they are not clipped
-		// by a scrollable parent menu's overflow, which means we position them in
-		// viewport coordinates here.
+		// are position:fixed (see .subarea-cascade in toolbar.scss) so that they
+		// are not clipped by a scrollable parent menu's overflow, which means we
+		// position them in viewport coordinates here.
 		const subAreaRect = subAreaRef.getBoundingClientRect();
 		const menuHeight = subAreaRef.scrollHeight;
 
@@ -144,26 +144,29 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 	}
 }
 
-export function generateSubAreaStyle(expandDirection, actionItemRect) {
-	if (!actionItemRect) {
-		return null;
+/** Applies the initial position for a cascade sub-area directly to the DOM
+ * element via CSSOM writes so that no inline style= attribute is created.
+ * This is the CSSOM equivalent of the former generateSubAreaStyle() React prop
+ * and is called before adjustSubAreaPosition() refines the placement.
+ *
+ * @param {HTMLElement} subAreaRef - The sub-area DOM element.
+ * @param {string} expandDirection - "vertical" or "horizontal".
+ * @param {object} actionItemRect - Bounding rect of the triggering toolbar item.
+ */
+export function applySubAreaInitialStyle(subAreaRef, expandDirection, actionItemRect) {
+	if (!subAreaRef || !actionItemRect) {
+		return;
 	}
 
 	// Cascade sub-areas use position:fixed so they are not clipped by a scrollable
 	// parent menu's overflow. Because they are fixed, the initial position is
 	// expressed in viewport coordinates (adjustSubAreaPosition refines it).
-	if (expandDirection === "vertical") {
-		return {
-			position: "fixed",
-			top: actionItemRect.bottom + 1,
-			left: actionItemRect.left
-		};
-	}
-	return {
-		position: "fixed",
-		top: actionItemRect.top - 1,
-		left: actionItemRect.right
-	};
+	subAreaRef.style.top = (expandDirection === "vertical"
+		? actionItemRect.bottom + 1
+		: actionItemRect.top - 1) + "px";
+	subAreaRef.style.left = (expandDirection === "vertical"
+		? actionItemRect.left
+		: actionItemRect.right) + "px";
 }
 
 

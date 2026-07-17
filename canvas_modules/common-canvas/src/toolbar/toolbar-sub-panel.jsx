@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { adjustSubAreaPosition, generateSubAreaStyle } from "./toolbar-sub-utils.js";
+import { adjustSubAreaPosition, applySubAreaInitialStyle } from "./toolbar-sub-utils.js";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
 class ToolbarSubPanel extends React.Component {
@@ -30,6 +30,9 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	componentDidMount() {
+		if (this.props.isCascadeMenu) {
+			applySubAreaInitialStyle(this.areaRef, this.props.expandDirection, this.props.actionItemRect);
+		}
 		adjustSubAreaPosition(this.areaRef,
 			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
 
@@ -43,6 +46,9 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	componentDidUpdate() {
+		if (this.props.isCascadeMenu) {
+			applySubAreaInitialStyle(this.areaRef, this.props.expandDirection, this.props.actionItemRect);
+		}
 		adjustSubAreaPosition(this.areaRef,
 			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
 	}
@@ -83,13 +89,11 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	render() {
-		const style = this.props.isCascadeMenu
-			? generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect)
-			: null;
+		const cascadeClass = this.props.isCascadeMenu ? " subarea-cascade" : "";
 
 		if (this.props.subPanel) {
 			return (
-				<div ref={(ref) => (this.areaRef = ref)} style={style} className={"toolbar-popover-list subpanel"} tabIndex={-1}
+				<div ref={(ref) => (this.areaRef = ref)} className={"toolbar-popover-list subpanel" + cascadeClass} tabIndex={-1}
 					onKeyDown={this.onKeyDown} onFocus={this.onFocus}
 				>
 					<this.props.subPanel closeSubPanel={this.closeSubPanel} subPanelData={this.props.subPanelData} />
