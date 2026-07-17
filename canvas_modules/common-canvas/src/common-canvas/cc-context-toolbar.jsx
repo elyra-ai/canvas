@@ -142,7 +142,11 @@ class CommonCanvasContextToolbar extends React.Component {
 		if (!this.toolbarDivRef.current) {
 			return;
 		}
+
 		const el = this.toolbarDivRef.current;
+
+		// Note: cmPos is already adjusted as a starting point for the context
+		// toolbar position by a calculation in svg-canvas-renderer.js.
 		const pos = this.props.contextSource ? this.props.contextSource.cmPos || { x: 0, y: 0 } : { x: 0, y: 0 };
 		const toolbarItems = this.props.contextMenuDef
 			? this.props.contextMenuDef.filter((cmItem) => cmItem.toolbarItem)
@@ -158,6 +162,7 @@ class CommonCanvasContextToolbar extends React.Component {
 			: pos.x - toolbarWidth;
 		let y = pos.y - ICON_SIZE_PLUS_GAP;
 
+		// Make sure the context toolbar is fully inside the viewport.
 		({ x, y } = this.adjustPosToFit(x, y, toolbarWidth, ICON_SIZE_PLUS_GAP));
 
 		el.style.setProperty("--cc-ctx-toolbar-left", x + "px");
