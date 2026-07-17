@@ -42,6 +42,16 @@ class CommonCanvasContextToolbar extends React.Component {
 		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
 		this.colorClicked = this.colorClicked.bind(this);
 		this.closeContextToolbar = this.closeContextToolbar.bind(this);
+
+		this.toolbarDivRef = React.createRef();
+	}
+
+	componentDidMount() {
+		this.applyToolbarPosition();
+	}
+
+	componentDidUpdate() {
+		this.applyToolbarPosition();
 	}
 
 	onMouseLeave(evt) {
@@ -125,6 +135,39 @@ class CommonCanvasContextToolbar extends React.Component {
 		// work correctly with different browser magnifications.
 		const reduction = overflowMenuItems.length > 0 ? 5 : 0;
 		return buttonsWidth + dividersWidth - reduction;
+	}
+
+	/** Sets CSS custom properties for toolbar position and width on the DOM node. */
+	applyToolbarPosition() {
+		if (!this.toolbarDivRef.current) {
+			return;
+		}
+
+		const el = this.toolbarDivRef.current;
+
+		// Note: cmPos is already adjusted as a starting point for the context
+		// toolbar position by a calculation in svg-canvas-renderer.js.
+		const pos = this.props.contextSource ? this.props.contextSource.cmPos || { x: 0, y: 0 } : { x: 0, y: 0 };
+		const toolbarItems = this.props.contextMenuDef
+			? this.props.contextMenuDef.filter((cmItem) => cmItem.toolbarItem)
+			: [];
+		let overflowMenuItems = this.props.contextMenuDef
+			? this.props.contextMenuDef.filter((cmItem) => !cmItem.toolbarItem)
+			: [];
+		overflowMenuItems = this.removeUnnecessaryDividers(overflowMenuItems);
+		const toolbarWidth = this.getContextToolbarWidth(toolbarItems, overflowMenuItems);
+
+		let x = this.shouldCenterJustifyToolbar()
+			? pos.x - (toolbarWidth / 2)
+			: pos.x - toolbarWidth;
+		let y = pos.y - ICON_SIZE_PLUS_GAP;
+
+		// Make sure the context toolbar is fully inside the viewport.
+		({ x, y } = this.adjustPosToFit(x, y, toolbarWidth, ICON_SIZE_PLUS_GAP));
+
+		el.style.setProperty("--cc-ctx-toolbar-left", x + "px");
+		el.style.setProperty("--cc-ctx-toolbar-top", y + "px");
+		el.style.setProperty("--cc-ctx-toolbar-width", toolbarWidth + "px");
 	}
 
 	// Removes leading and trailing dividers from the items array and any
@@ -231,26 +274,14 @@ class CommonCanvasContextToolbar extends React.Component {
 			let overflowMenuItems = this.props.contextMenuDef.filter((cmItem) => !cmItem.toolbarItem);
 			overflowMenuItems = this.removeUnnecessaryDividers(overflowMenuItems);
 			const toolbarConfig = this.getToolbarConfig({ toolbarItems, overflowMenuItems });
-			const toolbarWidth = this.getContextToolbarWidth(toolbarItems, overflowMenuItems);
-
-			// Note: cmPos is already adjusted as a starting point for the context
-			// toolbar position by a calculation in svg-canvas-renderer.js.
-			const pos = this.props.contextSource.cmPos || { x: 0, y: 0 };
-			let x = this.shouldCenterJustifyToolbar()
-				? pos.x - (toolbarWidth / 2)
-				: pos.x - toolbarWidth;
-			let y = pos.y - ICON_SIZE_PLUS_GAP;
-
-			// Make sure the context toolbar is fully inside the viewport.
-			({ x, y } = this.adjustPosToFit(x, y, toolbarWidth, ICON_SIZE_PLUS_GAP));
 
 			// Only set initial focus if context toolbar was opened via keyboard
 			const setInitialFocus = this.props.contextSource.cause === CAUSE_KEYBOARD;
 
 			contextToolbar = (
 				<div
+					ref={this.toolbarDivRef}
 					className={"context-toolbar floating-toolbar"}
-					style={{ left: x, top: y, width: toolbarWidth }}
 					onMouseEnter={this.onMouseEnter}
 					onMouseLeave={this.onMouseLeave}
 				>

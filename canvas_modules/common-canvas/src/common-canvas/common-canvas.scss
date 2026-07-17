@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,6 +147,10 @@ $panel-border-color: carbon.$border-subtle-01;
 // necessary because the width allocated to the context toolbar is reduced by
 // five pixels to force the overflow icon to be displayed.
 .context-toolbar  {
+	// width is set via CSS custom property applied by CSSOM (see cc-context-toolbar.jsx).
+	// It forces the overflow button to appear by constraining the available width.
+	width: var(--cc-ctx-toolbar-width, fit-content);
+
 	.toolbar-overflow-item {
 		button:focus {
 			border-color: transparent;
@@ -158,13 +162,9 @@ $panel-border-color: carbon.$border-subtle-01;
 .text-toolbar,
 .context-toolbar  {
 	position: absolute;
-	// For text toolbar - top and left will be calculated and set programmatically
-	// For context toolbar - top, left and width will be calculated and set programmatically.
-	// 'width' is set for the context toolbar because the overflow button must be forced to
-	// appear by setting the width appropriately (see cc-context-toolbar.jsx).
-	top: 0;
-	left: 0;
-	width: fit-content;
+	// top and left are set via CSS custom properties applied by CSSOM (see component files).
+	top: var(--cc-text-toolbar-top, var(--cc-ctx-toolbar-top, 0));
+	left: var(--cc-text-toolbar-left, var(--cc-ctx-toolbar-left, 0));
 	// This bottom border allows the canvas context toolbar to disappear, if the mouse
 	// cursor is immediately moved away from the toolbar, after it opens. That's because,
 	// when the toolbar opens, the border will be underneath the mouse cursor and so the
@@ -186,6 +186,8 @@ $panel-border-color: carbon.$border-subtle-01;
 
 // Text toolbar specific attributes.
 .text-toolbar  {
+	width: fit-content;
+
 	.toolbar-div {
 		animation: raise-toolbar 0.3s linear;
 		border: 1px solid carbon.$border-strong-01;
