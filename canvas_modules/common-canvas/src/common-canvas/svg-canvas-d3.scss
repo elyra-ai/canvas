@@ -205,8 +205,10 @@ $link-highlight-color: carbon.$support-info;
 	cursor: var(--canvas-cursor, default);
 }
 
-/* Node and comment body outline elements respond to --canvas-cursor during resize */
+/* Sizing hit-area elements drive the cursor during hover; body outline inherits it too */
 
+.d3-node-sizing,
+.d3-comment-sizing,
 .d3-node-body-outline,
 .d3-comment-rect {
 	cursor: var(--canvas-cursor, default);
