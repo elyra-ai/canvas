@@ -41,6 +41,11 @@ class CanvasBottomPanel extends React.Component {
 	componentDidMount() {
 		// Minimum height is fixed for bottom panel.
 		this.minHeight = 75;
+		this.applyHeight();
+	}
+
+	componentDidUpdate() {
+		this.applyHeight();
 	}
 
 	onMouseDown(e) {
@@ -75,11 +80,25 @@ class CanvasBottomPanel extends React.Component {
 		// Assume the bottom panel is zero height if it has not yet fully rendered.
 		const bottomPanelHeight = this.bottomPanelRef?.current ? this.bottomPanelRef.current.getBoundingClientRect().height : 0;
 
-		// Max Height should be a percentage of the total available height (center panel + bottom panel)
-		const maxHeight = (centerPanelHeight + bottomPanelHeight) * MAX_HEIGHT_EXTEND_PERCENT;
+		// Max Height should be a percentage of the total available height (center panel + bottom panel).
+		// If the total is zero the panels have not yet rendered so use ht unclamped.
+		const totalHeight = centerPanelHeight + bottomPanelHeight;
+		if (totalHeight === 0) {
+			return ht;
+		}
+		const maxHeight = totalHeight * MAX_HEIGHT_EXTEND_PERCENT;
 		const height = Math.min(Math.max(ht, this.minHeight), maxHeight);
 
 		return height;
+	}
+
+	/** Sets --bottom-panel-height on the panel element via CSSOM to avoid an inline style attribute. */
+	applyHeight() {
+		const el = this.bottomPanelRef.current;
+		if (!el) {
+			return;
+		}
+		el.style.setProperty("--bottom-panel-height", this.limitHeight(this.props.panelHeight) + "px");
 	}
 
 	render() {
@@ -87,12 +106,10 @@ class CanvasBottomPanel extends React.Component {
 		let bottomPanel = null;
 
 		if (this.props.bottomPanelIsOpen) {
-			const heightPx = this.limitHeight(this.props.panelHeight) + "px";
-
 			const className = "bottom-panel-drag" + (this.state.isBeingDragging ? " is-being-dragged" : "");
 
 			bottomPanel = (
-				<div ref={this.bottomPanelRef} className="bottom-panel" style={{ height: heightPx }} >
+				<div ref={this.bottomPanelRef} className="bottom-panel">
 					<div className={className} onMouseDown={this.onMouseDown} />
 					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}

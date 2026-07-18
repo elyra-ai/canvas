@@ -303,6 +303,13 @@ export default class AbstractTable extends React.Component {
 		this.setCurrentControlValueSelected(rows);
 	}
 
+	removeRow(rowIndex) {
+		const rows = this.props.value;
+		rows.splice(rowIndex, 1);
+		this.props.controller.removeErrorMessageRow({ name: this.props.propertyId.name, row: rowIndex });
+		this.setCurrentControlValueSelected(rows);
+	}
+
 	// selectSummaryRow is true if creating the makeSelectedEditRow header row
 	_makeCell(columnDef, controlValue, propertyName, rowIndex, colIndex, tableState, selectSummaryRow) {
 		const childPropertyId = {
@@ -777,7 +784,7 @@ export default class AbstractTable extends React.Component {
 								size="sm"
 								className="delete-button"
 								hasIconOnly
-								onClick={this.removeSelected}
+								onClick={this.removeRow.bind(this, rowIndex)}
 								renderIcon={TrashCan}
 								iconDescription={toolTip}
 							/>

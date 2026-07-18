@@ -38,6 +38,8 @@ class CommonContextMenu extends React.Component {
 		};
 		this.menuRefs = [];
 		this.subMenuRefs = [];
+		this.subMenuDivRefs = {};
+		this.subMenuPosData = {};
 
 		this.focusIndex = null; // Set to null so we know when it is not initialized.
 		this.subMenuFocusIndex = 0;
@@ -45,14 +47,21 @@ class CommonContextMenu extends React.Component {
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.itemSelected = this.itemSelected.bind(this);
 		this.colorClicked = this.colorClicked.bind(this);
+
+		this.menuPopoverRef = React.createRef();
 	}
 
 	componentDidMount() {
+		this.applyMenuPosition();
+		this.applySubMenuPositions();
 		this.focusIndex = this.focusIndex === null ? 0 : this.focusIndex;
 		this.menuRefs[this.focusIndex].current.focus();
 	}
 
 	componentDidUpdate() {
+		this.applyMenuPosition();
+		this.applySubMenuPositions();
+
 		if (this.state.displaySubMenuAction) {
 			this.subMenuFocusIndex = 0;
 			if (this.state.displaySubMenuAction !== ACTION_COLOR_BACKGROUND) {
@@ -120,6 +129,34 @@ class CommonContextMenu extends React.Component {
 				this.itemSelected(action);
 			}
 		}
+	}
+
+	/** Sets CSS custom properties for the root menu position on its DOM node. */
+	applyMenuPosition() {
+		if (!this.menuPopoverRef.current) {
+			return;
+		}
+		const menuSize = this.calculateMenuSize(this.props.menuDefinition);
+		const menuPos = this.calculateMenuPos(this.props.mousePos, menuSize, this.props.canvasRect);
+		const el = this.menuPopoverRef.current;
+		el.style.setProperty("--context-menu-left", menuPos.x + "px");
+		el.style.setProperty("--context-menu-top", menuPos.y + "px");
+	}
+
+	/** Sets CSS custom properties for each sub-menu position collected during render. */
+	applySubMenuPositions() {
+		Object.keys(this.subMenuDivRefs).forEach((action) => {
+			const ref = this.subMenuDivRefs[action];
+			const posData = this.subMenuPosData[action];
+			if (ref && ref.current && posData) {
+				ref.current.style.setProperty("--context-submenu-top", posData.top);
+				if ("left" in posData) {
+					ref.current.style.setProperty("--context-submenu-left", posData.left);
+				} else {
+					ref.current.style.removeProperty("--context-submenu-left");
+				}
+			}
+		});
 	}
 
 	itemSelected(data) {
@@ -342,6 +379,10 @@ class CommonContextMenu extends React.Component {
 			menuRefs.push(ref);
 		}
 
+		const subMenuDivRef = React.createRef();
+		this.subMenuDivRefs[menuItem.action] = subMenuDivRef;
+		this.subMenuPosData[menuItem.action] = subMenuPosStyle;
+
 		return (
 			<div key={index} ref={ref} className={menuItemClass} aria-haspopup tabIndex={-1} data-action={menuItem.action} role="menuitem"
 				onMouseEnter={onMouseEnter}
@@ -349,7 +390,7 @@ class CommonContextMenu extends React.Component {
 				onKeyDown={this.onKeyDown}
 			>
 				{menuItemContent}
-				<div style={subMenuPosStyle} className={subMenuClass}>
+				<div ref={subMenuDivRef} className={subMenuClass}>
 					{subMenuContent}
 				</div>
 			</div>
@@ -404,21 +445,17 @@ class CommonContextMenu extends React.Component {
 	}
 
 	render() {
-		// Reposition contextMenu so that it does not show off the screen
+		this.menuRefs = [];
+		this.subMenuDivRefs = {};
+		this.subMenuPosData = {};
 		const menuSize = this.calculateMenuSize(this.props.menuDefinition);
 		const menuPos = this.calculateMenuPos(this.props.mousePos, menuSize, this.props.canvasRect);
-		const posStyle = {
-			left: menuPos.x + "px",
-			top: menuPos.y + "px"
-		};
-
-		this.menuRefs = [];
 		const menuDefinition = this.ensureAllSubMenuItemsHaveAction(this.props.menuDefinition);
 		const menuInfo = this.buildMenu(menuDefinition, menuSize, menuPos, this.props.canvasRect);
 		this.menuRefs = menuInfo.menuRefs;
 
 		return (
-			<div id="context-menu-popover" role="menu" className="context-menu-popover" style={posStyle} onContextMenu={this.onContextMenu}>
+			<div ref={this.menuPopoverRef} id="context-menu-popover" role="menu" className="context-menu-popover" onContextMenu={this.onContextMenu}>
 				{menuInfo.menuItems}
 			</div>
 		);
