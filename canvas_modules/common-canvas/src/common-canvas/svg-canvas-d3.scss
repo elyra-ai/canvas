@@ -214,24 +214,24 @@ $link-highlight-color: carbon.$support-info;
 
 /* Debug bounding-box rectangle classes (only visible when enableBoundingRectangles is true) */
 
-.d3-bounds-initial-viewport {
+.d3-debug-bounds-darkorange {
 	fill: none;
-	stroke: darkorange;
+	stroke: carbon.$support-warning; // darkorange;
 }
 
-.d3-bounds-viewport {
+.d3-debug-bounds-red {
 	fill: none;
-	stroke: red;
+	stroke: carbon.$support-error; // red;
 }
 
-.d3-bounds-objects {
+.d3-debug-bounds-blue {
 	fill: none;
-	stroke: blue;
+	stroke: carbon.$support-info; // blue;
 }
 
-.d3-bounds-objects-padding {
+.d3-debug-bounds-green {
 	fill: none;
-	stroke: green;
+	stroke: carbon.$support-success; // green;
 }
 
 /* Ghost div and node used when dragging a node from the palette */
