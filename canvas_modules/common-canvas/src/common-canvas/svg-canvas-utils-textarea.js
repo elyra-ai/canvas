@@ -585,9 +585,9 @@ export default class SvgCanvasTextArea {
 			.append("foreignObject")
 			.attr("class", "d3-foreign-object-text-entry")
 			.attr("width", data.width)
-			.attr("height", data.height)
 			.attr("x", data.xPos)
-			.attr("y", data.yPos);
+			.attr("y", data.yPos)
+			.each((d, i, nodes) => nodes[i].style.setProperty("--textarea-height", data.height + "px"));
 
 		const textArea = this.foreignObjectLabel
 			.append("xhtml:textarea")
@@ -748,9 +748,9 @@ export default class SvgCanvasTextArea {
 			.append("foreignObject")
 			.attr("class", "d3-foreign-object-comment-text-entry")
 			.attr("width", data.width)
-			.attr("height", data.height)
 			.attr("x", data.xPos)
-			.attr("y", data.yPos);
+			.attr("y", data.yPos)
+			.each((d, i, nodes) => nodes[i].style.setProperty("--textarea-height", data.height + "px"));
 
 		this.foreignObjectComment
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
