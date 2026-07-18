@@ -17,14 +17,13 @@ import configs from "eslint-config-canvas";
 import globals from "globals";
 import importPlugin from "eslint-plugin-import";
 import js from "@eslint/js";
-import jsxA11y from "eslint-plugin-jsx-a11y";
 import reactConfigs from "../eslint-config-canvas/react.js";
 import reactPlugin from "eslint-plugin-react";
 
 export default [
 	importPlugin.flatConfigs.errors,
 	...configs,
-	...reactConfigs(jsxA11y),
+	...reactConfigs,
 	{
 		plugins: {
 			react: reactPlugin
