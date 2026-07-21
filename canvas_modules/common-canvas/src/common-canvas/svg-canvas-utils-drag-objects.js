@@ -105,7 +105,7 @@ export default class SVGCanvasUtilsDragObjects {
 				this.nodeSizingCursor = this.getCursorBasedOnDirection(this.nodeSizingDirection);
 				cursorType = this.nodeSizingCursor;
 			}
-			d3.select(d3Event.currentTarget).style("cursor", cursorType);
+			d3Event.currentTarget.parentNode.style.setProperty("--canvas-cursor", cursorType);
 		}
 	}
 
@@ -118,7 +118,7 @@ export default class SVGCanvasUtilsDragObjects {
 	}
 
 	mouseLeaveNodeSizingArea(d3Event) {
-		d3.select(d3Event.currentTarget).style("cursor", "default");
+		d3Event.currentTarget.parentNode.style.setProperty("--canvas-cursor", "default");
 	}
 
 	mouseEnterCommentSizingArea(d3Event, d) {
@@ -130,7 +130,7 @@ export default class SVGCanvasUtilsDragObjects {
 				this.commentSizingCursor = this.getCursorBasedOnDirection(this.commentSizingDirection);
 				cursorType = this.commentSizingCursor;
 			}
-			d3.select(d3Event.currentTarget).style("cursor", cursorType);
+			d3Event.currentTarget.parentNode.style.setProperty("--canvas-cursor", cursorType);
 		}
 	}
 
@@ -141,7 +141,7 @@ export default class SVGCanvasUtilsDragObjects {
 	}
 
 	mouseLeaveCommentSizingArea(d3Event) {
-		d3.select(d3Event.currentTarget).style("cursor", "default");
+		d3Event.currentTarget.parentNode.style.setProperty("--canvas-cursor", "default");
 	}
 
 	// Moves the object passed in (and any other selected objects) by the
