@@ -762,7 +762,7 @@ export default class SidePanelForms extends React.Component {
 					value={this.props.getStateValue("enteredMajorGridY")}
 				/>
 			</div>
-			<div className="harness-sidepanel-spacer" />
+			<div className="harness-sidepanel-gap" />
 			<div className="harness-snap-to-grid">
 				<TextInput
 					style={entrySize}
