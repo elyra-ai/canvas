@@ -103,7 +103,7 @@ class MultiCommandPanel extends React.Component {
 		const checkBoxes = this.generateCheckboxes();
 
 		return (
-			<div style={{ padding: 10, width: 170 }} onClick={this.onClick} >
+			<div className="harness-multi-command-panel" onClick={this.onClick} >
 				{ checkBoxes }
 				<Button kind="primary" size="sm" onClick={this.closePanel} >OK</Button>
 			</div>

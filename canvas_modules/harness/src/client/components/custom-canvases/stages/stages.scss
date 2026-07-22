@@ -189,3 +189,48 @@
 		pointer-events: none;
 	}
 }
+
+// CSP: replacements for inline style= attributes
+.harness-app-decoration {
+	height: 100%;
+	width: 100%;
+}
+
+.harness-app-decoration-outline {
+	fill: lightgray;
+	stroke: lightgray;
+}
+
+.harness-app-decoration-strip {
+	fill: gold;
+	stroke: gold;
+}
+
+.harness-app-decoration-tag {
+	position: absolute;
+	top: 20px;
+	left: 5px;
+}
+
+.harness-app-decoration-label {
+	position: absolute;
+	top: 30px;
+	left: 100px;
+}
+
+.harness-multi-command-panel {
+	padding: 10px;
+	width: 170px;
+}
+
+.harness-stages-palette-header {
+	border-bottom: 1px solid lightgray;
+	height: fit-content;
+	padding: 20px 18px;
+}
+
+.harness-stages-search-panel {
+	width: 300px;
+	padding: 20px;
+}
+

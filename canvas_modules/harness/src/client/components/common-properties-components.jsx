@@ -2293,11 +2293,11 @@ class CommonPropertiesComponents extends React.Component {
 			{contentActions}
 		</div>);
 
-		let rightFlyoutWidth = "0px";
-		let rightFlyout = (<div className="right-flyout-panel" style={{ width: rightFlyoutWidth }} />);
+		let rightFlyout = (<div className="right-flyout-panel harness-right-flyout-closed" />);
+		let mainContentClass = "harness-properties-documentation-container-main-content harness-main-content-flyout-closed";
 		if (this.state.showRightFlyout) {
-			rightFlyoutWidth = "318px";
-			rightFlyout = (<div className="right-flyout-panel" style={{ width: rightFlyoutWidth }}>
+			mainContentClass = "harness-properties-documentation-container-main-content harness-main-content-flyout-open";
+			rightFlyout = (<div className="right-flyout-panel harness-right-flyout-open">
 				<CommonProperties
 					propertiesInfo={this.state.rightFlyoutContent}
 					callbacks={{ actionHandler: this.flyoutActionHandler, controllerHandler: this.flyoutControllerHandler }}
@@ -2309,7 +2309,7 @@ class CommonPropertiesComponents extends React.Component {
 		return (
 			<div className="harness-properties-documentation-container">
 				{navBar}
-				<div className="harness-properties-documentation-container-main-content" style={{ width: "calc(100% - " + rightFlyoutWidth + " )" }}>
+				<div className={mainContentClass}>
 					{header}
 					{content}
 				</div>
