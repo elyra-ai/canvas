@@ -129,6 +129,13 @@
 	}
 }
 
+.elyra-CodeMirror {
+	.cm-editor {
+		height: var(--expression-editor-height);
+		min-height: var(--expression-editor-min-height);
+	}
+}
+
 .properties-light-disabled {
 	.elyra-CodeMirror .cm-editor {
 		background: carbon.$field-01;

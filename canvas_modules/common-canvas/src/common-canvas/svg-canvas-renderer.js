@@ -400,14 +400,14 @@ export default class SVGCanvasRenderer {
 	}
 
 	hideCanvas() {
-		this.canvasSVG.style("display", "none");
+		this.canvasSVG.classed("hidden", true);
 	}
 
 	displayCanvas() {
 		this.logger.logStartTimer("displayCanvas");
 
 		// Ensure the SVG area is displayed, in case it was previously hidden.
-		this.canvasSVG.style("display", "inherit");
+		this.canvasSVG.classed("hidden", false);
 
 		this.displayComments();
 		this.displayNodes();
@@ -585,8 +585,7 @@ export default class SVGCanvasRenderer {
 			.attr("width", svgRect.width)
 			.attr("x", 0)
 			.attr("y", 0)
-			.style("fill", "none")
-			.style("stroke", "darkorange");
+			.attr("class", "d3-bounds-initial-viewport");
 
 		grp
 			.append("rect")
@@ -594,8 +593,7 @@ export default class SVGCanvasRenderer {
 			.attr("width", transformedSVGRect.width - 2)
 			.attr("x", transformedSVGRect.x)
 			.attr("y", transformedSVGRect.y)
-			.style("fill", "none")
-			.style("stroke", "red");
+			.attr("class", "d3-bounds-viewport");
 
 		if (canv) {
 			grp
@@ -604,8 +602,7 @@ export default class SVGCanvasRenderer {
 				.attr("width", canv.width)
 				.attr("x", canv.left)
 				.attr("y", canv.top)
-				.style("fill", "none")
-				.style("stroke", "blue");
+				.attr("class", "d3-bounds-objects");
 		}
 
 		if (canvWithPadding) {
@@ -615,8 +612,7 @@ export default class SVGCanvasRenderer {
 				.attr("width", canvWithPadding.width)
 				.attr("x", canvWithPadding.left)
 				.attr("y", canvWithPadding.top)
-				.style("fill", "none")
-				.style("stroke", "green");
+				.attr("class", "d3-bounds-objects-padding");
 		}
 
 		if (this.config.enableBoundingRectangles &&
@@ -1393,7 +1389,6 @@ export default class SVGCanvasRenderer {
 			.attr("height", dims.height)
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("pointer-events", "all")
-			.style("cursor", "default")
 			.on("mousedown", () => {
 				if (!this.svgCanvasTextArea.isEditingText()) {
 					this.canvasController.setFocusOnCanvas();
@@ -1483,7 +1478,7 @@ export default class SVGCanvasRenderer {
 	// Resets the pointer cursor on the background rectangle in the Canvas SVG area.
 	resetCanvasCursor() {
 		const selector = ".d3-svg-background[data-pipeline-id='" + this.activePipeline.id + "']";
-		this.canvasSVG.select(selector).style("cursor", this.zoomUtils.isDragActivated() && this.dispUtils.isDisplayingFullPage() ? "grab" : "default");
+		this.canvasSVG.select(selector).classed("cursor-grab", this.zoomUtils.isDragActivated() && this.dispUtils.isDisplayingFullPage());
 	}
 
 	createCanvasGroup(canvasObj, className) {
@@ -4521,8 +4516,9 @@ export default class SVGCanvasRenderer {
 				.attr("height", "100%")
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-temp-cursor-overlay")
-				.attr("pointer-events", "all")
-				.style("cursor", cursorStyle);
+				.attr("pointer-events", "all");
+
+			this.canvasSVG.select(".d3-temp-cursor-overlay").node().style.setProperty("--canvas-cursor", cursorStyle);
 		}
 	}
 
