@@ -37,17 +37,17 @@ class AppDecoration extends React.Component {
 		const stripPath = `M 0 0 L 0 ${d} ${w} ${d} ${w} 0 Z`;
 
 		return (
-			<div className="harness-app-decoration" onClick={this.onClick} >
+			<div className="stages-app-decoration" onClick={this.onClick} >
 				<svg height="100%" width="100%">
-					<path className="harness-app-decoration-outline" d={outlinePath} />
-					<path className="harness-app-decoration-strip" d={stripPath} />
+					<path className="stages-app-decoration-outline" d={outlinePath} />
+					<path className="stages-app-decoration-strip" d={stripPath} />
 				</svg>
-				<div className="harness-app-decoration-tag" >
+				<div className="stages-app-decoration-tag" >
 					<Tag className="some-class" type="cyan">
 						{"Column"}
 					</Tag>
 				</div>
-				<div className="harness-app-decoration-label" >
+				<div className="stages-app-decoration-label" >
 					{this.props.node.label}
 				</div>
 			</div>
