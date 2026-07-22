@@ -21,7 +21,6 @@
 
 import React from "react";
 import Isvg from "react-inlinesvg";
-import { Tooltip as ReactTooltip } from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
@@ -3338,7 +3337,6 @@ class App extends React.Component {
 			{ "console-panel-open": this.state.consoleOpened }
 		);
 
-		const tooltipFontSize = "13px";
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			{sidePanel}
@@ -3350,8 +3348,7 @@ class App extends React.Component {
 				{commonCanvas}
 			</main>
 			{consoleView}
-			<ReactTooltip id="toolbar-tooltip" place="bottom" effect="solid" style={{ fontSize: tooltipFontSize }} />
-		</div>);
+			</div>);
 
 		return (
 			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
