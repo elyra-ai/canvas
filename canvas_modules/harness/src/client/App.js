@@ -3348,7 +3348,7 @@ class App extends React.Component {
 				{commonCanvas}
 			</main>
 			{consoleView}
-			</div>);
+		</div>);
 
 		return (
 			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
