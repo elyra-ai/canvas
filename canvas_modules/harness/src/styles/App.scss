@@ -236,12 +236,6 @@ $harness-navbar-icon-width: 48px;
 	}
 }
 
-// --------------------------------------------------------------------
-// CSP: replacements for inline style= attributes — harness components
-// All values here were previously in React style={{ }} props which
-// rendered as HTML style= attributes, blocked by style-src 'nonce-...'
-// --------------------------------------------------------------------
-
 .harness-palette-header {
 	border-bottom: 1px solid carbon.$border-subtle-01;
 	height: fit-content;
