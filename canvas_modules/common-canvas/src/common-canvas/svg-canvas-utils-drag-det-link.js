@@ -22,7 +22,8 @@ const d3 = Object.assign({}, d3Drag, d3Selection);
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { LINK_SELECTION_DETACHABLE, NORTH, SOUTH, EAST, WEST } from "./constants/canvas-constants.js";
+import { LINK_SELECTION_DETACHABLE, NORTH, SOUTH, EAST, WEST,
+	ACTION_UPDATE_LINK } from "./constants/canvas-constants.js";
 
 
 // This utility files provides a drag handler which manages drag operations on
@@ -211,7 +212,7 @@ export default class SVGCanvasUtilsDragDetLink {
 			// to the object model.
 			if (editSubType) {
 				const success = this.ren.canvasController.editActionHandler({
-					editType: "updateLink",
+					editType: ACTION_UPDATE_LINK,
 					editSubType: editSubType,
 					editSource: "canvas",
 					newLink: newLink,

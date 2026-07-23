@@ -47,7 +47,7 @@ describe("CommonCanvas renders correctly", () => {
 		const { container } = createCommonCanvas(config, canvasController, canvasParams);
 
 		const bottomPanel = container.querySelector(".bottom-panel");
-		expect(bottomPanel.style.height).to.equal("500px");
+		expect(bottomPanel.style.getPropertyValue("--bottom-panel-height")).to.equal("500px");
 	});
 
 

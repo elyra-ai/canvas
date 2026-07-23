@@ -80,15 +80,14 @@ class AppSettingsPanel extends React.Component {
 
 	render() {
 		return (
-			<div style={{ padding: 10, width: 170 }} onClick={this.onClick} >
-				<div style={{ display: "flex", paddingTop: 10, paddingBottom: 15, justifyContent: "space-between" }}>
+			<div className="harness-app-x-panel" onClick={this.onClick} >
+				<div className="harness-app-x-panel-header">
 					Test panel:
 					<button
 						ref={this.xButtonRef}
 						onKeyDown={this.onKeyDownXIcon}
 						onClick={this.props.closeSubPanel}
-						style={{
-							display: "inline-flex", cursor: "pointer", minHeight: 20, width: 25, border: 0, padding: "0 10px", height: "10px" }}
+						className="harness-app-x-close-btn"
 					>X</button>
 				</div>
 				<Checkbox id={"chk1"} labelText={"Check one"} onChange={this.onChange} checked={this.state.chk1} />

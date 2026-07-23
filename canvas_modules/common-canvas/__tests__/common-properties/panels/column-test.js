@@ -40,7 +40,7 @@ describe("column panel renders correctly", () => {
 		const controlPanels = columnPanel.querySelectorAll("div.properties-control-panel");
 		expect(controlPanels.length).to.equal(2);
 		// each column adds a new `auto` to grid
-		expect(columnPanel.style.gridTemplateColumns).to.equal("1fr 1fr");
+		expect(columnPanel.style.getPropertyValue("--column-grid-template")).to.equal("1fr 1fr");
 	});
 });
 

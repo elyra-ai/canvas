@@ -64,15 +64,15 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 		canvasController.openTextToolbar(100, 200, [], MARKDOWN, () => { /**/ });
 
 		await waitFor(() => {
-			expect(container.querySelectorAll(".text-toolbar")[0].style.left).to.equal("100px");
-			expect(container.querySelectorAll(".text-toolbar")[0].style.top).to.equal("200px");
+			expect(container.querySelectorAll(".text-toolbar")[0].style.getPropertyValue("--cc-text-toolbar-left")).to.equal("100px");
+			expect(container.querySelectorAll(".text-toolbar")[0].style.getPropertyValue("--cc-text-toolbar-top")).to.equal("200px");
 		});
 
 		canvasController.moveTextToolbar(150, 250);
 
 		await waitFor(() => {
-			expect(container.querySelectorAll(".text-toolbar")[0].style.left).to.equal("150px");
-			expect(container.querySelectorAll(".text-toolbar")[0].style.top).to.equal("250px");
+			expect(container.querySelectorAll(".text-toolbar")[0].style.getPropertyValue("--cc-text-toolbar-left")).to.equal("150px");
+			expect(container.querySelectorAll(".text-toolbar")[0].style.getPropertyValue("--cc-text-toolbar-top")).to.equal("250px");
 		});
 	});
 

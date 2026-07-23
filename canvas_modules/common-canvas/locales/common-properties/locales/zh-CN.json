@@ -45,6 +45,7 @@
   "datetime.format.error": "{role} 无效。 格式应该为 {format}。",
   "invalid.field.error": "{label} 无效，在数据集中找不到字段。",
   "invalid.number.error": "数字无效。",
+  "invalid.integer.error": "值必须为整数。",
   "expression.validate.label": "验证",
   "expression.validating.label": "正在验证",
   "expression.builder.title": "表达式构建器",

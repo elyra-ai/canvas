@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,15 @@
 	-webkit-box-shadow: carbon.$spacing-01 carbon.$spacing-01 carbon.$spacing-01 rgba(0, 0, 0, 0.2);
 	box-shadow: carbon.$spacing-01 carbon.$spacing-01 carbon.$spacing-01 rgba(0, 0, 0, 0.2);
 	position: absolute;
+	// left and top are set via CSS custom properties applied by CSSOM (see common-context-menu.jsx).
+	left: var(--context-menu-left, 0);
+	top: var(--context-menu-top, 0);
 
 	// For cascaded sub-menu
 	&.context-menu-submenu {
-		top: 0;
-		left: 100%;
+		// top and left are set via CSS custom properties applied by CSSOM (see common-context-menu.jsx).
+		top: var(--context-submenu-top, 0);
+		left: var(--context-submenu-left, 100%);
 		display: none;
 
 		// Makes the cascaded sub-menu visible.

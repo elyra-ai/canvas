@@ -38,6 +38,10 @@
 				width: 100%;
 				height: carbon.$spacing-07;
 
+				th.properties-grid-fake-col {
+					width: var(--vg-col-width);
+				}
+
 				.properties-vt-header-checkbox {
 					height: carbon.$spacing-07;
 					display: flex;
@@ -60,6 +64,7 @@
 					align-items: center;
 					justify-items: center;
 					position: relative;
+					width: var(--vg-col-width);
 
 					&.properties-vt-column {
 						.cds--checkbox-wrapper {
@@ -150,6 +155,7 @@
 		tbody.properties-grid-body {
 			display: grid;
 			position: relative;
+			height: var(--vg-body-height);
 
 			tr.properties-grid-body-row {
 				@include carbon.type-style("body-short-01");
@@ -160,6 +166,7 @@
 				height: carbon.$spacing-07;
 				width: 100%;
 				border-bottom: 1px solid carbon.$layer-accent-01;
+				transform: var(--vg-row-transform);
 
 				&:hover:not(.properties-vt-row-non-interactive) {
 					// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
@@ -191,7 +198,9 @@
 					display: flex;
 					align-items: center;
 					overflow: hidden; // hide select dropdown warning/errors underline
-
+					width: var(--vg-col-width);
+					min-height: var(--vg-col-min-height);
+	
 					// This class is set by other controls using FlexibleTable
 					// All cell stylings are be done in their respective controls
 					.properties-table-cell-control {

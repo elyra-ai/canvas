@@ -82,6 +82,10 @@ $properties-resize-button-size: carbon.$spacing-06;
 	&.properties-max {
 		width: propertiesMainWidths.$common-properties-max-flyout-width;
 	}
+	&.properties-custom-size {
+		// width is set via CSS custom property applied by CSSOM (see properties-main.jsx).
+		width: var(--properties-custom-width);
+	}
 }
 
 .common-canvas .right-flyout-panel {

@@ -45,6 +45,7 @@
   "datetime.format.error": "Ungültige {role}. Das Format sollte {format} lauten.",
   "invalid.field.error": "{label} ungültig, Feld nicht in Dataset gefunden.",
   "invalid.number.error": "Die Nummer ist nicht gültig.",
+  "invalid.integer.error": "Der Wert muss eine ganze Zahl sein.",
   "expression.validate.label": "Validieren",
   "expression.validating.label": "Validierung wird ausgeführt",
   "expression.builder.title": "Expression Builder",

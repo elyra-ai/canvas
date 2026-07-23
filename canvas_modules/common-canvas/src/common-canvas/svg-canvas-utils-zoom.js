@@ -23,7 +23,8 @@ const d3 = Object.assign({}, d3Selection, d3Zoom);
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import { INTERACTION_CARBON, INTERACTION_MOUSE, INTERACTION_TRACKPAD,
-	LINK_SELECTION_NONE
+	LINK_SELECTION_NONE,
+	ACTION_SET_ZOOM
 } from "./constants/canvas-constants.js";
 
 // This utility file provides a d3-zoom handler which manages zoom operations
@@ -536,7 +537,7 @@ export default class SVGCanvasUtilsZoom {
 		this.ren.canvasSVG.property("__zoom", this.zoomTransform);
 
 		const data = {
-			editType: "setZoom",
+			editType: ACTION_SET_ZOOM,
 			editSource: "canvas",
 			zoom: this.zoomTransform,
 			pipelineId: this.ren.activePipeline.id
