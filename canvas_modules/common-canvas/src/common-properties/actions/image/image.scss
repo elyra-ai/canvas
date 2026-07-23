@@ -20,15 +20,7 @@
 	// 8px spacing between action image and the control beside image.
 	padding: 0 0 0 carbon.$spacing-03;
 	cursor: pointer;
-	align-self: flex-start;
-	display: flex;
-	align-items: center;
-	// Match Carbon TextInput md height and offset past the label so the icon sits beside the input.
-	// on_panel descriptions are rendered above the input row (see control-factory.js); tooltip-style
-	// descriptions show as an inline info icon and don't add block height, so the label area is
-	// always a fixed height and this margin-top value stays correct for both cases.
-	height: carbon.$spacing-08;
-	margin-top: carbon.$spacing-05 + carbon.$spacing-03;
+	align-self: flex-end;
 	&.left {
 		order: -1;
 		padding: 0 carbon.$spacing-03 0 0;
