@@ -523,6 +523,7 @@
         "label": {
           "default": "Dropdown — action RIGHT"
         },
+        "control": "oneofselect",
         "action_ref": "moon_right"
       }
     ],
