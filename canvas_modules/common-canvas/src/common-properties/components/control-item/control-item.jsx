@@ -99,11 +99,10 @@ class ControlItem extends React.Component {
 
 		const action = this.actionFactory.generateAction(0, this.props.control.action);
 
-		const hasImageAction = action && this.props.control.action.actionType === ActionType.IMAGE;
 		const className = classNames(
 			"properties-control-item",
 			{ "hide": hidden },
-			{ "properties-ci-action-item image": hasImageAction }
+			{ "properties-ci-action-item image": action && this.props.control.action.actionType === ActionType.IMAGE }
 		);
 
 		/*
@@ -121,7 +120,6 @@ class ControlItem extends React.Component {
 				</div>
 			);
 		}
-
 		return (
 			<div data-id={"properties-ci-" + this.props.control.name}
 				className={className} disabled={disabled}

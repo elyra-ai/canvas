@@ -55,7 +55,6 @@ class ImageAction extends React.Component {
 			{...this.imageDimensions}
 		/>);
 	}
-
 	applyAction() {
 		if (this.props.state !== STATES.DISABLED) { // this is needed to mimic disabled action button
 			// fire event and let the application determine how to handle the action
