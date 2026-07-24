@@ -2970,6 +2970,14 @@ class App extends React.Component {
 			],
 			rightBar: [
 				{
+					action: "studio",
+					label: "Canvas Studio",
+					enable: true,
+					iconEnabled: (<SelectWindow size={16} />),
+					tooltip: "Open Canvas Studio (no-code builder)"
+				},
+				{ divider: true },
+				{
 					action: "help",
 					label: "Elyra Canvas Documentation",
 					enable: true,
@@ -3025,6 +3033,9 @@ class App extends React.Component {
 
 	toolbarActionHandler(action) {
 		switch (action) {
+		case "studio":
+			window.location.href = "/#/studio";
+			break;
 		case "console":
 			this.openConsole();
 			break;
