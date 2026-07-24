@@ -2,28 +2,28 @@
 
 Canvas Studio is a no-code UI builder added to the Elyra Canvas test harness. It lets non-technical users visually create palette nodes, configure node property forms, and tune canvas settings — without writing any JSON.
 
-**URL:** `http://localhost:3001/#/studio`
+**URL:** `http://localhost:3001/#/studio` 
 **Entry point:** Click the Canvas Studio button (window icon) in the top-right of the main harness navbar.
 
 ---
 
 ## How much can the Studio cover?
 
-The CommonProperties `parameterDef` JSON format is a **finite, well-defined specification** of approximately 200 distinct features. It is not infinitely extensible. The Studio currently covers the most commonly used subset. The table below shows the full scope:
+The CommonProperties `parameterDef` JSON format is a specification of approximately 200 distinct features. The Studio currently covers a specific subset of those features. The table below shows the full scope:
 
 | Category | Total in format | Studio covers |
 |---|---|---|
-| Top-level paramDef keys | 9 | 5 (`titleDefinition`, `current_parameters`, `parameters`, `uihints`, `conditions`) |
-| Parameter types | 8 (`string`, `integer`, `double`, `boolean`, `date`, `time`, `timestamp`, `custom`) | 5 (all except `date`, `time`, `timestamp`) |
-| Control types | 33 | 5 auto-mapped from type (`textfield`, `numberfield`, `toggletext`, `oneofselect`, custom) |
-| `parameter_info` fields | 42+ | 5 (`label`, `description`, `control_type`, `action_ref`, auto) |
-| Group/panel types | 14 | 1 (`controls` — single flat group) |
-| Condition types | 7 | 1 (`validation`) |
+| Top-level paramDef keys | 9 | 7 (`titleDefinition`, `current_parameters`, `parameters`, `uihints`, `conditions`, `resources`, `group_info` via layout) |
+| Parameter types | 8 (`string`, `integer`, `double`, `boolean`, `date`, `time`, `timestamp`, `custom`) | 7 (all except `custom`) |
+| Control types | 33 | 9 auto-mapped from type (`textfield`, `numberfield`, `toggletext`, `oneofselect`, `textarea`, `expression`, `datepicker`, `timepicker`, `datetimepicker`) |
+| `parameter_info` fields | 42+ | 9 (`label`, `description`, `control_type`, `action_ref`, `place_holder_text`, `helper_text`, `char_limit`, `read_only`, auto) |
+| Group/panel types | 14 | 2 (`controls` flat, `tabs`) |
+| Condition types | 7 | 3 (`validation`, `enabled`, `visible`) |
 | Condition operators | 24+ | 10 (`isNotEmpty`, `isEmpty`, `equals`, `notEquals`, `greaterThan`, `lessThan`, `contains`, `notContains`, `startsWith`, `endsWith`) |
-| Action types | 3 (`button`, `image`, `custom`) | 1 (`image`) |
-| Action fields | 9 | 7 (`id`, `label`, `description`, `image.url`, `image.placement`, `image.size`) |
+| Action types | 3 (`button`, `image`, `custom`) | 2 (`image`, `button`) |
+| Action fields | 9 | 8 (`id`, `label`, `description`, `control`, `image.url`, `image.placement`, `image.size`, `data.parameter_ref`) |
 
-**What's not yet in the Studio** (features in the format that need manual JSON for now): complex types, tabs/sub-panels, column selection controls, date/time pickers, expression editors, `enabled`/`visible` conditions, dataset metadata, localization resource keys, and custom controls/actions.
+**What's not yet in the Studio** (features in the format that need manual JSON for now): complex types, column selection controls, dataset metadata, and custom controls/actions.
 
 ---
 
@@ -31,7 +31,7 @@ The CommonProperties `parameterDef` JSON format is a **finite, well-defined spec
 
 ### New files
 
-All new files live under `canvas_modules/harness/src/client/components/studio/`.
+Most new files live under `canvas_modules/harness/src/client/components/studio/`. The stylesheet is at `canvas_modules/harness/src/styles/studio.scss`.
 
 | File | Purpose |
 |------|---------|
@@ -41,10 +41,12 @@ All new files live under `canvas_modules/harness/src/client/components/studio/`.
 | `palette-builder/NodeTypeForm.jsx` | Form for one node type's label, op, description, icon |
 | `palette-builder/PortsEditor.jsx` | Dynamic rows for input/output ports (label + cardinality) |
 | `palette-builder/IconPicker.jsx` | Tab grid of SVGs from `assets/images/` + custom URL tab |
-| `properties-builder/PropertiesBuilder.jsx` | Node selector, titleDefinition, parameter list, ActionsBuilder, ConditionsBuilder |
-| `properties-builder/ParameterForm.jsx` | Form for one parameter's label, id, description, type, required, default, action_ref, enum values |
-| `properties-builder/ConditionsBuilder.jsx` | Validation rule builder — parameter + operator + error message |
-| `properties-builder/ActionsBuilder.jsx` | Image action builder — id, label, tooltip, image URL, placement, size |
+| `properties-builder/PropertiesBuilder.jsx` | Node selector, titleDefinition, parameter list, ActionsBuilder, ConditionsBuilder, GroupBuilder, ResourcesEditor |
+| `properties-builder/ParameterForm.jsx` | Form for one parameter's label, id, description, type, required, default, placeholder, helper text, char limit, read-only, action_ref, enum values |
+| `properties-builder/ConditionsBuilder.jsx` | Rule builder — validation errors, enabled/disabled fields, show/hide fields |
+| `properties-builder/ActionsBuilder.jsx` | Action builder — image/icon or button type, id, label, tooltip, image URL, placement, size |
+| `properties-builder/GroupBuilder.jsx` | Layout selector (flat / tabs) and tab group definitions |
+| `properties-builder/ResourcesEditor.jsx` | Key/value editor for localization resource strings |
 | `properties-builder/PropertiesPreview.jsx` | Live `<CommonProperties>` render of the generated paramDef |
 | `preview/StudioCanvas.jsx` | Live `<CommonCanvas>` with its own CanvasController and config toggles |
 | `utils/palette-generator.js` | Pure function: form state → palette v3.0 JSON |
@@ -84,7 +86,7 @@ All new files live under `canvas_modules/harness/src/client/components/studio/`.
 | UI control | JSON field |
 |------------|-----------|
 | "Label" TextInput | `node_types[].app_data.ui_data.label` |
-| "Operation ID" TextInput | `node_types[].op` |
+| "Operation ID (op)" TextInput | `node_types[].op` |
 | "Description" TextInput | `node_types[].app_data.ui_data.description` |
 | IconPicker selection | `node_types[].app_data.ui_data.image` |
 | *(always set)* | `node_types[].type = "execution_node"` |
@@ -95,32 +97,9 @@ All new files live under `canvas_modules/harness/src/client/components/studio/`.
 | UI control | JSON field |
 |------------|-----------|
 | "Label" TextInput | `inputs[]/outputs[].app_data.ui_data.label` |
-| "Min" NumberInput | `inputs[]/outputs[].app_data.ui_data.cardinality.min` |
-| "Max" NumberInput | `inputs[]/outputs[].app_data.ui_data.cardinality.max` |
+| "Min" number input | `inputs[]/outputs[].app_data.ui_data.cardinality.min` |
+| "Max" number input | `inputs[]/outputs[].app_data.ui_data.cardinality.max` |
 | *(uuid)* | `inputs[]/outputs[].id` |
-
-#### Equivalent raw JSON
-
-```json
-{
-  "version": "3.0",
-  "categories": [{
-    "id": "my-nodes",
-    "label": "My Nodes",
-    "description": "",
-    "image": "/images/carbon/gears.svg",
-    "is_open": true,
-    "node_types": [{
-      "id": "<studioId>",
-      "type": "execution_node",
-      "op": "com.example.filter",
-      "inputs": [{ "id": "<portId>", "app_data": { "ui_data": { "label": "Input", "cardinality": { "min": 0, "max": 1 } } } }],
-      "outputs": [{ "id": "<portId>", "app_data": { "ui_data": { "label": "Output", "cardinality": { "min": 0, "max": -1 } } } }],
-      "app_data": { "ui_data": { "label": "Filter", "description": "", "image": "/images/carbon/filter.svg" } }
-    }]
-  }]
-}
-```
 
 ---
 
@@ -149,68 +128,74 @@ All new files live under `canvas_modules/harness/src/client/components/studio/`.
 | "Type" → `double` | `parameters[].type = "double"`, `control_type = "numberfield"` |
 | "Type" → `boolean` | `parameters[].type = "boolean"`, `control_type = "toggletext"` |
 | "Type" → `enum` | `parameters[].type = "string"`, `parameters[].enum[]`, `control_type = "oneofselect"` |
+| "Type" → `textarea` | `parameters[].type = "string"`, `control_type = "textarea"` |
+| "Type" → `expression` | `parameters[].type = "string"`, `control_type = "expression"` |
+| "Type" → `date` | `parameters[].type = "date"`, `control_type = "datepicker"` |
+| "Type" → `time` | `parameters[].type = "time"`, `control_type = "timepicker"` |
+| "Type" → `timestamp` | `parameters[].type = "timestamp"`, `control_type = "datetimepicker"` |
 | "Required" Toggle | `parameters[].required` |
-| "Default value" TextInput | `current_parameters[id]` |
-| "Action" Select | `uihints.parameter_info[].action_ref` *(omitted if none)* |
-| Enum option rows | `parameters[].enum[]` |
+| "Default value" TextInput | `current_parameters[id]` *(hidden for boolean and enum)* |
+| "Placeholder text" TextInput | `uihints.parameter_info[].place_holder_text.default` *(omitted if blank; hidden for boolean and enum)* |
+| "Helper text" TextInput | `uihints.parameter_info[].helper_text.default` *(omitted if blank)* |
+| "Character limit" number input | `uihints.parameter_info[].char_limit` *(omitted if 0; shown for string/textarea/expression only)* |
+| "Read-only" Toggle | `uihints.parameter_info[].read_only` *(omitted if false)* |
+| "Action" Select | `uihints.parameter_info[].action_ref` *(omitted if none; only shown when actions exist)* |
+| Enum option rows | `parameters[].enum[]` *(only shown when type = enum)* |
 
 #### ActionsBuilder → `uihints.action_info[]`
 
 | UI control | JSON field |
 |------------|-----------|
+| "Action type" Select | `action_info[].control` (`"image"` or `"button"`) |
 | "Action ID" TextInput | `action_info[].id` |
 | "Label" TextInput | `action_info[].label.default` |
 | "Description" TextInput | `action_info[].description.default` |
-| "Image URL" TextInput | `action_info[].image.url` |
-| "Placement" Select | `action_info[].image.placement` (`"right"` or `"left"`) |
-| "Width" NumberInput | `action_info[].image.size.width` |
-| "Height" NumberInput | `action_info[].image.size.height` |
-| *(always set)* | `action_info[].control = "image"`, `action_info[].data = {}` |
+| "Image URL" TextInput *(image type only)* | `action_info[].image.url` |
+| "Placement" Select *(image type only)* | `action_info[].image.placement` (`"right"` or `"left"`) |
+| "Width" number input *(image type only)* | `action_info[].image.size.width` |
+| "Height" number input *(image type only)* | `action_info[].image.size.height` |
+| "Parameter ref" TextInput *(button type only)* | `action_info[].data.parameter_ref` *(omitted if blank)* |
 
 #### ConditionsBuilder → `conditions[]`
 
+Each condition row produces one of three JSON shapes depending on the "Condition type" Select:
+
+**Validation error** (`conditionType = "validation"`):
+
 | UI control | JSON field |
 |------------|-----------|
-| "Parameter" Select | `conditions[].validation.fail_message.focus_parameter_ref` and `evaluate.condition.parameter_ref` |
-| "Rule" Select | `conditions[].validation.evaluate.condition.op` |
-| "Value" TextInput *(shown for comparison ops)* | `conditions[].validation.evaluate.condition.value` |
-| "Error message" TextInput | `conditions[].validation.fail_message.message.default` |
+| "Condition type" Select | selects `conditions[].validation` shape |
+| "Parameter" Select | `validation.fail_message.focus_parameter_ref` and `evaluate.condition.parameter_ref` |
+| "Rule" Select | `validation.evaluate.condition.op` |
+| "Value" TextInput *(shown for comparison ops)* | `validation.evaluate.condition.value` |
+| "Error message" TextInput | `validation.fail_message.message.default` |
 | *(always set)* | `fail_message.type = "error"` |
 
-#### Equivalent raw JSON (matching the example file from the user)
+**Enable / disable a field** (`conditionType = "enabled"`) or **Show / hide a field** (`conditionType = "visible"`):
 
-```json
-{
-  "titleDefinition": { "title": "Action Image Alignment Test", "editable": false },
-  "current_parameters": { "text_right": "", "text_left": "" },
-  "parameters": [
-    { "id": "text_right", "type": "string", "required": true },
-    { "id": "dropdown_right", "type": "string", "required": true, "enum": ["Alpha", "Beta", "Gamma"] }
-  ],
-  "uihints": {
-    "id": "action_image_alignment_test",
-    "parameter_info": [
-      { "parameter_ref": "text_right", "label": { "default": "Text input — action RIGHT" }, "action_ref": "moon_right" },
-      { "parameter_ref": "dropdown_right", "label": { "default": "Dropdown — action RIGHT" }, "control_type": "oneofselect", "action_ref": "moon_right" }
-    ],
-    "action_info": [{
-      "id": "moon_right",
-      "label": { "default": "Moon" },
-      "description": { "default": "Moon action tooltip" },
-      "control": "image",
-      "data": {},
-      "image": { "url": "/images/moon.jpg", "placement": "right", "size": { "height": 20, "width": 25 } }
-    }],
-    "group_info": [{ "id": "main-group", "type": "controls", "parameter_refs": ["text_right", "dropdown_right"] }]
-  },
-  "conditions": [{
-    "validation": {
-      "fail_message": { "type": "error", "focus_parameter_ref": "text_right", "message": { "default": "This field is required." } },
-      "evaluate": { "condition": { "parameter_ref": "text_right", "op": "isNotEmpty" } }
-    }
-  }]
-}
-```
+| UI control | JSON field |
+|------------|-----------|
+| "Condition type" Select | selects `conditions[].enabled` or `conditions[].visible` shape |
+| "Enable/Show this field" Select | `enabled.parameter_refs[0]` / `visible.parameter_refs[0]` |
+| "When this parameter" Select | `enabled.evaluate.condition.parameter_ref` |
+| "Rule" Select | `enabled.evaluate.condition.op` |
+| "Value" TextInput *(shown for comparison ops)* | `enabled.evaluate.condition.value` |
+
+#### GroupBuilder → `uihints.group_info[]`
+
+| UI control | JSON field |
+|------------|-----------|
+| "Panel layout" Select → `flat` | `group_info: [{ id: "main-group", type: "controls", parameter_refs: [...all params] }]` |
+| "Panel layout" Select → `tabs` | `group_info: [{ id: "main-tabs", type: "tabs", group_info: [...tabs] }]` |
+| Tab "Tab label" TextInput | `group_info[].group_info[].label.default` |
+| Tab parameter checkboxes | `group_info[].group_info[].parameter_refs[]` |
+
+#### ResourcesEditor → `resources{}`
+
+| UI control | JSON field |
+|------------|-----------|
+| "Key" TextInput | key in `resources` object |
+| "Value" TextInput | value in `resources` object |
 
 ---
 
@@ -265,7 +250,7 @@ Double-clicking a node on the canvas opens its configured properties panel in th
   "version": "1.0",
   "studio": {
     "categories": [...],
-    "paramDefs": { "<nodeStudioId>": { "titleDefinition": {}, "parameters": [], "conditions": [], "actions": [] } },
+    "paramDefs": { "<nodeStudioId>": { "titleDefinition": {}, "parameters": [], "conditions": [], "actions": [], "groups": [], "groupLayout": "flat", "resources": {} } },
     "canvasConfig": {}
   },
   "palette": { "version": "3.0", "categories": [...] }
@@ -287,7 +272,10 @@ StudioPage.state
 │       ├── titleDefinition       → titleDefinition section
 │       ├── parameters[]          → ParameterForm rows
 │       ├── conditions[]          → ConditionsBuilder rows
-│       └── actions[]             → ActionsBuilder rows
+│       ├── actions[]             → ActionsBuilder rows
+│       ├── groupLayout           → GroupBuilder layout selector
+│       ├── groups[]              → GroupBuilder tab definitions
+│       └── resources{}           → ResourcesEditor key/value pairs
 ├── selectedNodeStudioId          → PaletteBuilder (highlights selected) + PropertiesBuilder (shows params)
 └── canvasConfig{}                → StudioCanvas config toggles → CommonCanvas
 ```
@@ -298,20 +286,12 @@ The two generator utilities (`palette-generator.js`, `properties-generator.js`) 
 
 ## What Could Be Added Next
 
-Features in the CommonProperties format not yet in the Studio, roughly ordered by how commonly they appear in real paramDef files:
+Features in the CommonProperties format not yet in the Studio:
 
-| Feature | JSON key | Complexity to add |
+| Feature | JSON key | Note |
 |---|---|---|
-| Placeholder text per field | `parameter_info[].place_holder_text` | Low — one TextInput in ParameterForm |
-| `enabled` / `visible` conditions | `conditions[].enabled`, `conditions[].visible` | Low — extend ConditionsBuilder with type selector |
-| Panel tabs / sub-tabs | `group_info[].type = "tabs"` | Medium — GroupBuilder component |
-| Date / time fields | `type = "date"`, `control = "datepicker"` | Medium — add types to ParameterForm |
-| Button-type actions | `action_info[].control = "button"` | Low — add type toggle to ActionsBuilder |
-| Character limit per field | `parameter_info[].char_limit` | Low — one NumberInput in ParameterForm |
-| Helper text per field | `parameter_info[].helper_text` | Low — one TextInput in ParameterForm |
-| Read-only fields | `parameter_info[].read_only` | Low — one Toggle in ParameterForm |
-| Textarea (multi-line) | `control_type = "textarea"` | Low — add to type options |
-| Expression editor | `control_type = "expression"` | Low — add to type options |
-| Complex types (tables) | `complex_types[]` | High — requires a separate ComplexTypeBuilder |
-| Column selection controls | `control = "selectcolumn"` | High — requires dataset_metadata |
-| Localization resources | `resources{}`, `resource_key` | Medium — ResourcesEditor |
+| Complex types (tables) | `complex_types[]` | Requires a ComplexTypeBuilder sub-editor for defining struct/table schemas |
+| Column selection controls | `control = "selectcolumn"` | Requires `dataset_metadata` — runtime external data (column names from a dataset) |
+| Resource key on fields | `parameter_info[].resource_key` | Would replace `label.default` with a key into the `resources` object — ResourcesEditor is already implemented |
+| Sub-tabs / nested groups | `group_info[].type = "subTabs"` | Currently only top-level tabs are supported |
+| Multiple targets per enabled/visible condition | `enabled.parameter_refs[]` | Currently one target parameter per rule; multi-select would allow controlling several at once |
