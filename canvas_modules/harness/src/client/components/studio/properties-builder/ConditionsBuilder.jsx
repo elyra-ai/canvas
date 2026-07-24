@@ -20,6 +20,12 @@ import { Button, Select, SelectItem, TextInput } from "@carbon/react";
 import { Add, TrashCan } from "@carbon/react/icons";
 import { v4 as uuid4 } from "uuid";
 
+const CONDITION_TYPES = [
+	{ value: "validation", label: "Validation error" },
+	{ value: "enabled", label: "Enable / disable a field" },
+	{ value: "visible", label: "Show / hide a field" }
+];
+
 const CONDITION_OPS = [
 	{ value: "isNotEmpty", label: "is not empty" },
 	{ value: "isEmpty", label: "is empty" },
@@ -49,7 +55,9 @@ export default class ConditionsBuilder extends React.Component {
 	addCondition() {
 		const newCondition = {
 			conditionId: uuid4(),
+			conditionType: "validation",
 			paramRef: (this.props.parameters && this.props.parameters[0] && this.props.parameters[0].id) || "",
+			targetParamRef: "",
 			op: "isNotEmpty",
 			value: "",
 			errorMessage: "This field is required."
@@ -90,64 +98,97 @@ export default class ConditionsBuilder extends React.Component {
 					</div>
 				)}
 
-				{(conditions || []).map((cond) => (
-					<div key={cond.conditionId} className="studio-condition-row">
-						<div className="studio-condition-fields">
-							<Select
-								id={`cond-param-${cond.conditionId}`}
-								labelText="Parameter"
-								value={cond.paramRef || ""}
-								size="sm"
-								onChange={(e) => this.updateCondition(cond.conditionId, "paramRef", e.target.value)}
-							>
-								<SelectItem value="" text="— pick parameter —" />
-								{paramOptions.map((p) => (
-									<SelectItem key={p.paramId} value={p.id} text={p.displayName || p.id} />
-								))}
-							</Select>
-
-							<Select
-								id={`cond-op-${cond.conditionId}`}
-								labelText="Rule"
-								value={cond.op || "isNotEmpty"}
-								size="sm"
-								onChange={(e) => this.updateCondition(cond.conditionId, "op", e.target.value)}
-							>
-								{CONDITION_OPS.map((op) => (
-									<SelectItem key={op.value} value={op.value} text={op.label} />
-								))}
-							</Select>
-
-							{OPS_NEEDING_VALUE.has(cond.op) && (
-								<TextInput
-									id={`cond-val-${cond.conditionId}`}
-									labelText="Value"
-									value={cond.value || ""}
+				{(conditions || []).map((cond) => {
+					const condType = cond.conditionType || "validation";
+					const isEnabledVisible = condType === "enabled" || condType === "visible";
+					return (
+						<div key={cond.conditionId} className="studio-condition-row">
+							<div className="studio-condition-fields">
+								<Select
+									id={`cond-type-${cond.conditionId}`}
+									labelText="Condition type"
+									value={condType}
 									size="sm"
-									onChange={(e) => this.updateCondition(cond.conditionId, "value", e.target.value)}
-								/>
-							)}
+									onChange={(e) => this.updateCondition(cond.conditionId, "conditionType", e.target.value)}
+								>
+									{CONDITION_TYPES.map((t) => (
+										<SelectItem key={t.value} value={t.value} text={t.label} />
+									))}
+								</Select>
 
-							<TextInput
-								id={`cond-msg-${cond.conditionId}`}
-								labelText="Error message"
-								value={cond.errorMessage || ""}
+								{isEnabledVisible && (
+									<Select
+										id={`cond-target-${cond.conditionId}`}
+										labelText={condType === "enabled" ? "Enable/disable this field" : "Show/hide this field"}
+										value={cond.targetParamRef || ""}
+										size="sm"
+										onChange={(e) => this.updateCondition(cond.conditionId, "targetParamRef", e.target.value)}
+									>
+										<SelectItem value="" text="— pick parameter —" />
+										{paramOptions.map((p) => (
+											<SelectItem key={p.paramId} value={p.id} text={p.displayName || p.id} />
+										))}
+									</Select>
+								)}
+
+								<Select
+									id={`cond-param-${cond.conditionId}`}
+									labelText={isEnabledVisible ? "When this parameter" : "Parameter"}
+									value={cond.paramRef || ""}
+									size="sm"
+									onChange={(e) => this.updateCondition(cond.conditionId, "paramRef", e.target.value)}
+								>
+									<SelectItem value="" text="— pick parameter —" />
+									{paramOptions.map((p) => (
+										<SelectItem key={p.paramId} value={p.id} text={p.displayName || p.id} />
+									))}
+								</Select>
+
+								<Select
+									id={`cond-op-${cond.conditionId}`}
+									labelText="Rule"
+									value={cond.op || "isNotEmpty"}
+									size="sm"
+									onChange={(e) => this.updateCondition(cond.conditionId, "op", e.target.value)}
+								>
+									{CONDITION_OPS.map((op) => (
+										<SelectItem key={op.value} value={op.value} text={op.label} />
+									))}
+								</Select>
+
+								{OPS_NEEDING_VALUE.has(cond.op) && (
+									<TextInput
+										id={`cond-val-${cond.conditionId}`}
+										labelText="Value"
+										value={cond.value || ""}
+										size="sm"
+										onChange={(e) => this.updateCondition(cond.conditionId, "value", e.target.value)}
+									/>
+								)}
+
+								{!isEnabledVisible && (
+									<TextInput
+										id={`cond-msg-${cond.conditionId}`}
+										labelText="Error message"
+										value={cond.errorMessage || ""}
+										size="sm"
+										onChange={(e) => this.updateCondition(cond.conditionId, "errorMessage", e.target.value)}
+									/>
+								)}
+							</div>
+
+							<Button
+								kind="ghost"
 								size="sm"
-								onChange={(e) => this.updateCondition(cond.conditionId, "errorMessage", e.target.value)}
+								hasIconOnly
+								renderIcon={TrashCan}
+								iconDescription="Remove rule"
+								className="studio-condition-delete"
+								onClick={() => this.removeCondition(cond.conditionId)}
 							/>
 						</div>
-
-						<Button
-							kind="ghost"
-							size="sm"
-							hasIconOnly
-							renderIcon={TrashCan}
-							iconDescription="Remove rule"
-							className="studio-condition-delete"
-							onClick={() => this.removeCondition(cond.conditionId)}
-						/>
-					</div>
-				))}
+					);
+				})}
 			</div>
 		);
 	}

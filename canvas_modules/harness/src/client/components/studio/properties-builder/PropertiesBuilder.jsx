@@ -22,6 +22,8 @@ import { v4 as uuid4 } from "uuid";
 import ParameterForm from "./ParameterForm";
 import ConditionsBuilder from "./ConditionsBuilder";
 import ActionsBuilder from "./ActionsBuilder";
+import GroupBuilder from "./GroupBuilder";
+import ResourcesEditor from "./ResourcesEditor";
 import PropertiesPreview from "./PropertiesPreview";
 
 export default class PropertiesBuilder extends React.Component {
@@ -174,6 +176,9 @@ export default class PropertiesBuilder extends React.Component {
 		const parameters = (paramDef && paramDef.parameters) || [];
 		const conditions = (paramDef && paramDef.conditions) || [];
 		const actions = (paramDef && paramDef.actions) || [];
+		const groups = (paramDef && paramDef.groups) || [];
+		const groupLayout = (paramDef && paramDef.groupLayout) || "flat";
+		const resources = (paramDef && paramDef.resources) || {};
 		const titleDef = (paramDef && paramDef.titleDefinition) || { title: "", editable: true };
 
 		return (
@@ -261,6 +266,23 @@ export default class PropertiesBuilder extends React.Component {
 								conditions={conditions}
 								parameters={parameters}
 								onChange={(updated) => this.updateField("conditions", updated)}
+							/>
+						</div>
+
+						<div className="studio-subsection">
+							<GroupBuilder
+								groupLayout={groupLayout}
+								groups={groups}
+								parameters={parameters}
+								onLayoutChange={(layout) => this.updateField("groupLayout", layout)}
+								onGroupsChange={(updated) => this.updateField("groups", updated)}
+							/>
+						</div>
+
+						<div className="studio-subsection">
+							<ResourcesEditor
+								resources={resources}
+								onChange={(updated) => this.updateField("resources", updated)}
 							/>
 						</div>
 

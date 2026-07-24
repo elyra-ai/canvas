@@ -19,13 +19,31 @@ const CONTROL_TYPE_MAP = {
 	integer: "numberfield",
 	double: "numberfield",
 	boolean: "toggletext",
-	enum: "oneofselect"
+	enum: "oneofselect",
+	textarea: "textarea",
+	expression: "expression",
+	date: "datepicker",
+	time: "timepicker",
+	timestamp: "datetimepicker"
 };
 
 const OPS_NEEDING_VALUE = new Set([
 	"equals", "notEquals", "greaterThan", "lessThan",
 	"contains", "notContains", "startsWith", "endsWith"
 ]);
+
+const SCHEMA_TYPE_MAP = {
+	string: "string",
+	integer: "integer",
+	double: "double",
+	boolean: "boolean",
+	enum: "string",
+	textarea: "string",
+	expression: "string",
+	date: "date",
+	time: "time",
+	timestamp: "timestamp"
+};
 
 function coerceDefault(value, type) {
 	if (value === null || value === "") {
@@ -57,6 +75,15 @@ function buildCondition(cond) {
 	if (OPS_NEEDING_VALUE.has(cond.op) && cond.value) {
 		evaluateCondition.value = cond.value;
 	}
+	const condType = cond.conditionType || "validation";
+	if (condType === "enabled" || condType === "visible") {
+		return {
+			[condType]: {
+				parameter_refs: cond.targetParamRef ? [cond.targetParamRef] : [cond.paramRef],
+				evaluate: { condition: evaluateCondition }
+			}
+		};
+	}
 	return {
 		validation: {
 			fail_message: {
@@ -72,18 +99,40 @@ function buildCondition(cond) {
 function buildActionInfo(actions) {
 	return (actions || [])
 		.filter((a) => Boolean(a.id))
-		.map((a) => ({
-			id: a.id,
-			label: { default: a.label || a.id },
-			description: { default: a.description || "" },
-			control: "image",
-			data: {},
-			image: {
-				url: a.imageUrl || "",
-				placement: a.placement || "right",
-				size: { height: Number(a.height) || 20, width: Number(a.width) || 25 }
+		.map((a) => {
+			const control = a.controlType || "image";
+			const entry = {
+				id: a.id,
+				label: { default: a.label || a.id },
+				description: { default: a.description || "" },
+				control,
+				data: a.paramRef ? { parameter_ref: a.paramRef } : {}
+			};
+			if (control === "image") {
+				entry.image = {
+					url: a.imageUrl || "",
+					placement: a.placement || "right",
+					size: { height: Number(a.height) || 20, width: Number(a.width) || 25 }
+				};
 			}
-		}));
+			return entry;
+		});
+}
+
+function buildGroupInfo(groups, groupLayout, parameterRefs) {
+	if (groupLayout === "tabs" && groups && groups.length > 0) {
+		return [{
+			id: "main-tabs",
+			type: "tabs",
+			group_info: groups.map((g) => ({
+				id: g.groupId,
+				type: "controls",
+				label: { default: g.label || "Tab" },
+				parameter_refs: g.paramRefs || []
+			}))
+		}];
+	}
+	return [{ id: "main-group", type: "controls", parameter_refs: parameterRefs }];
 }
 
 export default function propertiesGenerator(paramDefEntry, nodeLabel, nodeOp) {
@@ -91,6 +140,9 @@ export default function propertiesGenerator(paramDefEntry, nodeLabel, nodeOp) {
 	const titleDefinition = paramDefEntry && paramDefEntry.titleDefinition;
 	const conditions = (paramDefEntry && paramDefEntry.conditions) || [];
 	const actions = (paramDefEntry && paramDefEntry.actions) || [];
+	const groups = (paramDefEntry && paramDefEntry.groups) || [];
+	const groupLayout = (paramDefEntry && paramDefEntry.groupLayout) || "flat";
+	const resources = (paramDefEntry && paramDefEntry.resources) || {};
 
 	const currentParameters = {};
 	const parametersSchema = [];
@@ -106,7 +158,7 @@ export default function propertiesGenerator(paramDefEntry, nodeLabel, nodeOp) {
 
 		const schemaParam = {
 			id: param.id,
-			type: param.type === "enum" ? "string" : (param.type || "string"),
+			type: SCHEMA_TYPE_MAP[param.type] || "string",
 			required: Boolean(param.required)
 		};
 		if (param.type === "enum" && param.enumValues && param.enumValues.length > 0) {
@@ -121,6 +173,18 @@ export default function propertiesGenerator(paramDefEntry, nodeLabel, nodeOp) {
 		};
 		if (param.description) {
 			infoEntry.description = { default: param.description };
+		}
+		if (param.placeholder) {
+			infoEntry.place_holder_text = { default: param.placeholder };
+		}
+		if (param.helperText) {
+			infoEntry.helper_text = { default: param.helperText };
+		}
+		if (param.charLimit > 0) {
+			infoEntry.char_limit = param.charLimit;
+		}
+		if (param.readOnly) {
+			infoEntry.read_only = true;
 		}
 		if (param.actionRef) {
 			infoEntry.action_ref = param.actionRef;
@@ -140,15 +204,9 @@ export default function propertiesGenerator(paramDefEntry, nodeLabel, nodeOp) {
 			id: uiHintsId,
 			label: { default: nodeLabel || "Node Properties" },
 			parameter_info: parameterInfo,
-			group_info: [
-				{
-					id: "main-group",
-					type: "controls",
-					parameter_refs: parameterRefs
-				}
-			]
+			group_info: buildGroupInfo(groups, groupLayout, parameterRefs)
 		},
-		resources: {}
+		resources
 	};
 
 	if (titleDefinition && titleDefinition.title) {

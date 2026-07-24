@@ -68,7 +68,7 @@ export default class StudioPage extends React.Component {
 			this.setState((prev) => ({
 				paramDefs: {
 					...prev.paramDefs,
-					[updatedNode.studioId]: { titleDefinition: { title: "", editable: true }, parameters: [], conditions: [], actions: [] }
+					[updatedNode.studioId]: { titleDefinition: { title: "", editable: true }, parameters: [], conditions: [], actions: [], groups: [], groupLayout: "flat", resources: {} }
 				}
 			}));
 		}
@@ -127,7 +127,7 @@ export default class StudioPage extends React.Component {
 	render() {
 		const { categories, paramDefs, selectedNodeStudioId, canvasConfig } = this.state;
 		const paletteJSON = paletteGenerator(categories);
-		const emptyParamDef = { titleDefinition: { title: "", editable: true }, parameters: [], conditions: [], actions: [] };
+		const emptyParamDef = { titleDefinition: { title: "", editable: true }, parameters: [], conditions: [], actions: [], groups: [], groupLayout: "flat", resources: {} };
 		const selectedParamDef = selectedNodeStudioId ? (paramDefs[selectedNodeStudioId] || emptyParamDef) : null;
 
 		return (

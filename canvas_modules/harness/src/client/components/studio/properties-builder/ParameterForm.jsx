@@ -24,8 +24,15 @@ const PARAM_TYPES = [
 	{ value: "integer", label: "Integer" },
 	{ value: "double", label: "Number (decimal)" },
 	{ value: "boolean", label: "Boolean (toggle)" },
-	{ value: "enum", label: "Dropdown (enum)" }
+	{ value: "enum", label: "Dropdown (enum)" },
+	{ value: "textarea", label: "Multi-line text" },
+	{ value: "expression", label: "Expression editor" },
+	{ value: "date", label: "Date" },
+	{ value: "time", label: "Time" },
+	{ value: "timestamp", label: "Date & time" }
 ];
+
+const TEXT_LIKE_TYPES = new Set(["string", "textarea", "expression", ""]);
 
 export default class ParameterForm extends React.Component {
 	constructor(props) {
@@ -130,6 +137,56 @@ export default class ParameterForm extends React.Component {
 						/>
 					</div>
 				)}
+
+				{param.type !== "boolean" && param.type !== "enum" && (
+					<div className="studio-form-field">
+						<TextInput
+							id={`param-placeholder-${param.paramId}`}
+							labelText="Placeholder text"
+							value={param.placeholder || ""}
+							size="sm"
+							onChange={(e) => this.handleChange("placeholder", e.target.value)}
+						/>
+					</div>
+				)}
+
+				<div className="studio-form-field">
+					<TextInput
+						id={`param-helper-${param.paramId}`}
+						labelText="Helper text (shown below the field)"
+						value={param.helperText || ""}
+						size="sm"
+						onChange={(e) => this.handleChange("helperText", e.target.value)}
+					/>
+				</div>
+
+				{TEXT_LIKE_TYPES.has(param.type || "") && (
+					<div className="studio-form-field">
+						<div className="studio-port-num">
+							<label className="studio-port-num-label" htmlFor={`param-charlimit-${param.paramId}`}>
+								Character limit (0 = unlimited)
+							</label>
+							<input
+								id={`param-charlimit-${param.paramId}`}
+								type="number"
+								className="studio-port-num-input"
+								value={param.charLimit || 0}
+								min={0}
+								onChange={(e) => this.handleChange("charLimit", parseInt(e.target.value, 10) || 0)}
+							/>
+						</div>
+					</div>
+				)}
+
+				<div className="studio-form-field">
+					<Toggle
+						id={`param-readonly-${param.paramId}`}
+						labelText="Read-only"
+						toggled={Boolean(param.readOnly)}
+						size="sm"
+						onToggle={(v) => this.handleChange("readOnly", v)}
+					/>
+				</div>
 
 				{availableActions && availableActions.length > 0 && (
 					<div className="studio-form-field">

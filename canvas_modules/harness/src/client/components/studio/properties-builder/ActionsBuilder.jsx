@@ -34,12 +34,14 @@ export default class ActionsBuilder extends React.Component {
 		const newAction = {
 			actionId: uuid4(),
 			id: "",
+			controlType: "image",
 			label: "",
 			description: "",
 			imageUrl: "",
 			placement: "right",
 			width: 25,
-			height: 20
+			height: 20,
+			paramRef: ""
 		};
 		this.props.onChange([...(this.props.actions || []), newAction]);
 		this.setState((prev) => ({ expanded: { ...prev.expanded, [newAction.actionId]: true } }));
@@ -120,6 +122,19 @@ export default class ActionsBuilder extends React.Component {
 						{expanded[action.actionId] && (
 							<div className="studio-action-form">
 								<div className="studio-form-field">
+									<Select
+										id={`action-type-${action.actionId}`}
+										labelText="Action type"
+										value={action.controlType || "image"}
+										size="sm"
+										onChange={(e) => this.updateAction(action.actionId, "controlType", e.target.value)}
+									>
+										<SelectItem value="image" text="Image / icon" />
+										<SelectItem value="button" text="Button" />
+									</Select>
+								</div>
+
+								<div className="studio-form-field">
 									<TextInput
 										id={`action-id-${action.actionId}`}
 										labelText="Action ID (referenced by parameter's action_ref)"
@@ -150,54 +165,71 @@ export default class ActionsBuilder extends React.Component {
 									/>
 								</div>
 
-								<div className="studio-form-field">
-									<TextInput
-										id={`action-url-${action.actionId}`}
-										labelText="Image URL"
-										placeholder="/images/moon.jpg"
-										value={action.imageUrl || ""}
-										size="sm"
-										onChange={(e) => this.updateAction(action.actionId, "imageUrl", e.target.value)}
-									/>
-								</div>
+								{(action.controlType || "image") === "image" && (
+									<>
+										<div className="studio-form-field">
+											<TextInput
+												id={`action-url-${action.actionId}`}
+												labelText="Image URL"
+												placeholder="/images/moon.jpg"
+												value={action.imageUrl || ""}
+												size="sm"
+												onChange={(e) => this.updateAction(action.actionId, "imageUrl", e.target.value)}
+											/>
+										</div>
 
-								<div className="studio-form-field">
-									<Select
-										id={`action-placement-${action.actionId}`}
-										labelText="Placement"
-										value={action.placement || "right"}
-										size="sm"
-										onChange={(e) => this.updateAction(action.actionId, "placement", e.target.value)}
-									>
-										<SelectItem value="right" text="Right of field" />
-										<SelectItem value="left" text="Left of field" />
-									</Select>
-								</div>
+										<div className="studio-form-field">
+											<Select
+												id={`action-placement-${action.actionId}`}
+												labelText="Placement"
+												value={action.placement || "right"}
+												size="sm"
+												onChange={(e) => this.updateAction(action.actionId, "placement", e.target.value)}
+											>
+												<SelectItem value="right" text="Right of field" />
+												<SelectItem value="left" text="Left of field" />
+											</Select>
+										</div>
 
-								<div className="studio-two-col-row">
-									<div className="studio-port-num">
-										<label className="studio-port-num-label" htmlFor={`action-width-${action.actionId}`}>Width (px)</label>
-										<input
-											id={`action-width-${action.actionId}`}
-											type="number"
-											className="studio-port-num-input"
-											value={action.width || 25}
-											min={1}
-											onChange={(e) => this.updateAction(action.actionId, "width", parseInt(e.target.value, 10) || 25)}
+										<div className="studio-two-col-row">
+											<div className="studio-port-num">
+												<label className="studio-port-num-label" htmlFor={`action-width-${action.actionId}`}>Width (px)</label>
+												<input
+													id={`action-width-${action.actionId}`}
+													type="number"
+													className="studio-port-num-input"
+													value={action.width || 25}
+													min={1}
+													onChange={(e) => this.updateAction(action.actionId, "width", parseInt(e.target.value, 10) || 25)}
+												/>
+											</div>
+											<div className="studio-port-num">
+												<label className="studio-port-num-label" htmlFor={`action-height-${action.actionId}`}>Height (px)</label>
+												<input
+													id={`action-height-${action.actionId}`}
+													type="number"
+													className="studio-port-num-input"
+													value={action.height || 20}
+													min={1}
+													onChange={(e) => this.updateAction(action.actionId, "height", parseInt(e.target.value, 10) || 20)}
+												/>
+											</div>
+										</div>
+									</>
+								)}
+
+								{(action.controlType || "image") === "button" && (
+									<div className="studio-form-field">
+										<TextInput
+											id={`action-paramref-${action.actionId}`}
+											labelText="Parameter ref (optional — links button to a parameter)"
+											placeholder="my_param"
+											value={action.paramRef || ""}
+											size="sm"
+											onChange={(e) => this.updateAction(action.actionId, "paramRef", e.target.value)}
 										/>
 									</div>
-									<div className="studio-port-num">
-										<label className="studio-port-num-label" htmlFor={`action-height-${action.actionId}`}>Height (px)</label>
-										<input
-											id={`action-height-${action.actionId}`}
-											type="number"
-											className="studio-port-num-input"
-											value={action.height || 20}
-											min={1}
-											onChange={(e) => this.updateAction(action.actionId, "height", parseInt(e.target.value, 10) || 20)}
-										/>
-									</div>
-								</div>
+								)}
 							</div>
 						)}
 					</div>

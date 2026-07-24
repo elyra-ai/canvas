@@ -705,3 +705,63 @@
 	padding: 2rem;
 	font-size: 0.875rem;
 }
+
+// ---- Group Builder ----
+
+.studio-groups-list {
+	margin-top: 0.5rem;
+}
+
+.studio-group-item {
+	border: 1px solid var(--cds-border-subtle-01);
+	border-radius: 4px;
+	padding: 0.75rem;
+	margin-bottom: 0.75rem;
+}
+
+.studio-group-header {
+	display: flex;
+	align-items: flex-end;
+	gap: 0.5rem;
+	margin-bottom: 0.75rem;
+
+	> .cds--form-item {
+		flex: 1;
+	}
+}
+
+.studio-group-delete {
+	flex-shrink: 0;
+}
+
+.studio-group-params {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+}
+
+.studio-group-param-check {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.875rem;
+	cursor: pointer;
+
+	input[type="checkbox"] {
+		cursor: pointer;
+	}
+}
+
+// ---- Resources Editor ----
+
+.studio-resource-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr auto;
+	gap: 0.5rem;
+	align-items: flex-end;
+	margin-bottom: 0.5rem;
+}
+
+.studio-resource-delete {
+	flex-shrink: 0;
+}
