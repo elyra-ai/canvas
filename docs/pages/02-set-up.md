@@ -148,6 +148,64 @@ If you intend to configure Common Properties to use the, now superseded, React-v
 
 - react-virtualized/styles.css
 
+## Content Security Policy
+
+Applications can use Elyra Canvas with a `Content-Security-Policy` that omits `'unsafe-inline'` from `style-src`, but this requires some application-level setup and a few feature constraints.
+
+### Requirements for `style-src` without `'unsafe-inline'`
+
+1. Serve the Carbon and Elyra Canvas stylesheets as external CSS files, or compile them into your application's stylesheet bundle.
+2. If your application uses [`<CommonProperties>`](04-common-properties.md) controls that inject runtime styles, generate a nonce for each HTTP response and pass it through the [`cspNonce`](04.08-properties-config.md#properties-config) property in the Common Properties configuration.
+3. Ensure any SVG icons or images rendered by the application do not contain embedded `<style>` elements. Elyra Canvas removes `<style>` elements from inline SVG content and expands supported class-based rules to SVG presentation attributes before inserting the SVG into the document, but application teams should still provide CSP-safe SVG assets.
+4. Do not use the canvas object inline style APIs when your policy omits `'unsafe-inline'`. The style specifications passed to [`setObjectsStyle()`](03.04-canvas-controller.md#pipeline-flow-methods), [`setObjectsMultiStyle()`](03.04-canvas-controller.md#pipeline-flow-methods), [`setLinksStyle()`](03.04-canvas-controller.md#setlinksstylepipelinelinkids-linkstyle-temporary), and [`setLinksMultiStyle()`](03.04-canvas-controller.md#setlinksmultistylepipelineobjstyles-temporary) are written as inline `style` attributes and therefore require `'unsafe-inline'` in `style-src`.
+5. Do not store inline object styles in the pipeline flow data model. Node, comment, and link `.style` and `.style_temp` values are also rendered as inline `style` attributes and therefore require `'unsafe-inline'`.
+6. Review any application code that adds inline `style` attributes outside Elyra Canvas. A CSP that omits `'unsafe-inline'` will also block those application-authored inline styles.
+
+### Passing a nonce to Common Properties
+
+Common Properties only requires a nonce when the application uses features that inject runtime styles. This includes the expression editor powered by CodeMirror and table-related components.
+
+Use the [`cspNonce`](04.08-properties-config.md#properties-config) property documented in the Common Properties configuration page:
+
+```jsx
+<CommonProperties
+    propertiesConfig={{
+        cspNonce: nonce
+    }}
+    ...
+/>
+```
+
+Your server must generate a new cryptographically random nonce for each HTTP response and include the same nonce in the `Content-Security-Policy` response header, for example:
+
+```http
+Content-Security-Policy: default-src 'self'; style-src 'self' 'nonce-<your-nonce-value>'
+```
+
+See the [`cspNonce`](04.08-properties-config.md#properties-config) documentation for a fuller example.
+
+### SVG icons and images
+
+If your application provides custom SVG icons or other inline SVG assets to Elyra Canvas, make sure they are compatible with a restrictive `style-src` policy:
+
+- Prefer SVG presentation attributes such as `fill`, `stroke`, `stroke-width`, and `opacity`.
+- Avoid embedded `<style>` elements inside the SVG markup.
+- Avoid relying on CSS class selectors inside the SVG to define appearance.
+
+If an SVG contains `<style>` elements, Elyra Canvas will attempt to convert the supported class-based rules into presentation attributes and remove the `<style>` blocks before rendering. For predictable results, application teams should still provide SVG assets that already avoid embedded styles.
+
+### Features that still require `'unsafe-inline'`
+
+A `style-src` policy without `'unsafe-inline'` is compatible with the standard Elyra Canvas and Common Properties styling model, but not with APIs that explicitly write inline style attributes.
+
+This means `'unsafe-inline'` is still required if your application uses:
+
+- Canvas object style specifications in the pipeline flow data model, including `.style` and `.style_temp` on nodes, comments, or links.
+- [`setObjectsStyle()`](03.04-canvas-controller.md#pipeline-flow-methods) or [`setObjectsMultiStyle()`](03.04-canvas-controller.md#pipeline-flow-methods).
+- [`setLinksStyle()`](03.04-canvas-controller.md#setlinksstylepipelinelinkids-linkstyle-temporary) or [`setLinksMultiStyle()`](03.04-canvas-controller.md#setlinksmultistylepipelineobjstyles-temporary).
+
+If your application avoids those inline style APIs, avoids SVG `<style>` blocks, and supplies a nonce where Common Properties requires one, you can enforce `style-src` without `'unsafe-inline'`.
+
 ## IBM Telemetry
 
 `@elyra/canvas` uses [IBM Telemetry](https://github.com/ibm-telemetry/telemetry-js) to collect de-identified, anonymized usage metrics. Telemetry runs automatically via a `postinstall` hook the first time the package is installed as a dependency.
