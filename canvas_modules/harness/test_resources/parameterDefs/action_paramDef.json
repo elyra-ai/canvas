@@ -492,7 +492,7 @@
         "label": {
           "default": "Text input — action RIGHT"
         },
-        "action_ref": "moon_right"
+        "action_ref": "filter_right"
       },
       {
         "parameter_ref": "text_left",
@@ -973,6 +973,25 @@
           "size": {
             "height": 20,
             "width": 25
+          }
+        }
+      },
+      {
+        "id": "filter_right",
+        "label": {
+          "default": "Filter"
+        },
+        "description": {
+          "default": "Filter action tooltip"
+        },
+        "control": "image",
+        "data": {},
+        "image": {
+          "url": "/images/carbon/filter.svg",
+          "placement": "right",
+          "size": {
+            "height": 16,
+            "width": 16
           }
         }
       },
