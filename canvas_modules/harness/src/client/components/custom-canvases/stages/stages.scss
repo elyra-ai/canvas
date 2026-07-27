@@ -189,3 +189,47 @@
 		pointer-events: none;
 	}
 }
+
+.stages-app-decoration {
+	height: 100%;
+	width: 100%;
+}
+
+.stages-app-decoration-outline {
+	fill: #D3D3D3;
+	stroke: #D3D3D3;
+}
+
+.stages-app-decoration-strip {
+	fill: #FFD700;
+	stroke: #FFD700;
+}
+
+.stages-app-decoration-tag {
+	position: absolute;
+	top: 20px;
+	left: 5px;
+}
+
+.stages-app-decoration-label {
+	position: absolute;
+	top: 30px;
+	left: 100px;
+}
+
+.stages-app-multi-command-panel {
+	padding: 10px;
+	width: 170px;
+}
+
+.stages-app-palette-header {
+	border-bottom: 1px solid #D3D3D3;
+	height: fit-content;
+	padding: 20px 18px;
+}
+
+.stages-app-search-panel {
+	width: 300px;
+	padding: 20px;
+}
+

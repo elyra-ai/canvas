@@ -18,7 +18,8 @@
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, CANVAS_FOCUS,
-	LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE
+	LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
+	OBJ_NODE, OBJ_LINK, OBJ_COMMENT
 } from "./constants/canvas-constants.js";
 
 
@@ -80,19 +81,19 @@ export default class SVGCanvasUtilsAccessibility {
 			return [];
 		}
 		let solitaryComments = this.ap.pipeline.comments.filter((c) => !this.commentHasLinks(c));
-		solitaryComments = solitaryComments.map((sc) => ({ type: "comment", obj: sc }));
+		solitaryComments = solitaryComments.map((sc) => ({ type: OBJ_COMMENT, obj: sc }));
 		return solitaryComments;
 	}
 
 	getEntryLinks() {
 		let entryLinks = this.ap.pipeline.links.filter((l) => l.srcPos && l.trgPos);
-		entryLinks = entryLinks.map((el) => ({ type: "link", obj: el }));
+		entryLinks = entryLinks.map((el) => ({ type: OBJ_LINK, obj: el }));
 		return entryLinks;
 	}
 
 	getEntryNodes() {
 		let entryNodes = this.ap.pipeline.nodes.filter((n) => !this.nodeHasInputLinks(n) && !this.nodeHasAssocLinks(n));
-		entryNodes = entryNodes.map((en) => ({ type: "node", obj: en }));
+		entryNodes = entryNodes.map((en) => ({ type: OBJ_NODE, obj: en }));
 		return entryNodes;
 	}
 
@@ -119,7 +120,7 @@ export default class SVGCanvasUtilsAccessibility {
 				xPos = node.x_pos;
 			}
 		});
-		return { type: "node", obj: entryNode };
+		return { type: OBJ_NODE, obj: entryNode };
 	}
 
 	// Returns an array of groups of nodes, comments and links that are
@@ -276,14 +277,14 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getTagGroupYCoord(tg) {
-		if (tg.type === "link") {
+		if (tg.type === OBJ_LINK) {
 			return tg.obj.srcPos.y_pos;
 		}
 		return tg.obj.y_pos;
 	}
 
 	getTagGroupXCoord(tg) {
-		if (tg.type === "link") {
+		if (tg.type === OBJ_LINK) {
 			return tg.obj.srcPos.x_pos;
 		}
 		return tg.obj.x_pos;
@@ -380,24 +381,24 @@ export default class SVGCanvasUtilsAccessibility {
 	getAllLinksForNode(node) {
 		const linkInfos = [];
 		const dataLinksFrom = this.getLinksFromNode(node, NODE_LINK);
-		dataLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: link.srcObj }); });
+		dataLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: OBJ_NODE, obj: link.srcObj }); });
 
 		const dataLinksTo = this.getLinksToNode(node, NODE_LINK);
 		// Filter out any self-referencing links which will have already been added.
 		dataLinksTo.forEach((link) => {
 			if (link.srcNodeId !== link.trgNodeId) {
-				linkInfos.push({ link: link, type: "node", obj: link.trgNode });
+				linkInfos.push({ link: link, type: OBJ_NODE, obj: link.trgNode });
 			}
 		});
 
 		const assocLinksFrom = this.getLinksFromNode(node, ASSOCIATION_LINK);
-		assocLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: link.srcObj }); });
+		assocLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: OBJ_NODE, obj: link.srcObj }); });
 
 		const assocLinksTo = this.getLinksToNode(node, ASSOCIATION_LINK);
-		assocLinksTo.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: link.trgNode }); });
+		assocLinksTo.forEach((link) => { linkInfos.push({ link: link, type: OBJ_NODE, obj: link.trgNode }); });
 
 		const commentLinksFrom = this.getLinksToNode(node, COMMENT_LINK);
-		commentLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: "comment", obj: this.ap.getComment(link.srcNodeId) }); });
+		commentLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: OBJ_COMMENT, obj: this.ap.getComment(link.srcNodeId) }); });
 
 		return linkInfos;
 	}
@@ -405,16 +406,16 @@ export default class SVGCanvasUtilsAccessibility {
 	getNextLinksFromNode(node) {
 		const linkInfos = [];
 		const dataLinksFrom = this.getLinksFromNode(node, NODE_LINK);
-		dataLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: this.ap.getNode(link.trgNodeId) }); });
+		dataLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: OBJ_NODE, obj: this.ap.getNode(link.trgNodeId) }); });
 
 		const assocLinksFrom = this.getLinksFromNode(node, ASSOCIATION_LINK);
-		assocLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: this.ap.getNode(node.id === link.srcNodeId ? link.trgNodeId : link.srcNodeId) }); });
+		assocLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: OBJ_NODE, obj: this.ap.getNode(node.id === link.srcNodeId ? link.trgNodeId : link.srcNodeId) }); });
 
 		const assocLinksTo = this.getLinksToNode(node, ASSOCIATION_LINK);
-		assocLinksTo.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: link.trgNode }); });
+		assocLinksTo.forEach((link) => { linkInfos.push({ link: link, type: OBJ_NODE, obj: link.trgNode }); });
 
 		const commentLinksFrom = this.getLinksToNode(node, COMMENT_LINK);
-		commentLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: "comment", obj: this.ap.getComment(link.srcNodeId) }); });
+		commentLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: OBJ_COMMENT, obj: this.ap.getComment(link.srcNodeId) }); });
 
 		return linkInfos;
 	}
@@ -584,7 +585,7 @@ export default class SVGCanvasUtilsAccessibility {
 		const focusableSubElements = [];
 		const objType = CanvasUtils.getObjectTypeName(d);
 
-		if (objType === "node") {
+		if (objType === OBJ_NODE) {
 			if (d.inputs && d.layout.inputPortDisplay && d.layout.inputPortFocusable) {
 				d.inputs.forEach((ip) => {
 					focusableSubElements.push({ type: "inputPort", obj: ip });
@@ -602,7 +603,7 @@ export default class SVGCanvasUtilsAccessibility {
 			}
 		}
 
-		if (objType === "link" &&
+		if (objType === OBJ_LINK &&
 				d.type === NODE_LINK &&
 				(this.ap.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 				this.ap.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
@@ -620,7 +621,7 @@ export default class SVGCanvasUtilsAccessibility {
 			});
 		}
 
-		if (objType === "link" &&
+		if (objType === OBJ_LINK &&
 			d.type === NODE_LINK &&
 			(this.ap.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 			this.ap.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))

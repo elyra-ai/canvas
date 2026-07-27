@@ -950,14 +950,14 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		let fieldTable = container.querySelector("div.properties-value-table-container");
 		let rows = tableUtilsRTL.getTableRows(fieldTable);
 		expect(rows).to.have.length(2);
-		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMin: 21");
+		expect(rows[0].textContent).to.equal("Min: 21");
 		const searchInput = fieldTable.querySelectorAll("div.properties-ft-search-container input");
 		expect(searchInput).to.have.length(1);
 		fireEvent.change(searchInput[0], { target: { value: "Max" } });
 		fieldTable = container.querySelector("div.properties-value-table-container");
 		rows = tableUtilsRTL.getTableRows(fieldTable);
 		expect(rows).to.have.length(1);
-		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMax: 55");
+		expect(rows[0].textContent).to.equal("Max: 55");
 	});
 	it("expression builder filters function table", () => {
 		reset();
@@ -1032,14 +1032,14 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		const rows = tableUtilsRTL.getTableRows(valueTable);
 		const sortHeaders = valueTable.querySelectorAll(".properties-vt-column-sortable");
 		expect(rows).to.have.length(2);
-		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMin: 21");
+		expect(rows[0].textContent).to.equal("Min: 21");
 		expect(sortHeaders).to.have.length(1);
 
 		tableUtilsRTL.clickHeaderColumnSort(valueTable, 0);
-		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMax: 55");
+		expect(rows[0].textContent).to.equal("Max: 55");
 
 		tableUtilsRTL.clickHeaderColumnSort(valueTable, 0);
-		expect(rows[0].textContent).to.equal("Select row 1 from Values tableMin: 21");
+		expect(rows[0].textContent).to.equal("Min: 21");
 	});
 	it("expression builder sorts function table", () => {
 		reset();
@@ -1123,7 +1123,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// check that recently used field has the correct values stored with it
 		let valueRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-value-table-container"));
 		expect(valueRows).to.have.length(3);
-		expect(valueRows[2].textContent).to.equal("Select row 3 from Values tablenot specified");
+		expect(valueRows[2].textContent).to.equal("not specified");
 		// check that reusing a field will move it to the top of Recently Used
 		dropDown = container.querySelector("div.properties-expression-field-select .cds--list-box__field");
 		fireEvent.click(dropDown);
@@ -1144,7 +1144,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		expect(fieldRows[1].textContent).to.equal("Select row 2 from Fields tableSex");
 		valueRows = tableUtilsRTL.getTableRows(container.querySelector("div.properties-value-table-container"));
 		expect(valueRows).to.have.length(2);
-		expect(valueRows[0].textContent).to.equal("Select row 1 from Values tableMin: 21");
+		expect(valueRows[0].textContent).to.equal("Min: 21");
 	});
 	it("expression builder correctly adds and reorders functions to Recently Used", () => {
 		reset();

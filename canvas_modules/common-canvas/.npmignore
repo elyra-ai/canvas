@@ -47,6 +47,7 @@ jest-setup.js
 # build
 scripts
 *.yml
+!telemetry.yml
 package-lock.json
 webpack.*.js
 Gruntfile.js

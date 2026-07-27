@@ -447,16 +447,13 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(resizeBtn).to.have.length(1);
 		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
 		expect(customSizeContainer).to.have.length(1);
-		let style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("400px");
 		fireEvent.click(resizeBtn[0]);
 		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("800px");
 		fireEvent.click(resizeBtn[0]);
 		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("400px");
 
 		// Restore console.warn
 		consoleWarnSpy.mockRestore();
@@ -473,16 +470,13 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(resizeBtn).to.have.length(1);
 		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
 		expect(customSizeContainer).to.have.length(1);
-		let style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("400px");
 		fireEvent.click(resizeBtn[0]);
 		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("800px");
 		fireEvent.click(resizeBtn[0]);
 		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("400px");
 	});
 
 	it("When enableResize=true and editor_size=large and pixel_width min and max are set resize button should be rendered", () => {
@@ -496,16 +490,13 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(resizeBtn).to.have.length(1);
 		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
 		expect(customSizeContainer).to.have.length(1);
-		let style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("400px");
 		fireEvent.click(resizeBtn[0]);
 		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("800px");
 		fireEvent.click(resizeBtn[0]);
 		expect(container.querySelectorAll("aside.properties-custom-size")).to.have.length(1);
-		style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("400px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("400px");
 	});
 
 	it("When enableResize=true and editor_size=small and pixel_width min and max are the same the resize button should not be rendered", () => {
@@ -524,8 +515,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(resizeBtn).to.have.length(0);
 		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
 		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("800px");
 
 		// Restore console.warn
 		consoleWarnSpy.mockRestore();
@@ -547,8 +537,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(resizeBtn).to.have.length(0);
 		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
 		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("800px");
 
 		// Restore console.warn
 		consoleWarnSpy.mockRestore();
@@ -570,8 +559,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(resizeBtn).to.have.length(0);
 		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
 		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("800px");
 
 		// Restore console.warn
 		consoleWarnSpy.mockRestore();
@@ -604,8 +592,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(resizeBtn).to.have.length(0);
 		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
 		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("1000px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("1000px");
 
 		// Restore console.warn
 		consoleWarnSpy.mockRestore();
@@ -626,8 +613,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(resizeBtn).to.have.length(0);
 		const customSizeContainer = container.querySelectorAll("aside.properties-custom-size");
 		expect(customSizeContainer).to.have.length(1);
-		const style = window.getComputedStyle(customSizeContainer[0]);
-		expect(style.width).to.equal("800px");
+		expect(customSizeContainer[0].style.getPropertyValue("--properties-custom-width")).to.equal("800px");
 
 		// Restore console.warn
 		consoleWarnSpy.mockRestore();

@@ -124,21 +124,20 @@ class ColorPicker extends React.Component {
 
 				return (<div key={"key" + i} ref={this.refss[i]} tabIndex={"-1"}
 					data-color={c}
-					style={{ backgroundColor: c }}
+					style={{ "--color-picker-swatch-color": c }}
 					className={className}
 				/>);
 			});
 
 			const rowCount = Math.ceil(this.totalColors / this.colorsPerRow);
 
-			const style = {
-				width: (this.colorsPerRow * COLOR_DIM_PLUS_PAD) + COLOR_PADDING,
-				height: (rowCount * COLOR_DIM_PLUS_PAD) + COLOR_PADDING,
-				paddingBottom: "4px"
+			const containerStyle = {
+				"--color-picker-width": (this.colorsPerRow * COLOR_DIM_PLUS_PAD) + COLOR_PADDING + "px",
+				"--color-picker-height": (rowCount * COLOR_DIM_PLUS_PAD) + COLOR_PADDING + "px"
 			};
 
 			return (
-				<div className="color-picker" style={style} tabIndex={"-1"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
+				<div className="color-picker" style={containerStyle} tabIndex={"-1"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
 					{colorDivs}
 				</div>
 			);

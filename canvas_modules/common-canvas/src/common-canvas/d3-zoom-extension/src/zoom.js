@@ -94,7 +94,7 @@ export default function() {
         .on("touchstart.zoom", touchstarted)
         .on("touchmove.zoom", touchmoved)
         .on("touchend.zoom touchcancel.zoom", touchended)
-        .style("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
+        .each(function() { this.style.setProperty("-webkit-tap-highlight-color", "rgba(0,0,0,0)"); });
   }
 
   zoom.transform = function(collection, transform, point, event) {

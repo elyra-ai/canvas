@@ -639,7 +639,7 @@ class PropertiesMain extends React.Component {
 			if (overrideSize !== null) {
 				// Add custom classname when custom editor size is set
 				propertiesSizeClassname = "properties-custom-size";
-				overrideStyle = { width: overrideSize + "px" };
+				overrideStyle = { "--properties-custom-width": overrideSize + "px" };
 			}
 
 			const className = classNames("properties-wrapper",

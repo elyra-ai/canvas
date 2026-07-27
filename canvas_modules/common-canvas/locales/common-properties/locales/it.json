@@ -45,6 +45,7 @@
   "datetime.format.error": "{role} non valido. Il formato deve essere {format}.",
   "invalid.field.error": "{label} non valido, campo non trovato nel dataset.",
   "invalid.number.error": "Il numero non è valido.",
+  "invalid.integer.error": "Il valore deve essere un numero intero.",
   "expression.validate.label": "Convalida",
   "expression.validating.label": "Convalida",
   "expression.builder.title": "Builder di espressioni",

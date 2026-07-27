@@ -712,7 +712,7 @@ class MappingContainerNode extends React.Component {
 						key={"key_" + index}
 						ref={this.textInputRef}
 						value={field.label}
-						style={{ height: "18px", borderBottom: 0, paddingLeft: 0 }}
+						className="mapping-text-input"
 						hideLabel
 						labelText={""}
 						readOnly={false}

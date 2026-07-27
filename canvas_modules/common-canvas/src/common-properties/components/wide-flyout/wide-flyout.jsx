@@ -26,7 +26,8 @@ export default class WideFlyout extends Component {
 		this.modalRef = React.createRef();
 		this.state = {
 			style: {
-				height: 0
+				"--wf-height": 0,
+				"--wf-top": null
 			}
 		};
 		this.updateDimensions = this.updateDimensions.bind(this);
@@ -96,8 +97,8 @@ export default class WideFlyout extends Component {
 				const commonProperties = this.commonPropertiesParent.getBoundingClientRect();
 				this.setState({
 					style: {
-						height: commonProperties.height + "px",
-						top: commonProperties.top + "px",
+						"--wf-height": commonProperties.height + "px",
+						"--wf-top": commonProperties.top + "px",
 					}
 				});
 			}
