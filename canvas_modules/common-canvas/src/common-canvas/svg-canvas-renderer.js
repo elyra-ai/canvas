@@ -3359,7 +3359,8 @@ export default class SVGCanvasRenderer {
 
 				} else {
 					imageSel.selectChild("svg").remove();
-					this.loadInlineSVG(image).then((svgElement) => {
+					d3.svg(image, { cache: "force-cache" }).then((data) => {
+						const svgElement = data.documentElement;
 						svgElement.setAttribute("aria-label", "Node Image");
 						imageSel.node().append(svgElement);
 					});
@@ -3368,86 +3369,6 @@ export default class SVGCanvasRenderer {
 				imageSel.attr("xlink:href", image);
 			}
 		}
-	}
-
-	// The default behavior for SVG files is to load them in-line regardless
-	// of how many times a unique image is used for a particular flow. This
-	// can be unnecessarily slow if an image is referenced many times. This
-	// method provides a performance enhancement for displaying SVG images.
-	// Loads an SVG file for inline display, using force-cache for performance.
-	// If the cached response contains <style> blocks (indicating a stale pre-CSP
-	// version), it silently retries with no-cache to fetch the current file.
-	// If the retry also contains <style> blocks, they are expanded to presentation
-	// attributes by expandSVGStyleClasses and an error is logged.
-	async loadInlineSVG(image) {
-		const load = (cacheMode) => d3.svg(image, { cache: cacheMode }).then((data) => data.documentElement.cloneNode(true));
-
-		let svgElement = await load("force-cache");
-		if (svgElement.querySelectorAll("style").length > 0) {
-			svgElement = await load("no-cache");
-			if (svgElement.querySelectorAll("style").length > 0) {
-				this.logger.error("SVGCanvasRenderer: SVG image contains <style> blocks that may violate CSP style-src: " + image);
-			}
-		}
-		this.expandSVGStyleClasses(svgElement);
-		return svgElement;
-	}
-
-	// Expands CSS class-based styles in an inlined SVG element to SVG presentation
-	// attributes, then removes the <style> blocks. This avoids CSP style-src
-	// violations that occur when <style> tags are injected into the live document
-	// without a valid nonce. Only simple class selectors with property declarations
-	// are handled; complex selectors are left in place.
-	expandSVGStyleClasses(svgElement) {
-		const styleEls = svgElement.querySelectorAll("style");
-		if (styleEls.length === 0) {
-			return;
-		}
-
-		// Parse class rules from all <style> blocks into a map of className -> {prop: val}
-		const classRules = {};
-		styleEls.forEach((styleEl) => {
-			const text = styleEl.textContent || "";
-			const ruleRe = /\.([\w-]+)\s*\{([^}]+)\}/g;
-			let match;
-			while ((match = ruleRe.exec(text)) !== null) {
-				const cls = match[1];
-				const props = {};
-				match[2].split(";").forEach((decl) => {
-					const colonIdx = decl.indexOf(":");
-					if (colonIdx !== -1) {
-						const prop = decl.slice(0, colonIdx).trim();
-						const val = decl.slice(colonIdx + 1).trim();
-						if (prop && val && prop !== "enable-background") {
-							props[prop] = val;
-						}
-					}
-				});
-				classRules[cls] = Object.assign(classRules[cls] || {}, props);
-			}
-			styleEl.remove();
-		});
-
-		if (Object.keys(classRules).length === 0) {
-			return;
-		}
-
-		// Apply the rules as presentation attributes on all matching elements
-		svgElement.querySelectorAll("[class]").forEach((el) => {
-			const classes = el.getAttribute("class").split(/\s+/);
-			classes.forEach((cls) => {
-				const rules = classRules[cls];
-				if (rules) {
-					Object.entries(rules).forEach(([prop, val]) => {
-						// Only set as presentation attribute if not already explicitly set
-						if (!el.hasAttribute(prop)) {
-							el.setAttribute(prop, val);
-						}
-					});
-				}
-			});
-			el.removeAttribute("class");
-		});
 	}
 
 	// It stores each unique SVG file encountered in the <defs> element for the
@@ -3467,13 +3388,9 @@ export default class SVGCanvasRenderer {
 
 			d3.svg(image, { cache: "force-cache" }).then((data) => {
 				// Asynchronously, populate placeholder <symbol> with SVG file contents.
-				// Clone so the node can be appended independently of the cached document,
-				// then expand CSS class rules to presentation attributes before insertion.
-				const svgElement = data.documentElement.cloneNode(true);
-				this.expandSVGStyleClasses(svgElement);
 				this.canvasDefs.selectChildren(symbolSelector)
 					.node()
-					.append(svgElement);
+					.append(data.documentElement);
 			});
 		}
 

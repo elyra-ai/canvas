@@ -23,13 +23,14 @@ import compression from "compression";
 import path from "path";
 import { fileURLToPath } from "url";
 import { randomBytes } from "crypto";
-import { readFileSync } from "fs";
+import { readFileSync, readFile } from "fs";
 import appConfig from "./utils/app-config.js";
 import { APP_SESSION_KEY, API_PATH_V1, APP_PATH } from "./constants.js";
 import log4js from "log4js";
 import bodyParser from "body-parser";
 import log4jsUtils from "./utils/log4js-util.js";
 import { isCspEnabled } from "./csp-state.js";
+import { transformSVG } from "./svg-csp-transform.js";
 
 log4jsUtils.init();
 
@@ -123,6 +124,27 @@ function create(callback) {
 	}
 
 	app.use(express.static(path.join(__dirname, "../.build"), { index: false }));
+
+	// When CSP is enabled, intercept SVG file requests and transform the content
+	// to eliminate <style> blocks and style= attributes before serving. This must
+	// be registered before express.static so it takes precedence for SVG files.
+	app.get("*.svg", serveSvg);
+
+	function serveSvg(req, res, next) {
+		if (!isCspEnabled()) {
+			return next();
+		}
+		const svgPath = path.join(__dirname, "../assets", req.path);
+		readFile(svgPath, "utf8", function onSvgRead(err, data) {
+			if (err) {
+				return next();
+			}
+			res.setHeader("Content-Type", "image/svg+xml");
+			res.setHeader("Cache-Control", "public, max-age=3600");
+			return res.send(transformSVG(data));
+		});
+		return null;
+	}
 
 	// Serve index.html dynamically so the CSP nonce can be injected when CSP is
 	// enabled.  In dev mode the HTML is read from webpack's in-memory filesystem
