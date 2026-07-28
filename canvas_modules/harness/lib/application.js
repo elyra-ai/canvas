@@ -123,26 +123,40 @@ function create(callback) {
 		devCompiler = _configureHmr(app);
 	}
 
-	app.use(express.static(path.join(__dirname, "../.build"), { index: false }));
-
 	// When CSP is enabled, intercept SVG file requests and transform the content
 	// to eliminate <style> blocks and style= attributes before serving. This must
 	// be registered before express.static so it takes precedence for SVG files.
+	// SVGs may live under assets/ (dev) or .build/ (production), so both
+	// directories are tried in order before falling through to the next handler.
 	app.get("*.svg", serveSvg);
+
+	app.use(express.static(path.join(__dirname, "../.build"), { index: false }));
 
 	function serveSvg(req, res, next) {
 		if (!isCspEnabled()) {
 			return next();
 		}
-		const svgPath = path.join(__dirname, "../assets", req.path);
-		readFile(svgPath, "utf8", function onSvgRead(err, data) {
-			if (err) {
+		const candidates = [
+			path.join(__dirname, "../assets", req.path),
+			path.join(__dirname, "../.build", req.path)
+		];
+		let index = 0;
+		function tryNext() {
+			if (index >= candidates.length) {
 				return next();
 			}
-			res.setHeader("Content-Type", "image/svg+xml");
-			res.setHeader("Cache-Control", "public, max-age=3600");
-			return res.send(transformSVG(data));
-		});
+			const svgPath = candidates[index++];
+			readFile(svgPath, "utf8", function onSvgRead(err, data) {
+				if (err) {
+					return tryNext();
+				}
+				res.setHeader("Content-Type", "image/svg+xml");
+				res.setHeader("Cache-Control", "public, max-age=3600");
+				return res.send(transformSVG(data));
+			});
+			return null;
+		}
+		tryNext();
 		return null;
 	}
 

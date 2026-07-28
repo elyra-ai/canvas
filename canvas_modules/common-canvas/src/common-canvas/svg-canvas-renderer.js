@@ -3371,12 +3371,11 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// It stores each unique SVG file encountered in the <defs> element for the
-	// canvas as a <symbol> element. It then adds <use> elements to each place
-	// where that image is referenced. So, if the same image is referenced many
-	// times there is just one symbol for the SVG file stored in the <defs>
-	// element. This is faster but can restrict customization capabilities of
-	// the canvas images.
+	// Stores each unique SVG file in the <defs> element as a <symbol>, then
+	// adds <use> elements everywhere that image is referenced. So, if the same
+	// image is referenced many times there is just one symbol for the SVG file
+	// stored in the <defs> element. This is faster but can restrict
+	// customization capabilities of the canvas images.
 	loadSVGToDefs(imageSel, image) {
 		const symbolId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
 		const symbolSelector = "#" + symbolId;

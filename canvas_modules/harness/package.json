@@ -86,7 +86,6 @@
     "sass": "1.72.0",
     "sass-loader": "14.1.1",
     "source-map-loader": "5.0.0",
-    "style-loader": "3.3.4",
     "stylelint": "14.16.1",
     "ts-loader": "9.5.4",
     "typescript": "5.9.3",

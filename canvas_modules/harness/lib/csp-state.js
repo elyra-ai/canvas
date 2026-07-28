@@ -19,7 +19,7 @@
 // application.js and v1-ops-api.js can import it without creating a
 // circular dependency.
 
-let cspEnabled = true;
+let cspEnabled = false;
 
 /** Returns the current CSP-enabled flag. */
 export function isCspEnabled() {

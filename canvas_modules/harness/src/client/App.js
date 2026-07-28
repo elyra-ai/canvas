@@ -2415,8 +2415,7 @@ class App extends React.Component {
 					}
 				}
 			},
-			enableLinksOverNodes: this.state.selectedLinksOverNodes,
-			cspNonce: window.__CSP_NONCE__
+			enableLinksOverNodes: this.state.selectedLinksOverNodes
 		};
 
 		return canvasConfig;
