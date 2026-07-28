@@ -23,14 +23,13 @@ import compression from "compression";
 import path from "path";
 import { fileURLToPath } from "url";
 import { randomBytes } from "crypto";
-import { readFileSync, readFile } from "fs";
+import { readFileSync } from "fs";
 import appConfig from "./utils/app-config.js";
 import { APP_SESSION_KEY, API_PATH_V1, APP_PATH } from "./constants.js";
 import log4js from "log4js";
 import bodyParser from "body-parser";
 import log4jsUtils from "./utils/log4js-util.js";
 import { isCspEnabled } from "./csp-state.js";
-import { transformSVG } from "./svg-csp-transform.js";
 
 log4jsUtils.init();
 
@@ -96,42 +95,7 @@ function create(callback) {
 		devCompiler = _configureHmr(app);
 	}
 
-	// When CSP is enabled, intercept SVG file requests and transform the content
-	// to eliminate <style> blocks and style= attributes before serving. This must
-	// be registered before express.static so it takes precedence for SVG files.
-	// SVGs may live under assets/ (dev) or .build/ (production), so both
-	// directories are tried in order before falling through to the next handler.
-	app.get("*.svg", serveSvg);
-
 	app.use(express.static(path.join(__dirname, "../.build"), { index: false }));
-
-	function serveSvg(req, res, next) {
-		if (!isCspEnabled()) {
-			return next();
-		}
-		const candidates = [
-			path.join(__dirname, "../assets", req.path),
-			path.join(__dirname, "../.build", req.path)
-		];
-		let index = 0;
-		function tryNext() {
-			if (index >= candidates.length) {
-				return next();
-			}
-			const svgPath = candidates[index++];
-			readFile(svgPath, "utf8", function onSvgRead(err, data) {
-				if (err) {
-					return tryNext();
-				}
-				res.setHeader("Content-Type", "image/svg+xml");
-				res.setHeader("Cache-Control", "public, max-age=3600");
-				return res.send(transformSVG(data));
-			});
-			return null;
-		}
-		tryNext();
-		return null;
-	}
 
 	// Serve index.html dynamically so the CSP nonce can be injected when CSP is
 	// enabled.  In dev mode the HTML is read from webpack's in-memory filesystem
