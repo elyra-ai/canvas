@@ -61,13 +61,12 @@ function create(callback) {
 	// response as window.__CSP_NONCE__ so that client code (e.g. CommonProperties)
 	// can pass it to components that inject <style> tags at runtime.
 	// script-src retains 'unsafe-inline' for the HMR dev toolchain only.
-	// Violations are logged via /csp-report for ongoing review.
+	// CSP violations are visible in the browser DevTools console.
 	app.use((_req, res, next) => {
 		if (!isCspEnabled()) {
 			return next();
 		}
 		res.locals.cspNonce = randomBytes(16).toString("base64");
-		res.setHeader("Reporting-Endpoints", "csp-endpoint=\"/csp-report\"");
 		res.setHeader(
 			"Content-Security-Policy",
 			[
@@ -77,37 +76,11 @@ function create(callback) {
 				"font-src 'self' data:",
 				"img-src 'self' data:",
 				"connect-src 'self'",
-				"worker-src blob:",
-				"report-uri /csp-report",
-				"report-to csp-endpoint"
+				"worker-src blob:"
 			].join("; ")
 		);
 		return next();
 	});
-
-	// CSP violation report endpoint — browsers POST here when the above policy
-	// is violated. Each report is printed to the server console as a warning so
-	// violations are visible without opening browser DevTools.
-	app.post("/csp-report",
-		bodyParser.json({ type: ["application/csp-report", "application/reports+json"], limit: "50kb" }),
-		(req, res) => {
-			// report-to sends an array; report-uri sends a single object
-			const reports = Array.isArray(req.body) ? req.body : [req.body];
-			reports.forEach((item) => {
-				const report = item["csp-report"] || item.body;
-				if (report) {
-					logger.warn(
-						`CSP violation: blocked-uri="${report["blocked-uri"] || report.blockedURL}" ` +
-						`violated-directive="${report["violated-directive"] || report.effectiveDirective}" ` +
-						`source-file="${report["source-file"] || report.sourceFile}" ` +
-						`line=${report["line-number"] || report.lineNumber} ` +
-						`col=${report["column-number"] || report.columnNumber}`
-					);
-				}
-			});
-			res.status(204).end();
-		}
-	);
 
 	app.use(session({
 		secret: APP_SESSION_KEY,
