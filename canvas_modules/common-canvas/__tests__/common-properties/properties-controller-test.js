@@ -1890,7 +1890,12 @@ describe("Properties Controller getRequiredDefinitionIds", () => {
 			"required_radioBooleanWithEnum_167.45387366555846",
 			"required_radioBooleanWithoutEnum_836.1233358606064",
 			"required_radioBooleanWithLabels_68.57624159959238",
-			"required_fields_294.69762842919897"
+			"required_fields_294.69762842919897",
+			"required_text_right_432.31746334251517",
+			"required_text_left_510.6994183066741",
+			"required_text_with_desc_right_999.6333204248104",
+			"required_number_right_934.053738245873",
+			"required_dropdown_right_647.6303960698478"
 		]);
 	});
 });
