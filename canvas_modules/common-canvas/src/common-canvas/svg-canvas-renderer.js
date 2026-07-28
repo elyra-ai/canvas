@@ -3359,7 +3359,7 @@ export default class SVGCanvasRenderer {
 
 				} else {
 					imageSel.selectChild("svg").remove();
-					d3.svg(image, { cache: "force-cache" }).then((data) => {
+					d3.svg(image).then((data) => {
 						const svgElement = data.documentElement;
 						svgElement.setAttribute("aria-label", "Node Image");
 						imageSel.node().append(svgElement);
@@ -3385,7 +3385,7 @@ export default class SVGCanvasRenderer {
 		if (symbol.empty()) {
 			this.canvasDefs.append("symbol").attr("id", symbolId);
 
-			d3.svg(image, { cache: "force-cache" }).then((data) => {
+			d3.svg(image).then((data) => {
 				// Asynchronously, populate placeholder <symbol> with SVG file contents.
 				this.canvasDefs.selectChildren(symbolSelector)
 					.node()

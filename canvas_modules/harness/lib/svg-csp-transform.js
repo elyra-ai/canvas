@@ -85,7 +85,9 @@ function expandStyleBlocks(svg) {
 
 	// For each element that has a class= attribute, inject the resolved rules
 	// as presentation attributes and remove the class= attribute.
-	result = result.replace(/<(\w[\w-]*)\s([^>]+)>/g, (tag, tagName, attrs) => {
+	// The regex captures an optional trailing "/" so that self-closing tags
+	// (e.g. <rect ... />) are reconstructed correctly.
+	result = result.replace(/<(\w[\w-]*)\s([\s\S]*?)(\/?)>/g, (tag, tagName, attrs, selfClose) => {
 		const classMatch = attrs.match(/\bclass="([^"]+)"/);
 		if (!classMatch) {
 			return tag;
@@ -105,7 +107,7 @@ function expandStyleBlocks(svg) {
 			}
 		});
 		const attrsWithoutClass = attrs.replace(/\s*\bclass="[^"]*"/, "");
-		return `<${tagName} ${attrsWithoutClass}${extraAttrs}>`;
+		return `<${tagName} ${attrsWithoutClass}${extraAttrs}${selfClose}>`;
 	});
 
 	return result;
