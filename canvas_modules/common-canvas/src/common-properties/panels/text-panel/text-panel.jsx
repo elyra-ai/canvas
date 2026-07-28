@@ -29,7 +29,7 @@ class TextPanel extends Component {
 		const className = this.props.panel.className ? this.props.panel.className : "";
 		const hidden = this.props.panelState === STATES.HIDDEN;
 		const disabled = this.props.panelState === STATES.DISABLED;
-		let label = this.props.panel.label ? (<div className="panel-label">{this.props.panel.label}</div>) : null;
+		let label = this.props.panel.label ? (<div className="panel-label" aria-disabled={disabled}>{this.props.panel.label}</div>) : null;
 		let description;
 		if (this.props.panel.description && !isEmpty(this.props.panel.description.text)) {
 			const dynamicDescriptionText = evaluateText(this.props.panel.description.text, this.props.controller);

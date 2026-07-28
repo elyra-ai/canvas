@@ -31,8 +31,11 @@
 		margin-bottom: carbon.$spacing-03;
 	}
 	&[disabled] {
-		opacity: 0.5;
 		pointer-events: none;
+		.panel-label,
+		.panel-description {
+			color: carbon.$text-disabled;
+		}
 	}
 	&.hide {
 		display: none;
