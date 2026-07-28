@@ -126,6 +126,7 @@ describe("selectcolumns renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					openFieldPicker={openFieldPickerSpy}
 				/>
 			</Provider>
@@ -142,6 +143,7 @@ describe("selectcolumns renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					openFieldPicker={openFieldPickerSpy}
 				/>
 			</Provider>
@@ -164,6 +166,7 @@ describe("selectcolumns renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					openFieldPicker={openFieldPickerSpy}
 					rightFlyout
 				/>
@@ -194,6 +197,7 @@ describe("selectcolumns renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					openFieldPicker={openFieldPickerSpy}
 					rightFlyout
 				/>
@@ -211,6 +215,7 @@ describe("selectcolumns renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					openFieldPicker={openFieldPickerSpy}
 					rightFlyout
 				/>

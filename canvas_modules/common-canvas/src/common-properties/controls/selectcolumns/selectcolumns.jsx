@@ -66,6 +66,7 @@ class SelectColumnsControl extends AbstractTable {
 							control={control}
 							propertyId={propertyId}
 							controller={this.props.controller}
+							controlItem={<span />}
 							tableControl
 						/>
 					</div>

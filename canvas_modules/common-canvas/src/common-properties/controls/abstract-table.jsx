@@ -335,6 +335,7 @@ export default class AbstractTable extends React.Component {
 					control={this.props.controller.getControl(propertyId)}
 					propertyId={propertyId}
 					controller={this.props.controller}
+					controlItem={<span />}
 					tableControl
 				/>
 			</div>);
@@ -347,6 +348,7 @@ export default class AbstractTable extends React.Component {
 						control={this.props.controller.getControl(propertyId)}
 						propertyId={propertyId}
 						controller={this.props.controller}
+						controlItem={<span />}
 						tableControl
 					/>
 				</div>);
