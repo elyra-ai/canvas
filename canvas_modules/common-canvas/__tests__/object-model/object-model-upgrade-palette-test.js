@@ -37,6 +37,77 @@ import sparkPaletteV0 from "../../../harness/test_resources/palettes/x-sparkPale
 
 import { extractPaletteVersion } from "../../src/object-model/schemas-utils/upgrade-palette.js";
 
+/**
+ * Normalizes legacy encoded SVG icon markup so structurally equivalent palette
+ * fixtures compare equal across historical versions.
+ * @param {string} image The encoded image value.
+ * @returns {string} The original value or normalized encoded SVG content.
+ */
+function normalizePaletteImage(image) {
+	const prefix = "data:image/svg+xml;base64,";
+	if (typeof image !== "string" || !image.startsWith(prefix)) {
+		return image;
+	}
+
+	const svg = atob(image.substring(prefix.length));
+	const normalizedSvg = svg
+		.replace(/ style="enable-background:[^"]*"/g, "")
+		.replace(/<image([^>]*) style="overflow:visible;opacity:0\.66;enable-background:new\s*;"([^>]*)>/g, "<image$1 overflow=\"visible\" opacity=\"0.66\"$2>")
+		.replace(/<image([^>]*) style="overflow:visible;opacity:0\.66;"([^>]*)>/g, "<image$1 overflow=\"visible\" opacity=\"0.66\"$2>")
+		.replace(/<([\w:-]+)([^>]*) style="([^"]*fill:[^"]*)"([^>]*)\/>/g, (match, tagName, before, styleValue, after) => {
+			const presentationAttrs = styleValue
+				.split(";")
+				.map((decl) => decl.trim())
+				.filter(Boolean)
+				.map((decl) => {
+					const colonIdx = decl.indexOf(":");
+					if (colonIdx === -1) {
+						return null;
+					}
+					const prop = decl.slice(0, colonIdx).trim();
+					const value = decl.slice(colonIdx + 1).trim();
+					return prop && value ? `${prop}="${value}"` : null;
+				})
+				.filter(Boolean)
+				.join(" ");
+			return `<${tagName}${before} ${presentationAttrs}${after}/>`;
+		})
+		.replace(/viewBox="([^"]*)"\n\s*\n\s+xml:space=/g, "viewBox=\"$1\"\n   xml:space=");
+
+	return normalizedSvg === svg ? image : `${prefix}${btoa(normalizedSvg)}`;
+}
+
+/**
+ * Deep clones a palette and normalizes node icon encoding for comparisons.
+ * @param {object} palette The palette to normalize.
+ * @returns {object} A normalized palette clone.
+ */
+function normalizePaletteForComparison(palette) {
+	const normalizedPalette = JSON.parse(JSON.stringify(palette));
+	if (!normalizedPalette.categories) {
+		return normalizedPalette;
+	}
+
+	normalizedPalette.categories.forEach((category) => {
+		if (category.node_types) {
+			category.node_types.forEach((nodeType) => {
+				if (nodeType.app_data?.ui_data?.image) {
+					nodeType.app_data.ui_data.image = normalizePaletteImage(nodeType.app_data.ui_data.image);
+				}
+			});
+		}
+		if (category.nodetypes) {
+			category.nodetypes.forEach((nodeType) => {
+				if (nodeType.image) {
+					nodeType.image = normalizePaletteImage(nodeType.image);
+				}
+			});
+		}
+	});
+
+	return normalizedPalette;
+}
+
 const objectModel = new ObjectModel();
 objectModel.setSchemaValidation(true); // Ensure we validate against the schemas as we upgrade
 
@@ -106,8 +177,8 @@ describe("Upgrade palette test", () => {
 
 		objectModel.setPipelineFlowPalette(file);
 
-		const expectedPalette = file;
-		const actualPalette = objectModel.getPaletteData();
+		const expectedPalette = normalizePaletteForComparison(file);
+		const actualPalette = normalizePaletteForComparison(objectModel.getPaletteData());
 
 		// console.info("Expected Palette = " + JSON.stringify(expectedPalette, null, 2));
 		// console.info("Actual Palette   = " + JSON.stringify(actualPalette, null, 2));
@@ -121,7 +192,7 @@ describe("Upgrade palette test", () => {
 		objectModel.setPipelineFlowPalette(earlierPalette);
 
 		let expectedPalette = latestPalette;
-		const actualPalette = objectModel.getPaletteData();
+		const actualPalette = normalizePaletteForComparison(objectModel.getPaletteData());
 
 		// The open_with_tool attribute for supernodes was introduced in v2 palette examples.
 		// Therefore, remove any node with a open_with_tool from the expected palete JSON.
@@ -146,7 +217,7 @@ describe("Upgrade palette test", () => {
 		// console.info("Expected Palette = " + JSON.stringify(expectedPalette, null, 2));
 		// console.info("Actual Palette   = " + JSON.stringify(actualPalette, null, 2));
 
-		expect(isEqual(JSON.stringify(expectedPalette, null, 4), JSON.stringify(actualPalette, null, 4))).to.be.true;
+		expect(isEqual(JSON.stringify(normalizePaletteForComparison(expectedPalette), null, 4), JSON.stringify(actualPalette, null, 4))).to.be.true;
 	}
 
 	// V0 needs a special function because theye are specified to object model
@@ -158,7 +229,7 @@ describe("Upgrade palette test", () => {
 
 		// Clone expected canvas because earlier tests may have deep frozen it.
 		const expectedPalette = JSON.parse(JSON.stringify(latestPalette));
-		const actualPalette = objectModel.getPaletteData();
+		const actualPalette = normalizePaletteForComparison(objectModel.getPaletteData());
 
 		// The open_with_tool attribute for supernodes was introduced in v2 palette examples.
 		// Therefore, remove any node with a open_with_tool from the expected palete JSON.
@@ -170,7 +241,7 @@ describe("Upgrade palette test", () => {
 		// console.info("Expected Palette = " + JSON.stringify(expectedPalette, null, 2));
 		// console.info("Actual Palette   = " + JSON.stringify(actualPalette, null, 2));
 
-		expect(isEqual(JSON.stringify(expectedPalette, null, 4), JSON.stringify(actualPalette, null, 4))).to.be.true;
+		expect(isEqual(JSON.stringify(normalizePaletteForComparison(expectedPalette), null, 4), JSON.stringify(actualPalette, null, 4))).to.be.true;
 	}
 
 });

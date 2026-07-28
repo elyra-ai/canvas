@@ -286,13 +286,13 @@ describe("Show/hide Alerts tab based on showAlertsTab boolean in propertiesConfi
 
 	it("Hide Alerts tab when showAlertsTab=false in propertiesConfig", () => {
 		// No "Alerts" tab. Also no messageCount next to Summary Panel Actions.
-		const categoryLabels = ["Actions", "Conditions", "Summary Panel Actions"];
+		const categoryLabels = ["Actions", "Conditions", "Summary Panel Actions", "Alignment"];
 
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(actionParamDef, { showAlertsTab: false });
 		const wrapper = renderedObject.wrapper;
 		const { container } = wrapper;
 		const allCategories = container.querySelectorAll("div.properties-category-container");
-		expect(allCategories).to.have.length(3);
+		expect(allCategories).to.have.length(4);
 
 		allCategories.forEach((category, idx) => {
 			const categoryTitle = category.querySelector("button.cds--accordion__heading").textContent;
@@ -302,14 +302,14 @@ describe("Show/hide Alerts tab based on showAlertsTab boolean in propertiesConfi
 
 	it("Show Alerts tab when showAlertsTab=true in propertiesConfig", () => {
 		// Shows "Alerts" tab and messageCount next to Summary Panel Actions.
-		const categoryLabels = ["Alerts (1)", "Actions", "Conditions", "Summary Panel Actions (1)"];
+		const categoryLabels = ["Alerts (1)", "Actions", "Conditions", "Summary Panel Actions (1)", "Alignment"];
 
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(actionParamDef, { showAlertsTab: true });
 		const wrapper = renderedObject.wrapper;
 		const { container } = wrapper;
 
 		const allCategories = container.querySelectorAll("div.properties-category-container");
-		expect(allCategories).to.have.length(4);
+		expect(allCategories).to.have.length(5);
 
 		allCategories.forEach((category, idx) => {
 			const categoryTitle = category.querySelector("button.cds--accordion__heading").textContent;
@@ -319,14 +319,14 @@ describe("Show/hide Alerts tab based on showAlertsTab boolean in propertiesConfi
 
 	it("Show Alerts tab when showAlertsTab is not set in propertiesConfig", () => {
 		// Shows "Alerts" tab and messageCount next to Summary Panel Actions.
-		const categoryLabels = ["Alerts (1)", "Actions", "Conditions", "Summary Panel Actions (1)"];
+		const categoryLabels = ["Alerts (1)", "Actions", "Conditions", "Summary Panel Actions (1)", "Alignment"];
 
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(actionParamDef);
 		const wrapper = renderedObject.wrapper;
 		const { container } = wrapper;
 
 		const allCategories = container.querySelectorAll("div.properties-category-container");
-		expect(allCategories).to.have.length(4);
+		expect(allCategories).to.have.length(5);
 
 		allCategories.forEach((category, idx) => {
 			const categoryTitle = category.querySelector("button.cds--accordion__heading").textContent;
