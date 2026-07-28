@@ -265,7 +265,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			/>
 		);
 		const contentObject = (
-			<div className="properties-table-cell-control">
+			<div className="properties-table-cell-control" tabIndex={0}>
 				{expressionTableCellContentWithTooltip}
 			</div>
 		);
