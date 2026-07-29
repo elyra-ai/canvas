@@ -251,7 +251,8 @@ Double-clicking a node on the canvas opens its configured properties panel in th
   "studio": {
     "categories": [...],
     "paramDefs": { "<nodeStudioId>": { "titleDefinition": {}, "parameters": [], "conditions": [], "actions": [], "groups": [], "groupLayout": "flat", "resources": {} } },
-    "canvasConfig": {}
+    "canvasConfig": {},
+    "pipelineFlow": { "version": "3.0", "pipelines": [...] }
   },
   "palette": { "version": "3.0", "categories": [...] }
 }
@@ -277,8 +278,12 @@ StudioPage.state
 │       ├── groups[]              → GroupBuilder tab definitions
 │       └── resources{}           → ResourcesEditor key/value pairs
 ├── selectedNodeStudioId          → PaletteBuilder (highlights selected) + PropertiesBuilder (shows params)
-└── canvasConfig{}                → StudioCanvas config toggles → CommonCanvas
+├── canvasConfig{}                → StudioCanvas config toggles → CommonCanvas
+├── pipelineFlow                  → captured from StudioCanvas on every edit; included in Export JSON
+└── importedFlow                  → one-shot trigger: set on Import/mount, consumed by StudioCanvas, then cleared
 ```
+
+`categories`, `paramDefs`, `canvasConfig`, and `pipelineFlow` are persisted to `localStorage` in `componentDidUpdate` and restored in `componentDidMount`, so navigating away from `/#/studio` and returning does not lose the canvas state. `importedFlow` is never persisted — it is only used to hand a restored flow to `StudioCanvas` on remount.
 
 The two generator utilities (`palette-generator.js`, `properties-generator.js`) are pure functions called on every render. Edit a field → state updates → generator runs → JSON changes → canvas/preview re-renders.
 
