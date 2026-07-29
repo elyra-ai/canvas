@@ -172,7 +172,9 @@ class CanvasContents extends React.Component {
 	}
 
 	onCut(evt) {
+		const actions = this.props.canvasController.getKeyboardConfig().actions;
 		if (this.isFocusOnCanvasOrContents(evt) &&
+				actions.cutToClipboard &&
 				this.props.canvasConfig.enableEditingActions &&
 				!this.svgCanvasD3.isEditingText()) {
 			evt.preventDefault();
@@ -181,7 +183,9 @@ class CanvasContents extends React.Component {
 	}
 
 	onCopy(evt) {
+		const actions = this.props.canvasController.getKeyboardConfig().actions;
 		if (this.isFocusOnCanvasOrContents(evt) &&
+			actions.copyToClipboard &&
 				this.props.canvasConfig.enableEditingActions &&
 				!this.svgCanvasD3.isEditingText()) {
 			evt.preventDefault();
@@ -190,7 +194,9 @@ class CanvasContents extends React.Component {
 	}
 
 	onPaste(evt) {
+		const actions = this.props.canvasController.getKeyboardConfig().actions;
 		if (this.isFocusOnCanvasOrContents(evt) &&
+				actions.pasteFromClipboard &&
 				this.props.canvasConfig.enableEditingActions &&
 				!this.svgCanvasD3.isEditingText()) {
 			evt.preventDefault();
