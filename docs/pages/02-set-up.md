@@ -148,6 +148,10 @@ If you intend to configure Common Properties to use the, now superseded, React-v
 
 - react-virtualized/styles.css
 
+## Content Security Policy
+
+Applications can use Elyra Canvas with a `Content-Security-Policy` that omits `'unsafe-inline'` from `style-src`. See the [Content Security Policy](02.02-content-security-policy.md) page for the setup requirements, nonce usage, SVG guidance, and feature constraints.
+
 ## IBM Telemetry
 
 `@elyra/canvas` uses [IBM Telemetry](https://github.com/ibm-telemetry/telemetry-js) to collect de-identified, anonymized usage metrics. Telemetry runs automatically via a `postinstall` hook the first time the package is installed as a dependency.

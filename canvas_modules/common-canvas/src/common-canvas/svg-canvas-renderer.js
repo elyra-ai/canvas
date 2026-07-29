@@ -1521,8 +1521,9 @@ export default class SVGCanvasRenderer {
 	}
 
 	createDropShadow(defs) {
+		const filterId = this.getId("node_drop_shadow");
 		var dropShadowFilter = defs.append("filter")
-			.attr("id", this.getId("node_drop_shadow"))
+			.attr("id", filterId)
 			.attr("x", "-20%")
 			.attr("y", "-20%")
 			.attr("width", "200%")
@@ -1552,6 +1553,14 @@ export default class SVGCanvasRenderer {
 		var feMerge = dropShadowFilter.append("feMerge");
 		feMerge.append("feMergeNode");
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+	}
+
+	/**
+		* Returns the SVG filter reference for node drop shadows.
+		* @returns {string} SVG filter URL for the current pipeline.
+		*/
+	getDropShadowFilter() {
+		return `url(#${this.getId("node_drop_shadow")})`;
 	}
 
 	// Adds <pattern>s to the <defs> element which can be used to draw
@@ -1947,7 +1956,8 @@ export default class SVGCanvasRenderer {
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePath(d))
-			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
+			.attr("style", (d) => this.getNodeBodyStyle(d, "default"))
+			.attr("filter", (d) => (!CanvasUtils.getObjectStyle(d, "body", "default") && d.layout.dropShadow ? this.getDropShadowFilter() : null));
 
 		// Optional foreign object to contain a React object
 		nonBindingNodeGrps
@@ -3349,7 +3359,7 @@ export default class SVGCanvasRenderer {
 
 				} else {
 					imageSel.selectChild("svg").remove();
-					d3.svg(image, { cache: "force-cache" }).then((data) => {
+					d3.svg(image).then((data) => {
 						const svgElement = data.documentElement;
 						svgElement.setAttribute("aria-label", "Node Image");
 						imageSel.node().append(svgElement);
@@ -3361,16 +3371,11 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// The default behavior for SVG files is to load them in-line regardless
-	// of how many times a unique image is used for a particular flow. This
-	// can be unnecessarily slow if an image is referenced many times. This
-	// method provides a performance enhancement for displaying SVG images.
-	// It stores each unique SVG file encountered in the <defs> element for the
-	// canvas as a <symbol> element. It then adds <use> elements to each place
-	// where that image is referenced. So, if the same image is referenced many
-	// times there is just one symbol for the SVG file stored in the <defs>
-	// element. This is faster but can restrict customization capabilities of
-	// the canvas images.
+	// Stores each unique SVG file in the <defs> element as a <symbol>, then
+	// adds <use> elements everywhere that image is referenced. So, if the same
+	// image is referenced many times there is just one symbol for the SVG file
+	// stored in the <defs> element. This is faster but can restrict
+	// customization capabilities of the canvas images.
 	loadSVGToDefs(imageSel, image) {
 		const symbolId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
 		const symbolSelector = "#" + symbolId;
@@ -3380,7 +3385,7 @@ export default class SVGCanvasRenderer {
 		if (symbol.empty()) {
 			this.canvasDefs.append("symbol").attr("id", symbolId);
 
-			d3.svg(image, { cache: "force-cache" }).then((data) => {
+			d3.svg(image).then((data) => {
 				// Asynchronously, populate placeholder <symbol> with SVG file contents.
 				this.canvasDefs.selectChildren(symbolSelector)
 					.node()
@@ -3437,7 +3442,9 @@ export default class SVGCanvasRenderer {
 
 	setNodeBodyStyles(d, type, nodeGrp) {
 		const style = this.getNodeBodyStyle(d, type);
-		nodeGrp.selectChildren(".d3-node-body-outline").attr("style", style);
+		nodeGrp.selectChildren(".d3-node-body-outline")
+			.attr("style", style)
+			.attr("filter", !CanvasUtils.getObjectStyle(d, "body", type) && d.layout.dropShadow ? this.getDropShadowFilter() : null);
 	}
 
 	setNodeSelectionOutlineStyles(d, type, nodeGrp) {
@@ -3456,12 +3463,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getNodeBodyStyle(d, type) {
-		let style = CanvasUtils.getObjectStyle(d, "body", type);
-		// For port-arcs display we reapply the drop shadow if no style is provided
-		if (style === null && d.layout.dropShadow) {
-			style = `filter:url(${this.getId("#node_drop_shadow")})`;
-		}
-		return style;
+		return CanvasUtils.getObjectStyle(d, "body", type);
 	}
 
 	getNodeSelectionOutlineStyle(d, type) {
