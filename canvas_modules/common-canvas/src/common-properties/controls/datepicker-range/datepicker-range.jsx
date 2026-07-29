@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -146,6 +146,7 @@ class DatepickerRangeControl extends React.Component {
 					locale={this.locale}
 					allowInput
 					readOnly={this.props.readOnly}
+					value={[this.state.valueStart, this.state.valueEnd]}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -155,7 +156,6 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputStartChange.bind(this)}
-						value={this.state.valueStart}
 						onBlur={this.onStartBlur.bind(this)}
 						helperText={!this.props.tableControl && startHelperText}
 					/>
@@ -167,7 +167,6 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputEndChange.bind(this)}
-						value={this.state.valueEnd}
 						onBlur={this.onEndBlur.bind(this)}
 						helperText={!this.props.tableControl && endHelperText}
 					/>
