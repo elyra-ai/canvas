@@ -66,8 +66,91 @@ export default class ParameterForm extends React.Component {
 		this.handleChange("enumValues", enumValues);
 	}
 
-	render() {
+	renderExtraFields() {
 		const { param, availableActions } = this.props;
+		const notBoolEnum = param.type !== "boolean" && param.type !== "enum";
+		const defaultVal = param.default !== null && param.default !== "" ? String(param.default) : "";
+		return (
+			<>
+				{notBoolEnum && (
+					<div className="studio-form-field">
+						<TextInput
+							id={`param-default-${param.paramId}`}
+							labelText="Default value"
+							value={defaultVal}
+							size="sm"
+							onChange={(e) => this.handleChange("default", e.target.value)}
+						/>
+					</div>
+				)}
+				{notBoolEnum && (
+					<div className="studio-form-field">
+						<TextInput
+							id={`param-placeholder-${param.paramId}`}
+							labelText="Placeholder text"
+							value={param.placeholder || ""}
+							size="sm"
+							onChange={(e) => this.handleChange("placeholder", e.target.value)}
+						/>
+					</div>
+				)}
+				<div className="studio-form-field">
+					<TextInput
+						id={`param-helper-${param.paramId}`}
+						labelText="Helper text (shown below the field)"
+						value={param.helperText || ""}
+						size="sm"
+						onChange={(e) => this.handleChange("helperText", e.target.value)}
+					/>
+				</div>
+				{TEXT_LIKE_TYPES.has(param.type || "") && (
+					<div className="studio-form-field">
+						<div className="studio-port-num">
+							<label className="studio-port-num-label" htmlFor={`param-charlimit-${param.paramId}`}>
+								Character limit (0 = unlimited)
+							</label>
+							<input
+								id={`param-charlimit-${param.paramId}`}
+								type="number"
+								className="studio-port-num-input"
+								value={param.charLimit || 0}
+								min={0}
+								onChange={(e) => this.handleChange("charLimit", parseInt(e.target.value, 10) || 0)}
+							/>
+						</div>
+					</div>
+				)}
+				<div className="studio-form-field">
+					<Toggle
+						id={`param-readonly-${param.paramId}`}
+						labelText="Read-only"
+						toggled={Boolean(param.readOnly)}
+						size="sm"
+						onToggle={(v) => this.handleChange("readOnly", v)}
+					/>
+				</div>
+				{availableActions && availableActions.length > 0 && (
+					<div className="studio-form-field">
+						<Select
+							id={`param-actionref-${param.paramId}`}
+							labelText="Action (icon button beside this field)"
+							value={param.actionRef || ""}
+							size="sm"
+							onChange={(e) => this.handleChange("actionRef", e.target.value)}
+						>
+							<SelectItem value="" text="— None —" />
+							{availableActions.map((a) => (
+								<SelectItem key={a.actionId} value={a.id} text={a.id || "(unnamed action)"} />
+							))}
+						</Select>
+					</div>
+				)}
+			</>
+		);
+	}
+
+	render() {
+		const { param } = this.props;
 
 		return (
 			<div className="studio-parameter-form">
@@ -126,84 +209,7 @@ export default class ParameterForm extends React.Component {
 					/>
 				</div>
 
-				{param.type !== "boolean" && param.type !== "enum" && (
-					<div className="studio-form-field">
-						<TextInput
-							id={`param-default-${param.paramId}`}
-							labelText="Default value"
-							value={param.default !== null && param.default !== "" ? String(param.default) : ""}
-							size="sm"
-							onChange={(e) => this.handleChange("default", e.target.value)}
-						/>
-					</div>
-				)}
-
-				{param.type !== "boolean" && param.type !== "enum" && (
-					<div className="studio-form-field">
-						<TextInput
-							id={`param-placeholder-${param.paramId}`}
-							labelText="Placeholder text"
-							value={param.placeholder || ""}
-							size="sm"
-							onChange={(e) => this.handleChange("placeholder", e.target.value)}
-						/>
-					</div>
-				)}
-
-				<div className="studio-form-field">
-					<TextInput
-						id={`param-helper-${param.paramId}`}
-						labelText="Helper text (shown below the field)"
-						value={param.helperText || ""}
-						size="sm"
-						onChange={(e) => this.handleChange("helperText", e.target.value)}
-					/>
-				</div>
-
-				{TEXT_LIKE_TYPES.has(param.type || "") && (
-					<div className="studio-form-field">
-						<div className="studio-port-num">
-							<label className="studio-port-num-label" htmlFor={`param-charlimit-${param.paramId}`}>
-								Character limit (0 = unlimited)
-							</label>
-							<input
-								id={`param-charlimit-${param.paramId}`}
-								type="number"
-								className="studio-port-num-input"
-								value={param.charLimit || 0}
-								min={0}
-								onChange={(e) => this.handleChange("charLimit", parseInt(e.target.value, 10) || 0)}
-							/>
-						</div>
-					</div>
-				)}
-
-				<div className="studio-form-field">
-					<Toggle
-						id={`param-readonly-${param.paramId}`}
-						labelText="Read-only"
-						toggled={Boolean(param.readOnly)}
-						size="sm"
-						onToggle={(v) => this.handleChange("readOnly", v)}
-					/>
-				</div>
-
-				{availableActions && availableActions.length > 0 && (
-					<div className="studio-form-field">
-						<Select
-							id={`param-actionref-${param.paramId}`}
-							labelText="Action (icon button beside this field)"
-							value={param.actionRef || ""}
-							size="sm"
-							onChange={(e) => this.handleChange("actionRef", e.target.value)}
-						>
-							<SelectItem value="" text="— None —" />
-							{availableActions.map((a) => (
-								<SelectItem key={a.actionId} value={a.id} text={a.id || "(unnamed action)"} />
-							))}
-						</Select>
-					</div>
-				)}
+				{this.renderExtraFields()}
 
 				{param.type === "enum" && (
 					<div className="studio-enum-values">

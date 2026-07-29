@@ -53,6 +53,19 @@ export default class PropertiesBuilder extends React.Component {
 		return nodes.find((n) => n.studioId === this.props.selectedNodeStudioId) || null;
 	}
 
+	getParamDefFields() {
+		const { paramDef } = this.props;
+		return {
+			parameters: (paramDef && paramDef.parameters) || [],
+			conditions: (paramDef && paramDef.conditions) || [],
+			actions: (paramDef && paramDef.actions) || [],
+			groups: (paramDef && paramDef.groups) || [],
+			groupLayout: (paramDef && paramDef.groupLayout) || "flat",
+			resources: (paramDef && paramDef.resources) || {},
+			titleDef: (paramDef && paramDef.titleDefinition) || { title: "", editable: true }
+		};
+	}
+
 	updateField(field, value) {
 		const paramDef = this.props.paramDef || {};
 		this.props.onParamDefChange({ ...paramDef, [field]: value });
@@ -173,13 +186,7 @@ export default class PropertiesBuilder extends React.Component {
 		const { selectedNodeStudioId, onSelectNode, paramDef } = this.props;
 		const allNodes = this.getAllNodes();
 		const selectedNode = this.getSelectedNode();
-		const parameters = (paramDef && paramDef.parameters) || [];
-		const conditions = (paramDef && paramDef.conditions) || [];
-		const actions = (paramDef && paramDef.actions) || [];
-		const groups = (paramDef && paramDef.groups) || [];
-		const groupLayout = (paramDef && paramDef.groupLayout) || "flat";
-		const resources = (paramDef && paramDef.resources) || {};
-		const titleDef = (paramDef && paramDef.titleDefinition) || { title: "", editable: true };
+		const { parameters, conditions, actions, groups, groupLayout, resources, titleDef } = this.getParamDefFields();
 
 		return (
 			<div className="studio-properties-builder">
