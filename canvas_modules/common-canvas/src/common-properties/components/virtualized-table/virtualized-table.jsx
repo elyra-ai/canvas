@@ -279,6 +279,7 @@ class VirtualizedTable extends React.Component {
 					}
 					position={{ x: 0 }}
 					zIndex={999}
+					nonce={this.props.cspNonce}
 				>
 					<div
 						role="button" tabIndex="0"
@@ -485,7 +486,7 @@ class VirtualizedTable extends React.Component {
 					{ "properties-vt-single-selection": this.props.rowSelection && this.props.rowSelection === ROW_SELECTION.SINGLE,
 						"properties-light-disabled": !this.props.light })}
 				>
-					<AutoSizer>
+					<AutoSizer nonce={this.props.cspNonce}>
 						{({ height, width }) => ( // Table height: subtract 50 for margin below the table.
 							<Table
 								ref={this.virtualizedTableRef}
@@ -578,7 +579,8 @@ VirtualizedTable.propTypes = {
 	tableState: PropTypes.string,
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired,
-	readOnly: PropTypes.bool
+	readOnly: PropTypes.bool,
+	cspNonce: PropTypes.string
 };
 
 export default injectIntl(VirtualizedTable);

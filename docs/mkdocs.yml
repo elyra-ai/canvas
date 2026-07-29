@@ -79,6 +79,7 @@ nav:
   - Initial Setup:
     - Installation: 02-set-up.md
     - Localization: 02.01-localization.md
+    - Content Security Policy: 02.02-content-security-policy.md
 
   - Common Canvas:
     - Getting Started: 03-common-canvas.md

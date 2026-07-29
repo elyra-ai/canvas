@@ -719,6 +719,7 @@ class FlexibleTable extends React.Component {
 								tableState={this.props.tableState}
 								light={this.props.light}
 								readOnly={this.props.readOnly}
+								cspNonce={this.props.cspNonce}
 								{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
 							/>
 						</div>
@@ -770,7 +771,8 @@ FlexibleTable.propTypes = {
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired,
 	readOnly: PropTypes.bool,
-	enableTanstackTable: PropTypes.bool
+	enableTanstackTable: PropTypes.bool,
+	cspNonce: PropTypes.string
 };
 
 export default injectIntl(FlexibleTable);
