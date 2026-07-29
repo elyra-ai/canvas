@@ -26,7 +26,8 @@ import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	PORT_DISPLAY_IMAGE, PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
 	FLOW_IN, FLOW_OUT,
 	CANVAS_FOCUS,
-	LINK_METHOD_FREEFORM
+	LINK_METHOD_FREEFORM,
+	OBJ_NODE, OBJ_LINK, OBJ_COMMENT
 } from "../common-canvas/constants/canvas-constants.js";
 
 const NINETY_DEGREES = 90;
@@ -1331,11 +1332,11 @@ export default class CanvasUtils {
 	// the object passed in.
 	static getObjectTypeName(obj) {
 		if (this.isNode(obj)) {
-			return "node";
+			return OBJ_NODE;
 		} else if (this.isComment(obj)) {
-			return "comment";
+			return OBJ_COMMENT;
 		} else if (this.isLink(obj)) {
-			return "link";
+			return OBJ_LINK;
 		}
 		return "";
 	}

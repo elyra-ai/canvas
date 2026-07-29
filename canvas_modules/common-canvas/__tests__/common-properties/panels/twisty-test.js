@@ -153,8 +153,9 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 		twistyPanel = container.querySelector("div[data-id='properties-twisty-panel2']");
 		expect(twistyPanel.querySelectorAll("li.cds--accordion__item")).to.have.length(1);
 		expect(twistyPanel.querySelectorAll("li.cds--accordion__item--active")).to.have.length(1);
+		// Twisty Panel2 now contains numberfield3 plus numberfield4 in a nested panel
 		const numberfield = twistyPanel.querySelectorAll("input[type='number']");
-		expect(numberfield).to.have.length(1);
+		expect(numberfield).to.have.length(2);
 		expect(controller.getPanelState({ name: "twisty-panel2" })).to.equal("visible");
 		expect(controller.getControlState({ name: "numberfield3" })).to.equal("visible");
 
@@ -167,6 +168,59 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 	});
 });
 
+
+describe("twisty panel auto-hides when all children are hidden", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("panel should be visible while its only child is visible", () => {
+		// numberfield3 is visible by default, so its Twisty Panel2 is shown
+		expect(controller.getControlState({ name: "numberfield3" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "twisty-panel2" })).to.equal("visible");
+	});
+
+	it("panel should auto-hide and reappear as its child is hidden and shown", async() => {
+		const { container } = wrapper;
+		const hideNumberfield3 = container.querySelector("div[data-id='properties-hideNumberfield3'] input[type='checkbox']");
+		const hideNumberfield4 = container.querySelector("div[data-id='properties-hideNumberfield4'] input[type='checkbox']");
+
+		// hide numberfield4 (the only child of the nested panel): the nested panel auto-hides,
+		// but Twisty Panel2 stays visible because numberfield3 is still visible
+		fireEvent.click(hideNumberfield4);
+		await waitFor(() => {
+			expect(controller.getControlState({ name: "numberfield4" })).to.equal("hidden");
+			expect(controller.getPanelState({ name: "twisty-panel2-nested" })).to.equal("hidden");
+			expect(controller.getPanelState({ name: "twisty-panel2" })).to.equal("visible");
+		});
+
+		// also hide numberfield3: now every child of Twisty Panel2 (the field and the nested
+		// panel) is hidden, so Twisty Panel2 auto-hides too
+		fireEvent.click(hideNumberfield3);
+		await waitFor(() => {
+			expect(controller.getControlState({ name: "numberfield3" })).to.equal("hidden");
+			expect(controller.getPanelState({ name: "twisty-panel2" })).to.equal("hidden");
+			const twistyPanel = container.querySelector("div[data-id='properties-twisty-panel2']");
+			expect(twistyPanel.classList.contains("hide")).to.equal(true);
+		});
+
+		// show numberfield3 again: Twisty Panel2 reappears (nested panel stays hidden)
+		fireEvent.click(hideNumberfield3);
+		await waitFor(() => {
+			expect(controller.getControlState({ name: "numberfield3" })).to.equal("visible");
+			expect(controller.getPanelState({ name: "twisty-panel2" })).to.equal("visible");
+			expect(controller.getPanelState({ name: "twisty-panel2-nested" })).to.equal("hidden");
+		});
+	});
+});
 
 describe("twisty panel custom title renders correctly", () => {
 	let mockPanelTitleHandler;

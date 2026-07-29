@@ -59,7 +59,7 @@ export default class StagesCanvas extends React.Component {
 
 		// Palette header object - used in a real application to open an asset browser.
 		this.paletteHeader = (
-			<div style={{ borderBottom: "1px solid lightgray", height: "fit-content", padding: "20px 18px 20px" }} >
+			<div className="stages-app-palette-header" >
 				<Button kind="tertiary" size="sm" onClick={() => window.alert("In a real application an Asset Browser would open now.")}>
 					Add asset to canvas +
 				</Button>
@@ -324,7 +324,7 @@ export default class StagesCanvas extends React.Component {
 
 		} else if (this.state.leftFlyout === "search") {
 			leftFlyoutContent = (
-				<div style={{ width: "300px", padding: "20px" }}>
+				<div className="stages-app-search-panel">
 					This panel could contain Search controls to provide a sophisticated search experience.
 				</div>
 			);

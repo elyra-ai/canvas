@@ -38,6 +38,8 @@
 		padding: 0;
 		cursor: pointer;
 		outline: none;
+		height: var(--image-height);
+		width: var(--image-width);
 	}
 
 	.properties-action-image-button:focus {

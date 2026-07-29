@@ -306,7 +306,7 @@ class CustomDatasetsPanel {
 			}
 			// add extra 7px cell for overlay scrollbar
 			row.push(<Td key={row.length} column={"scrollbar"}
-				style={{ "width": "7px", "padding": "0 0 0 0" }}
+				className="harness-datasets-scrollbar-cell"
 			><div /></Td>);
 			rows.push(<Tr key={idx} className={this.getRowClassName(idx)}
 				onClick={this.handleRowClick.bind(this, idx)}
@@ -360,12 +360,12 @@ class CustomDatasetsPanel {
 			</Th>);
 		}
 		// Add an extra column for the scrollbar
-		headRow.push(<Th key={headRow.length} style={{ "width": "7px" }} column={" "} />);
+		headRow.push(<Th key={headRow.length} className="harness-datasets-scrollbar-cell" column={" "} />);
 
 		const header = (<Thead key="datasets-table-thead">{headRow}</Thead>);
 		return (
 			<div className="datasets-table-container-header-wrapper">
-				<div className="datasets-table-header-container" style={{ width: "100%" }}>
+				<div className="datasets-table-header-container harness-full-width">
 					<Table className="datasets-header-border"
 						id="table-header"
 						sortable={sortable}
@@ -387,15 +387,14 @@ class CustomDatasetsPanel {
 		const columnWidths = CustomDatasetsPanel.calculateColumnWidths(colWidths, "", parentTableWidth);
 		const headerData = this.getColumnHeader(columnWidths);
 		const rowData = this.getRowData(columnWidths);
-		const tableStyle = "";
 		return (
 			<div key="main-div-2" className="left-right-padding-8">
 				<span>Field Matches and Structure</span>
 				<br />
 				<div key="custom-datasets-div" id="datasets-table-container-wrapper">
 					{headerData}
-					<div className={"datasets-table-container-absolute"} style={{ tableStyle }}>
-						<div id={"datasets-table-container"} style={{ width: "100%" }}>
+					<div className={"datasets-table-container-absolute"}>
+						<div id={"datasets-table-container"} className="harness-full-width">
 							<Table
 								className="table"
 								id="datasets-table"

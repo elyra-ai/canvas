@@ -58,6 +58,15 @@ class CommonCanvasTextToolbar extends React.Component {
 		this.onKeyDown = this.onKeyDown.bind(this);
 
 		this.logger = new Logger("CC-Text-Toolbar");
+		this.toolbarDivRef = React.createRef();
+	}
+
+	componentDidMount() {
+		this.applyToolbarPosition();
+	}
+
+	componentDidUpdate() {
+		this.applyToolbarPosition();
 	}
 
 	onKeyDown(evt) {
@@ -304,6 +313,16 @@ class CommonCanvasTextToolbar extends React.Component {
 		return { leftBar: [] };
 	}
 
+	/** Sets CSS custom properties for toolbar position on the DOM node. */
+	applyToolbarPosition() {
+		if (!this.toolbarDivRef.current) {
+			return;
+		}
+		const el = this.toolbarDivRef.current;
+		el.style.setProperty("--cc-text-toolbar-left", this.props.pos_x + "px");
+		el.style.setProperty("--cc-text-toolbar-top", this.props.pos_y + "px");
+	}
+
 	render() {
 		this.logger.log("render");
 
@@ -312,8 +331,8 @@ class CommonCanvasTextToolbar extends React.Component {
 		if (this.props.isOpen) {
 			textToolbar = (
 				<div
+					ref={this.toolbarDivRef}
 					className={"text-toolbar floating-toolbar"}
-					style={{ left: this.props.pos_x, top: this.props.pos_y }}
 					onBlur={this.props.blurHandler}
 					onKeyDown={this.onKeyDown}
 				>

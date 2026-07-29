@@ -235,3 +235,78 @@ $harness-navbar-icon-width: 48px;
 		}
 	}
 }
+
+.harness-palette-header {
+	border-bottom: 1px solid carbon.$border-subtle-01;
+	height: fit-content;
+	padding: carbon.$spacing-04 carbon.$spacing-09;
+}
+
+.harness-toolbar-jsx-loading {
+	padding: carbon.$spacing-02 carbon.$spacing-05;
+}
+
+.harness-toolbar-jsx-checkbox {
+	padding: carbon.$spacing-02 carbon.$spacing-05;
+}
+
+.harness-right-flyout-closed {
+	width: 0;
+}
+
+.harness-right-flyout-open {
+	width: 318px;
+}
+
+.harness-main-content-flyout-closed {
+	width: 100%;
+}
+
+.harness-main-content-flyout-open {
+	width: calc(100% - 318px);
+}
+
+.harness-sidepanel-canvas-config {
+	overflow-y: scroll;
+	height: 100%;
+}
+
+.harness-sidepanel-gap {
+	height: 10px;
+}
+
+.harness-full-width {
+	width: 100%;
+}
+
+.harness-datasets-scrollbar-cell {
+	width: 7px;
+	padding: 0;
+}
+
+.harness-app-x-panel {
+	padding: carbon.$spacing-04;
+	width: 170px;
+}
+
+.harness-app-x-panel-header {
+	display: flex;
+	padding-top: carbon.$spacing-04;
+	padding-bottom: carbon.$spacing-05;
+	justify-content: space-between;
+}
+
+.harness-app-x-close-btn {
+	display: inline-flex;
+	cursor: pointer;
+	min-height: 20px;
+	width: 25px;
+	border: 0;
+	padding: 0 carbon.$spacing-04;
+	height: 10px;
+}
+
+.harness-custom-action-wrapper {
+	position: relative;
+}
+

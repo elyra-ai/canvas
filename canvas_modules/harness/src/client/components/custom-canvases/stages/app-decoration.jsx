@@ -37,17 +37,17 @@ class AppDecoration extends React.Component {
 		const stripPath = `M 0 0 L 0 ${d} ${w} ${d} ${w} 0 Z`;
 
 		return (
-			<div style={{ height: "100%", width: "100%" }} onClick={this.onClick} >
+			<div className="stages-app-decoration" onClick={this.onClick} >
 				<svg height="100%" width="100%">
-					<path style={{ fill: "lightgray", stroke: "lightgray" }} d={outlinePath} />
-					<path style={{ fill: "gold", stroke: "gold" }} d={stripPath} />
+					<path className="stages-app-decoration-outline" d={outlinePath} />
+					<path className="stages-app-decoration-strip" d={stripPath} />
 				</svg>
-				<div style={{ position: "absolute", top: 20, left: 5 }} >
+				<div className="stages-app-decoration-tag" >
 					<Tag className="some-class" type="cyan">
 						{"Column"}
 					</Tag>
 				</div>
-				<div style={{ position: "absolute", top: 30, left: 100 }} >
+				<div className="stages-app-decoration-label" >
 					{this.props.node.label}
 				</div>
 			</div>

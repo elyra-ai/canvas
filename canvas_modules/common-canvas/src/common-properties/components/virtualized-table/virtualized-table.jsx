@@ -223,7 +223,11 @@ class VirtualizedTable extends React.Component {
 			</div>)
 			: "";
 
-		return (<div className={className} data-role="properties-header-row" role="row" style={style}>
+		const headerStyle = {
+			"--vt-width": style.width,
+			"--vt-height": style.height,
+		};
+		return (<div className={className} data-role="properties-header-row" role="row" style={headerStyle}>
 			{checkbox}
 			{columns}
 		</div>);
@@ -426,24 +430,35 @@ class VirtualizedTable extends React.Component {
 		}
 
 		if (rowData.loading === true) {
+			const loadingStyle = {
+				"--vt-width": style.width,
+				"--vt-height": style.height,
+				"--vt-top": style.top,
+				"--vt-left": style.left,
+			};
 			return (
 				<div
 					className={className}
 					key={key}
 					data-role="properties-loading-row"
 					role="row"
-					style={style}
+					style={loadingStyle}
 				>
 					<Loading className="properties-vt-small-loading" small withOverlay={false} />
 				</div>
 			);
 		}
 
-		const width = (parseInt(style.width, 10)) + "px"; // Subtract 2px to account for row borders
-		const newStyle = Object.assign({}, style, { width: width });
+		const rowWidth = (parseInt(style.width, 10)) + "px";
+		const rowStyle = {
+			"--vt-width": rowWidth,
+			"--vt-height": style.height,
+			"--vt-top": style.top,
+			"--vt-left": style.left,
+		};
 
-		// Empty style required on cell for react-virtualized. This div wrapper is required to apply the onDoubleClick handler.
-		return (<div style={{}} key={key} className="properties-vt-double-click" onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
+		// This div wrapper is required to apply the onDoubleClick handler.
+		return (<div key={key} className="properties-vt-double-click" onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
 			<div
 				className={classNames(className,
 					{ "properties-vt-row-selected": selectedRow },
@@ -452,7 +467,7 @@ class VirtualizedTable extends React.Component {
 				)}
 				data-role="properties-data-row"
 				role="row"
-				style={newStyle}
+				style={rowStyle}
 				onMouseDown={(evt) => this.onRowClick(evt, rowData, index)}
 			>
 				{selectOption}
@@ -515,6 +530,7 @@ class VirtualizedTable extends React.Component {
 											disableSort={typeof this.props.sortColumns[column.key] === "undefined"}
 											cellRenderer={column.isHTML ? this.cellRendererHTML : this.cellRenderer}
 											headerRenderer={this.headerColRenderer}
+											style={null}
 											{...column.minWidth && { minWidth: column.minWidth }}
 										/>
 									))

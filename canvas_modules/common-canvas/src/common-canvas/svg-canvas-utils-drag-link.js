@@ -22,6 +22,7 @@ const d3 = Object.assign({}, d3Drag, d3Selection);
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import { ACTION_INSERT_NODE_INTO_LINK } from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations on
 // the middle part of a link when it is dragged to a node to convert the link
@@ -99,7 +100,7 @@ export default class SVGCanvasUtilsDragLink {
 			this.ren.setLinkOverNodeCancel();
 
 			this.ren.canvasController.editActionHandler({
-				editType: "insertNodeIntoLink",
+				editType: ACTION_INSERT_NODE_INTO_LINK,
 				editSource: "canvas",
 				node: this.targetNode,
 				srcPort: this.targetNode.outputs[0],

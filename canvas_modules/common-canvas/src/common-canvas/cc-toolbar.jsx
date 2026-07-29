@@ -24,8 +24,12 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import NotificationPanel from "../notification-panel/notification-panel.jsx";
 import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
-	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP,
-	TOOLBAR_TOGGLE_PALETTE }
+	NOTIFICATION_ICON_CLASS, TOOLBAR_LAYOUT_TOP,
+	ACTION_UNDO, ACTION_REDO, ACTION_CUT, ACTION_COPY, ACTION_PASTE,
+	ACTION_CREATE_AUTO_COMMENT, ACTION_DELETE_SELECTED_OBJECTS,
+	ACTION_ARRANGE_HORIZONTALLY, ACTION_ARRANGE_VERTICALLY,
+	ACTION_ZOOM_IN, ACTION_ZOOM_OUT, ACTION_ZOOM_FIT,
+	ACTION_TOGGLE_NOTIFICATION_PANEL, ACTION_TOGGLE_PALETTE }
 	from "../common-canvas/constants/canvas-constants";
 // Carbon icons - direct imports for tree-shaking optimization
 import SidePanelOpenFilled from "@carbon/icons-react/lib/SidePanelOpenFilled";
@@ -51,18 +55,18 @@ class CommonCanvasToolbar extends React.Component {
 	getDefaultToolbar() {
 		return {
 			leftBar: [
-				{ action: "undo", label: this.getLabel("canvas.undo"), enable: true },
-				{ action: "redo", label: this.getLabel("canvas.redo"), enable: true },
-				{ action: "cut", label: this.getLabel("edit.cutSelection"), enable: true },
-				{ action: "copy", label: this.getLabel("edit.copySelection"), enable: true },
-				{ action: "paste", label: this.getLabel("edit.pasteSelection"), enable: true },
-				{ action: "createAutoComment", label: this.getLabel("canvas.addComment"), enable: true },
-				{ action: "deleteSelectedObjects", label: this.getLabel("canvas.deleteObject"), enable: true }
+				{ action: ACTION_UNDO, label: this.getLabel("canvas.undo"), enable: true },
+				{ action: ACTION_REDO, label: this.getLabel("canvas.redo"), enable: true },
+				{ action: ACTION_CUT, label: this.getLabel("edit.cutSelection"), enable: true },
+				{ action: ACTION_COPY, label: this.getLabel("edit.copySelection"), enable: true },
+				{ action: ACTION_PASTE, label: this.getLabel("edit.pasteSelection"), enable: true },
+				{ action: ACTION_CREATE_AUTO_COMMENT, label: this.getLabel("canvas.addComment"), enable: true },
+				{ action: ACTION_DELETE_SELECTED_OBJECTS, label: this.getLabel("canvas.deleteObject"), enable: true }
 			],
 			rightBar: [
-				{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
-				{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
-				{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
+				{ action: ACTION_ZOOM_IN, label: this.getLabel("toolbar.zoomIn"), enable: true },
+				{ action: ACTION_ZOOM_OUT, label: this.getLabel("toolbar.zoomOut"), enable: true },
+				{ action: ACTION_ZOOM_FIT, label: this.getLabel("toolbar.zoomToFit"), enable: true }
 			]
 		};
 	}
@@ -79,9 +83,9 @@ class CommonCanvasToolbar extends React.Component {
 
 	getDefaultRightBar() {
 		return [
-			{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
-			{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
-			{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
+			{ action: ACTION_ZOOM_IN, label: this.getLabel("toolbar.zoomIn"), enable: true },
+			{ action: ACTION_ZOOM_OUT, label: this.getLabel("toolbar.zoomOut"), enable: true },
+			{ action: ACTION_ZOOM_FIT, label: this.getLabel("toolbar.zoomToFit"), enable: true }
 		];
 	}
 
@@ -187,11 +191,11 @@ class CommonCanvasToolbar extends React.Component {
 			const icon = this.props.isPaletteOpen ? (<SidePanelCloseFilled />) : (<SidePanelOpenFilled />);
 
 			const togglePaletteAction =
-				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true, iconEnabled: icon,
+				{ action: ACTION_TOGGLE_PALETTE, label: paletteLabel, enable: true, iconEnabled: icon,
 					isSelected: this.props.isPaletteOpen, className };
 
-			const lbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_PALETTE, leftBar);
-			const rbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_PALETTE, rightBar);
+			const lbIdx = this.getToolIndexByAction(ACTION_TOGGLE_PALETTE, leftBar);
+			const rbIdx = this.getToolIndexByAction(ACTION_TOGGLE_PALETTE, rightBar);
 
 			if (lbIdx > -1) {
 				const lbAction = leftBar[lbIdx];
@@ -234,7 +238,7 @@ class CommonCanvasToolbar extends React.Component {
 			const notificationCount = this.props.notificationMessages.length;
 
 			const toggleNotificationAction =
-				{ action: TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
+				{ action: ACTION_TOGGLE_NOTIFICATION_PANEL,
 					label: this.props.notificationConfigLabel,
 					enable: this.props.notificationConfigEnable,
 					extIsSubAreaDisplayed: this.props.isNotificationOpen,
@@ -246,8 +250,8 @@ class CommonCanvasToolbar extends React.Component {
 					leaveSubAreaOpenOnClickOutside: this.props.notificationConfigKeepOpen
 				};
 
-			const lbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_NOTIFICATION_PANEL, leftBar);
-			const rbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_NOTIFICATION_PANEL, rightBar);
+			const lbIdx = this.getToolIndexByAction(ACTION_TOGGLE_NOTIFICATION_PANEL, leftBar);
+			const rbIdx = this.getToolIndexByAction(ACTION_TOGGLE_NOTIFICATION_PANEL, rightBar);
 
 			if (lbIdx > -1) {
 				const lbAction = leftBar[lbIdx];
@@ -344,18 +348,18 @@ class CommonCanvasToolbar extends React.Component {
 	// or null if this is not a standard action.
 	genLabelKey(action) {
 		switch (action) {
-		case "undo": return "canvas.undo";
-		case "redo": return "canvas.redo";
-		case "cut": return "edit.cutSelection";
-		case "copy": return "edit.copySelection";
-		case "paste": return "edit.pasteSelection";
-		case "createAutoComment": return "canvas.addComment";
-		case "deleteSelectedObjects": return "canvas.deleteObject";
-		case "arrangeHorizontally": return "canvas.arrangeHorizontally";
-		case "arrangeVertically": return "canvas.arrangeVertically";
-		case "zoomIn": return "toolbar.zoomIn";
-		case "zoomOut": return "toolbar.zoomOut";
-		case "zoomToFit": return "toolbar.zoomToFit";
+		case ACTION_UNDO: return "canvas.undo";
+		case ACTION_REDO: return "canvas.redo";
+		case ACTION_CUT: return "edit.cutSelection";
+		case ACTION_COPY: return "edit.copySelection";
+		case ACTION_PASTE: return "edit.pasteSelection";
+		case ACTION_CREATE_AUTO_COMMENT: return "canvas.addComment";
+		case ACTION_DELETE_SELECTED_OBJECTS: return "canvas.deleteObject";
+		case ACTION_ARRANGE_HORIZONTALLY: return "canvas.arrangeHorizontally";
+		case ACTION_ARRANGE_VERTICALLY: return "canvas.arrangeVertically";
+		case ACTION_ZOOM_IN: return "toolbar.zoomIn";
+		case ACTION_ZOOM_OUT: return "toolbar.zoomOut";
+		case ACTION_ZOOM_FIT: return "toolbar.zoomToFit";
 
 		default: return null;
 		}
@@ -366,13 +370,13 @@ class CommonCanvasToolbar extends React.Component {
 		const redoLabel = this.props.redoLabel;
 
 		if (undoLabel) {
-			const undoTool = this.findTool("undo", toolbarConfig);
+			const undoTool = this.findTool(ACTION_UNDO, toolbarConfig);
 			if (undoTool) {
 				undoTool.label = this.getLabel("canvas.undoCommand", { undo_command: undoLabel });
 			}
 		}
 		if (redoLabel) {
-			const redoTool = this.findTool("redo", toolbarConfig);
+			const redoTool = this.findTool(ACTION_REDO, toolbarConfig);
 			if (redoTool) {
 				redoTool.label = this.getLabel("canvas.redoCommand", { redo_command: redoLabel });
 			}
