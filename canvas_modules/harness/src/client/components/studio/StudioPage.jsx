@@ -41,15 +41,52 @@ export default class StudioPage extends React.Component {
 			categories: [],
 			paramDefs: {},
 			selectedNodeStudioId: null,
-			canvasConfig: { ...DEFAULT_CANVAS_CONFIG }
+			canvasConfig: { ...DEFAULT_CANVAS_CONFIG },
+			pipelineFlow: null,
+			importedFlow: null
 		};
 		this.handleCategoriesChange = this.handleCategoriesChange.bind(this);
 		this.handleSelectNode = this.handleSelectNode.bind(this);
 		this.handleNodeTypeUpdate = this.handleNodeTypeUpdate.bind(this);
 		this.handleParamDefChange = this.handleParamDefChange.bind(this);
 		this.handleCanvasConfigChange = this.handleCanvasConfigChange.bind(this);
+		this.handleFlowChange = this.handleFlowChange.bind(this);
+		this.handleFlowImported = this.handleFlowImported.bind(this);
 		this.handleExport = this.handleExport.bind(this);
 		this.handleImport = this.handleImport.bind(this);
+	}
+
+	componentDidMount() {
+		try {
+			const saved = localStorage.getItem("elyra-studio-state");
+			if (saved) {
+				const { categories, paramDefs, canvasConfig, pipelineFlow } = JSON.parse(saved);
+				this.setState({
+					categories: categories || [],
+					paramDefs: paramDefs || {},
+					canvasConfig: canvasConfig || { ...DEFAULT_CANVAS_CONFIG },
+					importedFlow: pipelineFlow || null
+				});
+			}
+		} catch {
+			// ignore corrupt localStorage
+		}
+	}
+
+	componentDidUpdate(_prevProps, prevState) {
+		const { categories, paramDefs, canvasConfig, pipelineFlow } = this.state;
+		if (
+			prevState.categories !== categories ||
+			prevState.paramDefs !== paramDefs ||
+			prevState.canvasConfig !== canvasConfig ||
+			prevState.pipelineFlow !== pipelineFlow
+		) {
+			try {
+				localStorage.setItem("elyra-studio-state", JSON.stringify({ categories, paramDefs, canvasConfig, pipelineFlow }));
+			} catch {
+				// ignore quota errors
+			}
+		}
 	}
 
 	handleCategoriesChange(categories) {
@@ -65,11 +102,13 @@ export default class StudioPage extends React.Component {
 		// so properties are not lost when renaming a node
 		const existing = this.state.paramDefs[updatedNode.studioId];
 		if (!existing) {
+			const blank = {
+				titleDefinition: { title: "", editable: true },
+				parameters: [], conditions: [], actions: [],
+				groups: [], groupLayout: "flat", resources: {}
+			};
 			this.setState((prev) => ({
-				paramDefs: {
-					...prev.paramDefs,
-					[updatedNode.studioId]: { titleDefinition: { title: "", editable: true }, parameters: [], conditions: [], actions: [], groups: [], groupLayout: "flat", resources: {} }
-				}
+				paramDefs: { ...prev.paramDefs, [updatedNode.studioId]: blank }
 			}));
 		}
 	}
@@ -90,11 +129,19 @@ export default class StudioPage extends React.Component {
 		}));
 	}
 
+	handleFlowChange(flow) {
+		this.setState({ pipelineFlow: flow });
+	}
+
+	handleFlowImported() {
+		this.setState({ importedFlow: null });
+	}
+
 	handleExport() {
-		const { categories, paramDefs, canvasConfig } = this.state;
+		const { categories, paramDefs, canvasConfig, pipelineFlow } = this.state;
 		const bundle = {
 			version: "1.0",
-			studio: { categories, paramDefs, canvasConfig },
+			studio: { categories, paramDefs, canvasConfig, pipelineFlow },
 			palette: paletteGenerator(categories)
 		};
 		JavascriptFileDownload(JSON.stringify(bundle, null, 2), "studio-config.json", "application/json");
@@ -114,6 +161,7 @@ export default class StudioPage extends React.Component {
 						categories: bundle.studio.categories || [],
 						paramDefs: bundle.studio.paramDefs || {},
 						canvasConfig: bundle.studio.canvasConfig || { ...DEFAULT_CANVAS_CONFIG },
+						importedFlow: bundle.studio.pipelineFlow || null,
 						selectedNodeStudioId: null
 					});
 				}
@@ -187,6 +235,9 @@ export default class StudioPage extends React.Component {
 						categories={categories}
 						canvasConfig={canvasConfig}
 						onCanvasConfigChange={this.handleCanvasConfigChange}
+						importedFlow={this.state.importedFlow}
+						onFlowChange={this.handleFlowChange}
+						onFlowImported={this.handleFlowImported}
 					/>
 				</div>
 			</div>

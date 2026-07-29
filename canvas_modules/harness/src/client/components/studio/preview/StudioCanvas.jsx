@@ -46,6 +46,10 @@ export default class StudioCanvas extends React.Component {
 		if (prevProps.paletteJSON !== this.props.paletteJSON) {
 			this.canvasController.setPipelineFlowPalette(this.props.paletteJSON);
 		}
+		if (prevProps.importedFlow !== this.props.importedFlow && this.props.importedFlow) {
+			this.canvasController.setPipelineFlow(this.props.importedFlow);
+			this.props.onFlowImported();
+		}
 	}
 
 	getCanvasConfig() {
@@ -95,6 +99,7 @@ export default class StudioCanvas extends React.Component {
 	}
 
 	editActionHandler() {
+		this.props.onFlowChange(this.canvasController.getPipelineFlow());
 		return null;
 	}
 
@@ -177,5 +182,8 @@ StudioCanvas.propTypes = {
 	paramDefs: PropTypes.object,
 	categories: PropTypes.array,
 	canvasConfig: PropTypes.object.isRequired,
-	onCanvasConfigChange: PropTypes.func.isRequired
+	onCanvasConfigChange: PropTypes.func.isRequired,
+	importedFlow: PropTypes.object,
+	onFlowChange: PropTypes.func.isRequired,
+	onFlowImported: PropTypes.func.isRequired
 };
