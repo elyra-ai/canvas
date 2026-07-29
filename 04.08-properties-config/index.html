@@ -1041,6 +1041,8 @@
       
         
       
+        
+      
     
     
     
@@ -1127,6 +1129,34 @@
     
   
     Localization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02.02-content-security-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Security Policy
   
 
     
@@ -3348,6 +3378,32 @@
 </li>
 <li>
 <p>enableTanstackTable <code>boolean</code>: Feature flag to enable using Tanstack tables instead of React-virtualized tables. default: <code>true</code></p>
+</li>
+<li>
+<p>cspNonce <code>string</code> - Default undefined. A <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">Content Security Policy</a> nonce value to pass to Common Properties subcomponents that inject runtime styles. This includes the expression editor (powered by CodeMirror 6) and table-related components. When your application enforces a <code>style-src</code> CSP directive without <code>'unsafe-inline'</code>, those subcomponents can be blocked from injecting their required stylesheets unless a nonce-based policy is used. Providing a nonce allows those stylesheets to be permitted under that policy.</p>
+<p><strong>How to use:</strong></p>
+<ol>
+<li>
+<p>On your server, generate a cryptographically random nonce for each HTTP response:
+    <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">crypto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;crypto&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">nonce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomBytes</span><span class="p">(</span><span class="mf">16</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s2">&quot;base64&quot;</span><span class="p">);</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Include the nonce in your <code>Content-Security-Policy</code> header:
+    <div class="highlight"><pre><span></span><code>style-src &#39;self&#39; &#39;nonce-&lt;your-nonce-value&gt;&#39;
+</code></pre></div></p>
+</li>
+<li>
+<p>Pass the nonce to <code>&lt;CommonProperties&gt;</code>:
+    <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">CommonProperties</span>
+<span class="w">    </span><span class="na">propertiesConfig</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">cspNonce</span><span class="o">:</span><span class="w"> </span><span class="nx">nonce</span><span class="w"> </span><span class="p">}}</span>
+<span class="w">    </span><span class="na">...</span>
+<span class="p">/&gt;</span>
+</code></pre></div></p>
+</li>
+</ol>
+<p><strong>Note:</strong> If your application does not use any Common Properties feature that injects runtime styles, this field is not required and <code>'unsafe-inline'</code> is not needed in <code>style-src</code> for Common Properties. If you do use those features and do not provide a nonce, you must include <code>'unsafe-inline'</code> in your <code>style-src</code> policy for them to function correctly.</p>
 </li>
 </ul>
 

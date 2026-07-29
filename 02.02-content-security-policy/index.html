@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../04-common-properties/">
+        <link rel="prev" href="../02.01-localization/">
       
       
-        <link rel="next" href="../04.02-callbacks/">
+        <link rel="next" href="../03-common-canvas/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Parameter Definition - Elyra Canvas</title>
+        <title>Content Security Policy - Elyra Canvas</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#parameter-definition" class="md-skip">
+        <a href="#content-security-policy" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Parameter Definition
+              Content Security Policy
             
           </span>
         </div>
@@ -238,10 +238,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../02-set-up/" class="md-tabs__link">
           
   
@@ -282,12 +284,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../04-common-properties/" class="md-tabs__link">
           
   
@@ -1032,8 +1032,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -1041,21 +1043,26 @@
       
         
       
-    
-    
-    
-      
+        
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -1073,7 +1080,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1135,6 +1142,125 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Security Policy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content Security Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements-for-style-src-without-unsafe-inline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements for style-src without 'unsafe-inline'
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passing-a-nonce-to-common-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passing a nonce to Common Properties
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#svg-icons-and-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVG icons and images
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features-that-still-require-unsafe-inline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features that still require 'unsafe-inline'
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2658,10 +2784,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -2687,20 +2811,17 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -2718,7 +2839,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2761,37 +2882,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Parameter Definition
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../04.01-parameter-definition/" class="md-nav__link">
         
   
   
@@ -2807,142 +2901,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#title-definition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Title Definition
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#current-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Current Parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameter-definitions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameter Definitions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ui-only-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI-only Parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#complex-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Complex Types
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Complex Types">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-note-on-parameters-and-complex-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A Note on Parameters and Complex Types:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ui-hints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI Hints
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conditions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conditions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-set-metadata" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Set Metadata
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -3416,10 +3374,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#title-definition" class="md-nav__link">
+  <a href="#requirements-for-style-src-without-unsafe-inline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Title Definition
+        Requirements for style-src without 'unsafe-inline'
       
     </span>
   </a>
@@ -3427,10 +3385,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#current-parameters" class="md-nav__link">
+  <a href="#passing-a-nonce-to-common-properties" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current Parameters
+        Passing a nonce to Common Properties
       
     </span>
   </a>
@@ -3438,10 +3396,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parameter-definitions" class="md-nav__link">
+  <a href="#svg-icons-and-images" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameter Definitions
+        SVG icons and images
       
     </span>
   </a>
@@ -3449,82 +3407,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ui-only-parameters" class="md-nav__link">
+  <a href="#features-that-still-require-unsafe-inline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        UI-only Parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#complex-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Complex Types
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Complex Types">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-note-on-parameters-and-complex-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A Note on Parameters and Complex Types:
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ui-hints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI Hints
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conditions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conditions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-set-metadata" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Set Metadata
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
+        Features that still require 'unsafe-inline'
       
     </span>
   </a>
@@ -3548,7 +3434,7 @@
 
 
   
-    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/04.01-parameter-definition.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/02.02-content-security-policy.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -3556,234 +3442,52 @@
   
 
 
-<h1 id="parameter-definition">Parameter Definition<a class="headerlink" href="#parameter-definition" title="Permanent link">&para;</a></h1>
-<p>The parameter definition object provides input for controlling the common-properties dialog.  It consists of information that is available in the <code>operator</code> object combined with UI hints, information on data sets, and resources.</p>
-<p>The parameter definition has a defined schema and set of examples located here:
-<a href="https://github.com/elyra-ai/pipeline-schemas/tree/main/common-canvas/parameter-defs">schema and examples</a></p>
-<p>The parameter definition consists of the following sections:</p>
-<h2 id="title-definition">Title Definition<a class="headerlink" href="#title-definition" title="Permanent link">&para;</a></h2>
-<p>The title of the properties editor. If <code>editable</code> is set to true (default), the title can be edited. If set to false, the title will be readonly.</p>
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;titleDefinition&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;title&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Properties Title&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;editable&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">  </span><span class="p">}</span>
+<h1 id="content-security-policy">Content Security Policy<a class="headerlink" href="#content-security-policy" title="Permanent link">&para;</a></h1>
+<p>Applications can use Elyra Canvas with a <code>Content-Security-Policy</code> that omits <code>'unsafe-inline'</code> from <code>style-src</code>, but this requires some application-level setup and a few feature constraints.</p>
+<p>The Elyra Canvas Test Harness includes a CSP toggle in its toolbar and can be used as a working reference.</p>
+<h2 id="requirements-for-style-src-without-unsafe-inline">Requirements for <code>style-src</code> without <code>'unsafe-inline'</code><a class="headerlink" href="#requirements-for-style-src-without-unsafe-inline" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Serve the Carbon and Elyra Canvas stylesheets as external CSS files, or compile them into your application&rsquo;s stylesheet bundle.</li>
+<li>If your application uses <a href="../04-common-properties/"><code>&lt;CommonProperties&gt;</code></a> controls that inject runtime styles, generate a nonce for each HTTP response and pass it through the <a href="../04.08-properties-config/#properties-config"><code>cspNonce</code></a> property in the Common Properties configuration.</li>
+<li>Ensure any SVG icons or images rendered by the application do not contain embedded <code>&lt;style&gt;</code> elements or <code>style=</code> attributes on individual elements. Elyra Canvas inlines SVG files as-is; any <code>&lt;style&gt;</code> blocks or <code>style=</code> attributes present in the file will violate a strict <code>style-src</code> policy.</li>
+<li>Do not use the canvas object inline style APIs when your policy omits <code>'unsafe-inline'</code>. The style specifications passed to <a href="../03.04-canvas-controller/#pipeline-flow-methods"><code>setObjectsStyle()</code></a>, <a href="../03.04-canvas-controller/#pipeline-flow-methods"><code>setObjectsMultiStyle()</code></a>, <a href="../03.04-canvas-controller/#setlinksstylepipelinelinkids-linkstyle-temporary"><code>setLinksStyle()</code></a>, and <a href="../03.04-canvas-controller/#setlinksmultistylepipelineobjstyles-temporary"><code>setLinksMultiStyle()</code></a> are written as inline <code>style</code> attributes and therefore require <code>'unsafe-inline'</code> in <code>style-src</code>.</li>
+<li>Do not store inline object styles in the pipeline flow data model. Node, comment, and link <code>.style</code> and <code>.style_temp</code> values are also rendered as inline <code>style</code> attributes and therefore require <code>'unsafe-inline'</code>.</li>
+<li>Review any application code that adds inline <code>style</code> attributes outside Elyra Canvas. A CSP that omits <code>'unsafe-inline'</code> will also block those application-authored inline styles.</li>
+</ol>
+<h2 id="passing-a-nonce-to-common-properties">Passing a nonce to Common Properties<a class="headerlink" href="#passing-a-nonce-to-common-properties" title="Permanent link">&para;</a></h2>
+<p>Common Properties only requires a nonce when the application uses features that inject runtime styles. This includes the expression editor powered by CodeMirror and table-related components.</p>
+<p>Use the <a href="../04.08-properties-config/#properties-config"><code>cspNonce</code></a> property documented in the Common Properties configuration page:</p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">CommonProperties</span>
+<span class="w">    </span><span class="na">propertiesConfig</span><span class="o">=</span><span class="p">{{</span>
+<span class="w">        </span><span class="nx">cspNonce</span><span class="o">:</span><span class="w"> </span><span class="nx">nonce</span>
+<span class="w">    </span><span class="p">}}</span>
+<span class="w">    </span><span class="na">...</span>
+<span class="p">/&gt;</span>
 </code></pre></div>
-<h2 id="current-parameters">Current Parameters<a class="headerlink" href="#current-parameters" title="Permanent link">&para;</a></h2>
-<p>A list of input parameters and initial values upon input.  The list is a set of key/value pairs with the key being the field name and the value is the initial value.</p>
-<p>Example
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;current_parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;targetField&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">    </span><span class="s2">&quot;inputFieldList&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">    </span><span class="s2">&quot;elasticNetParam&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;fitIntercept&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;maxIter&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">75</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;regParam&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;standardization&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;threshold&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;tol&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0000010</span>
-<span class="w">  </span><span class="p">}</span>
-</code></pre></div></p>
-<h2 id="parameter-definitions">Parameter Definitions<a class="headerlink" href="#parameter-definitions" title="Permanent link">&para;</a></h2>
-<p>The list of parameters definitions for this property dialog.  The list contains the name of the parameter, the data type of the parameter, the role and the default value.  The information provided is as needed by the backend engine, i.e. the parameter name should be the name of the parameter that is expected for the backend engine.</p>
-<p>The list of parameter definitions has the following attributes:</p>
-<ul>
-<li><code>id</code> (<em>string</em>) <strong>Required</strong> Parameter identifier as consumed by the backend engine.</li>
-<li><code>default</code> (<em>any</em>) The default value of the parameter.</li>
-<li><code>enum</code> (<em>array[string]</em>) A restricted list of string values that are valid for the field.</li>
-<li><code>type</code> (<em>string</em>) Parameter type as consumed by the backend engine.</li>
-<li><code>role</code> (<em>string</em>) Parameter role, which is an optional specialization of the type.</li>
-<li><code>required</code> (<em>boolean</em>) Indication whether parameter is required or optional.</li>
-</ul>
-<p>Parameter types have one of a fixed set of basic types. These are:</p>
-<ul>
-<li><code>integer</code></li>
-<li><code>double</code></li>
-<li><code>string</code></li>
-<li><code>date</code></li>
-<li><code>time</code></li>
-<li><code>timestamp</code></li>
-<li><code>custom</code></li>
-</ul>
-<p>These can be used as maps or arrays e.g.:</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">array</span><span class="p">[&lt;</span><span class="nx">value</span><span class="o">-</span><span class="k">type</span><span class="p">&gt;]:</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">sequence</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">list</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">values</span>
+<p>Your server must generate a new cryptographically random nonce for each HTTP response and include the same nonce in the <code>Content-Security-Policy</code> response header, for example:</p>
+<div class="highlight"><pre><span></span><code><span class="err">Content-Security-Policy: default-src &#39;self&#39;; style-src &#39;self&#39; &#39;nonce-&lt;your-nonce-value&gt;&#39;</span>
 </code></pre></div>
-
-<p>Parameter roles defined by the role attribute can be one of:</p>
+<p>See the <a href="../04.08-properties-config/#properties-config"><code>cspNonce</code></a> documentation for a fuller example.</p>
+<h2 id="svg-icons-and-images">SVG icons and images<a class="headerlink" href="#svg-icons-and-images" title="Permanent link">&para;</a></h2>
+<p>If your application provides custom SVG icons or other inline SVG assets to Elyra Canvas, make sure they are compatible with a restrictive <code>style-src</code> policy:</p>
 <ul>
-<li><code>expression</code>: an expression assumed to be in the expression language for the run time</li>
-<li><code>column</code>: value represents one or more columns from the data model visible to this operator</li>
-<li><code>new_column</code>: value represents the name of a new column to be added to the data model and must therefore not match an existing column and conform to existing syntactic restrictions.</li>
+<li>Use SVG presentation attributes such as <code>fill</code>, <code>stroke</code>, <code>stroke-width</code>, and <code>opacity</code> instead of CSS properties.</li>
+<li>Do not embed <code>&lt;style&gt;</code> elements inside the SVG markup.</li>
+<li>Do not use CSS class selectors inside the SVG to define appearance.</li>
+<li>Do not use <code>style=</code> attributes on individual SVG elements. Common legacy values such as <code>style="enable-background:..."</code> (an Adobe Illustrator artefact) and <code>style="fill:..."</code> must be replaced with their equivalent presentation attributes or removed.</li>
 </ul>
-<p>Example
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;targetField&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="s2">&quot;column&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;inputFieldList&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;array[string]&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="p">[],</span>
-<span class="w">      </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="s2">&quot;column&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;impurity&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;enum&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;gini&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;entropy&quot;</span>
-<span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gini&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;elasticNetParam&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;double&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="mf">0.0</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">]</span>
-</code></pre></div></p>
-<h2 id="ui-only-parameters">UI-only Parameters<a class="headerlink" href="#ui-only-parameters" title="Permanent link">&para;</a></h2>
-<p>A list of input parameters and initial values upon input.  This set of parameters are separated from the backend parameters (current parameters).  The idea is that these parameters are not passed into the backend engine by the common-properties consumer.</p>
-<p>Example
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;current_ui_parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;databaseResource&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;tol&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0000010</span>
-<span class="w">  </span><span class="p">}</span>
-</code></pre></div></p>
-<p>UI-only parameters require information about the parameters same as the parameter definition information used for the backend parameters.  The UI-only parameter definition information is stored in the UI-hints section in the sub-section named <code>ui_parameters</code>.  A description of the UI hints specifications can be found on the <a href="../04.03-ui-hints/">UI Hints</a> page.</p>
-<p>UI-only properties are returned to the consuming application via a separate parameter on the applyPropertiesChanges callback.  See the <a href="../04.02-callbacks/">Callbacks</a> page.</p>
-<h2 id="complex-types">Complex Types<a class="headerlink" href="#complex-types" title="Permanent link">&para;</a></h2>
-<p>The complex types section is an array of</p>
-<p>The complex types have the following attributes:</p>
+<p>Elyra Canvas fetches SVG files from the server and inlines them into the canvas DOM as-is, with no style transformation. SVG files that contain <code>&lt;style&gt;</code> blocks or <code>style=</code> attributes will cause CSP violations when the application enforces <code>style-src</code> without <code>'unsafe-inline'</code>.</p>
+<p>When first enabling CSP on an existing deployment, be aware that browsers may have cached SVG assets from before the policy was applied. A previously cached SVG that contains <code>&lt;style&gt;</code> blocks or <code>style=</code> attributes will still cause violations even after the server-side assets are cleaned up, until the cached copy expires or is revalidated. To avoid this, either use cache-busting (content-hashed filenames) when deploying cleaned SVG assets, or ensure your SVG responses are served with <code>Cache-Control: no-cache</code> during the transition.</p>
+<h2 id="features-that-still-require-unsafe-inline">Features that still require <code>'unsafe-inline'</code><a class="headerlink" href="#features-that-still-require-unsafe-inline" title="Permanent link">&para;</a></h2>
+<p>A <code>style-src</code> policy without <code>'unsafe-inline'</code> is compatible with the standard Elyra Canvas and Common Properties styling model, but not with APIs that explicitly write inline style attributes.</p>
+<p>The set styles APIs are deprecated and will be removed in a future release.</p>
+<p>This means <code>'unsafe-inline'</code> is still required if your application uses:</p>
 <ul>
-<li><code>id</code> (<em>string</em>) <strong>Required</strong> Identifier of complex type, can be referenced in other places.</li>
-<li><code>type</code> (<em>string</em>) If <code>object</code> is specified, Common Properties will return the values as an array of objects consisting of key value pairs. This defaults to <code>array</code>.</li>
-<li><code>key_definition</code> (<em>object</em>) A parameter definition attribute on the key parameter field.</li>
-<li><code>parameters</code> (<em>object</em>) <strong>Required</strong> List of parameters fields.  Each parameter can be defined as a parameter definition attribute or a complex type attribute.</li>
+<li>Canvas object style specifications in the pipeline flow data model, including <code>.style</code> and <code>.style_temp</code> on nodes, comments, or links.</li>
+<li><a href="../03.04-canvas-controller/#pipeline-flow-methods"><code>setObjectsStyle()</code></a> or <a href="../03.04-canvas-controller/#pipeline-flow-methods"><code>setObjectsMultiStyle()</code></a>.</li>
+<li><a href="../03.04-canvas-controller/#setlinksstylepipelinelinkids-linkstyle-temporary"><code>setLinksStyle()</code></a> or <a href="../03.04-canvas-controller/#setlinksmultistylepipelineobjstyles-temporary"><code>setLinksMultiStyle()</code></a>.</li>
 </ul>
-<p>Example of complex types
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;complex_types&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SortEntry&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;key_definition&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;field&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;column&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="s2">&quot;parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;sort_order&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;enum&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;Ascending&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;Descending&quot;</span>
-<span class="w">          </span><span class="p">],</span>
-<span class="w">          </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Ascending&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">]</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
-</code></pre></div></p>
-<h4 id="a-note-on-parameters-and-complex-types">A Note on Parameters and Complex Types:<a class="headerlink" href="#a-note-on-parameters-and-complex-types" title="Permanent link">&para;</a></h4>
-<p>Note that both parameter and complex type definitions are in the exact same format as defined in the operator schema. Therefore the contents of operator JSON files can be used for these two sections.</p>
-<h2 id="ui-hints">UI Hints<a class="headerlink" href="#ui-hints" title="Permanent link">&para;</a></h2>
-<p>A set of specifications for controlling the layout and flow of Common Properties.  A description of the UI hints specifications can be found on the <a href="../04.03-ui-hints/">UI Hints</a> page.</p>
-<h2 id="conditions">Conditions<a class="headerlink" href="#conditions" title="Permanent link">&para;</a></h2>
-<p>A set of specifications for controlling validation checking of parameters during the common-properties dialog. A description of the Conditions specifications can be found here on the <a href="../04.05-conditions/">Conditions</a> page.</p>
-<h2 id="data-set-metadata">Data Set Metadata<a class="headerlink" href="#data-set-metadata" title="Permanent link">&para;</a></h2>
-<p>The data set metadata is an array of datarecord-metadata objects as defined in the datarecord-metadata JSON schema. Each datarecord-metadata object contains and array of fields that provide column information on the input data set.  <a href="https://github.com/elyra-ai/pipeline-schemas/tree/main/common-pipeline/datarecord-metadata">schema and examples</a></p>
-<p>The fields have the following attributes:</p>
-<ul>
-<li><code>name</code> (<em>string</em>) <strong>Required</strong> Field name. Must be unique within the dataset.</li>
-<li><code>type</code> (<em>string</em>) <strong>Required</strong> Field type. Can be a primitive type (string, integer, double, date, time, timestamp), or a vector, map, or struct containing those types. Required.</li>
-<li><code>nullable</code> (<em>boolean</em>) Indicates whether or not one can place null values into the field.  Default: False.</li>
-<li><code>metadata</code> (<em>object</em>) A set of additional metadata attributes.</li>
-</ul>
-<p>The additional metadata attributes are as follows:</p>
-<ul>
-<li><code>description</code> (<em>string</em>) A description of the field.</li>
-<li><code>measure</code> (<em>string</em>) The field measurement type.  The value can be one of the following. <code>range, discrete, flag, set, ordered-set, typeless, collection, geospatial, default</code></li>
-<li><code>role</code> (<em>string</em>) Field role for modeling. The value can be one of the following.
-<code>input,
-target,
-both,
-none,
-partition,
-split,
-frequency,
-record-id</code></li>
-<li><code>max_string_length</code> (<em>number</em>) Maximum character length for string fields. Length is unlimited when not present.</li>
-<li><code>values</code> (<em>array[string]</em>) Array of unique categorical values for the column.</li>
-<li><code>ranges</code> (<em>object</em>) Minimum and maximum discovered values for scalar data.</li>
-</ul>
-<p>Example
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;dataset_metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Schema-1&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;fields&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Age&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;range&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Sex&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BP&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Schema-2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;fields&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Birthdate&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Date of birth&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;range&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">]</span>
-</code></pre></div></p>
-<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
-<p>This is a map of string resources.</p>
-<p>Example:
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;resources&quot;</span><span class="o">:</span><span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;org.apache.spark.ml.classification.DecisionTreeClassifier.label&quot;</span><span class="o">:</span><span class="s2">&quot;Random Forest Classifier&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;org.apache.spark.ml.classification.DecisionTreeClassifier.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Fitted Random Forest Classification Model&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;inputFieldList.label&quot;</span><span class="o">:</span><span class="s2">&quot;Input columns&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;inputFieldList.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Select one or more input columns&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;targetField.label&quot;</span><span class="o">:</span><span class="s2">&quot;Target column&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;targetField.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Select a target column&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;max_depth_not_valid&quot;</span><span class="o">:</span><span class="s2">&quot;The max depth parameter must be greater than or equal to zero&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;max_iter_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The max iterations parameter must be greater than or equal to zero&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;min_instances_per_node_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The minimum instances per node value must be &gt;= 1&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;subsampling_rate_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The subsampling rate value must be &gt; 0 and &lt;= 1&quot;</span>
-<span class="p">}</span>
-</code></pre></div></p>
+<p>If your application avoids those inline style APIs, provides SVG assets that contain no <code>&lt;style&gt;</code> blocks or <code>style=</code> attributes, and supplies a nonce where Common Properties requires one, you can enforce <code>style-src</code> without <code>'unsafe-inline'</code>.</p>
 
 
 
@@ -3813,7 +3517,7 @@ record-id</code></li>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../04-common-properties/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting started">
+          <a href="../02.01-localization/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Localization">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -3823,20 +3527,20 @@ record-id</code></li>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Getting started
+                Localization
               </div>
             </div>
           </a>
         
         
           
-          <a href="../04.02-callbacks/" class="md-footer__link md-footer__link--next" aria-label="Next: Callbacks">
+          <a href="../03-common-canvas/" class="md-footer__link md-footer__link--next" aria-label="Next: Getting Started">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Callbacks
+                Getting Started
               </div>
             </div>
             <div class="md-footer__button md-icon">
