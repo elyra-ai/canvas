@@ -377,6 +377,7 @@ class App extends React.Component {
 			showHeadingDesc: false,
 			light: true,
 			lightTheme: false,
+			cspEnabled: Boolean(window.__CSP_NONCE__),
 			showRequiredIndicator: true,
 			showAlertsTab: true,
 			enableResize: true,
@@ -2333,7 +2334,8 @@ class App extends React.Component {
 			showCharacterCounter: this.state.showCharacterCounter,
 			locale: this.locale,
 			iconSwitch: this.state.iconSwitch,
-			enableTanstackTable: this.state.enableTanstackTable
+			enableTanstackTable: this.state.enableTanstackTable,
+			cspNonce: window.__CSP_NONCE__
 		};
 	}
 
@@ -2899,6 +2901,27 @@ class App extends React.Component {
 		}));
 	}
 
+	/**
+	 * Handles the CSP-enabled toggle in the toolbar.
+	 * Posts the new value to the server, then navigates to the origin so the
+	 * browser performs a genuine fresh page load (distinct from the current
+	 * "/#/" URL) and the updated Content-Security-Policy header takes effect.
+	 * @param {boolean} val - The new toggle value (true = CSP on, false = CSP off).
+	 */
+	handleCspToggle(val) {
+		fetch("/v1/test-harness/csp-enabled", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			credentials: "include",
+			body: JSON.stringify({ enabled: val })
+		})
+			.then((response) => {
+				if (response.ok) {
+					window.location.replace(window.location.origin + "/");
+				}
+			});
+	}
+
 	getNavigationBar() {
 		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
 		const breadcrumbs = (<Breadcrumbs
@@ -2954,6 +2977,28 @@ class App extends React.Component {
 						</div>
 					),
 					tooltip: "Switch Theme"
+				},
+				{ divider: true },
+				{
+					action: "csp-toggle",
+					label: "CSP",
+					enable: true,
+					jsx: (tabIndex) => (
+						<div className="harness-theme-toggle-wrapper" tabIndex={-1}>
+							<Toggle
+								id="harness-toggle-csp"
+								aria-label="Enable Content Security Policy"
+								size="sm"
+								labelA="CSP Off"
+								labelB="CSP On"
+								className="toolbar-jsx-obj"
+								toggled={this.state.cspEnabled}
+								onToggle={this.handleCspToggle.bind(this)}
+								tabIndex={tabIndex}
+							/>
+						</div>
+					),
+					tooltip: "Enable/disable Content Security Policy (page will reload)"
 				},
 				{ divider: true },
 				{

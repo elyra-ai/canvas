@@ -3359,7 +3359,7 @@ export default class SVGCanvasRenderer {
 
 				} else {
 					imageSel.selectChild("svg").remove();
-					d3.svg(image, { cache: "force-cache" }).then((data) => {
+					d3.svg(image).then((data) => {
 						const svgElement = data.documentElement;
 						svgElement.setAttribute("aria-label", "Node Image");
 						imageSel.node().append(svgElement);
@@ -3371,16 +3371,11 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// The default behavior for SVG files is to load them in-line regardless
-	// of how many times a unique image is used for a particular flow. This
-	// can be unnecessarily slow if an image is referenced many times. This
-	// method provides a performance enhancement for displaying SVG images.
-	// It stores each unique SVG file encountered in the <defs> element for the
-	// canvas as a <symbol> element. It then adds <use> elements to each place
-	// where that image is referenced. So, if the same image is referenced many
-	// times there is just one symbol for the SVG file stored in the <defs>
-	// element. This is faster but can restrict customization capabilities of
-	// the canvas images.
+	// Stores each unique SVG file in the <defs> element as a <symbol>, then
+	// adds <use> elements everywhere that image is referenced. So, if the same
+	// image is referenced many times there is just one symbol for the SVG file
+	// stored in the <defs> element. This is faster but can restrict
+	// customization capabilities of the canvas images.
 	loadSVGToDefs(imageSel, image) {
 		const symbolId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
 		const symbolSelector = "#" + symbolId;
@@ -3390,7 +3385,7 @@ export default class SVGCanvasRenderer {
 		if (symbol.empty()) {
 			this.canvasDefs.append("symbol").attr("id", symbolId);
 
-			d3.svg(image, { cache: "force-cache" }).then((data) => {
+			d3.svg(image).then((data) => {
 				// Asynchronously, populate placeholder <symbol> with SVG file contents.
 				this.canvasDefs.selectChildren(symbolSelector)
 					.node()

@@ -500,6 +500,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<div className="properties-field-table-container expression-builder-table" >
 					<FlexibleTable
 						enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+						cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 						columns={fieldHeaders}
 						data={tableData}
 						sortable={sortable}
@@ -519,6 +520,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<div className="properties-value-table-container expression-builder-table" >
 					<FlexibleTable
 						enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+						cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 						columns={valueHeader}
 						data={valuesTableData}
 						sortable={["values"]}
@@ -688,6 +690,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					<div className="properties-functions-table" >
 						<FlexibleTable
 							enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+							cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 							columns={headers}
 							data={data}
 							sortable={["function", "return"]}
