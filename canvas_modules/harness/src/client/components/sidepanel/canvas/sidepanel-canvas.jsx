@@ -19,7 +19,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle, FormGroup }
+import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle, FormGroup, Accordion, AccordionItem }
 	from "@carbon/react";
 import { get, set } from "lodash";
 import {
@@ -119,6 +119,8 @@ import {
 
 import FormsService from "../../../services/FormsService";
 
+const savedAccordionState = {};
+
 export default class SidePanelForms extends React.Component {
 	constructor(props) {
 		super(props);
@@ -129,7 +131,8 @@ export default class SidePanelForms extends React.Component {
 			canvasPalette2: "",
 			canvasFiles: [],
 			paletteFiles: [],
-			controlsDisabled: this.props.getStateValue("selectedExampleApp") !== EXAMPLE_APP_NONE
+			controlsDisabled: this.props.getStateValue("selectedExampleApp") !== EXAMPLE_APP_NONE,
+			suppressAccordionAnim: true
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
@@ -164,6 +167,9 @@ export default class SidePanelForms extends React.Component {
 			.then(function(res) {
 				that.setState({ paletteFiles: res });
 			});
+
+		// Avoid replaying the accordion open/close animation on mount.
+		this.setState({ suppressAccordionAnim: false });
 	}
 
 	onCanvasFileSelect(evt) {
@@ -1935,6 +1941,17 @@ export default class SidePanelForms extends React.Component {
 
 		const disabledStyle = this.state.controlsDisabled ? { pointerEvents: "none", opacity: "0.4" } : {};
 
+		const section = (title, content) => (
+			<AccordionItem key={title} title={title}
+				open={savedAccordionState[title] !== false}
+				onHeadingClick={({ isOpen }) => {
+					savedAccordionState[title] = isOpen;
+				}}
+			>
+				{content}
+			</AccordionItem>
+		);
+
 		return (
 			<div>
 				{exampleApps}
@@ -1942,196 +1959,171 @@ export default class SidePanelForms extends React.Component {
 				<div style={disabledStyle}>
 					{canvasInput}
 					{divider}
-					<div className="harness-side-panel-header">Palette</div>
-					{divider}
-					{paletteInput}
-					{divider}
-					{paletteLayout}
-					{divider}
-					{enablePaletteHeader}
-					{divider}
-					{enableAutoLinkOnlyFromSelNodes}
-					{divider}
-					{enableSingleClickAddFromPalette}
-					{divider}
-					<div className="harness-side-panel-header">Nodes</div>
-					{divider}
-					{nodeFormatType}
-					{divider}
-					{enableResizableNodes}
-					{divider}
-					{enableInsertNodeDroppedOnLink}
-					{divider}
-					{enableHighlightNodeOnNewLinkDrag}
-					{divider}
-					{enableHighlightUnavailableNodes}
-					{divider}
-					{enableSelfRefLinks}
-					{divider}
-					{linkDirection}
-					{divider}
-					{enableSingleOutputPortDisplay}
-					{divider}
-					{displayFullLabelOnHover}
-					{divider}
-					<div className="harness-side-panel-header">Supernodes</div>
-					{divider}
-					{enableMoveNodesOnSupernodeResize}
-					{divider}
-					<div className="harness-side-panel-header">Links</div>
-					{divider}
-					{linkType}
-					{divider}
-					{linkMethod}
-					{divider}
-					{enableLinkSelection}
-					{divider}
-					{enableStraightLinksAsFreeform}
-					{divider}
-					{enableLinkReplaceOnNewConnection}
-					{divider}
-					{enableSplitLinkDroppedOnNode}
-					{divider}
-					{enableRaiseLinksToTopOnHover}
-					{divider}
-					{enableAssocLinkCreation}
-					{divider}
-					{enableLinksOverNodes}
-					{divider}
-					{assocLinkType}
-					{divider}
-					<div className="harness-side-panel-header">Comments</div>
-					{divider}
-					{enableMarkdownInComments}
-					{divider}
-					{enableMarkdownHTML}
-					{divider}
-					{enableWYSIWYGComments}
-					{divider}
-					{enableMoveNodesInComment}
-					{divider}
-					<div className="harness-side-panel-header">Drag, Pan, Zoom and Select</div>
-					{divider}
-					{saveZoom}
-					{divider}
-					{enablePanIntoViewOnOpen}
-					{divider}
-					{enableZoomIntoSubFlows}
-					{divider}
-					{enableDragWithoutSelect}
-					{divider}
-					<div className="harness-side-panel-header">Toolbar</div>
-					{divider}
-					{toolbarLayout}
-					{divider}
-					{toolbarType}
-					{divider}
-					{toolbarSize}
-					{divider}
-					<div className="harness-side-panel-header">Left Flyout</div>
-					{divider}
-					{enableShowLeftFlyout}
-					{divider}
-					{enableLeftFlyoutUnderToolbar}
-					{divider}
-					<div className="harness-side-panel-header">Right Flyout</div>
-					{divider}
-					{enableShowRightFlyout}
-					{divider}
-					{enableRightFlyoutUnderToolbar}
-					{divider}
-					{enableRightFlyoutDragToResize}
-					{divider}
-					{enablePositionNodeOnRightFlyoutOpen}
-					{divider}
-					<div className="harness-side-panel-header">Top Panel</div>
-					{divider}
-					{enableShowTopPanel}
-					{divider}
-					<div className="harness-side-panel-header">Bottom Panel</div>
-					{divider}
-					{enableShowBottomPanel}
-					{divider}
-					<div className="harness-side-panel-header">Context Menu/Toolbar</div>
-					{divider}
-					{enableContextToolbar}
-					{divider}
-					{enableSaveToPalette}
-					{divider}
-					{enableCreateSupernodeNonContiguous}
-					{divider}
-					<div className="harness-side-panel-header">Canvas Content</div>
-					{divider}
-					{saveToPdf}
-					{divider}
-					{interactionType}
-					{divider}
-					{snapToGrid}
-					{divider}
-					{displayGrid}
-					{divider}
-					{stateTag}
-					{divider}
-					{enableDropZoneOnExternalDrag}
-					{divider}
-					{enableDisplayCustomizedDropZoneContent}
-					{divider}
-					{enableDisplayCustomizedEmptyCanvasContent}
-					{divider}
-					{displayBoundingRectangles}
-					{divider}
-					{enableCanvasUnderlay}
-					{divider}
-					<div className="harness-side-panel-header">Operational</div>
-					{divider}
-					{layoutLibrary}
-					{divider}
-					{enableKeyboardNavigation}
-					{divider}
-					{enableImageDisplay}
-					{divider}
-					{enableEditingActions}
-					{divider}
-					{enableObjectModel}
-					{divider}
-					{enableExternalPipelineFlows}
-					{divider}
-					{schemaValidation}
-					{divider}
-					{enableBrowserEditMenu}
-					{divider}
-					<div className="harness-side-panel-header">Tip Config</div>
-					{divider}
-					{tipConfig}
-					{divider}
-					<div className="harness-side-panel-header">Draggable node</div>
-					{divider}
-					{nodeDraggable}
-					{divider}
-					<div className="harness-side-panel-header">Notifications</div>
-					{divider}
-					{enableNotificationConfigToggle}
-					{divider}
-					{notificationTitle}
-					{notificationSubtitle}
-					{notificationEmptyMessage}
-					{notificationClearAll}
-					{notificationKeepOpen}
-					{notificationSecondaryButtonDisabled}
-					{divider}
-					<div className="harness-side-panel-header">Extra Canvas</div>
-					{divider}
-					{extraCanvas}
-					{canvasInput2}
-					{paletteInput2}
-					{divider}
-					{enableNotificationConfigToggle2}
-					{divider}
-					{notificationTitle2}
-					{notificationSubtitle2}
-					{notificationEmptyMessage2}
-					{notificationClearAll2}
-					{notificationKeepOpen2}
+					<Accordion className={this.state.suppressAccordionAnim ? "harness-sidepanel-accordion-no-anim" : ""}>
+						{section("Palette", <>
+							{paletteInput}
+							{divider}
+							{paletteLayout}
+							{divider}
+							{enablePaletteHeader}
+							{divider}
+							{enableAutoLinkOnlyFromSelNodes}
+							{divider}
+							{enableSingleClickAddFromPalette}
+						</>)}
+						{section("Nodes", <>
+							{nodeFormatType}
+							{divider}
+							{enableResizableNodes}
+							{divider}
+							{enableInsertNodeDroppedOnLink}
+							{divider}
+							{enableHighlightNodeOnNewLinkDrag}
+							{divider}
+							{enableHighlightUnavailableNodes}
+							{divider}
+							{enableSelfRefLinks}
+							{divider}
+							{linkDirection}
+							{divider}
+							{enableSingleOutputPortDisplay}
+							{divider}
+							{displayFullLabelOnHover}
+						</>)}
+						{section("Supernodes", enableMoveNodesOnSupernodeResize)}
+						{section("Links", <>
+							{linkType}
+							{divider}
+							{linkMethod}
+							{divider}
+							{enableLinkSelection}
+							{divider}
+							{enableStraightLinksAsFreeform}
+							{divider}
+							{enableLinkReplaceOnNewConnection}
+							{divider}
+							{enableSplitLinkDroppedOnNode}
+							{divider}
+							{enableRaiseLinksToTopOnHover}
+							{divider}
+							{enableAssocLinkCreation}
+							{divider}
+							{enableLinksOverNodes}
+							{divider}
+							{assocLinkType}
+						</>)}
+						{section("Comments", <>
+							{enableMarkdownInComments}
+							{divider}
+							{enableMarkdownHTML}
+							{divider}
+							{enableWYSIWYGComments}
+							{divider}
+							{enableMoveNodesInComment}
+						</>)}
+						{section("Drag, Pan, Zoom and Select", <>
+							{saveZoom}
+							{divider}
+							{enablePanIntoViewOnOpen}
+							{divider}
+							{enableZoomIntoSubFlows}
+							{divider}
+							{enableDragWithoutSelect}
+						</>)}
+						{section("Toolbar", <>
+							{toolbarLayout}
+							{divider}
+							{toolbarType}
+							{divider}
+							{toolbarSize}
+						</>)}
+						{section("Left Flyout", <>
+							{enableShowLeftFlyout}
+							{divider}
+							{enableLeftFlyoutUnderToolbar}
+						</>)}
+						{section("Right Flyout", <>
+							{enableShowRightFlyout}
+							{divider}
+							{enableRightFlyoutUnderToolbar}
+							{divider}
+							{enableRightFlyoutDragToResize}
+							{divider}
+							{enablePositionNodeOnRightFlyoutOpen}
+						</>)}
+						{section("Top Panel", enableShowTopPanel)}
+						{section("Bottom Panel", enableShowBottomPanel)}
+						{section("Context Menu/Toolbar", <>
+							{enableContextToolbar}
+							{divider}
+							{enableSaveToPalette}
+							{divider}
+							{enableCreateSupernodeNonContiguous}
+						</>)}
+						{section("Canvas Content", <>
+							{saveToPdf}
+							{divider}
+							{interactionType}
+							{divider}
+							{snapToGrid}
+							{divider}
+							{displayGrid}
+							{divider}
+							{stateTag}
+							{divider}
+							{enableDropZoneOnExternalDrag}
+							{divider}
+							{enableDisplayCustomizedDropZoneContent}
+							{divider}
+							{enableDisplayCustomizedEmptyCanvasContent}
+							{divider}
+							{displayBoundingRectangles}
+							{divider}
+							{enableCanvasUnderlay}
+						</>)}
+						{section("Operational", <>
+							{layoutLibrary}
+							{divider}
+							{enableKeyboardNavigation}
+							{divider}
+							{enableImageDisplay}
+							{divider}
+							{enableEditingActions}
+							{divider}
+							{enableObjectModel}
+							{divider}
+							{enableExternalPipelineFlows}
+							{divider}
+							{schemaValidation}
+							{divider}
+							{enableBrowserEditMenu}
+						</>)}
+						{section("Tip Config", tipConfig)}
+						{section("Draggable node", nodeDraggable)}
+						{section("Notifications", <>
+							{enableNotificationConfigToggle}
+							{divider}
+							{notificationTitle}
+							{notificationSubtitle}
+							{notificationEmptyMessage}
+							{notificationClearAll}
+							{notificationKeepOpen}
+							{notificationSecondaryButtonDisabled}
+						</>)}
+						{section("Extra Canvas", <>
+							{extraCanvas}
+							{canvasInput2}
+							{paletteInput2}
+							{divider}
+							{enableNotificationConfigToggle2}
+							{divider}
+							{notificationTitle2}
+							{notificationSubtitle2}
+							{notificationEmptyMessage2}
+							{notificationClearAll2}
+							{notificationKeepOpen2}
+						</>)}
+					</Accordion>
 				</div>
 			</div>
 		);
