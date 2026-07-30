@@ -726,4 +726,8 @@ Toolbar.propTypes = {
 	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
+Toolbar.defaultProps = {
+	size: "md"
+};
+
 export default Toolbar;
