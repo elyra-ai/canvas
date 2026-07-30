@@ -56,7 +56,7 @@ class PaletteDialogContentCategory extends React.Component {
 			: this.props.category.label;
 
 		return (
-			<div data-id={this.props.category.id} className={style} onClick={this.categorySelected}>
+			<div data-id={this.props.category.id} data-label={this.props.category.label} className={style} onClick={this.categorySelected}>
 				{content}
 			</div>
 		);

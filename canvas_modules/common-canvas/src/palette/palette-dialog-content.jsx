@@ -16,7 +16,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { InlineLoading } from "@carbon/react";
 import PaletteDialogContentCategories from "./palette-dialog-content-categories.jsx";
 import PaletteDialogContentGrid from "./palette-dialog-content-grid.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
@@ -73,7 +72,7 @@ class PaletteDialogContent extends React.Component {
 	}
 
 	categorySelected(catSelEvent) {
-		this.setState({ selectedCategory: catSelEvent.target.firstChild.data });
+		this.setState({ selectedCategory: catSelEvent.currentTarget.dataset.label });
 	}
 
 	render() {
@@ -86,14 +85,7 @@ class PaletteDialogContent extends React.Component {
 		if (category.loading_text) {
 			content = (
 				<div className="palette-dialog-content-loading">
-					<InlineLoading
-						description={category.loading_text}
-						status="active"
-						successDelay={1500}
-						onSuccess={function noRefCheck() {
-							return null;
-						}}
-					/>
+					{category.label}
 				</div>
 			);
 		} else if (this.props.showGrid) {
