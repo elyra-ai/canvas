@@ -2341,6 +2341,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#node-template-palette_-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node template palette_* attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node template palette_* attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#palette_disabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        palette_disabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#palette_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        palette_image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#palette_class_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        palette_class_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3483,6 +3533,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#node-template-palette_-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node template palette_* attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node template palette_* attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#palette_disabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        palette_disabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#palette_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        palette_image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#palette_class_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        palette_class_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3546,7 +3646,44 @@
 </ol>
 <h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
 <p>According to the schema, node template descriptions are not mandatory in the palette object. However, it is recommended you provide descriptions for each of your node templates. The reason for this is that, the search function searches through node template descriptions, as well as node template labels and category labels. This means you can write your node template descriptions to contain appropriate keywords that a user might search for when looking for a node.</p>
-<p>For example, if there is a node template called ‘Import Data’ and that node could import comma-separated files you could add ‘comma-separated’ and ‘csv’ into your description for that node template. If the user entered <code>comma</code> in the search field the ‘Import Data’ node template would be shown in the search results even though <code>comma</code> does not appear in the node template label.</p>
+<p>For example, if there is a node template called &lsquo;Import Data&rsquo; and that node could import comma-separated files you could add &lsquo;comma-separated&rsquo; and &lsquo;csv&rsquo; into your description for that node template. If the user entered <code>comma</code> in the search field the &lsquo;Import Data&rsquo; node template would be shown in the search results even though <code>comma</code> does not appear in the node template label.</p>
+<h2 id="node-template-palette_-attributes">Node template <code>palette_*</code> attributes<a class="headerlink" href="#node-template-palette_-attributes" title="Permanent link">&para;</a></h2>
+<p>Node templates in the palette can be customized using three special attributes that are set inside <code>app_data.ui_data</code> of each node type entry in the palette JSON. These attributes control how the node appears and behaves in the palette without affecting the node once it has been added to the canvas.</p>
+<h3 id="palette_disabled"><code>palette_disabled</code><a class="headerlink" href="#palette_disabled" title="Permanent link">&para;</a></h3>
+<p><strong>Type:</strong> <code>boolean</code></p>
+<p>When set to <code>true</code>, the node template is displayed in the palette in a visually dimmed state and cannot be dragged onto the canvas or added via single-click or double-click. The node icon is rendered at reduced opacity using the disabled fill color. This is useful for indicating that a node is not available under current conditions — for example, when a required license is inactive or a dependent service is not configured.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;app_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ui_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Node&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/images/my-node.svg&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;palette_disabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="palette_image"><code>palette_image</code><a class="headerlink" href="#palette_image" title="Permanent link">&para;</a></h3>
+<p><strong>Type:</strong> <code>string</code> (URL or data URI)</p>
+<p>Specifies an alternative image to display for the node when it is shown in the palette. When this attribute is present it overrides the node&rsquo;s <code>image</code> field only within the palette. Once the user drags or adds the node to the canvas, the standard <code>image</code> value is used instead.</p>
+<p>This is useful when you want a distinct icon in the palette — for example a generic placeholder image — while preserving the intended node icon on the canvas.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;app_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ui_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Node&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/images/canvas-icon.svg&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;palette_image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/images/palette-icon.svg&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="palette_class_name"><code>palette_class_name</code><a class="headerlink" href="#palette_class_name" title="Permanent link">&para;</a></h3>
+<p><strong>Type:</strong> <code>string</code></p>
+<p>Adds one or more extra CSS class names to the node&rsquo;s outermost <code>&lt;div&gt;</code> element in the palette. This allows the host application to apply custom styles to specific node templates, independently of all other nodes.</p>
+<p>Multiple classes can be provided as a single space-separated string.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;app_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;ui_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Node&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/images/my-node.svg&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;palette_class_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-custom-node highlighted-node&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
 
