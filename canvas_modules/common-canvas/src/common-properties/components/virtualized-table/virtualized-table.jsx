@@ -459,7 +459,8 @@ class VirtualizedTable extends React.Component {
 		};
 
 		// This div wrapper is required to apply the onDoubleClick handler.
-		return (<div key={key} className="properties-vt-double-click" onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
+		// style is required on the outermost element by react-virtualized's cell range renderer.
+		return (<div key={key} className="properties-vt-double-click" style={rowStyle} onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
 			<div
 				className={classNames(className,
 					{ "properties-vt-row-selected": selectedRow },
