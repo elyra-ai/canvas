@@ -10,6 +10,6 @@
   },
   "type": "module",
   "peerDependencies": {
-    "eslint-plugin-jsx-a11y": "^6.10.2"
+    "eslint-plugin-jsx-a11y": "6.10.2"
   }
 }
