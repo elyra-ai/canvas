@@ -225,7 +225,10 @@ $palette-dialog-list-item-height: 46px;
 
 	.palette-list-item.palette-list-item-disabled {
 		.palette-list-item-icon {
-			fill: carbon.$button-disabled;
+			fill: carbon.$icon-disabled;
+		}
+
+		img.palette-list-item-icon {
 			opacity: 0.5;
 		}
 	}
@@ -468,7 +471,10 @@ $palette-dialog-list-item-height: 46px;
 
 		&.palette-list-item-disabled {
 			.palette-list-item-icon {
-				fill: carbon.$button-disabled;
+				fill: carbon.$icon-disabled;
+			}
+
+			img.palette-list-item-icon {
 				opacity: 0.5;
 			}
 		}
@@ -565,9 +571,11 @@ $palette-dialog-list-item-height: 46px;
 }
 
 .palette-dialog-grid-node-outer.palette-dialog-grid-node-outer-disabled {
-	.palette-dialog-grid-node-icon .node-icon,
+	.palette-dialog-grid-node-icon .node-icon {
+		fill: carbon.$icon-disabled;
+	}
+
 	.palette-dialog-grid-node-icon img {
-		fill: carbon.$button-disabled;
 		opacity: 0.5;
 	}
 }
