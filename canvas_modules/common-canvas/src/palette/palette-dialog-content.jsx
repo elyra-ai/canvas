@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { InlineLoading } from "@carbon/react";
 import PaletteDialogContentCategories from "./palette-dialog-content-categories.jsx";
 import PaletteDialogContentGrid from "./palette-dialog-content-grid.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
@@ -80,16 +81,32 @@ class PaletteDialogContent extends React.Component {
 		const category = this.getSelectedCategory(this.props.paletteJSON.categories);
 		const nodeTypes = category && category.node_types ? category.node_types : [];
 		const nodeTypeInfos = nodeTypes.map((nt) =>	({ nodeType: nt, category: category }));
-		const content = this.props.showGrid
-			? (
+
+		let content;
+		if (category.loading_text) {
+			content = (
+				<div className="palette-dialog-content-loading">
+					<InlineLoading
+						description={category.loading_text}
+						status="active"
+						successDelay={1500}
+						onSuccess={function noRefCheck() {
+							return null;
+						}}
+					/>
+				</div>
+			);
+		} else if (this.props.showGrid) {
+			content = (
 				<PaletteDialogContentGrid
 					category={category}
 					nodeTypes={nodeTypes}
 					canvasController={this.props.canvasController}
 					isEditingEnabled={this.props.isEditingEnabled}
 					allowClickToAdd={this.props.allowClickToAdd}
-				/>)
-			: (
+				/>);
+		} else {
+			content = (
 				<PaletteContentList
 					category={category}
 					nodeTypeInfos={nodeTypeInfos}
@@ -98,6 +115,7 @@ class PaletteDialogContent extends React.Component {
 					isEditingEnabled={this.props.isEditingEnabled}
 					allowClickToAdd={this.props.allowClickToAdd}
 				/>);
+		}
 		return (
 			<div className="palette-dialog-content">
 				<PaletteDialogContentCategories categories={cats}
