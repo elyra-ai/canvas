@@ -65,8 +65,8 @@ describe("Toolbar renders correctly", () => {
 		expect(container.getElementsByClassName("toolbar-right-bar")).to.have.length(1);
 		expect(container.getElementsByClassName("toolbar-item")).to.have.length(4);
 		expect(container.getElementsByClassName("toolbar-divider")).to.have.length(1);
-		// No toolbar-overflow-container created for the right bar
-		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(0);
+		// Trailing overflow container so wrapped right bar items can still show in a menu.
+		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(1);
 	});
 
 	it("should register a click when clicked on an enabled toolbar item", () => {
@@ -209,8 +209,10 @@ describe("Toolbar renders correctly", () => {
 		// CSS will highlight the first button when toolbar has focus
 		expect(toolbar.getAttribute("tabindex")).to.equal("-1");
 
-		// Verify all buttons are disabled
-		const buttons = container.querySelectorAll("button");
+		// Verify all real action buttons are disabled (excludes the aria-hidden
+		// trailing overflow toggle, which is never itself marked disabled).
+		const buttons = container.querySelectorAll("button:not([aria-hidden=\"true\"])");
+		expect(buttons.length).to.be.greaterThan(0);
 		buttons.forEach((button) => {
 			expect(button.hasAttribute("disabled")).to.be.true;
 		});
