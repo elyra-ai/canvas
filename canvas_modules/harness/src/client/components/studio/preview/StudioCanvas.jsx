@@ -48,8 +48,13 @@ export default class StudioCanvas extends React.Component {
 		}
 		if (prevProps.importedFlow !== this.props.importedFlow && this.props.importedFlow) {
 			this.canvasController.setPipelineFlow(this.props.importedFlow);
+			setTimeout(() => this.canvasController.zoomToFit(), 50);
 			this.props.onFlowImported();
 		}
+	}
+
+	getFlow() {
+		return this.canvasController.getPipelineFlow();
 	}
 
 	getCanvasConfig() {

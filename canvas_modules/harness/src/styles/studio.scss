@@ -43,22 +43,19 @@
 			color: var(--cds-text-primary);
 		}
 
-		.studio-back-link {
-			font-size: 0.875rem;
-			color: var(--cds-link-primary);
-			text-decoration: none;
-			cursor: pointer;
-
-			&:hover {
-				text-decoration: underline;
-			}
-		}
 	}
 
 	.studio-header-actions {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
+	}
+
+	.studio-header-divider {
+		width: 1px;
+		height: 1.5rem;
+		background-color: var(--cds-border-subtle-01);
+		margin: 0 0.25rem;
 	}
 }
 

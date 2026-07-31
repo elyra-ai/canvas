@@ -97,7 +97,7 @@ import AppSettingsPanel from "./app-x-settings-panel.jsx";
 // Uncomment these and associated code to automatically display a flow and palette.
 // import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
 
-import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
+import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, DocumentImport, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification as NotificationIcon, Save, Launch, Restart } from "@carbon/react/icons";
 
@@ -1429,6 +1429,43 @@ class App extends React.Component {
 
 	openConsole() {
 		this.setState({ consoleOpened: !this.state.consoleOpened });
+	}
+
+	goToStudio() {
+		try {
+			const saved = localStorage.getItem("elyra-studio-state");
+			const studioState = saved ? JSON.parse(saved) : {};
+			studioState.pipelineFlow = this.canvasController.getPipelineFlow();
+			localStorage.setItem("elyra-studio-state", JSON.stringify(studioState));
+		} catch {
+			// ignore
+		}
+		window.location.assign("/#/studio");
+	}
+
+	loadFromStudio() {
+		try {
+			const saved = localStorage.getItem("elyra-studio-harness-config");
+			if (!saved) {
+				this.log("Load from Studio: no Studio configuration found — use Save to Harness in Canvas Studio first");
+				return;
+			}
+			const config = JSON.parse(saved);
+			if (config.palette) {
+				this.canvasController.setPipelineFlowPalette(config.palette);
+				this.log("Palette loaded from Studio");
+			}
+			if (config.pipelineFlow) {
+				this.canvasController.getCommandStack().clearCommandStack();
+				this.canvasController.setPipelineFlow(config.pipelineFlow);
+				this.setFlowNotificationMessages();
+				this.setBreadcrumbsDefinition();
+				this.canvasController.zoomToFit();
+				this.log("Pipeline flow loaded from Studio");
+			}
+		} catch (err) {
+			this.log("Load from Studio: failed to parse Studio configuration — " + err);
+		}
 	}
 
 	downloadPipelineFlow() {
@@ -2936,6 +2973,14 @@ class App extends React.Component {
 				},
 				{ divider: true },
 				{
+					action: "loadFromStudio",
+					label: "Load from Studio",
+					enable: true,
+					iconEnabled: (<DocumentImport size={16} />),
+					tooltip: "Load palette and flow from Canvas Studio"
+				},
+				{ divider: true },
+				{
 					action: "theme-toggle",
 					label: "Switch Theme",
 					enable: true,
@@ -3034,7 +3079,10 @@ class App extends React.Component {
 	toolbarActionHandler(action) {
 		switch (action) {
 		case "studio":
-			window.location.href = "/#/studio";
+			this.goToStudio();
+			break;
+		case "loadFromStudio":
+			this.loadFromStudio();
 			break;
 		case "console":
 			this.openConsole();

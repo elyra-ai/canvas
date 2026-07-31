@@ -17,7 +17,7 @@
 
 import React from "react";
 import { Button } from "@carbon/react";
-import { Download, Upload } from "@carbon/react/icons";
+import { Download, Save, Upload } from "@carbon/react/icons";
 import JavascriptFileDownload from "js-file-download";
 
 import PaletteBuilder from "./palette-builder/PaletteBuilder";
@@ -37,6 +37,7 @@ const DEFAULT_CANVAS_CONFIG = {
 export default class StudioPage extends React.Component {
 	constructor(props) {
 		super(props);
+		this.studioCanvasRef = React.createRef();
 		this.state = {
 			categories: [],
 			paramDefs: {},
@@ -54,6 +55,8 @@ export default class StudioPage extends React.Component {
 		this.handleFlowImported = this.handleFlowImported.bind(this);
 		this.handleExport = this.handleExport.bind(this);
 		this.handleImport = this.handleImport.bind(this);
+		this.handleSaveToHarness = this.handleSaveToHarness.bind(this);
+		this.handleDiscardAndExit = this.handleDiscardAndExit.bind(this);
 	}
 
 	componentDidMount() {
@@ -65,6 +68,7 @@ export default class StudioPage extends React.Component {
 					categories: categories || [],
 					paramDefs: paramDefs || {},
 					canvasConfig: canvasConfig || { ...DEFAULT_CANVAS_CONFIG },
+					pipelineFlow: pipelineFlow || null,
 					importedFlow: pipelineFlow || null
 				});
 			}
@@ -87,6 +91,13 @@ export default class StudioPage extends React.Component {
 				// ignore quota errors
 			}
 		}
+	}
+
+	getCurrentFlow() {
+		if (this.studioCanvasRef.current) {
+			return this.studioCanvasRef.current.getFlow();
+		}
+		return this.state.pipelineFlow;
 	}
 
 	handleCategoriesChange(categories) {
@@ -137,8 +148,35 @@ export default class StudioPage extends React.Component {
 		this.setState({ importedFlow: null });
 	}
 
+	handleSaveToHarness() {
+		const { categories, paramDefs, canvasConfig } = this.state;
+		const pipelineFlow = this.getCurrentFlow();
+		try {
+			localStorage.setItem("elyra-studio-harness-config", JSON.stringify({
+				palette: paletteGenerator(categories),
+				paramDefs,
+				canvasConfig,
+				pipelineFlow
+			}));
+			localStorage.setItem("elyra-studio-state", JSON.stringify({ categories, paramDefs, canvasConfig, pipelineFlow }));
+		} catch {
+			// ignore quota errors
+		}
+		window.location.assign("/#/");
+	}
+
+	handleDiscardAndExit() {
+		try {
+			localStorage.removeItem("elyra-studio-state");
+		} catch {
+			// ignore
+		}
+		window.location.assign("/#/");
+	}
+
 	handleExport() {
-		const { categories, paramDefs, canvasConfig, pipelineFlow } = this.state;
+		const { categories, paramDefs, canvasConfig } = this.state;
+		const pipelineFlow = this.getCurrentFlow();
 		const bundle = {
 			version: "1.0",
 			studio: { categories, paramDefs, canvasConfig, pipelineFlow },
@@ -182,7 +220,6 @@ export default class StudioPage extends React.Component {
 			<div className="studio-page">
 				<div className="studio-header">
 					<div className="studio-header-left">
-						<a href="/#/" className="studio-back-link">← Back to Harness</a>
 						<span className="studio-title">Canvas Studio</span>
 					</div>
 					<div className="studio-header-actions">
@@ -196,8 +233,15 @@ export default class StudioPage extends React.Component {
 							style={{ display: "none" }}
 							onChange={this.handleImport}
 						/>
-						<Button kind="secondary" size="sm" renderIcon={Download} onClick={this.handleExport}>
+						<Button kind="ghost" size="sm" renderIcon={Download} onClick={this.handleExport}>
 							Export JSON
+						</Button>
+						<div className="studio-header-divider" />
+						<Button kind="ghost" size="sm" onClick={this.handleDiscardAndExit}>
+							Exit without saving
+						</Button>
+						<Button kind="primary" size="sm" renderIcon={Save} onClick={this.handleSaveToHarness}>
+							Save to Harness
 						</Button>
 					</div>
 				</div>
@@ -230,6 +274,7 @@ export default class StudioPage extends React.Component {
 					</div>
 
 					<StudioCanvas
+						ref={this.studioCanvasRef}
 						paletteJSON={paletteJSON}
 						paramDefs={paramDefs}
 						categories={categories}
