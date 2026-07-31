@@ -22,7 +22,7 @@ import classNames from "classnames";
 
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
-import { getFormattedDate, getISODate } from "../../util/date-utils";
+import { getFormattedDate, getISODate, getDateObject } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE } from "../../constants/constants.js";
 
 class DatepickerControl extends React.Component {
@@ -82,7 +82,7 @@ class DatepickerControl extends React.Component {
 					onChange={this.handleChange.bind(this)}
 					locale={this.locale}
 					readOnly={this.props.readOnly}
-					value={this.state.value}
+					value={getDateObject(this.state.value, this.dateFormat)}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -93,7 +93,6 @@ class DatepickerControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
-						value={this.state.value}
 						helperText={(!this.props.tableControl && helperText) || this.props.control.helperText}
 					/>
 				</DatePicker>

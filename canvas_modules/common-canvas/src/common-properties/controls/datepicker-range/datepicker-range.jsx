@@ -25,7 +25,7 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
-import { getFormattedDate, getISODate } from "../../util/date-utils";
+import { getFormattedDate, getISODate, getDateObject } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE, MESSAGE_KEYS, CARBON_ICONS } from "../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
 
@@ -55,8 +55,8 @@ class DatepickerRangeControl extends React.Component {
 	}
 
 	onEndBlur(evt) {
-		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
-		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
+		const isoStartDate = getISODate(this.state.valueStart, this.dateFormat);
+		const isoEndDate = getISODate(evt.target.value, this.dateFormat);
 		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
 	}
 
@@ -146,6 +146,7 @@ class DatepickerRangeControl extends React.Component {
 					locale={this.locale}
 					allowInput
 					readOnly={this.props.readOnly}
+					value={[getDateObject(this.state.valueStart, this.dateFormat), getDateObject(this.state.valueEnd, this.dateFormat)]}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -155,7 +156,6 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputStartChange.bind(this)}
-						value={this.state.valueStart}
 						onBlur={this.onStartBlur.bind(this)}
 						helperText={!this.props.tableControl && startHelperText}
 					/>
@@ -167,7 +167,6 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputEndChange.bind(this)}
-						value={this.state.valueEnd}
 						onBlur={this.onEndBlur.bind(this)}
 						helperText={!this.props.tableControl && endHelperText}
 					/>
