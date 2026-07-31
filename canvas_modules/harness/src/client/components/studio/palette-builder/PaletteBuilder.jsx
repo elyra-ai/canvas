@@ -37,6 +37,7 @@ export default class PaletteBuilder extends React.Component {
 		this.removeNodeType = this.removeNodeType.bind(this);
 		this.updateNodeType = this.updateNodeType.bind(this);
 		this.selectNode = this.selectNode.bind(this);
+		this.closeNodeForm = this.closeNodeForm.bind(this);
 	}
 
 	addCategory() {
@@ -128,6 +129,10 @@ export default class PaletteBuilder extends React.Component {
 		this.props.onSelectNode(editing);
 	}
 
+	closeNodeForm() {
+		this.setState({ editingNodeId: null });
+	}
+
 	renderNodeTypeItem(category, nodeType) {
 		const isEditing = this.state.editingNodeId === nodeType.studioId;
 		return (
@@ -166,7 +171,7 @@ export default class PaletteBuilder extends React.Component {
 					<NodeTypeForm
 						nodeType={nodeType}
 						onChange={(updated) => this.updateNodeType(category.studioId, updated)}
-						onClose={() => this.setState({ editingNodeId: null })}
+						onClose={this.closeNodeForm}
 					/>
 				)}
 			</div>

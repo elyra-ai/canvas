@@ -25,20 +25,26 @@ export default class NodeTypeForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
+		this.handleClose = this.handleClose.bind(this);
 	}
 
 	handleChange(field, value) {
 		this.props.onChange({ ...this.props.nodeType, [field]: value });
 	}
 
+	handleClose(e) {
+		e.stopPropagation();
+		this.props.onClose();
+	}
+
 	render() {
-		const { nodeType, onClose } = this.props;
+		const { nodeType } = this.props;
 
 		return (
 			<div className="studio-node-type-form">
 				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 					<div className="studio-node-type-form-title">Edit Node Type</div>
-					<Button kind="ghost" size="sm" hasIconOnly renderIcon={Close} iconDescription="Close" onClick={onClose} />
+					<Button kind="ghost" size="sm" hasIconOnly renderIcon={Close} iconDescription="Close" onClick={this.handleClose} />
 				</div>
 
 				<div className="studio-form-field">

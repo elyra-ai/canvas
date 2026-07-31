@@ -17,7 +17,7 @@
 
 import React from "react";
 import { Button } from "@carbon/react";
-import { Download, Save, Upload } from "@carbon/react/icons";
+import { Close, Download, Save, Upload } from "@carbon/react/icons";
 import JavascriptFileDownload from "js-file-download";
 
 import PaletteBuilder from "./palette-builder/PaletteBuilder";
@@ -44,7 +44,9 @@ export default class StudioPage extends React.Component {
 			selectedNodeStudioId: null,
 			canvasConfig: { ...DEFAULT_CANVAS_CONFIG },
 			pipelineFlow: null,
-			importedFlow: null
+			importedFlow: null,
+			paletteCollapsed: false,
+			propertiesCollapsed: false
 		};
 		this.handleCategoriesChange = this.handleCategoriesChange.bind(this);
 		this.handleSelectNode = this.handleSelectNode.bind(this);
@@ -210,11 +212,93 @@ export default class StudioPage extends React.Component {
 		reader.readAsText(file);
 	}
 
-	render() {
-		const { categories, paramDefs, selectedNodeStudioId, canvasConfig } = this.state;
-		const paletteJSON = paletteGenerator(categories);
-		const emptyParamDef = { titleDefinition: { title: "", editable: true }, parameters: [], conditions: [], actions: [], groups: [], groupLayout: "flat", resources: {} };
+	renderPaletteColumn() {
+		const { categories, selectedNodeStudioId, paletteCollapsed } = this.state;
+		if (paletteCollapsed) {
+			return (
+				<div
+					className="studio-column studio-column--collapsed"
+					role="button"
+					tabIndex={0}
+					onClick={() => this.setState({ paletteCollapsed: false })}
+					onKeyDown={(e) => e.key === "Enter" && this.setState({ paletteCollapsed: false })}
+				>
+					<span className="studio-column-collapsed-label">Palette Builder</span>
+				</div>
+			);
+		}
+		return (
+			<div className="studio-column">
+				<div className="studio-column-header">
+					Palette Builder
+					<Button kind="ghost" size="sm" hasIconOnly
+						renderIcon={Close} iconDescription="Collapse panel"
+						onClick={() => this.setState({ paletteCollapsed: true })}
+					/>
+				</div>
+				<div className="studio-column-content">
+					<PaletteBuilder
+						categories={categories}
+						selectedNodeStudioId={selectedNodeStudioId}
+						onCategoriesChange={this.handleCategoriesChange}
+						onSelectNode={this.handleSelectNode}
+						onNodeTypeUpdate={this.handleNodeTypeUpdate}
+					/>
+				</div>
+			</div>
+		);
+	}
+
+	renderPropertiesColumn() {
+		const { categories, paramDefs, selectedNodeStudioId, propertiesCollapsed } = this.state;
+		const emptyParamDef = {
+			titleDefinition: { title: "", editable: true },
+			parameters: [], conditions: [], actions: [],
+			groups: [], groupLayout: "flat", resources: {}
+		};
 		const selectedParamDef = selectedNodeStudioId ? (paramDefs[selectedNodeStudioId] || emptyParamDef) : null;
+
+		if (propertiesCollapsed) {
+			return (
+				<div
+					className="studio-column studio-column--collapsed"
+					role="button"
+					tabIndex={0}
+					onClick={() => this.setState({ propertiesCollapsed: false })}
+					onKeyDown={(e) => e.key === "Enter" && this.setState({ propertiesCollapsed: false })}
+				>
+					<span className="studio-column-collapsed-label">Node Properties</span>
+				</div>
+			);
+		}
+		return (
+			<div className="studio-column">
+				<div className="studio-column-header">
+					Node Properties
+					<Button kind="ghost" size="sm" hasIconOnly
+						renderIcon={Close} iconDescription="Collapse panel"
+						onClick={() => this.setState({ propertiesCollapsed: true })}
+					/>
+				</div>
+				<div className="studio-column-content">
+					<PropertiesBuilder
+						categories={categories}
+						selectedNodeStudioId={selectedNodeStudioId}
+						paramDef={selectedParamDef}
+						onSelectNode={this.handleSelectNode}
+						onParamDefChange={this.handleParamDefChange}
+					/>
+				</div>
+			</div>
+		);
+	}
+
+	render() {
+		const { categories, paramDefs, canvasConfig, paletteCollapsed, propertiesCollapsed } = this.state;
+		const paletteJSON = paletteGenerator(categories);
+		const bodyStyle = {
+			gridTemplateColumns: `${paletteCollapsed ? "40px" : "320px"} ${propertiesCollapsed ? "40px" : "320px"} 1fr`
+		};
 
 		return (
 			<div className="studio-page">
@@ -246,33 +330,9 @@ export default class StudioPage extends React.Component {
 					</div>
 				</div>
 
-				<div className="studio-body">
-					<div className="studio-column">
-						<div className="studio-column-header">Palette Builder</div>
-						<div className="studio-column-content">
-							<PaletteBuilder
-								categories={categories}
-								selectedNodeStudioId={selectedNodeStudioId}
-								onCategoriesChange={this.handleCategoriesChange}
-								onSelectNode={this.handleSelectNode}
-								onNodeTypeUpdate={this.handleNodeTypeUpdate}
-							/>
-						</div>
-					</div>
-
-					<div className="studio-column">
-						<div className="studio-column-header">Node Properties</div>
-						<div className="studio-column-content">
-							<PropertiesBuilder
-								categories={categories}
-								selectedNodeStudioId={selectedNodeStudioId}
-								paramDef={selectedParamDef}
-								onSelectNode={this.handleSelectNode}
-								onParamDefChange={this.handleParamDefChange}
-							/>
-						</div>
-					</div>
-
+				<div className="studio-body" style={bodyStyle}>
+					{this.renderPaletteColumn()}
+					{this.renderPropertiesColumn()}
 					<StudioCanvas
 						ref={this.studioCanvasRef}
 						paletteJSON={paletteJSON}
