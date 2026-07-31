@@ -113,9 +113,9 @@ export default class ParameterForm extends React.Component {
 								id={`param-charlimit-${param.paramId}`}
 								type="number"
 								className="studio-port-num-input"
-								value={param.charLimit || 0}
+								value={param.charLimit ?? ""}
 								min={0}
-								onChange={(e) => this.handleChange("charLimit", parseInt(e.target.value, 10) || 0)}
+								onChange={(e) => this.handleChange("charLimit", e.target.value === "" ? null : Math.max(0, parseInt(e.target.value, 10) || 0))}
 							/>
 						</div>
 					</div>

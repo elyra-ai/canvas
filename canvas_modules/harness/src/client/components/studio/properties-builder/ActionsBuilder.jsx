@@ -27,6 +27,7 @@ export default class ActionsBuilder extends React.Component {
 		this.addAction = this.addAction.bind(this);
 		this.removeAction = this.removeAction.bind(this);
 		this.updateAction = this.updateAction.bind(this);
+		this.updateActionSize = this.updateActionSize.bind(this);
 		this.toggleExpanded = this.toggleExpanded.bind(this);
 	}
 
@@ -49,6 +50,11 @@ export default class ActionsBuilder extends React.Component {
 
 	removeAction(actionId) {
 		this.props.onChange((this.props.actions || []).filter((a) => a.actionId !== actionId));
+	}
+
+	updateActionSize(actionId, field, rawValue) {
+		const parsed = parseInt(rawValue, 10);
+		this.updateAction(actionId, field, rawValue === "" ? null : Math.max(1, parsed || 1));
 	}
 
 	updateAction(actionId, field, value) {
@@ -198,9 +204,9 @@ export default class ActionsBuilder extends React.Component {
 													id={`action-width-${action.actionId}`}
 													type="number"
 													className="studio-port-num-input"
-													value={action.width || 25}
+													value={action.width ?? ""}
 													min={1}
-													onChange={(e) => this.updateAction(action.actionId, "width", parseInt(e.target.value, 10) || 25)}
+													onChange={(e) => this.updateActionSize(action.actionId, "width", e.target.value)}
 												/>
 											</div>
 											<div className="studio-port-num">
@@ -209,9 +215,9 @@ export default class ActionsBuilder extends React.Component {
 													id={`action-height-${action.actionId}`}
 													type="number"
 													className="studio-port-num-input"
-													value={action.height || 20}
+													value={action.height ?? ""}
 													min={1}
-													onChange={(e) => this.updateAction(action.actionId, "height", parseInt(e.target.value, 10) || 20)}
+													onChange={(e) => this.updateActionSize(action.actionId, "height", e.target.value)}
 												/>
 											</div>
 										</div>

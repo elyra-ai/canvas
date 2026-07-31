@@ -38,8 +38,12 @@ export default class PortsEditor extends React.Component {
 
 	handleCardinalityChange(portId, field, value) {
 		const numVal = parseInt(value, 10);
+		let stored = null;
+		if (value !== "") {
+			stored = isNaN(numVal) ? 0 : numVal;
+		}
 		const ports = this.props.ports.map((p) =>
-			(p.portId === portId ? { ...p, [field]: isNaN(numVal) ? 0 : numVal } : p)
+			(p.portId === portId ? { ...p, [field]: stored } : p)
 		);
 		this.props.onChange(ports);
 	}
@@ -81,7 +85,7 @@ export default class PortsEditor extends React.Component {
 								id={`port-min-${port.portId}`}
 								type="number"
 								className="studio-port-num-input"
-								value={port.cardinalityMin}
+								value={port.cardinalityMin ?? ""}
 								min={0}
 								onChange={(e) => this.handleCardinalityChange(port.portId, "cardinalityMin", e.target.value)}
 							/>
@@ -92,7 +96,7 @@ export default class PortsEditor extends React.Component {
 								id={`port-max-${port.portId}`}
 								type="number"
 								className="studio-port-num-input"
-								value={port.cardinalityMax}
+								value={port.cardinalityMax ?? ""}
 								min={-1}
 								onChange={(e) => this.handleCardinalityChange(port.portId, "cardinalityMax", e.target.value)}
 							/>
