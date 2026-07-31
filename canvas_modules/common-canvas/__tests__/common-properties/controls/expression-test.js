@@ -736,6 +736,7 @@ describe("expression handles no expression builder resources correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 				rightFlyout
 			/>
 		);
@@ -752,6 +753,7 @@ describe("expression handles no expression builder resources correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 				rightFlyout
 			/>
 		);
@@ -768,6 +770,7 @@ describe("expression handles no expression builder resources correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 				builder={false}
 				rightFlyout
 			/>

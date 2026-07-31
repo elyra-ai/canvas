@@ -90,7 +90,6 @@ class TextfieldControl extends React.Component {
 					control={this.props.control}
 					propertyId={this.props.propertyId}
 					controller={this.props.controller}
-					controlItem={<span />}
 					tableControl={this.props.tableControl}
 				/>
 				{/* // TODO this could conflict with the below ValidationMessage. */}

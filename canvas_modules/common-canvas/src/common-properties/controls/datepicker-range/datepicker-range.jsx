@@ -182,7 +182,7 @@ DatepickerRangeControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux

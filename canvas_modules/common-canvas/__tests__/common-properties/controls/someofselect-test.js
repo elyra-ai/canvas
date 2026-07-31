@@ -96,6 +96,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -113,6 +114,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -134,6 +136,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					readOnly
 				/>
 			</Provider>
@@ -154,6 +157,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -180,6 +184,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -204,6 +209,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -227,6 +233,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -241,6 +248,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -255,6 +263,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);

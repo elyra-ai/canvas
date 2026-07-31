@@ -130,6 +130,7 @@ export default class ExpressionBuilder extends React.Component {
 					control={this.props.control}
 					propertyId={this.props.propertyId}
 					controller={this.props.controller}
+					controlItem={<span />}
 					builder={false}
 					editorDidMount={this.editorDidMount}
 					selectionRange={this.selection}
