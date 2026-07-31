@@ -22,6 +22,7 @@ const ICON_TABS = [
 	{
 		label: "General",
 		icons: [
+			"folder", "folder--open",
 			"analytics", "chart--column", "chart--line", "chart--scatter",
 			"data-collection", "data-table", "db2--database", "document--export",
 			"document--import", "document", "filter", "gears", "join--inner",
