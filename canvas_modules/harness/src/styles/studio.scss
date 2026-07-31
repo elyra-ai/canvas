@@ -17,7 +17,8 @@
 .studio-page {
 	display: flex;
 	flex-direction: column;
-	height: 100vh;
+	position: fixed;
+	inset: 0;
 	overflow: hidden;
 	background-color: var(--cds-background);
 }
