@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "顯示先前的管線",
   "action.displaySubPipeline": "顯示超級節點整頁",
   "action.editComment": "編輯註解",
+  "action.editCommentDecorationLabel": "編輯評論裝飾標籤",
   "action.editLinkDecorationLabel": "編輯鏈結裝飾標籤",
   "action.editNodeDecorationLabel": "編輯節點裝飾標籤",
   "action.expandSuperNodeInPlace": "就地展開 {node_label} 超級節點",

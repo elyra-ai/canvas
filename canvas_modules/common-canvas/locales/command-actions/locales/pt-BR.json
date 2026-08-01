@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "Exibir o pipeline anterior",
   "action.displaySubPipeline": "Exibir página inteira de supernó",
   "action.editComment": "Editar comentário",
+  "action.editCommentDecorationLabel": "Editar rótulo de decoração do comentário",
   "action.editLinkDecorationLabel": "Editar rótulo de decoração do link",
   "action.editNodeDecorationLabel": "Editar rótulo de decoração do nó",
   "action.expandSuperNodeInPlace": "Expandir supernó {node_label} no lugar",
