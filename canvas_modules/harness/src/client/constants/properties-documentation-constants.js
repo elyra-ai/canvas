@@ -4355,6 +4355,129 @@ export const STRUCTURETABLE_ROW_SELECTION_PROPS_INFO = {
 		}
 	}
 };
+export const STRUCTURETABLE_ROW_SELECTION_NONE_PROPS_INFO = {
+	"title": "StructureTableRow Title None",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: row_selection none",
+			"editable": false
+		},
+		"current_parameters": {
+			"noSelectionTable": [
+				["BabyBoomer", "Age >= 55"],
+				["GenX", "Age < 55 && Age >= 35"],
+				["Millenial", "Age < 35"]
+			]
+		},
+		"parameters": [
+			{
+				"id": "noSelectionTable",
+				"type": "array[noSelectionTable]",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "noSelectionTable",
+				"parameters": [
+					{
+						"id": "valueName",
+						"type": "string",
+						"default": "Value",
+						"role": "new_column"
+					},
+					{
+						"id": "condition",
+						"type": "string",
+						"default": ""
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "RowSelectionNone.test",
+			"icon": "images/modelbuildspark.svg",
+			"label": {
+				"default": "Row Selection None Test"
+			},
+			"description": {
+				"default": "Test row_selection none in complex type controls"
+			},
+			"parameter_info": [
+				{
+					"parameter_ref": "noSelectionTable",
+					"label": {
+						"default": "Values"
+					},
+					"description": {
+						"default": "Table with row_selection set to none"
+					}
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "noSelectionTable",
+					"row_selection": "none",
+					"add_remove_rows": true,
+					"parameters": [
+						{
+							"parameter_ref": "valueName",
+							"label": {
+								"default": "Name",
+								"resource_key": "noSelectionTable.name.label"
+							},
+							"description": {
+								"resource_key": "noSelectionTable.name.desc"
+							},
+							"width": 15,
+							"edit_style": "inline"
+						},
+						{
+							"parameter_ref": "condition",
+							"label": {
+								"default": "Condition",
+								"resource_key": "noSelectionTable.condition.label"
+							},
+							"description": {
+								"resource_key": "noSelectionTable.condition.desc"
+							},
+							"width": 15,
+							"edit_style": "inline"
+						}
+					]
+				}
+			],
+			"group_info": [
+				{
+					"id": "Row Selection None Node",
+					"type": "panels",
+					"label": {
+						"default": "Row Selection None Node"
+					},
+					"group_info": [
+						{
+							"id": "Row Selection None Control",
+							"parameter_refs": [
+								"noSelectionTable"
+							]
+						}
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
+		"resources": {
+			"noSelectionTable.name.label": "Name",
+			"noSelectionTable.name.desc": "value of field",
+			"noSelectionTable.condition.label": "Condition",
+			"noSelectionTable.condition.desc": "condition value"
+		}
+	}
+};
 export const STRUCTURELISTEDITOR_PROPS_INFO = {
 	"title": "StructureListEditor Title",
 	"parameterDef": {

@@ -44,7 +44,8 @@ export default {
 		// autoExternal() handles top-level packages from dependencies/peerDependencies
 		// but we need to explicitly externalize React subpath imports
 		"react/jsx-runtime",
-		"react/jsx-dev-runtime"
+		"react/jsx-dev-runtime",
+		"react-dom/client"
 	],
 	output: [
 		{

@@ -143,7 +143,7 @@ describe("CommonContextMenu renders correctly", () => {
 		const style = subMenuItem.style;
 
 		// If left property is negative, the submenu is on the left of the main menu.
-		expect(style.left).to.equal("-160px");
+		expect(style.getPropertyValue("--context-submenu-left")).to.equal("-160px");
 	});
 });
 

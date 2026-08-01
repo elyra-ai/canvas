@@ -104,6 +104,12 @@ class PaletteDialogContentGridNode extends React.Component {
 		this.props.canvasController.closeTip();
 	}
 
+	/** Returns true if this node should be treated as disabled (not draggable/clickable). */
+	isItemDisabled() {
+		const disabled = this.props.nodeTemplate?.app_data?.ui_data?.palette_disabled;
+		return !this.props.isEditingEnabled || disabled;
+	}
+
 	createAutoNode() {
 		if (this.props.canvasController.createAutoNodeCommand) {
 			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTemplate);
@@ -120,7 +126,9 @@ class PaletteDialogContentGridNode extends React.Component {
 		let icon = <div className="node-icon" />;
 
 		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
-			let image = this.props.nodeTemplate.app_data.ui_data.image;
+			let image = this.props.nodeTemplate.app_data.ui_data.palette_image
+				? this.props.nodeTemplate.app_data.ui_data.palette_image
+				: this.props.nodeTemplate.app_data.ui_data.image;
 
 			if (image === USE_DEFAULT_ICON) {
 				image = SUPERNODE_ICON;
@@ -133,12 +141,13 @@ class PaletteDialogContentGridNode extends React.Component {
 
 			} else if (typeof image === "string") {
 				icon = image.endsWith(".svg")
-					? <SVG src={image} className="node-icon" aria-label={label} />
-					: <img src={image} className="node-icon" alt={label} />;
+					? <SVG src={image} className="node-icon" draggable="false" aria-label={label} />
+					: <img src={image} className="node-icon" draggable="false" alt={label} />;
 			}
 		}
 
-		let draggable = this.props.isEditingEnabled ? "true" : "false";
+		const itemDisabled = this.isItemDisabled();
+		let draggable = itemDisabled ? "false" : "true";
 		let txtClassName = "palette-dialog-grid-node-text";
 
 		// Special case for when there are no nodes in the category so we show
@@ -150,18 +159,23 @@ class PaletteDialogContentGridNode extends React.Component {
 			icon = (<Warning className="palette-dialog-grid-node-icon-warning" draggable="false" />);
 		}
 
+		const paletteClass = this.props.nodeTemplate?.app_data?.ui_data?.palette_class_name;
+		const outerClass = "palette-dialog-grid-node-outer" +
+			(itemDisabled ? " palette-dialog-grid-node-outer-disabled" : "") +
+			(paletteClass ? " " + paletteClass : "");
+
 		return (
 			<div id={this.props.nodeTemplate.id}
 				data-id={this.props.nodeTemplate.op}
 				draggable={draggable}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
-				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
-				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
-				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
-				onClick={this.props.isEditingEnabled ? this.onClick : null}
-				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
-				className="palette-dialog-grid-node-outer"
+				onMouseDown={itemDisabled ? null : this.onMouseDown}
+				onDragStart={itemDisabled ? null : this.onDragStart}
+				onDragEnd={itemDisabled ? null : this.onDragEnd}
+				onClick={itemDisabled ? null : this.onClick}
+				onDoubleClick={itemDisabled ? null : this.onDoubleClick}
+				className={outerClass}
 			>
 				<div className="palette-dialog-grid-node-inner">
 					<div className="palette-dialog-grid-node-icon">

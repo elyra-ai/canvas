@@ -29,6 +29,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.logger = new Logger("CC-RightFlyout");
 
 		this.rightFlyoutRef = React.createRef();
+		this.rightFlyoutOuterRef = React.createRef();
 		this.state = { isBeingDragging: false };
 
 		this.initialMinWidth = null;
@@ -47,6 +48,11 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (typeof this.props.panelMinWidth === "undefined" || this.props.panelMinWidth === null) {
 			this.initialMinWidth = this.getCurrentWidth();
 		}
+		this.applyWidth();
+	}
+
+	componentDidUpdate() {
+		this.applyWidth();
 	}
 
 	onMouseDown(e) {
@@ -109,6 +115,20 @@ class CommonCanvasRightFlyout extends React.Component {
 		return this.props.panelMinWidth;
 	}
 
+	/** Sets --right-flyout-width on the outer flyout element via CSSOM to avoid an inline style attribute. */
+	applyWidth() {
+		const el = this.rightFlyoutOuterRef.current;
+		if (!el) {
+			return;
+		}
+		const width = this.isPanelWidthSpecified() ? this.limitWidth(this.props.panelWidth) + "px" : null;
+		if (width) {
+			el.style.setProperty("--right-flyout-width", width);
+		} else {
+			el.style.removeProperty("--right-flyout-width");
+		}
+	}
+
 	// Return true if a value is provided for this.props.panelWidth
 	isPanelWidthSpecified() {
 		return !(typeof this.props.panelWidth === "undefined" || this.props.panelWidth === null);
@@ -136,14 +156,12 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (this.props.content && this.props.isOpen) {
 			const rightFlyoutDragContent = this.getRightFlyoutResizeContent();
 
-			const width = this.isPanelWidthSpecified() ? this.limitWidth(this.props.panelWidth) + "px" : null;
-
 			const rfClass = this.props.enableRightFlyoutUnderToolbar
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 
 			rightFlyout = (
-				<div className="right-flyout" style={{ width: width }} >
+				<div className="right-flyout" ref={this.rightFlyoutOuterRef}>
 					{rightFlyoutDragContent}
 					<div className={rfClass} ref={this.rightFlyoutRef}>
 						{this.props.content}

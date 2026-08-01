@@ -540,7 +540,7 @@ export default class SidePanelAPI extends React.Component {
 
 		if (this.state.appendLink) {
 			messageLink = (<div>
-				<a href="https://github.com/elyra-ai/canvas/wiki/2.0-Common-Canvas-Documentation" target="_blank">Visit Common Canvas Wiki!</a>
+				<a href="https://elyra-ai.github.io/canvas/" target="_blank">Visit Common Canvas Docs!</a>
 			</div>);
 		}
 
@@ -896,7 +896,7 @@ export default class SidePanelAPI extends React.Component {
 					<Toggle
 						id="harness-sidepanel-api-notification-link"
 						className="harness-sidepanel-spacer harness-sidepanel-headers"
-						labelText="Add Link to Wiki"
+						labelText="Add Link to Docs"
 						toggled={this.state.appendLink}
 						onToggle={this.onAppendLinkToggle.bind(this)}
 					/>

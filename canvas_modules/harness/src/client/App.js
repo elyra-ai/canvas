@@ -21,7 +21,6 @@
 
 import React from "react";
 import Isvg from "react-inlinesvg";
-import { Tooltip as ReactTooltip } from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
@@ -167,7 +166,7 @@ import {
 	PALETTE_LAYOUT_FLYOUT,
 	TOOLBAR_LAYOUT_TOP,
 	LAYOUT_LIBRARY_DAGRE
-} from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+} from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";
@@ -378,6 +377,7 @@ class App extends React.Component {
 			showHeadingDesc: false,
 			light: true,
 			lightTheme: false,
+			cspEnabled: Boolean(window.__CSP_NONCE__),
 			showRequiredIndicator: true,
 			showAlertsTab: true,
 			enableResize: true,
@@ -579,7 +579,7 @@ class App extends React.Component {
 		// Sample palette header object for display below the Search bar and above
 		// the scrollable area for categories and nodes.
 		this.paletteHeader = (
-			<div style={{ borderBottom: "1px solid lightgray", height: "fit-content", padding: "12px 50px 12px" }} >
+			<div className="harness-palette-header">
 				<Button kind="tertiary" onClick={() => window.alert("Test button clicked!")}>
 					Test Button
 				</Button>
@@ -2334,7 +2334,8 @@ class App extends React.Component {
 			showCharacterCounter: this.state.showCharacterCounter,
 			locale: this.locale,
 			iconSwitch: this.state.iconSwitch,
-			enableTanstackTable: this.state.enableTanstackTable
+			enableTanstackTable: this.state.enableTanstackTable,
+			cspNonce: window.__CSP_NONCE__
 		};
 	}
 
@@ -2666,7 +2667,7 @@ class App extends React.Component {
 						action: "custom-loading",
 						tooltip: "A custom loading!",
 						jsx: (tabIndex) => (
-							<div style={{ padding: "4px 11px" }}>
+							<div className="harness-toolbar-jsx-loading">
 								<InlineLoading status="active" description="Loading..."
 									className={"toolbar-jsx-obj"}
 									tabIndex={tabIndex}
@@ -2680,7 +2681,7 @@ class App extends React.Component {
 						action: "custom-checkbox",
 						tooltip: "A custom checkbox!",
 						jsx: (tabIndex) => (
-							<div style={{ padding: "5px 11px" }}>
+							<div className="harness-toolbar-jsx-checkbox">
 								<Checkbox id={"custom-checkbox"} defaultChecked labelText={"Check it out"}
 									onClick={(e) => window.alert("Checkbox clicked!")}
 									className={"toolbar-jsx-obj"}
@@ -2900,6 +2901,27 @@ class App extends React.Component {
 		}));
 	}
 
+	/**
+	 * Handles the CSP-enabled toggle in the toolbar.
+	 * Posts the new value to the server, then navigates to the origin so the
+	 * browser performs a genuine fresh page load (distinct from the current
+	 * "/#/" URL) and the updated Content-Security-Policy header takes effect.
+	 * @param {boolean} val - The new toggle value (true = CSP on, false = CSP off).
+	 */
+	handleCspToggle(val) {
+		fetch("/v1/test-harness/csp-enabled", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			credentials: "include",
+			body: JSON.stringify({ enabled: val })
+		})
+			.then((response) => {
+				if (response.ok) {
+					window.location.replace(window.location.origin + "/");
+				}
+			});
+	}
+
 	getNavigationBar() {
 		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
 		const breadcrumbs = (<Breadcrumbs
@@ -2955,6 +2977,28 @@ class App extends React.Component {
 						</div>
 					),
 					tooltip: "Switch Theme"
+				},
+				{ divider: true },
+				{
+					action: "csp-toggle",
+					label: "CSP",
+					enable: true,
+					jsx: (tabIndex) => (
+						<div className="harness-theme-toggle-wrapper" tabIndex={-1}>
+							<Toggle
+								id="harness-toggle-csp"
+								aria-label="Enable Content Security Policy"
+								size="sm"
+								labelA="CSP Off"
+								labelB="CSP On"
+								className="toolbar-jsx-obj"
+								toggled={this.state.cspEnabled}
+								onToggle={this.handleCspToggle.bind(this)}
+								tabIndex={tabIndex}
+							/>
+						</div>
+					),
+					tooltip: "Enable/disable Content Security Policy (page will reload)"
 				},
 				{ divider: true },
 				{
@@ -3073,6 +3117,10 @@ class App extends React.Component {
 		const keyboardConfig = {
 			actions: {
 				delete: true,
+				undo: true,
+				redo: true,
+				selectAll: true,
+				deselectAll: true,
 				cutToClipboard: true,
 				copyToClipboard: true,
 				pasteFromClipboard: true
@@ -3338,7 +3386,6 @@ class App extends React.Component {
 			{ "console-panel-open": this.state.consoleOpened }
 		);
 
-		const tooltipFontSize = "13px";
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			{sidePanel}
@@ -3350,7 +3397,6 @@ class App extends React.Component {
 				{commonCanvas}
 			</main>
 			{consoleView}
-			<ReactTooltip id="toolbar-tooltip" place="bottom" effect="solid" style={{ fontSize: tooltipFontSize }} />
 		</div>);
 
 		return (

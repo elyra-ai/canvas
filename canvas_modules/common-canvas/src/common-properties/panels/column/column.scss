@@ -19,6 +19,7 @@
 .properties-column-panel {
 	display: grid;
 	column-gap: carbon.$spacing-05;
+	grid-template-columns: var(--column-grid-template);
 	.properties-control-panel:not(:empty) + .properties-control-panel:not(:empty) {
 		// In column panel, two properties-control-panel should be side-by-side w/o padding
 		padding-top: 0;

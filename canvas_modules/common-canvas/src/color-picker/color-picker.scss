@@ -17,14 +17,18 @@
 @use "../carbon.scss";
 
 .color-picker {
-	width: 156px;
-	height: 55px;
+	// width and height are set via CSS custom properties from color-picker.jsx.
+	width: var(--color-picker-width, 156px);
+	height: var(--color-picker-height, 55px);
 	display: flex;
 	flex-wrap: wrap;
+	padding-bottom: 4px;
 
 	.color-picker-item {
 		width: 20px;
 		height: 20px;
+		// background-color is set via CSS custom property from color-picker.jsx.
+		background-color: var(--color-picker-swatch-color);
 		margin: 5px 0 0 5px;
 		cursor: pointer;
 		border: carbon.$border-subtle-02 1px solid;
