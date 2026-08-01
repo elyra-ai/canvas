@@ -84,14 +84,14 @@
 	display: grid;
 	grid-template-columns: 320px 320px 1fr;
 	flex: 1;
-	min-height: 0; 
+	min-height: 0;
 	overflow: hidden;
 }
 
 .studio-column {
 	display: flex;
 	flex-direction: column;
-	min-height: 0; 
+	min-height: 0;
 	overflow: hidden;
 	border-right: 1px solid var(--cds-border-subtle-01);
 
