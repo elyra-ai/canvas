@@ -49,16 +49,6 @@ class DatepickerRangeControl extends React.Component {
 		this.getRangeValue = this.getRangeValue.bind(this);
 	}
 
-	getRangeValue() {
-		const { valueStart, valueEnd } = this.state;
-		if (!this.rangeValue || this.rangeValueStart !== valueStart || this.rangeValueEnd !== valueEnd) {
-			this.rangeValueStart = valueStart;
-			this.rangeValueEnd = valueEnd;
-			this.rangeValue = [getDateObject(valueStart, this.dateFormat), getDateObject(valueEnd, this.dateFormat)].filter(Boolean);
-		}
-		return this.rangeValue;
-	}
-
 	onStartBlur(evt) {
 		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
 		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
@@ -69,6 +59,16 @@ class DatepickerRangeControl extends React.Component {
 		const isoStartDate = getISODate(this.state.valueStart, this.dateFormat);
 		const isoEndDate = getISODate(evt.target.value, this.dateFormat);
 		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
+	}
+
+	getRangeValue() {
+		const { valueStart, valueEnd } = this.state;
+		if (!this.rangeValue || this.rangeValueStart !== valueStart || this.rangeValueEnd !== valueEnd) {
+			this.rangeValueStart = valueStart;
+			this.rangeValueEnd = valueEnd;
+			this.rangeValue = [getDateObject(valueStart, this.dateFormat), getDateObject(valueEnd, this.dateFormat)].filter(Boolean);
+		}
+		return this.rangeValue;
 	}
 
 	getDatepickerSize() {
