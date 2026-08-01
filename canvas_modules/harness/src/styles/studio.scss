@@ -21,6 +21,26 @@
 	inset: 0;
 	overflow: hidden;
 	background-color: var(--cds-background);
+
+	.right-flyout {
+		border-left: none !important;
+	}
+
+	.properties-right-flyout {
+		border-left: none !important;
+	}
+
+	.properties-btn-resize {
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		opacity: 1 !important;
+		visibility: visible !important;
+		z-index: 100;
+		right: unset !important;
+		bottom: unset !important;
+	}
 }
 
 .studio-header {
@@ -64,14 +84,14 @@
 	display: grid;
 	grid-template-columns: 320px 320px 1fr;
 	flex: 1;
-	min-height: 0; // prevents flex child from overflowing its container
+	min-height: 0; 
 	overflow: hidden;
 }
 
 .studio-column {
 	display: flex;
 	flex-direction: column;
-	min-height: 0; // prevents grid child from expanding past its track
+	min-height: 0; 
 	overflow: hidden;
 	border-right: 1px solid var(--cds-border-subtle-01);
 
@@ -226,7 +246,6 @@
 	}
 }
 
-// Collapsed column strip
 .studio-column--collapsed {
 	overflow: hidden;
 	display: flex;
@@ -254,7 +273,6 @@
 	padding: 1rem 0;
 }
 
-// Node type form (inline below list)
 .studio-node-type-form {
 	border: 1px solid var(--cds-focus);
 	border-radius: 4px;
@@ -270,7 +288,6 @@
 	margin-bottom: 0.75rem;
 }
 
-// Ports editor
 .studio-ports-editor {
 	margin-top: 0.5rem;
 }
@@ -290,12 +307,10 @@
 	margin-bottom: 0.75rem;
 	min-width: 0;
 
-	// Label input occupies the full first row
 	> *:first-child {
 		grid-column: 1 / -1;
 	}
 
-	// Override Carbon's internal min-width so NumberInput respects the grid track
 	> * {
 		min-width: 0;
 	}
@@ -308,7 +323,6 @@
 	}
 }
 
-// Two equal columns for width + height number inputs (Actions builder)
 .studio-two-col-row {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -488,7 +502,6 @@
 		background-color: var(--cds-layer-hover-02);
 	}
 
-	// Left info side: must be able to shrink below its content size
 	> div:first-child {
 		display: flex;
 		align-items: center;
@@ -514,7 +527,6 @@
 		flex-shrink: 0;
 	}
 
-	// Action buttons must never be pushed off screen
 	.studio-parameter-actions {
 		display: flex;
 		gap: 0.25rem;
@@ -540,7 +552,7 @@
 	margin-bottom: 0.375rem;
 }
 
-// Subsections (titleDefinition, conditions, actions)
+
 .studio-subsection {
 	margin-bottom: 1rem;
 	border: 1px solid var(--cds-border-subtle-01);
@@ -576,7 +588,7 @@
 	padding: 0.375rem 0;
 }
 
-// Conditions builder
+
 .studio-conditions-builder {
 	.studio-subsection-header {
 		border-bottom: none;
@@ -612,7 +624,6 @@
 	align-self: flex-end;
 }
 
-// Actions builder
 .studio-actions-builder {
 	.studio-subsection-header {
 		border-bottom: none;
@@ -661,7 +672,6 @@
 	border-top: 1px solid var(--cds-border-subtle-01);
 }
 
-// Properties Preview
 .studio-properties-preview {
 	margin-top: 1rem;
 	border: 1px solid var(--cds-border-subtle-01);
@@ -682,6 +692,82 @@
 		background-color: var(--cds-layer-02);
 		max-height: 300px;
 		overflow-y: auto;
+	}
+}
+
+// ---- Node properties right flyout ----
+
+.studio-flyout-panel {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	position: relative;
+}
+
+.studio-flyout-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--cds-border-subtle-01);
+	background-color: var(--cds-layer-01);
+	flex-shrink: 0;
+	position: relative;
+	z-index: 10;
+	overflow: visible;
+}
+
+.studio-flyout-title {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: var(--cds-text-primary);
+}
+
+.studio-flyout-close-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	background: none;
+	border: none;
+	cursor: pointer;
+	border-radius: 2px;
+	color: var(--cds-icon-primary);
+	flex-shrink: 0;
+
+	&:hover {
+		background-color: var(--cds-layer-hover-01);
+	}
+
+	&:focus {
+		outline: 2px solid var(--cds-focus);
+		outline-offset: -2px;
+	}
+}
+
+.studio-flyout-panel {
+	.properties-right-flyout-container {
+		flex: 1;
+		min-height: 0;
+	}
+
+	.properties-close-button {
+		display: none;
+	}
+}
+
+.studio-flyout-footer {
+	display: flex;
+	flex-shrink: 0;
+	border-top: 1px solid var(--cds-border-subtle-01);
+
+	.cds--btn {
+		flex: 1;
+		max-width: none;
+		justify-content: center;
+		min-height: 3rem;
 	}
 }
 
@@ -723,7 +809,7 @@
 	}
 }
 
-// Empty state
+
 .studio-empty-canvas {
 	display: flex;
 	flex-direction: column;

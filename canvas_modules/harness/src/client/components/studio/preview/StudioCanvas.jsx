@@ -16,11 +16,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Select, SelectItem, Toggle } from "@carbon/react";
+import { Button, Select, SelectItem, Toggle } from "@carbon/react";
+import { Close } from "@carbon/react/icons";
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import propertiesGenerator from "../utils/properties-generator";
-
-const NOOP = () => null;
 
 const LINK_TYPES = ["Curve", "Elbow", "Straight", "Parallax"];
 const LINK_DIRECTIONS = ["LeftRight", "TopBottom", "BottomTop", "RightLeft"];
@@ -31,7 +30,13 @@ export default class StudioCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.state = { showProperties: false, propertiesData: null };
+		this.state = {
+			showProperties: false,
+			propertiesData: null,
+			propertiesNodeLabel: "",
+			currentPropertiesStudioId: null,
+			savedValues: {}
+		};
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 	}
@@ -94,9 +99,19 @@ export default class StudioCanvas extends React.Component {
 				});
 				const paramDef = matchedStudioId && this.props.paramDefs && this.props.paramDefs[matchedStudioId];
 				if (paramDef) {
+					let propertiesData = propertiesGenerator(paramDef, nodeLabel, matchedOp);
+					const saved = this.state.savedValues[matchedStudioId];
+					if (saved) {
+						propertiesData = {
+							...propertiesData,
+							current_parameters: { ...propertiesData.current_parameters, ...saved }
+						};
+					}
 					this.setState({
 						showProperties: true,
-						propertiesData: propertiesGenerator(paramDef, nodeLabel, matchedOp)
+						currentPropertiesStudioId: matchedStudioId,
+						propertiesNodeLabel: nodeLabel || matchedOp || "Node Properties",
+						propertiesData
 					});
 				}
 			}
@@ -110,7 +125,11 @@ export default class StudioCanvas extends React.Component {
 
 	render() {
 		const { canvasConfig, onCanvasConfigChange } = this.props;
-		const { showProperties, propertiesData } = this.state;
+		const { showProperties, propertiesData, propertiesNodeLabel, currentPropertiesStudioId } = this.state;
+		const closeProperties = () => this.setState({ showProperties: false, propertiesData: null });
+		const saveProperties = (paramValues) => this.setState((prev) => ({
+			savedValues: { ...prev.savedValues, [currentPropertiesStudioId]: paramValues }
+		}));
 
 		return (
 			<div className="studio-canvas-column">
@@ -165,14 +184,29 @@ export default class StudioCanvas extends React.Component {
 						clickActionHandler={this.clickActionHandler}
 						editActionHandler={this.editActionHandler}
 						rightFlyoutContent={showProperties && propertiesData ? (
-							<CommonProperties
-								propertiesInfo={{ parameterDef: propertiesData }}
-								propertiesConfig={{ containerType: "Custom", rightFlyout: true, applyOnBlur: true }}
-								callbacks={{
-									closePropertiesDialog: () => this.setState({ showProperties: false, propertiesData: null }),
-									applyPropertyChanges: NOOP
-								}}
-							/>
+							<div className="studio-flyout-panel">
+								<div className="studio-flyout-header">
+									<span className="studio-flyout-title">{propertiesNodeLabel}</span>
+									<button
+										type="button"
+										className="studio-flyout-close-btn"
+										aria-label="Close"
+										title="Close"
+										onClick={closeProperties}
+									>
+										<Close size={16} />
+									</button>
+								</div>
+								<CommonProperties
+									propertiesInfo={{ parameterDef: propertiesData }}
+									propertiesConfig={{ containerType: "Custom", rightFlyout: true, applyOnBlur: true }}
+									callbacks={{ closePropertiesDialog: closeProperties, applyPropertyChanges: saveProperties }}
+								/>
+								<div className="studio-flyout-footer">
+									<Button kind="secondary" onClick={closeProperties}>Cancel</Button>
+									<Button kind="primary" onClick={closeProperties}>Save</Button>
+								</div>
+							</div>
 						) : null}
 						showRightFlyout={showProperties && propertiesData !== null}
 					/>
