@@ -46,6 +46,17 @@ class DatepickerRangeControl extends React.Component {
 
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
 		this.createInfoDesc = this.createInfoDesc.bind(this);
+		this.getRangeValue = this.getRangeValue.bind(this);
+	}
+
+	getRangeValue() {
+		const { valueStart, valueEnd } = this.state;
+		if (!this.rangeValue || this.rangeValueStart !== valueStart || this.rangeValueEnd !== valueEnd) {
+			this.rangeValueStart = valueStart;
+			this.rangeValueEnd = valueEnd;
+			this.rangeValue = [getDateObject(valueStart, this.dateFormat), getDateObject(valueEnd, this.dateFormat)].filter(Boolean);
+		}
+		return this.rangeValue;
 	}
 
 	onStartBlur(evt) {
@@ -146,7 +157,7 @@ class DatepickerRangeControl extends React.Component {
 					locale={this.locale}
 					allowInput
 					readOnly={this.props.readOnly}
-					value={[getDateObject(this.state.valueStart, this.dateFormat), getDateObject(this.state.valueEnd, this.dateFormat)]}
+					value={this.getRangeValue()}
 				>
 					<DatePickerInput
 						{...validationProps}
