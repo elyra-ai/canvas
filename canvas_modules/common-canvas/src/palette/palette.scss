@@ -477,6 +477,8 @@ $palette-dialog-list-item-height: 46px;
 		}
 
 		&.palette-list-item-disabled {
+			cursor: not-allowed;
+
 			.palette-list-item-icon {
 				fill: carbon.$icon-disabled;
 			}
@@ -583,6 +585,8 @@ $palette-dialog-list-item-height: 46px;
 }
 
 .palette-dialog-grid-node-outer.palette-dialog-grid-node-outer-disabled {
+	cursor: not-allowed;
+
 	.palette-dialog-grid-node-icon .node-icon {
 		fill: carbon.$icon-disabled;
 	}
