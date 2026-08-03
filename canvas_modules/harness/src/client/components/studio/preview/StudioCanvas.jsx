@@ -35,7 +35,8 @@ export default class StudioCanvas extends React.Component {
 			propertiesData: null,
 			propertiesNodeLabel: "",
 			currentPropertiesStudioId: null,
-			savedValues: {}
+			savedValues: {},
+			flyoutExpanded: false
 		};
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
@@ -109,6 +110,7 @@ export default class StudioCanvas extends React.Component {
 					}
 					this.setState({
 						showProperties: true,
+						flyoutExpanded: false,
 						currentPropertiesStudioId: matchedStudioId,
 						propertiesNodeLabel: nodeLabel || matchedOp || "Node Properties",
 						propertiesData
@@ -125,11 +127,16 @@ export default class StudioCanvas extends React.Component {
 
 	render() {
 		const { canvasConfig, onCanvasConfigChange } = this.props;
-		const { showProperties, propertiesData, propertiesNodeLabel, currentPropertiesStudioId } = this.state;
+		const { showProperties, propertiesData, propertiesNodeLabel, currentPropertiesStudioId, flyoutExpanded } = this.state;
 		const closeProperties = () => this.setState({ showProperties: false, propertiesData: null });
 		const saveProperties = (paramValues) => this.setState((prev) => ({
 			savedValues: { ...prev.savedValues, [currentPropertiesStudioId]: paramValues }
 		}));
+		const onFlyoutClick = (e) => {
+			if (e.target.closest(".properties-btn-resize")) {
+				this.setState((prev) => ({ flyoutExpanded: !prev.flyoutExpanded }));
+			}
+		};
 
 		return (
 			<div className="studio-canvas-column">
@@ -183,7 +190,12 @@ export default class StudioCanvas extends React.Component {
 						config={this.getCanvasConfig()}
 						clickActionHandler={this.clickActionHandler}
 						editActionHandler={this.editActionHandler}
-						rightFlyoutContent={showProperties && propertiesData ? (
+					/>
+					{showProperties && propertiesData && (
+						<div
+							className={`studio-flyout-overlay${flyoutExpanded ? " studio-flyout-overlay--expanded" : ""}`}
+							onClick={onFlyoutClick}
+						>
 							<div className="studio-flyout-panel">
 								<div className="studio-flyout-header">
 									<span className="studio-flyout-title">{propertiesNodeLabel}</span>
@@ -207,9 +219,8 @@ export default class StudioCanvas extends React.Component {
 									<Button kind="primary" onClick={closeProperties}>Save</Button>
 								</div>
 							</div>
-						) : null}
-						showRightFlyout={showProperties && propertiesData !== null}
-					/>
+						</div>
+					)}
 				</div>
 			</div>
 		);

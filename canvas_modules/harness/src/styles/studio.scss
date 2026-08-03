@@ -21,26 +21,6 @@
 	inset: 0;
 	overflow: hidden;
 	background-color: var(--cds-background);
-
-	.right-flyout {
-		border-left: none !important;
-	}
-
-	.properties-right-flyout {
-		border-left: none !important;
-	}
-
-	.properties-btn-resize {
-		position: absolute;
-		left: 0;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		opacity: 1 !important;
-		visibility: visible !important;
-		z-index: 100;
-		right: unset !important;
-		bottom: unset !important;
-	}
 }
 
 .studio-header {
@@ -752,10 +732,6 @@
 		flex: 1;
 		min-height: 0;
 	}
-
-	.properties-close-button {
-		display: none;
-	}
 }
 
 .studio-flyout-footer {
@@ -809,6 +785,42 @@
 	}
 }
 
+// The properties panel is an absolute overlay on top of the canvas so its width
+// is fully under our control and never overflows the canvas column.
+.studio-flyout-overlay {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: clamp(320px, 30%, 500px);
+	z-index: 50;
+	background-color: var(--cds-layer-01);
+	border-left: 1px solid var(--cds-border-subtle-01);
+
+	&.studio-flyout-overlay--expanded {
+		width: min(clamp(480px, 55%, 700px), 100%);
+	}
+
+	.properties-right-flyout {
+		border-left: none;
+	}
+
+	.properties-btn-resize {
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		opacity: 1 !important;
+		visibility: visible !important;
+		z-index: 100;
+		right: unset !important;
+		bottom: unset !important;
+	}
+
+	.properties-close-button {
+		display: none;
+	}
+}
 
 .studio-empty-canvas {
 	display: flex;
