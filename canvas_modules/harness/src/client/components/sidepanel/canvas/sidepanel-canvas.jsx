@@ -1943,7 +1943,7 @@ export default class SidePanelForms extends React.Component {
 
 		const section = (title, content) => (
 			<AccordionItem key={title} title={title}
-				open={savedAccordionState[title] !== false}
+				open={savedAccordionState[title] === true}
 				onHeadingClick={({ isOpen }) => {
 					savedAccordionState[title] = isOpen;
 				}}
