@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-/* global jest, beforeEach */
+/* global jest, beforeEach, afterEach */
 import fetchMock from "jest-fetch-mock";
 fetchMock.enableMocks();
 fetch.mockResponse("<svg />");
+
+// Collects any console.warn/console.error message that is not in the
+// `ignoredMessages` allow list below.
+const unexpectedMessages = [];
 
 // Added to filter out `act` error and warning messages
 console.warn = mockConsole(console.warn);
@@ -99,11 +103,15 @@ function mockConsole(consoleMethod) {
 		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message && typeof message === "string" && message.includes(ignoredMessage));
 		if (!hasIgnoredMessage) {
 			consoleMethod(message, ...args);
+			
+			unexpectedMessages.push(message);
 		}
 	};
 }
 
 beforeEach(() => {
+	unexpectedMessages.length = 0;
+
 	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
 	Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
 		configurable: true,
@@ -113,4 +121,17 @@ beforeEach(() => {
 		configurable: true,
 		value: 1000
 	});
+});
+
+// Fail the test if any unexpected console.warn/console.error message was
+// logged during it.
+afterEach(() => {
+	if (unexpectedMessages.length > 0) {
+		const messages = unexpectedMessages.join("\n");
+		unexpectedMessages.length = 0;
+		throw new Error(
+			`Unexpected console warning/error message(s) logged during test:\n${messages}\n\n` +
+			"If this message is expected, add it to the `ignoredMessages` list in jest-setup.js."
+		);
+	}
 });
