@@ -224,12 +224,19 @@ $palette-dialog-list-item-height: 46px;
 	}
 
 	.palette-list-item.palette-list-item-disabled {
+		cursor: not-allowed;
+
 		.palette-list-item-icon {
 			fill: carbon.$icon-disabled;
 		}
 
 		img.palette-list-item-icon {
 			opacity: 0.5;
+		}
+
+		.palette-list-item-text-div,
+		.palette-list-item-description {
+			color: carbon.$button-disabled;
 		}
 	}
 }
@@ -477,6 +484,11 @@ $palette-dialog-list-item-height: 46px;
 			img.palette-list-item-icon {
 				opacity: 0.5;
 			}
+
+			.palette-list-item-text-div,
+			.palette-list-item-description {
+				color: carbon.$button-disabled;
+			}
 		}
 	}
 }
@@ -577,6 +589,10 @@ $palette-dialog-list-item-height: 46px;
 
 	.palette-dialog-grid-node-icon img {
 		opacity: 0.5;
+	}
+
+	.palette-dialog-grid-node-text {
+		color: carbon.$button-disabled;
 	}
 }
 
