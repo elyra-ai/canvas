@@ -130,6 +130,7 @@ export default class ExpressionBuilder extends React.Component {
 					control={this.props.control}
 					propertyId={this.props.propertyId}
 					controller={this.props.controller}
+					// ExpressionControl marks controlItem as required, so this must be passed even though it is not used here.
 					controlItem={<span />}
 					builder={false}
 					editorDidMount={this.editorDidMount}
