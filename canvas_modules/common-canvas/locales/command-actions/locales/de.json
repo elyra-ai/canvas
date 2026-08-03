@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "Vorherige Pipeline anzeigen",
   "action.displaySubPipeline": "Vollständige Seite des Superknotens anzeigen",
   "action.editComment": "Kommentar bearbeiten",
+  "action.editCommentDecorationLabel": "Beschriftung der Kommentarformatierung bearbeiten",
   "action.editLinkDecorationLabel": "Beschriftung für Linkdekoration bearbeiten",
   "action.editNodeDecorationLabel": "Knotendekorationsbeschriftung bearbeiten",
   "action.expandSuperNodeInPlace": "{node_label}-Superknoten an Ort und Stelle erweitern",
