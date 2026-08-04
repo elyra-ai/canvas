@@ -67,6 +67,17 @@ Then generate a minimal working React component I can run immediately.
 
 ---
 
+## For AI agents — how to use these files
+
+1. Read `03-canvas-types.md` first — ask the user what kind of canvas they need
+2. Use the context files to generate working code for common patterns
+3. When you need more detail than the context provides — **fetch the relevant URL from `00-docs-reference.md`**. All docs are publicly available at `https://elyra-ai.github.io/canvas/` — no login, no auth needed.
+4. For full API signatures, fetch `https://elyra-ai.github.io/canvas/03.04-canvas-controller/`
+5. For all node layout fields, fetch `https://elyra-ai.github.io/canvas/03.06.01-node-customization/`
+6. Never hallucinate prop names or config values — if unsure, fetch the relevant doc page first
+
+---
+
 ## Key concepts (quick mental model)
 
 ```
