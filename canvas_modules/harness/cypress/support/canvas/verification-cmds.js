@@ -1094,7 +1094,11 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 		.then((leftBarItems) => {
 			cy.get(".common-canvas-toolbar .toolbar-right-bar .toolbar-item")
 				.then((rightBarItems) => {
-					cy.get(".common-canvas-toolbar .toolbar-overflow-item")
+					// Exclude the trailing overflow item (only used when right bar items wrap
+					// but no left bar item has) so it doesn't skew the left-bar-wrap check below.
+					cy.get(".common-canvas-toolbar .toolbar-left-bar " +
+						".toolbar-overflow-container:not([data-toolbar-action='overflow_toolbar-right-bar-overflow']) " +
+						".toolbar-overflow-item")
 						.then((toolbarOverflowItems) => {
 							cy.get(".common-canvas-toolbar .toolbar-left-bar .toolbar-divider")
 								.then((leftBarDividerItems) => {
@@ -1105,10 +1109,14 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 
 									let visibleItemsCount = leftBarTopItemsCount + rightBarTopItemsCount;
 
-									// If there is one more overflow item than the left bar items
-									// then an overflow item is visible. Note: there is one overflow item
-									// for each divider in the left bar as well as each button in the left bar.
-									if (overflowTopItemsCount > leftBarTopItemsCount + leftBarDividerItemsCount) {
+									// An overflow button is visible either because a left bar item has
+									// wrapped (there is one more overflow item on the top row than left
+									// bar buttons/dividers) or, if none has, because a right bar item has
+									// wrapped (fewer right bar items are on the top row than exist in total).
+									const leftBarHasWrapped = overflowTopItemsCount > leftBarTopItemsCount + leftBarDividerItemsCount;
+									const rightBarHasWrapped = rightBarTopItemsCount < rightBarItems.length;
+
+									if (leftBarHasWrapped || rightBarHasWrapped) {
 										visibleItemsCount++;
 									}
 

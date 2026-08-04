@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "Afficher le pipeline précédent",
   "action.displaySubPipeline": "Afficher la page complète du super nœud",
   "action.editComment": "Modifier le commentaire",
+  "action.editCommentDecorationLabel": "Modifier le libellé de la décoration du commentaire",
   "action.editLinkDecorationLabel": "Modifier le libellé de décoration de lien",
   "action.editNodeDecorationLabel": "Modifier le libellé de décoration de nœud",
   "action.expandSuperNodeInPlace": "Développer le super nœud {node_label}",

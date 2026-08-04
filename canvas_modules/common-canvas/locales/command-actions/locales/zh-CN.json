@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "显示上一条管道",
   "action.displaySubPipeline": "显示超节点完整页面",
   "action.editComment": "编辑注释",
+  "action.editCommentDecorationLabel": "编辑评论装饰标签",
   "action.editLinkDecorationLabel": "编辑链接装饰标签",
   "action.editNodeDecorationLabel": "编辑节点装饰标签",
   "action.expandSuperNodeInPlace": "在适当位置展开 {node_label} 超节点",

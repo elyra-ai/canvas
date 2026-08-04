@@ -293,7 +293,9 @@
         "label": {
           "default": "Currency type"
         },
-        "description": "Try pressing the currency image",
+        "description": {
+          "default": "Try pressing the currency image"
+        },
         "control": "readonly",
         "action_ref": "currency"
       },
@@ -750,6 +752,9 @@
         "label": {
           "resource_key": "moon"
         },
+        "description": {
+          "default": "This is a tooltip for moon1 action image."
+        },
         "control": "image",
         "data": {
           "parameter_ref": "oneofselect_null"
@@ -768,6 +773,9 @@
         "label": {
           "resource_key": "moon"
         },
+        "description": {
+          "default": "This is a tooltip for moon2 action image."
+        },
         "control": "image",
         "data": {
           "parameter_ref": "oneofselect_empty_string"
@@ -784,6 +792,9 @@
         "id": "moon3",
         "label": {
           "resource_key": "moon"
+        },
+        "description": {
+          "default": "This is a tooltip for moon3 action image."
         },
         "control": "image",
         "data": {
@@ -803,6 +814,9 @@
         "label": {
           "resource_key": "moon"
         },
+        "description": {
+          "default": "This is a tooltip for moon4 action image."
+        },
         "control": "image",
         "data": {
           "parameter_ref": "radioString"
@@ -821,6 +835,9 @@
         "label": {
           "resource_key": "moon"
         },
+        "description": {
+          "default": "This is a tooltip for moon5 action image."
+        },
         "control": "image",
         "data": {
           "parameter_ref": "radioString"
@@ -837,6 +854,9 @@
         "id": "meteor",
         "label": {
           "resource_key": "meteor"
+        },
+        "description": {
+          "default": "This is a tooltip for meteor action image."
         },
         "control": "image",
         "data": {
