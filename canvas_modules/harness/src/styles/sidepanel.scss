@@ -58,16 +58,14 @@
 	}
 }
 
-.harness-side-panel-header {
-	padding: 0 20px;
-	color: carbon.$text-primary;
-	font-size: 16px;
-	font-weight: bold;
-	pointer-events: none;
-}
-
 .harness-sidepanel-children {
 	padding: 5px 10px;
+}
+
+.harness-sidepanel-accordion-no-anim {
+	.cds--accordion__wrapper, .cds--accordion__arrow {
+		transition: none;
+	}
 }
 
 .harness-sidepanel-divider {
