@@ -526,9 +526,9 @@ class CommonPropertiesComponents extends React.Component {
 					to <span className="harness-highlight">Custom</span> and <span className="harness-highlight">rightFlyout</span> set to true.
 					Below is the minimum specifications to render CommonProperties. More options and details are listed in the&nbsp;
 				<a className="harness-properties-documentation-page-intro-link"
-					href={"https://github.com/elyra-ai/canvas/wiki/3.0-Common-properties-documentation"}
+					href={"https://elyra-ai.github.io/canvas/04-common-properties/"}
 				>
-					Common Properties wiki
+					Common Properties documentation
 				</a>.
 				</p>
 				<pre className="harness-json-block">
@@ -547,12 +547,11 @@ class CommonPropertiesComponents extends React.Component {
 				<pre className="harness-json-block">
 					{CONTAINERS_RIGHT_FLYOUT_CANVAS}
 				</pre>
-				<p>For more information with using CommonCanvas right-flyout for the properties editor, refer to the documentation in the&nbsp;
+				<p>For more information with using CommonCanvas right-flyout for the properties editor, refer to the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href={"https://github.com/elyra-ai/canvas/wiki/3.0-Common-properties-documentation" +
-						"#using-commonproperties-documentation-in-commoncanvas-right-flyout-panel"}
+						href="https://elyra-ai.github.io/canvas/03.06.05-panels-customization/#right-flyout-panel"
 					>
-						Common Properties wiki
+						Common Canvas panels documentation
 					</a>.
 				</p>
 			</div>
@@ -2169,7 +2168,7 @@ class CommonPropertiesComponents extends React.Component {
 						to <span className="harness-highlight">More than ten fields...</span> This placeholder text can be configured through
 						&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href="https://github.com/elyra-ai/canvas/wiki/3.0-Common-Properties-documentation#step-3--display-the-properties-editor"
+						href="https://elyra-ai.github.io/canvas/04-common-properties/#step-3-display-the-common-properties-object"
 					>custom labels</a>.
 					</p>
 					<div className="harness-section-row">

@@ -84,6 +84,7 @@ class PaletteDialogTopbar extends React.Component {
 				<Toolbar
 					instanceId = {0}
 					config={config}
+					size="md"
 					toolbarActionHandler={this.toolbarActionHandler}
 					additionalText={{
 						overflowMenuLabel: this.props.intl.formatMessage({ id: "toolbar.overflowMenu" }),

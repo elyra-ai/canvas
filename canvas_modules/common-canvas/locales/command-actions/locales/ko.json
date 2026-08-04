@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "이전 파이프라인 표시",
   "action.displaySubPipeline": "수퍼노드 전체 페이지 표시",
   "action.editComment": "주석 편집",
+  "action.editCommentDecorationLabel": "댓글 장식 레이블 편집",
   "action.editLinkDecorationLabel": "링크 데코레이션 레이블 편집",
   "action.editNodeDecorationLabel": "노드 데코레이션 레이블 편집",
   "action.expandSuperNodeInPlace": "위치에서 {node_label} 수퍼노드 펼치기",
