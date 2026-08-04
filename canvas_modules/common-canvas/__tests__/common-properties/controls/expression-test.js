@@ -53,7 +53,6 @@ const control = {
 };
 
 const propertyId = { name: "test-expression" };
-const controlItem = <span>Test Label</span>;
 const dataModel = [{
 	"fields": [
 		{
@@ -194,7 +193,6 @@ describe("expression-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				controlItem={controlItem}
 			/>
 		);
 
@@ -203,7 +201,6 @@ describe("expression-control renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
-			"controlItem": controlItem,
 		});
 	});
 
@@ -214,7 +211,6 @@ describe("expression-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -230,7 +226,6 @@ describe("expression-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				controlItem={controlItem}
 				rightFlyout
 			/>
 		);
@@ -249,7 +244,6 @@ describe("expression-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				controlItem={controlItem}
 				rightFlyout
 			/>
 		);
@@ -736,7 +730,6 @@ describe("expression handles no expression builder resources correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				controlItem={controlItem}
 				rightFlyout
 			/>
 		);
@@ -753,7 +746,6 @@ describe("expression handles no expression builder resources correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				controlItem={controlItem}
 				rightFlyout
 			/>
 		);
@@ -770,7 +762,6 @@ describe("expression handles no expression builder resources correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				controlItem={controlItem}
 				builder={false}
 				rightFlyout
 			/>
