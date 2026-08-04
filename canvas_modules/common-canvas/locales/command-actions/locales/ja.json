@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "前のパイプラインを表示する",
   "action.displaySubPipeline": "スーパーノードのページ全体を表示",
   "action.editComment": "コメントの編集",
+  "action.editCommentDecorationLabel": "コメントの装飾ラベルを編集する",
   "action.editLinkDecorationLabel": "リンク装飾ラベルの編集",
   "action.editNodeDecorationLabel": "ノード装飾ラベルの編集",
   "action.expandSuperNodeInPlace": "所定の位置にある {node_label} スーパーノードを展開",

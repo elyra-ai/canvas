@@ -56,3 +56,32 @@
 		padding-bottom: 0; // Removes bottom padding when only the Carbon wrapper is present without actual control.
 	}
 }
+
+// For non-readonly controls with image actions, keeps the action image aligned with the input.
+// When a validation error extends the flex container, margin-bottom compensates to prevent the image from shifting down beside the error.
+.properties-ctrl-wrapper.action:not(:has(.properties-readonly)) {
+	.properties-action-image {
+		align-self: flex-end;
+	}
+
+	&:has([data-invalid]) .properties-action-image {
+		margin-bottom: carbon.$spacing-02 + carbon.$spacing-05;
+	}
+}
+
+// Used when an image action control has an on_panel description. The description renders
+// above this row so the action image only needs a fixed margin-top equal to the label height.
+.properties-ctrl-action-row {
+	display: flex;
+	> div:first-child {
+		width: 100%;
+		min-width: 0;
+	}
+	.properties-action-image {
+		align-self: flex-start;
+		display: flex;
+		align-items: center;
+		height: carbon.$spacing-08;
+		margin-top: carbon.$spacing-05 + carbon.$spacing-03;
+	}
+}

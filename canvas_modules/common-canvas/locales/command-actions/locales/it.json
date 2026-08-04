@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "Visualizzare la pipeline precedente",
   "action.displaySubPipeline": "Visualizza la pagina completa del supernodo",
   "action.editComment": "Modifica commento",
+  "action.editCommentDecorationLabel": "Modifica l'etichetta di decorazione del commento",
   "action.editLinkDecorationLabel": "Modifica etichetta di decorazione del link",
   "action.editNodeDecorationLabel": "Modifica etichetta di decorazione del nodo",
   "action.expandSuperNodeInPlace": "Espandi supernodo {node_label} in luogo",
