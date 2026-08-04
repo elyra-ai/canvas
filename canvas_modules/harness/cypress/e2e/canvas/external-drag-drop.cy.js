@@ -23,6 +23,7 @@ describe("Test drag and drop of external object to canvas", function() {
 	it("Test dragging a node from side panel to canvas", function() {
 		// Open side panel and drag derive node on canvas
 		cy.toggleCommonCanvasSidePanel();
+		cy.openAccordionSection("Draggable node");
 		cy.dragDeriveNodeAtPosition(300, 300);
 		cy.verifyNumberOfNodes(1);
 		cy.clickToolbarUndo();
