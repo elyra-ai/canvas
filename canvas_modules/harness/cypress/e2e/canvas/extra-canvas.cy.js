@@ -36,6 +36,7 @@ describe("Test of extra canvas node operation", function() {
 
 		// Open side panel and drag derive node on canvas
 		cy.toggleCommonCanvasSidePanel();
+		cy.openAccordionSection("Draggable node");
 		cy.dragDeriveNodeAtPosition(380, 480);
 		cy.toggleCommonCanvasSidePanel();
 		cy.verifyNumberOfNodesInExtraCanvas(10);

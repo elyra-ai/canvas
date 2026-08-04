@@ -33,6 +33,9 @@ class PaletteContentList extends React.Component {
 	// Sets focus on the fist node in the list. This is called using a ref
 	// from the parent category.
 	setFirstNode() {
+		if (this.contentItemRefs.length === 0) {
+			return;
+		}
 		this.currentFocusIndex = 0;
 		this.contentItemRefs[this.currentFocusIndex].current.focus();
 	}

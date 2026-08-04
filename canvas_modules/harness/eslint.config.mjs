@@ -19,6 +19,7 @@ import configs from "eslint-config-canvas";
 import globals from "globals";
 import importPlugin from "eslint-plugin-import";
 import pluginCypress from "eslint-plugin-cypress";
+import jsxA11y from "eslint-plugin-jsx-a11y";
 import reactConfigs from "../eslint-config-canvas/react.js";
 import reactPlugin from "eslint-plugin-react";
 
@@ -26,7 +27,7 @@ import reactPlugin from "eslint-plugin-react";
 export default [
 	importPlugin.flatConfigs.errors,
 	...configs,
-	...reactConfigs,
+	...reactConfigs(jsxA11y),
 	{
 		plugins: {
 			react: reactPlugin

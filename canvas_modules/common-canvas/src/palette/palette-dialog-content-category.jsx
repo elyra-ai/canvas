@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { InlineLoading } from "@carbon/react";
 
 class PaletteDialogContentCategory extends React.Component {
 	constructor(props) {
@@ -39,9 +40,24 @@ class PaletteDialogContentCategory extends React.Component {
 			style = "palette-dialog-category-selected";
 		}
 
+		const content = this.props.category.loading_text
+			? (
+				<div className="palette-dialog-category-item-loading">
+					<InlineLoading
+						status="active"
+						successDelay={1500}
+						onSuccess={function noRefCheck() {
+							return null;
+						}}
+					/>
+					{this.props.category.label}
+				</div>
+			)
+			: this.props.category.label;
+
 		return (
-			<div data-id={this.props.category.id} className={style} onClick={this.categorySelected}>
-				{this.props.category.label}
+			<div data-id={this.props.category.id} data-label={this.props.category.label} className={style} onClick={this.categorySelected}>
+				{content}
 			</div>
 		);
 	}
