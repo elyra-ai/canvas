@@ -32,6 +32,10 @@
 	}
 	&[disabled] {
 		pointer-events: none;
+		.panel-label,
+		.panel-description {
+			color: carbon.$text-disabled;
+		}
 	}
 	&.hide {
 		display: none;

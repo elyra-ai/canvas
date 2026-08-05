@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -171,8 +171,8 @@ export default class CanvasInHandler {
 	}
 
 	static getComments(canvasComments) {
-		return canvasComments.map((canvasComment) =>
-			({
+		return canvasComments.map((canvasComment) => {
+			const newComment = {
 				id: canvasComment.id,
 				class_name: canvasComment.className,
 				content: canvasComment.content,
@@ -181,8 +181,12 @@ export default class CanvasInHandler {
 				height: canvasComment.height,
 				width: canvasComment.width,
 				style: canvasComment.style
-			})
-		);
+			};
+			if (canvasComment.decorations) {
+				newComment.decorations = this.getDecorations(canvasComment.decorations);
+			}
+			return newComment;
+		});
 	}
 
 	static getLinks(canvasLinks, nodes, comments) {

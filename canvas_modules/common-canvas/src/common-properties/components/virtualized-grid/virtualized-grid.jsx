@@ -48,6 +48,7 @@ const VirtualizedGrid = (props) => {
 	const [keyBoardEventCalled, setKeyBoardEventCalledState] = useState(false);
 	const [lastChecked, setLastCheckedState] = useState(isEmpty(props.rowsSelected) ? null : props.rowsSelected.slice(-1).pop());
 
+	const isFirstRender = useRef(true);
 	const parentRef = useRef(null);
 	const rowVirtualizer = useVirtualizer({
 		count: props.rowCount,
@@ -111,6 +112,19 @@ const VirtualizedGrid = (props) => {
 		});
 		return colSizeDefs;
 	}, [table.getState().columnSizingInfo, columns, props.excessWidth]);
+
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		if (props.onColumnResize) {
+			const totalWidth = table.getLeafHeaders().reduce((sum, header, idx) =>
+				sum + Math.max(header.column.getSize(), props.columns[idx]?.width || 0)
+			, 0);
+			props.onColumnResize(totalWidth);
+		}
+	}, [table.getState().columnSizingInfo]);
 
 	useEffect(() => {
 		if (props.onSort && table.getState().sorting.length > 0) {
@@ -189,6 +203,11 @@ const VirtualizedGrid = (props) => {
 	const renderDataRowCheckbox = (rowIndex, rowData) => {
 		if (props.summaryTable) {
 			return <div className="properties-vt-row-checkbox" />;
+		}
+
+		// Do not render any selection UI when row_selection is "none"
+		if (props.rowSelection === ROW_SELECTION.NONE) {
+			return "";
 		}
 
 		let selectOption = "";
@@ -280,7 +299,7 @@ const VirtualizedGrid = (props) => {
 			const excess = after + props.excessWidth;
 
 			return (<tr className="properties-vt-row-class" key="canvas-grid-header-row-0" data-role="properties-header-row">
-				<th key="properties-grid-fake-col-row-0-start" className="properties-grid-fake-col" style={{ width: `${before}px` }} />
+				<th key="properties-grid-fake-col-row-0-start" className="properties-grid-fake-col" style={{ "--vg-col-width": `${before}px` }} />
 				{renderHeaderCheckbox()}
 				{columnItems.map((virtualColumn) => {
 					const virtualHeader = headerGroup.headers[virtualColumn.index];
@@ -320,7 +339,7 @@ const VirtualizedGrid = (props) => {
 							tabIndex={sortIcon ? 0 : null}
 							role={sortIcon ? "button" : null}
 							aria-label={sortIcon ? props.intl.formatMessage(
-								{ id: "table.sort.column.label" },
+								{ id: "table.sort.column.label", defaultMessage: defaultMessages["table.sort.column.label"] },
 								{ column_name: headerLabel }
 							) : null}
 							onKeyDown={sortIcon ? (evt) => {
@@ -357,7 +376,7 @@ const VirtualizedGrid = (props) => {
 							{ "properties-vt-column-sortable": sortable },
 							{ "sort-column-active": sortable && (virtualHeader.column.getIsSorted() === "asc" || virtualHeader.column.getIsSorted() === "desc") }
 						)}
-						style={{ width: Math.max(colSizes[virtualColumn.index], header.width) }}
+						style={{ "--vg-col-width": Math.max(colSizes[virtualColumn.index], header.width) + "px" }}
 						onClick={virtualHeader.column.getToggleSortingHandler()}
 						aria-label={headerLabel}
 						data-id={`properties-vt-header-${header.key}`}
@@ -367,7 +386,7 @@ const VirtualizedGrid = (props) => {
 						{resizeHandle}
 					</th>);
 				})}
-				<th key="properties-grid-fake-col-row-0-end" className="properties-grid-fake-col" style={{ width: `${excess}px` }} />
+				<th key="properties-grid-fake-col-row-0-end" className="properties-grid-fake-col" style={{ "--vg-col-width": `${excess}px` }} />
 			</tr>);
 		})}
 	</thead>);
@@ -381,7 +400,7 @@ const VirtualizedGrid = (props) => {
 			: [0, 0];
 		const excess = after + props.excessWidth;
 
-		return (<tbody key="properties-grid-body-key" className="properties-grid-body" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
+		return (<tbody key="properties-grid-body-key" className="properties-grid-body" style={{ "--vg-body-height": `${rowVirtualizer.getTotalSize()}px` }}>
 			{rowItems.map((virtualRow) => {
 				const row = tableRows[virtualRow.index];
 				const originalRowIndex = props.getOriginalRowIndex(row.original, virtualRow.index);
@@ -392,8 +411,8 @@ const VirtualizedGrid = (props) => {
 					return (<td key={`properties-grid-row-${virtualRow.index}-${virtualColumn.index}`}
 						className={classNames("properties-grid-body-row-cell")}
 						style={{
-							minHeight: DEFAULT_ROW_HEIGHT,
-							width: Math.max(colSizes[virtualColumn.index], props.columns[virtualColumn.index].width)
+							"--vg-col-min-height": DEFAULT_ROW_HEIGHT + "px",
+							"--vg-col-width": Math.max(colSizes[virtualColumn.index], props.columns[virtualColumn.index].width) + "px"
 						}}
 					>
 						{cell.getValue()}
@@ -411,14 +430,14 @@ const VirtualizedGrid = (props) => {
 						{ "properties-vt-row-non-interactive": !props.selectable } // ReadonlyTable with single row selection is non-interactive.
 					)}
 					data-role="properties-data-row"
-					style={{ transform: `translateY(${virtualRow.start}px)` }}
+					style={{ "--vg-row-transform": `translateY(${virtualRow.start}px)` }}
 					onMouseDown={(evt) => onRowClick(evt, virtualRow.index, rowData)}
 					onDoubleClick={(evt) => onRowDoubleClick(evt, row.original.rowKey, virtualRow.index)}
 				>
-					<td key={`properties-grid-body-row-${virtualRow.index}-fake-col-start`} className="properties-grid-fake-col" style={{ width: `${before}px` }} />
+					<td key={`properties-grid-body-row-${virtualRow.index}-fake-col-start`} className="properties-grid-fake-col" style={{ "--vg-col-width": `${before}px` }} />
 					{renderDataRowCheckbox(virtualRow.index, rowData)}
 					{rowData}
-					<td key={`properties-grid-body-row-${virtualRow.index}-fake-col-end`} className="properties-grid-fake-col" style={{ width: `${excess}px` }} />
+					<td key={`properties-grid-body-row-${virtualRow.index}-fake-col-end`} className="properties-grid-fake-col" style={{ "--vg-col-width": `${excess}px` }} />
 				</tr>);
 			})}
 		</tbody>);
@@ -518,7 +537,8 @@ VirtualizedGrid.propTypes = {
 	tableDisabled: PropTypes.bool,
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired,
-	readOnly: PropTypes.bool
+	readOnly: PropTypes.bool,
+	onColumnResize: PropTypes.func
 };
 
 export default injectIntl(VirtualizedGrid);

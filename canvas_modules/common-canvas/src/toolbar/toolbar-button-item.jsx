@@ -53,19 +53,19 @@ import ConnectSource from "@carbon/icons-react/lib/ConnectSource";
 import ConnectTarget from "@carbon/icons-react/lib/ConnectTarget";
 import ArrangeVertical from "@carbon/icons-react/lib/ArrangeVertical";
 import ArrangeHorizontal from "@carbon/icons-react/lib/ArrangeHorizontal";
-import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
-	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
-	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT,
-	TOOLBAR_CREATE_WYSIWYG_COMMENT, TOOLBAR_CREATE_AUTO_WYSIWYG_COMMENT,
-	TOOLBAR_COLOR_BACKGROUND,
-	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
-	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
-	TOOLBAR_ARRANGE_HORIZONTALLY, TOOLBAR_ARRANGE_VERTICALLY,
-	TOOLBAR_OPEN_PALETTE, TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_PALETTE,
-	TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_CONNECT_FROM_PORT, TOOLBAR_CONNECT_TO_PORT,
-	TOOLBAR_SHOW_COMMENTS, TOOLBAR_HIDE_COMMENTS,
-	TOOLBAR_EXPAND_SUPERNODE_IN_PLACE, TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE,
-	TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE, TOOLBAR_SET_NODE_LABEL_EDIT, TOOLBAR_SET_COMMENT_EDIT_MODE }
+import { ACTION_STOP, ACTION_RUN, ACTION_UNDO, ACTION_REDO,
+	ACTION_CUT, ACTION_COPY, ACTION_PASTE, ACTION_CLIPBOARD,
+	ACTION_CREATE_COMMENT, ACTION_CREATE_AUTO_COMMENT,
+	ACTION_CREATE_WYSIWYG_COMMENT, ACTION_CREATE_AUTO_WYSIWYG_COMMENT,
+	ACTION_COLOR_BACKGROUND,
+	ACTION_DELETE_SELECTED_OBJECTS, ACTION_DELETE_LINK,
+	ACTION_ZOOM_IN, ACTION_ZOOM_OUT, ACTION_ZOOM_FIT,
+	ACTION_ARRANGE_HORIZONTALLY, ACTION_ARRANGE_VERTICALLY,
+	ACTION_OPEN_PALETTE, ACTION_CLOSE_PALETTE, ACTION_TOGGLE_PALETTE,
+	ACTION_TOGGLE_NOTIFICATION_PANEL, ACTION_CONNECT_FROM_PORT, ACTION_CONNECT_TO_PORT,
+	ACTION_SHOW_COMMENTS, ACTION_HIDE_COMMENTS,
+	ACTION_EXPAND_SUPERNODE_IN_PLACE, ACTION_COLLAPSE_SUPERNODE_IN_PLACE,
+	ACTION_EXPAND_SUPERNODE_FULL_PAGE, ACTION_SET_NODE_LABEL_EDIT, ACTION_SET_COMMENT_EDIT_MODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
 class ToolbarButtonItem extends React.Component {
@@ -105,66 +105,66 @@ class ToolbarButtonItem extends React.Component {
 		const disabled = !actionObj.enable;
 
 		switch (actionObj.action) {
-		case (TOOLBAR_STOP):
+		case (ACTION_STOP):
 			return <StopFilledAlt disabled={disabled} />;
-		case (TOOLBAR_RUN):
+		case (ACTION_RUN):
 			return <Play disabled={disabled} />;
-		case (TOOLBAR_EXPAND_SUPERNODE_IN_PLACE):
+		case (ACTION_EXPAND_SUPERNODE_IN_PLACE):
 			return <Maximize disabled={disabled} />;
-		case (TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE):
+		case (ACTION_COLLAPSE_SUPERNODE_IN_PLACE):
 			return <Minimize disabled={disabled} />;
-		case (TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE):
+		case (ACTION_EXPAND_SUPERNODE_FULL_PAGE):
 			return <Launch disabled={disabled} />;
-		case (TOOLBAR_UNDO):
+		case (ACTION_UNDO):
 			return <Undo disabled={disabled} />;
-		case (TOOLBAR_REDO):
+		case (ACTION_REDO):
 			return <Redo disabled={disabled} />;
-		case (TOOLBAR_CLIPBOARD):
+		case (ACTION_CLIPBOARD):
 			return <Result disabled={disabled} />;
-		case (TOOLBAR_CUT):
+		case (ACTION_CUT):
 			return <Cut disabled={disabled} />;
-		case (TOOLBAR_COPY):
+		case (ACTION_COPY):
 			return <Copy disabled={disabled} />;
-		case (TOOLBAR_PASTE):
+		case (ACTION_PASTE):
 			return <Paste disabled={disabled} />;
-		case (TOOLBAR_CONNECT_FROM_PORT):
+		case (ACTION_CONNECT_FROM_PORT):
 			return <ConnectSource disabled={disabled} />;
-		case (TOOLBAR_CONNECT_TO_PORT):
+		case (ACTION_CONNECT_TO_PORT):
 			return <ConnectTarget disabled={disabled} />;
-		case (TOOLBAR_CREATE_COMMENT):
-		case (TOOLBAR_CREATE_AUTO_COMMENT):
-		case (TOOLBAR_CREATE_WYSIWYG_COMMENT):
-		case (TOOLBAR_CREATE_AUTO_WYSIWYG_COMMENT):
+		case (ACTION_CREATE_COMMENT):
+		case (ACTION_CREATE_AUTO_COMMENT):
+		case (ACTION_CREATE_WYSIWYG_COMMENT):
+		case (ACTION_CREATE_AUTO_WYSIWYG_COMMENT):
 			return <AddComment disabled={disabled} />;
-		case (TOOLBAR_SHOW_COMMENTS):
+		case (ACTION_SHOW_COMMENTS):
 			return <Chat disabled={disabled} />;
-		case (TOOLBAR_HIDE_COMMENTS):
+		case (ACTION_HIDE_COMMENTS):
 			return <ChatOff disabled={disabled} />;
-		case (TOOLBAR_COLOR_BACKGROUND):
+		case (ACTION_COLOR_BACKGROUND):
 			return <ColorPalette disabled={disabled} />;
-		case (TOOLBAR_DELETE_LINK):
-		case (TOOLBAR_DELETE_SELECTED_OBJECTS):
+		case (ACTION_DELETE_LINK):
+		case (ACTION_DELETE_SELECTED_OBJECTS):
 			return <TrashCan disabled={disabled} />;
-		case (TOOLBAR_SET_COMMENT_EDIT_MODE):
-		case (TOOLBAR_SET_NODE_LABEL_EDIT):
+		case (ACTION_SET_COMMENT_EDIT_MODE):
+		case (ACTION_SET_NODE_LABEL_EDIT):
 			return <Edit disabled={disabled} />;
-		case (TOOLBAR_ZOOM_IN):
+		case (ACTION_ZOOM_IN):
 			return <ZoomIn disabled={disabled} />;
-		case (TOOLBAR_ZOOM_OUT):
+		case (ACTION_ZOOM_OUT):
 			return <ZoomOut disabled={disabled} />;
-		case (TOOLBAR_ZOOM_FIT):
+		case (ACTION_ZOOM_FIT):
 			return <CenterToFit disabled={disabled} />;
-		case (TOOLBAR_OPEN_PALETTE):
+		case (ACTION_OPEN_PALETTE):
 			return <OpenPanelFilledLeft disabled={disabled} />;
-		case (TOOLBAR_CLOSE_PALETTE):
+		case (ACTION_CLOSE_PALETTE):
 			return <OpenPanelFilledLeft disabled={disabled} />;
-		case (TOOLBAR_TOGGLE_PALETTE):
+		case (ACTION_TOGGLE_PALETTE):
 			return <OpenPanelFilledLeft disabled={disabled} />;
-		case (TOOLBAR_ARRANGE_HORIZONTALLY):
+		case (ACTION_ARRANGE_HORIZONTALLY):
 			return <ArrangeHorizontal disabled={disabled} />;
-		case (TOOLBAR_ARRANGE_VERTICALLY):
+		case (ACTION_ARRANGE_VERTICALLY):
 			return <ArrangeVertical disabled={disabled} />;
-		case (TOOLBAR_TOGGLE_NOTIFICATION_PANEL):
+		case (ACTION_TOGGLE_NOTIFICATION_PANEL):
 			return <SVG src={ToggleNotificationPanel} disabled={disabled} />;
 
 		default:

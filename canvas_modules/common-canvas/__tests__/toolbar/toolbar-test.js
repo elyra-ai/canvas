@@ -19,7 +19,7 @@ import { renderWithIntl } from "../_utils_/intl-utils";
 import { expect } from "chai";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 import sinon from "sinon";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, act } from "@testing-library/react";
 
 describe("Toolbar renders correctly", () => {
 
@@ -65,8 +65,8 @@ describe("Toolbar renders correctly", () => {
 		expect(container.getElementsByClassName("toolbar-right-bar")).to.have.length(1);
 		expect(container.getElementsByClassName("toolbar-item")).to.have.length(4);
 		expect(container.getElementsByClassName("toolbar-divider")).to.have.length(1);
-		// No toolbar-overflow-container created for the right bar
-		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(0);
+		// Trailing overflow container so wrapped right bar items can still show in a menu.
+		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(1);
 	});
 
 	it("should register a click when clicked on an enabled toolbar item", () => {
@@ -209,11 +209,47 @@ describe("Toolbar renders correctly", () => {
 		// CSS will highlight the first button when toolbar has focus
 		expect(toolbar.getAttribute("tabindex")).to.equal("-1");
 
-		// Verify all buttons are disabled
-		const buttons = container.querySelectorAll("button");
+		// Verify all real action buttons are disabled (excludes the aria-hidden
+		// trailing overflow toggle, which is never itself marked disabled).
+		const buttons = container.querySelectorAll("button:not([aria-hidden=\"true\"])");
+		expect(buttons.length).to.be.greaterThan(0);
 		buttons.forEach((button) => {
 			expect(button.hasAttribute("disabled")).to.be.true;
 		});
+	});
+
+	it("should close an open overflow menu when closeAnyOpenSubArea is called", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "palette", label: "Palette", enable: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ action: "cut", label: "Cut", enable: true },
+				{ action: "copy", label: "Copy", enable: true }
+			]
+		};
+		const toolbarRef = React.createRef();
+		const { container } = renderWithIntl(
+			<Toolbar
+				ref={toolbarRef}
+				config={toolbarConfig}
+				instanceId={0}
+				toolbarActionHandler={sinon.spy()}
+			/>
+		);
+
+		// Open an overflow menu by clicking its overflow button.
+		const overflowButtons = container.querySelectorAll(".toolbar-overflow-item button");
+		fireEvent.click(overflowButtons[0]);
+		expect(container.querySelectorAll(".toolbar-popover-list.submenu")).to.have.length(1);
+
+		// closeAnyOpenSubArea is what runs whenever another toolbar item opens its
+		// sub-area. It must close the already-open overflow menu so that two
+		// overflow menus can never be open at the same time.
+		act(() => {
+			toolbarRef.current.closeAnyOpenSubArea();
+		});
+		expect(container.querySelectorAll(".toolbar-popover-list.submenu")).to.have.length(0);
 	});
 });
 

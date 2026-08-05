@@ -483,11 +483,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			selectedField = tableData.findIndex((row) => row.rowKey === this.state.fieldSelected);
 		}
 
-		// set the selected row and adjust if the table is sorted.
-		let selectedValue = this.state.valueSelected;
 		if (this.state.valuesTableSortSpec !== null) {
 			valuesTableData = this.sortTableRows(valuesTableData, this.state.valuesTableSortSpec);
-			selectedValue = valuesTableData.findIndex((row) => row.rowKey === this.state.valueSelected);
 		}
 
 		const fieldsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_TABLE_LABEL);
@@ -503,6 +500,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<div className="properties-field-table-container expression-builder-table" >
 					<FlexibleTable
 						enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+						cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 						columns={fieldHeaders}
 						data={tableData}
 						sortable={sortable}
@@ -522,6 +520,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<div className="properties-value-table-container expression-builder-table" >
 					<FlexibleTable
 						enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+						cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 						columns={valueHeader}
 						data={valuesTableData}
 						sortable={["values"]}
@@ -529,10 +528,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onValueFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						tableLabel={valuesTableLabel}
-						rowSelection={ROW_SELECTION.SINGLE}
-						updateRowSelections={this.onValueTableClick}
+						rowSelection={ROW_SELECTION.NONE}
 						onRowDoubleClick={this.onAddValueClick}
-						selectedRows={[selectedValue]}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
 						light={!this.props.controller.getLight()}
 						emptyTablePlaceholder={emptyValuesLabel}
@@ -693,6 +690,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					<div className="properties-functions-table" >
 						<FlexibleTable
 							enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+							cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 							columns={headers}
 							data={data}
 							sortable={["function", "return"]}

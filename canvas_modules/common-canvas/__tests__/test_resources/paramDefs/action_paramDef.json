@@ -11,6 +11,7 @@
     ],
     "weather": "Mild, rainy",
     "moon_phase": "Full",
+    "currency_svg": "Dollar",
     "meteor_showers": "Perseids",
     "hide_button": true,
     "disable_button": true,
@@ -28,7 +29,12 @@
     "radioString": "entropy",
     "radioBooleanWithEnum": true,
     "radioBooleanWithoutEnum": true,
-    "radioBooleanWithLabels": false
+    "radioBooleanWithLabels": false,
+    "text_right": "",
+    "text_left": "",
+    "text_with_desc_right": "",
+    "number_right": null,
+    "dropdown_right": null
   },
   "parameters": [
     {
@@ -51,6 +57,10 @@
     },
     {
       "id": "moon_phase",
+      "type": "string"
+    },
+    {
+      "id": "currency_svg",
       "type": "string"
     },
     {
@@ -183,6 +193,32 @@
       "id": "radioBooleanWithLabels",
       "type": "boolean",
       "required": true
+    },
+    {
+      "id": "text_right",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "text_left",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "text_with_desc_right",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "number_right",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "dropdown_right",
+      "type": "string",
+      "required": true,
+      "enum": ["Alpha", "Beta", "Gamma"]
     }
   ],
   "uihints": {
@@ -251,6 +287,17 @@
         },
         "control": "readonly",
         "action_ref": "moon"
+      },
+      {
+        "parameter_ref": "currency_svg",
+        "label": {
+          "default": "Currency type"
+        },
+        "description": {
+          "default": "Try pressing the currency image"
+        },
+        "control": "readonly",
+        "action_ref": "currency"
       },
       {
         "parameter_ref": "icon_button",
@@ -441,6 +488,45 @@
         "control": "radioset",
         "resource_key": "radioBooleanWithLabels",
         "action_ref": "increment2"
+      },
+      {
+        "parameter_ref": "text_right",
+        "label": {
+          "default": "Text input — action RIGHT"
+        },
+        "action_ref": "filter_right"
+      },
+      {
+        "parameter_ref": "text_left",
+        "label": {
+          "default": "Text input — action LEFT"
+        },
+        "action_ref": "moon_left"
+      },
+      {
+        "parameter_ref": "text_with_desc_right",
+        "label": {
+          "default": "Text input with description — action RIGHT"
+        },
+        "description": {
+          "default": "This field has a description, which makes the label area taller. The action image should still align with the input, not the description."
+        },
+        "action_ref": "moon_right"
+      },
+      {
+        "parameter_ref": "number_right",
+        "label": {
+          "default": "Number input — action RIGHT"
+        },
+        "action_ref": "moon_right"
+      },
+      {
+        "parameter_ref": "dropdown_right",
+        "label": {
+          "default": "Dropdown — action RIGHT"
+        },
+        "control": "oneofselect",
+        "action_ref": "moon_right"
       }
     ],
     "action_info": [
@@ -522,7 +608,7 @@
         "data": {
           "parameter_ref": "icon_button",
           "icon": "Launch",
-          "tooltipDirection": "right"
+          "tooltipDirection": "left"
         }
       },
       {
@@ -620,12 +706,33 @@
         }
       },
       {
+        "id": "currency",
+        "label": {
+          "resource_key": "currency"
+        },
+        "description": {
+          "default": "This is a tooltip for action svg."
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "currency_svg"
+        },
+        "image": {
+          "url": "/images/currency.svg",
+          "placement": "left",
+          "size": {
+            "height": 35,
+            "width": 35
+          }
+        }
+      },
+      {
         "id": "moon",
         "label": {
           "resource_key": "moon"
         },
         "description": {
-          "default": "This is a tooltip for moon action image."
+          "default": "This is a tooltip for action image."
         },
         "control": "image",
         "data": {
@@ -869,6 +976,63 @@
         },
         "custom_action_id": "harness-custom-overflow-action",
         "class_name": "custom-action-right"
+      },
+      {
+        "id": "moon_right",
+        "label": {
+          "default": "Moon"
+        },
+        "description": {
+          "default": "Moon action tooltip"
+        },
+        "control": "image",
+        "data": {},
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "right",
+          "size": {
+            "height": 20,
+            "width": 25
+          }
+        }
+      },
+      {
+        "id": "filter_right",
+        "label": {
+          "default": "Filter"
+        },
+        "description": {
+          "default": "Filter action tooltip"
+        },
+        "control": "image",
+        "data": {},
+        "image": {
+          "url": "/images/carbon/filter.svg",
+          "placement": "right",
+          "size": {
+            "height": 16,
+            "width": 16
+          }
+        }
+      },
+      {
+        "id": "moon_left",
+        "label": {
+          "default": "Moon"
+        },
+        "description": {
+          "default": "Moon action tooltip"
+        },
+        "control": "image",
+        "data": {},
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "left",
+          "size": {
+            "height": 20,
+            "width": 25
+          }
+        }
       }
     ],
     "group_info": [
@@ -934,6 +1098,13 @@
             "type": "controls",
             "parameter_refs": [
               "moon_phase"
+            ]
+          },
+          {
+            "id": "currency-svg",
+            "type": "controls",
+            "parameter_refs": [
+              "currency_svg"
             ]
           },
           {
@@ -1123,6 +1294,26 @@
             ]
           }
         ]
+      },
+      {
+        "id": "action-alignment",
+        "label": {
+          "default": "Alignment"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "alignment-controls",
+            "type": "controls",
+            "parameter_refs": [
+              "text_right",
+              "text_left",
+              "text_with_desc_right",
+              "number_right",
+              "dropdown_right"
+            ]
+          }
+        ]
       }
     ],
     "help": {}
@@ -1162,7 +1353,8 @@
     {
       "visible": {
         "action_refs": [
-          "image_cond_hide"
+          "image_cond_hide",
+          "moon"
         ],
         "evaluate": {
           "condition": {
@@ -1176,16 +1368,103 @@
     {
       "enabled": {
         "action_refs": [
-          "image_cond_disable"
+          "image_cond_disable",
+          "moon1"
         ],
         "parameter_refs": [
-          "disable_image_text"
+          "disable_image_text",
+          "oneofselect_null"
         ],
         "evaluate": {
           "condition": {
             "parameter_ref": "disable_image",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "text_right",
+          "message": {
+            "default": "Text input is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "text_right",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "text_left",
+          "message": {
+            "default": "Text input is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "text_left",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "text_with_desc_right",
+          "message": {
+            "default": "Text input is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "text_with_desc_right",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "number_right",
+          "message": {
+            "default": "Number input is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "number_right",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "dropdown_right",
+          "message": {
+            "default": "A selection is required."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "dropdown_right",
+            "op": "isNotEmpty"
           }
         }
       }
@@ -1270,8 +1549,10 @@
     "fall": "Fall",
     "spring": "Spring",
     "moon": "Moon",
+    "currency": "Currency",
     "meteor": "Meteor",
     "weather.action.panel.label": "Weather action panel label",
     "weather.action.panel.desc": "Weather action panel description"
   }
 }
+

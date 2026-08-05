@@ -275,6 +275,8 @@ class PaletteContentListItem extends React.Component {
 
 		mainDivClass += !this.props.isPaletteWide ? " palette-narrow" : "";
 
+		mainDivClass += this.isItemDisabled() ? " palette-list-item-disabled" : "";
+
 		return mainDivClass;
 	}
 

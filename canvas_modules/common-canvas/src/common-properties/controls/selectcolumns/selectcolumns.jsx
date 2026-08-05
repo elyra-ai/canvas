@@ -157,6 +157,7 @@ class SelectColumnsControl extends AbstractTable {
 		const table =	(
 			<FlexibleTable
 				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+				cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 				columns={headers}
 				data={rows}
 				scrollToRow={rowToScrollTo}

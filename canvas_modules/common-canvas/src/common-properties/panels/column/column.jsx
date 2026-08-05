@@ -34,7 +34,7 @@ class ColumnPanel extends React.Component {
 			}
 		});
 		this.style = {
-			"gridTemplateColumns": gridColumns
+			"--column-grid-template": gridColumns
 		};
 	}
 

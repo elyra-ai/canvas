@@ -256,3 +256,14 @@ Cypress.Commands.add("clickBreadcrumb", (breadCrumb) => {
 Cypress.Commands.add("toggleApplyOnBlur", () => {
 	cy.get("div[data-id='properties-applyOnBlur'] div.cds--toggle__switch").click();
 });
+
+Cypress.Commands.add("openAccordionSection", (title) => {
+	cy.get(".cds--accordion__item")
+		.contains(".cds--accordion__heading", title)
+		.parent()
+		.then(($item) => {
+			if (!$item.hasClass("cds--accordion__item--active")) {
+				cy.wrap($item).find(".cds--accordion__heading").click();
+			}
+		});
+});

@@ -42,7 +42,7 @@
 	overflow-x: scroll;
 	p {
 		font-size: 14px;
-		font-weight: 200;
+		font-weight: 400;
 		line-height: 20px;
 		margin: 6px 0;
 	}
@@ -159,6 +159,7 @@
 .harness-conditions-documentation-content {
 	padding: 1em;
 	background-color: carbon.$layer-01;
+	color: carbon.$text-primary;
 }
 
 .harness-conditions-documentation-panels-controls-component,

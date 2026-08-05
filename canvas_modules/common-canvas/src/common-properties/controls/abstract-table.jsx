@@ -303,6 +303,13 @@ export default class AbstractTable extends React.Component {
 		this.setCurrentControlValueSelected(rows);
 	}
 
+	removeRow(rowIndex) {
+		const rows = this.props.value;
+		rows.splice(rowIndex, 1);
+		this.props.controller.removeErrorMessageRow({ name: this.props.propertyId.name, row: rowIndex });
+		this.setCurrentControlValueSelected(rows);
+	}
+
 	// selectSummaryRow is true if creating the makeSelectedEditRow header row
 	_makeCell(columnDef, controlValue, propertyName, rowIndex, colIndex, tableState, selectSummaryRow) {
 		const childPropertyId = {
@@ -653,15 +660,17 @@ export default class AbstractTable extends React.Component {
 		}
 
 		// ReadonlyTable with single row selection is non-interactive. rowClickCallback should be undefined.
+		// Tables with row_selection "none" also have no row selection callback.
 		let rowClickCallback;
 		const singleRowSelectionReadonlyTable = this.isReadonlyTable() && this.props.control.rowSelection === ROW_SELECTION.SINGLE;
-		if (!singleRowSelectionReadonlyTable) {
+		if (!singleRowSelectionReadonlyTable && this.props.control.rowSelection !== ROW_SELECTION.NONE) {
 			rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
 		}
 
 		const table =	(
 			<FlexibleTable
 				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+				cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 				sortable={sortFields}
 				filterable={filterFields}
 				columns={headers}
@@ -776,7 +785,7 @@ export default class AbstractTable extends React.Component {
 								size="sm"
 								className="delete-button"
 								hasIconOnly
-								onClick={this.removeSelected}
+								onClick={this.removeRow.bind(this, rowIndex)}
 								renderIcon={TrashCan}
 								iconDescription={toolTip}
 							/>

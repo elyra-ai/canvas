@@ -488,6 +488,13 @@ $toolbar-divider-width: 1px;
 		width: fit-content;
 		box-sizing: border-box;
 	}
+
+	// Cascade sub-areas use fixed positioning so they are not clipped by a
+	// scrollable parent menu's overflow. The initial top/left values are written
+	// via CSSOM in applySubAreaInitialStyle() and refined by adjustSubAreaPosition().
+	&.subarea-cascade {
+		position: fixed;
+	}
 }
 
 @keyframes to-visible {

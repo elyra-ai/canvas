@@ -37,6 +37,12 @@ class ImageAction extends React.Component {
 				width: `${this.props.action.image.size.width}px`
 			}
 			: {};
+		this.imageStyle = this.props.action?.image?.size
+			? {
+				"--image-height": `${this.props.action.image.size.height}px`,
+				"--image-width": `${this.props.action.image.size.width}px`
+			}
+			: {};
 	}
 
 	getIcon(filePath) {
@@ -88,7 +94,7 @@ class ImageAction extends React.Component {
 				kind="ghost"
 				iconDescription={this.props.action?.description?.text} // Text to appear in Tooltip
 				autoAlign
-				style={this.imageDimensions}
+				style={this.imageStyle}
 				disabled={disabled}
 				// Ensures the button is treated as icon-only when a description is present,
 				// preventing an empty tooltip from appearing.

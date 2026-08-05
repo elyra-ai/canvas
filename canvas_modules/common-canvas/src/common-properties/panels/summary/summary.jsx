@@ -134,7 +134,7 @@ class SummaryPanel extends React.Component {
 								rowData.push(
 									<td key={"summary-table-data-" + colIdx}
 										className={"properties-summary-row-data "}
-										style={{ width: colWidth }}
+										style={{ "--summary-col-width": colWidth }}
 									>
 										<TruncatedContentTooltip
 											content={<span>{contentValue}</span>}
