@@ -29,7 +29,7 @@ import * as PropertyUtils from "./../../util/property-utils";
 import * as ControlUtils from "./../../util/control-utils";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import { STATES } from "./../../constants/constants.js";
-import { Type, ParamRole } from "./../../constants/form-constants.js";
+import { Type, ParamRole, ControlType } from "./../../constants/form-constants.js";
 import classNames from "classnames";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -223,6 +223,10 @@ class SummaryPanel extends React.Component {
 				// We don't know what this object is, but we know we can't display it as an object
 				returnValue = JSON.stringify(returnValue);
 			}
+		}
+
+		if (control.controlType === ControlType.PASSWORDFIELD) {
+			returnValue = ControlUtils.maskDisplayValue(returnValue);
 		}
 
 		return returnValue;
