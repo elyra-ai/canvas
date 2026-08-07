@@ -255,7 +255,8 @@ CommonProperties.propTypes = {
 		showRequiredIndicator: PropTypes.bool,
 		showAlertsTab: PropTypes.bool,
 		locale: PropTypes.string,
-		enableTanstackTable: PropTypes.bool
+		enableTanstackTable: PropTypes.bool,
+		cspNonce: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

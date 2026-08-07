@@ -68,6 +68,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 	};
 	propertyUtilsRTL.setControls(controller, [control]);
 	const propertyId = { name: "test-someofselect" };
+	const controlItem = <span>Test Label</span>;
 
 	it("props should have been defined", () => {
 		renderWithIntl(
@@ -76,6 +77,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expectJest(mockSomeOfSelect).toHaveBeenCalledWith({
@@ -83,6 +85,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -93,6 +96,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -110,6 +114,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -131,6 +136,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 					readOnly
 				/>
 			</Provider>
@@ -151,6 +157,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -177,6 +184,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -201,6 +209,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -224,6 +233,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -238,6 +248,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);
@@ -252,6 +263,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 					control={control}
 					controller={controller}
 					propertyId={propertyId}
+					controlItem={controlItem}
 				/>
 			</Provider>
 		);

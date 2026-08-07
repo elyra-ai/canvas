@@ -172,6 +172,7 @@ class ListControl extends AbstractTable {
 		const table =	(
 			<FlexibleTable
 				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+				cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 				columns={headers}
 				data={rows}
 				scrollToRow={rowToScrollTo}
@@ -220,7 +221,7 @@ ListControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.element.isRequired,
 	rightFlyout: PropTypes.bool,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux

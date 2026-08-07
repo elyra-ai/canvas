@@ -279,3 +279,49 @@ describe("passwordfield classnames appear correctly", () => {
 		expect(tableControlDiv.querySelectorAll(".table-subpanel-passwordfield-control-class")).to.have.length(3);
 	});
 });
+
+describe("passwordfield values are masked in table cells", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(passwordfieldParamDef);
+		wrapper = renderedObject.wrapper;
+		propertyUtilsRTL.openSummaryPanel(wrapper, "passwordfield-table-summary");
+	});
+
+	it("passwordfield with edit_style on_panel should be masked in the table cell", () => {
+		const cell = wrapper.container.querySelector("div.properties-readonly[data-id='properties-pwd_table_0_2']");
+		expect(cell.querySelector("span.properties-field-type").textContent).to.equal("•••••••");
+	});
+
+	it("passwordfield with edit_style subpanel should be masked in the table cell", () => {
+		const cell = wrapper.container.querySelector("div.properties-readonly[data-id='properties-pwd_table_0_3']");
+		expect(cell.querySelector("span.properties-field-type").textContent).to.equal("•••••••");
+	});
+
+	it("masked passwordfield should not display the value in the tooltip", () => {
+		const cell = wrapper.container.querySelector("div.properties-readonly[data-id='properties-pwd_table_0_3']");
+		expect(cell.textContent.includes("Babbage")).to.equal(false);
+	});
+
+	it("passwordfield without a value should not be masked in the table cell", () => {
+		const cell = wrapper.container.querySelector("div.properties-readonly[data-id='properties-pwd_table_1_3']");
+		expect(cell.querySelector("span.properties-field-type").textContent).to.equal("");
+	});
+});
+
+describe("passwordfield values are masked in the summary panel", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(passwordfieldParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("passwordfield summary value should be masked", () => {
+		const summaryPanel = wrapper.container.querySelector("div[data-id='properties-passwordfield-table-summary']");
+		const summaryRows = summaryPanel.querySelectorAll("tr.properties-summary-row");
+		expect(summaryRows).to.have.length(2);
+		summaryRows.forEach((summaryRow) => {
+			expect(summaryRow.textContent.trim()).to.equal("••••••");
+		});
+	});
+});

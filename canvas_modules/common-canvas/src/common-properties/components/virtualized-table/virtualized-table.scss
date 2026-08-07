@@ -46,6 +46,17 @@
 
 	div[data-role="properties-header-row"] {
 		background-color: carbon.$layer-accent-01;
+		width: var(--vt-width);
+		height: var(--vt-height);
+	}
+
+	div[data-role="properties-loading-row"],
+	div[data-role="properties-data-row"] {
+		position: absolute;
+		top: var(--vt-top);
+		left: var(--vt-left);
+		width: var(--vt-width);
+		height: var(--vt-height);
 	}
 
 	div[data-role="properties-data-row"] {

@@ -105,6 +105,7 @@ class SomeofselectControl extends React.Component {
 				{this.props.controlItem}
 				<FlexibleTable
 					enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+					cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 					columns={[{ "key": "someofselect", "label": "" }]}
 					rows={rows}
 					data={tableOptions.options}
@@ -129,7 +130,7 @@ SomeofselectControl.propTypes = {
 	control: PropTypes.object,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.element.isRequired,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux

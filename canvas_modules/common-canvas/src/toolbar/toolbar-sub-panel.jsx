@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { adjustSubAreaPosition, generateSubAreaStyle } from "./toolbar-sub-utils.js";
+import { adjustSubAreaPosition, applySubAreaInitialStyle } from "./toolbar-sub-utils.js";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
 class ToolbarSubPanel extends React.Component {
@@ -25,17 +25,44 @@ class ToolbarSubPanel extends React.Component {
 		super(props);
 
 		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onPageScroll = this.onPageScroll.bind(this);
 		this.closeSubPanel = this.closeSubPanel.bind(this);
 	}
 
 	componentDidMount() {
+		if (this.props.isCascadeMenu) {
+			applySubAreaInitialStyle(this.areaRef, this.props.expandDirection, this.props.actionItemRect);
+		}
+		adjustSubAreaPosition(this.areaRef,
+			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
+
+		// A cascade sub-panel is position:fixed (so it can escape a scrollable
+		// parent menu's overflow). Because fixed positioning is relative to the
+		// viewport, we close the sub-panel if the page scrolls, otherwise it would
+		// stay pinned to the viewport while the toolbar scrolls away.
+		if (this.props.isCascadeMenu) {
+			window.addEventListener("scroll", this.onPageScroll, true);
+		}
+	}
+
+	componentDidUpdate() {
+		if (this.props.isCascadeMenu) {
+			applySubAreaInitialStyle(this.areaRef, this.props.expandDirection, this.props.actionItemRect);
+		}
 		adjustSubAreaPosition(this.areaRef,
 			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
 	}
 
-	componentDidUpdate() {
-		adjustSubAreaPosition(this.areaRef,
-			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
+	componentWillUnmount() {
+		window.removeEventListener("scroll", this.onPageScroll, true);
+	}
+
+	// Closes this (cascade) sub-panel when the page scrolls. Scrolling within the
+	// sub-panel itself is ignored.
+	onPageScroll(evt) {
+		if (this.areaRef && !this.areaRef.contains(evt.target)) {
+			this.props.closeSubArea();
+		}
 	}
 
 	onKeyDown(evt) {
@@ -62,13 +89,11 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	render() {
-		const style = this.props.isCascadeMenu
-			? generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect)
-			: null;
+		const cascadeClass = this.props.isCascadeMenu ? " subarea-cascade" : "";
 
 		if (this.props.subPanel) {
 			return (
-				<div ref={(ref) => (this.areaRef = ref)} style={style} className={"toolbar-popover-list subpanel"} tabIndex={-1}
+				<div ref={(ref) => (this.areaRef = ref)} className={"toolbar-popover-list subpanel" + cascadeClass} tabIndex={-1}
 					onKeyDown={this.onKeyDown} onFocus={this.onFocus}
 				>
 					<this.props.subPanel closeSubPanel={this.closeSubPanel} subPanelData={this.props.subPanelData} />
