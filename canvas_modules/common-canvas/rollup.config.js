@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import autoExternal from "rollup-plugin-auto-external";
 import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
@@ -25,6 +24,51 @@ import url from "@rollup/plugin-url";
 import { visualizer } from "rollup-plugin-visualizer";
 
 const bundleReport = process.env.BUNDLE_REPORT;
+
+// Packages listed in dependencies and peerDependencies that Rollup must treat as
+// external so they are not bundled into the dist. This replicates what
+// rollup-plugin-auto-external did via its array mode, but as a Set so we can combine
+// it with the prefix-match for @babel/runtime subpaths below.
+// Keep in sync with the dependencies/peerDependencies sections of package.json.
+const externalPackages = new Set([
+	"@babel/runtime",
+	"@carbon/react",
+	"@codemirror/autocomplete",
+	"@codemirror/commands",
+	"@codemirror/lang-javascript",
+	"@codemirror/lang-json",
+	"@codemirror/lang-python",
+	"@codemirror/lang-sql",
+	"@codemirror/language",
+	"@codemirror/legacy-modes",
+	"@codemirror/search",
+	"@codemirror/state",
+	"@codemirror/view",
+	"@elyra/pipeline-schemas",
+	"@ibm/telemetry-js",
+	"@tanstack/react-table",
+	"@tanstack/react-virtual",
+	"d3",
+	"dagre",
+	"date-fns",
+	"elkjs",
+	"immutable",
+	"jsonschema",
+	"lodash",
+	"markdown-it",
+	"prop-types",
+	"react",
+	"react-dom",
+	"react-draggable",
+	"react-inlinesvg",
+	"react-intl",
+	"react-portal",
+	"react-redux",
+	"react-virtualized",
+	"redux",
+	"seedrandom",
+	"uuid"
+]);
 
 export default {
 	input: {
@@ -40,13 +84,22 @@ export default {
 		"lib/canvas-controller": "./src/common-canvas/canvas-controller.js",
 		"common-canvas": "./src/index.js"
 	},
-	external: [
-		// autoExternal() handles top-level packages from dependencies/peerDependencies
-		// but we need to explicitly externalize React subpath imports
-		"react/jsx-runtime",
-		"react/jsx-dev-runtime",
-		"react-dom/client"
-	],
+	external: (id) => id.startsWith("@babel/runtime/") ||
+		id === "react/jsx-runtime" ||
+		id === "react/jsx-dev-runtime" ||
+		id === "react-dom/client" ||
+		externalPackages.has(id),
+	onwarn(warning, warn) {
+		// @babel/plugin-transform-runtime injects `import _readOnlyError from
+		// "@babel/runtime/helpers/readOnlyError"` into some files as a precaution even
+		// when the helper is never called. Rollup correctly reports it as unused; we
+		// suppress it here to keep build output clean.
+		if (warning.code === "UNUSED_EXTERNAL_IMPORT" &&
+			warning.source === "@babel/runtime/helpers/readOnlyError") {
+			return;
+		}
+		warn(warning);
+	},
 	output: [
 		{
 			entryFileNames: "[name].cjs",
@@ -63,10 +116,6 @@ export default {
 		}
 	],
 	plugins: [
-		autoExternal({
-			dependencies: true,
-			peerDependencies: true
-		}),
 		json(),
 		url(),
 		scss({ output: false }),
