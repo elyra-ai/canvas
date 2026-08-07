@@ -3584,7 +3584,7 @@
 <li><code>readonly</code> A read only text field. Used for fields users shouldn&rsquo;t edit.</li>
 <li><code>hidden</code> A control that has no UI to display.</li>
 <li><code>textfield</code> A single line editable text field.</li>
-<li><code>passwordfield</code> A masked single line text field with tooltip. The tooltip text can be customized by setting <code>[parameter_id].passwordHide.tooltip</code> and <code>[parameter_id].passwordShow.tooltip</code> in resources section.</li>
+<li><code>passwordfield</code> A masked single line text field with tooltip. The tooltip text can be customized by setting <code>[parameter_id].passwordHide.tooltip</code> and <code>[parameter_id].passwordShow.tooltip</code> in resources section. The value is also masked wherever it is displayed as read only text, for example in a table cell of a column using <code>edit_style</code> <code>subpanel</code> or <code>on_panel</code>, or in a summary panel.</li>
 <li><code>textarea</code> A multi-line text area.</li>
 <li><code>list</code> A single column table for editing a list of values.</li>
 <li><code>expression</code> An expression editing field  that provides language specific syntax highlighting and text auto complete.  An expression builder addon is available with the expression control.  You must provide the <code>expressionInfo</code> field for the <code>propertiesInfo</code> config. See <a href="../04-common-properties/#step-2-set-the-data">Common Properties Documentation</a> for more details. To maximize in a tearsheet add this attribute and define a <code>tearsheetPanel</code> in <code>group_info</code>.
