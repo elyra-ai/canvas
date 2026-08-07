@@ -403,6 +403,7 @@ class VirtualizedTable extends React.Component {
 
 				selectOption = (<div className="properties-vt-row-checkbox"
 					role="gridcell"
+					tabIndex={-1}
 					onMouseEnter={(evt) => this.overSelectOption(evt)}
 					onMouseLeave={(evt) => this.overSelectOption(evt)}
 					onFocus={(evt) => this.overSelectOption(evt)}
@@ -469,6 +470,7 @@ class VirtualizedTable extends React.Component {
 				)}
 				data-role="properties-data-row"
 				role="row"
+				tabIndex={-1}
 				style={rowStyle}
 				onMouseDown={(evt) => this.onRowClick(evt, rowData, index)}
 			>
