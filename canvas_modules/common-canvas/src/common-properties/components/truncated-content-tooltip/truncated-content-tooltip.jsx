@@ -46,6 +46,7 @@ export default class TruncatedContentTooltip extends React.Component {
 					className="properties-tooltips"
 					disable={has(this.props, "disabled") ? this.props.disabled : true}
 					showToolTipIfTruncated
+					alwaysTabbable={this.props.alwaysTabbable}
 					truncatedRef={truncatedRef}
 				>
 					<div ref={(ref) => (this.tooltipRef = ref)}>
@@ -67,5 +68,6 @@ TruncatedContentTooltip.propTypes = {
 		PropTypes.bool.isRequired,
 		PropTypes.array.isRequired
 	]),
-	disabled: PropTypes.bool
+	disabled: PropTypes.bool,
+	alwaysTabbable: PropTypes.bool
 };
