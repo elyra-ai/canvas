@@ -25,7 +25,7 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
-import { getFormattedDate, getISODate } from "../../util/date-utils";
+import { getFormattedDate, getISODate, getDateObject, isValidDate } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE, MESSAGE_KEYS, CARBON_ICONS } from "../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
 
@@ -46,22 +46,50 @@ class DatepickerRangeControl extends React.Component {
 
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
 		this.createInfoDesc = this.createInfoDesc.bind(this);
+
+		this.pickerRef = React.createRef();
+
+		this.initialValue = [
+			getDateObject(this.state.valueStart, this.dateFormat),
+			getDateObject(this.state.valueEnd, this.dateFormat)
+		].filter(Boolean);
+
+		this.handleNativeBlur = this.handleNativeBlur.bind(this);
 	}
 
-	onStartBlur(evt) {
-		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
-		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
-		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
+	// Attaches a capture-phase blur listener on each input so it runs before
+	// (and can suppress) flatpickr's own blur handler.
+	componentDidMount() {
+		const container = document.querySelector(`[data-id="${ControlUtils.getDataId(this.props.propertyId)}"]`);
+		this.rangeInputs = container ? Array.prototype.slice.call(container.querySelectorAll("input")) : [];
+		this.rangeInputs.forEach((inp) => inp.addEventListener("blur", this.handleNativeBlur));
 	}
 
-	onEndBlur(evt) {
-		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
-		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
-		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
+	componentWillUnmount() {
+		(this.rangeInputs || []).forEach((inp) => inp.removeEventListener("blur", this.handleNativeBlur));
 	}
 
 	getDatepickerSize() {
 		return this.props.tableControl ? "sm" : "md";
+	}
+
+	// Returns Carbon's underlying flatpickr instance and, on first access,
+	// disables flatpickr's own outside-click handler via ignoredFocusElements.
+	getCalendar() {
+		const calendar = this.pickerRef.current ? this.pickerRef.current.calendar : null;
+		if (calendar && !this.calendarPatched && calendar.config && calendar.config.ignoredFocusElements) {
+			calendar.config.ignoredFocusElements.push(document.documentElement);
+			this.calendarPatched = true;
+		}
+		return calendar;
+	}
+
+	// Commits the displayed values to Redux without touching flatpickr.
+	handleNativeBlur(evt) {
+		evt.stopImmediatePropagation();
+		const container = evt.target.closest(".properties-datepicker-range");
+		const inputs = container ? container.querySelectorAll("input") : [];
+		this.commitTyped(inputs[0] ? inputs[0].value : "", inputs[1] ? inputs[1].value : "", null);
 	}
 
 	// This handles changes for simple, single, and the start range date
@@ -81,13 +109,64 @@ class DatepickerRangeControl extends React.Component {
 		}
 	}
 
-	// Allows user to manually type in the input
-	// Once the calendar closes, it will trigger an onChange evt that will correct any invalid dates
+	handleInputFocus() {
+		this.getCalendar();
+	}
+
+	// Commits the pair to Redux. When `inputs` is provided, also syncs flatpickr's
+	// selectedDates so its own blur handler doesn't restore stale values.
+	commitTyped(valueStart, valueEnd, inputs) {
+		const startValid = isValidDate(valueStart, this.dateFormat);
+		const endValid = isValidDate(valueEnd, this.dateFormat);
+
+		if ((!startValid && valueStart) || (!endValid && valueEnd)) {
+			return;
+		}
+		const isoStart = startValid ? getISODate(valueStart, this.dateFormat) : "";
+		const isoEnd = endValid ? getISODate(valueEnd, this.dateFormat) : "";
+		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStart, isoEnd]);
+
+		const calendar = inputs === null ? null : this.getCalendar();
+		if (calendar) {
+			const dates = [];
+			if (startValid) {
+				dates.push(valueStart);
+			}
+			if (endValid) {
+				dates.push(valueEnd);
+			}
+			if (dates.length > 0) {
+				calendar.setDate(dates, false, calendar.config.dateFormat);
+			} else {
+				calendar.clear(false);
+			}
+
+			if (inputs && inputs[0]) {
+				inputs[0].value = valueStart;
+			}
+			if (inputs && inputs[1]) {
+				inputs[1].value = valueEnd;
+			}
+		}
+	}
+
+	// Mirrors typed input into state and commits.
 	handleInputStartChange(evt) {
-		this.setState({ valueStart: evt.target.value }); // Display value as what user enters
+		this.setState({ valueStart: evt.target.value });
+		this.commitFromInputs(evt.target);
 	}
 	handleInputEndChange(evt) {
-		this.setState({ valueEnd: evt.target.value }); // Display value as what user enters
+		this.setState({ valueEnd: evt.target.value });
+		this.commitFromInputs(evt.target);
+	}
+
+	// Reads both inputs from the DOM and commits. Reading the DOM (rather than
+	// mixing the event value with state) makes flatpickr's echoed input events
+	// after a calendar pick a no-op.
+	commitFromInputs(target) {
+		const container = target.closest(".properties-datepicker-range");
+		const inputs = container ? container.querySelectorAll("input") : [];
+		this.commitTyped(inputs[0] ? inputs[0].value : "", inputs[1] ? inputs[1].value : "", inputs);
 	}
 
 	createInfoDesc(label, description, range) {
@@ -140,12 +219,14 @@ class DatepickerRangeControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<DatePicker
+					ref={this.pickerRef}
 					datePickerType={DATEPICKER_TYPE.RANGE}
 					dateFormat={this.dateFormat}
 					onChange={this.handleDateRangeChange.bind(this)}
 					locale={this.locale}
 					allowInput
 					readOnly={this.props.readOnly}
+					value={this.initialValue}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -155,8 +236,7 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputStartChange.bind(this)}
-						value={this.state.valueStart}
-						onBlur={this.onStartBlur.bind(this)}
+						onFocus={this.handleInputFocus.bind(this)}
 						helperText={!this.props.tableControl && startHelperText}
 					/>
 					<DatePickerInput
@@ -167,8 +247,7 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputEndChange.bind(this)}
-						value={this.state.valueEnd}
-						onBlur={this.onEndBlur.bind(this)}
+						onFocus={this.handleInputFocus.bind(this)}
 						helperText={!this.props.tableControl && endHelperText}
 					/>
 				</DatePicker>
