@@ -60,7 +60,7 @@ class DatepickerControl extends React.Component {
 	handleInputChange(evt) {
 		const value = evt.target.value;
 		const valid = isValidDate(value, this.dateFormat);
-		
+
 		if (!valid && value) {
 			return;
 		}
