@@ -22,7 +22,7 @@ import classNames from "classnames";
 
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
-import { getFormattedDate, getISODate, getDateObject } from "../../util/date-utils";
+import { getFormattedDate, getISODate, getDateObject, isValidDate } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE } from "../../constants/constants.js";
 
 class DatepickerControl extends React.Component {
@@ -33,9 +33,10 @@ class DatepickerControl extends React.Component {
 
 		this.dateFormat = ControlUtils.getDateTimeFormat(props.control);
 
-		this.state = {
-			value: props.value ? getFormattedDate(props.value, this.dateFormat) : ""
-		};
+		const displayStr = props.value ? getFormattedDate(props.value, this.dateFormat) : "";
+		this.initialValue = getDateObject(displayStr, this.dateFormat) || null;
+
+		this.pickerRef = React.createRef();
 
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
 	}
@@ -44,23 +45,34 @@ class DatepickerControl extends React.Component {
 		return this.props.tableControl ? "sm" : "md";
 	}
 
+	// Fired by flatpickr on both calendar picks and manual-typed-then-blurred inputs.
 	handleChange(evt) {
 		if (evt.length > 0) {
 			const isoDate = getISODate(evt[0]);
-			const value = getFormattedDate(evt[0], this.dateFormat); // display value
-			this.props.controller.updatePropertyValue(this.props.propertyId, isoDate); // internal format
-			this.setState({ value });
+			this.props.controller.updatePropertyValue(this.props.propertyId, isoDate);
 		} else {
 			this.props.controller.updatePropertyValue(this.props.propertyId, "");
-			this.setState({ value: "" });
 		}
 	}
 
-	// Allows user to manually type in the input
-	// Once the calendar closes, it will trigger an onChange evt that will correct any invalid dates
+	// Commits typed value to Redux and syncs flatpickr's selectedDates so its
+	// own blur handler doesn't restore a stale value.
 	handleInputChange(evt) {
-		const value = evt.target.value; // Display value as what user enters
-		this.setState({ value });
+		const value = evt.target.value;
+		const valid = isValidDate(value, this.dateFormat);
+		
+		if (!valid && value) {
+			return;
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, valid ? getISODate(value, this.dateFormat) : "");
+		const calendar = this.pickerRef.current ? this.pickerRef.current.calendar : null;
+		if (calendar) {
+			if (valid) {
+				calendar.setDate(value, false, calendar.config.dateFormat);
+			} else {
+				calendar.clear(false);
+			}
+		}
 	}
 
 	render() {
@@ -76,13 +88,15 @@ class DatepickerControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<DatePicker
+					ref={this.pickerRef}
 					className="properties-datepicker-wrapper-parent"
 					datePickerType={DATEPICKER_TYPE.SINGLE}
 					dateFormat={this.dateFormat}
 					onChange={this.handleChange.bind(this)}
 					locale={this.locale}
+					allowInput
 					readOnly={this.props.readOnly}
-					value={getDateObject(this.state.value, this.dateFormat)}
+					value={this.initialValue}
 				>
 					<DatePickerInput
 						{...validationProps}
