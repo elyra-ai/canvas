@@ -330,6 +330,7 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
+				// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 				<div
 					ref={this.toolbarDivRef}
 					className={"text-toolbar floating-toolbar"}

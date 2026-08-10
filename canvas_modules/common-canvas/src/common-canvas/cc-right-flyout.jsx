@@ -90,7 +90,15 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (this.props.enableRightFlyoutDragToResize) {
 			const className = "right-flyout-drag" + (this.state.isBeingDragging ? " is-being-dragged" : "");
 
-			resizeContent = (<div className={className} onMouseDown={this.onMouseDown} />);
+			resizeContent = (
+				// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+				<div className={className}
+					role="separator"
+					aria-orientation="vertical"
+					aria-label={this.props.canvasController.labelUtil.getLabel("canvas.rightFlyoutResize")}
+					onMouseDown={this.onMouseDown}
+				/>
+			);
 		}
 
 		return resizeContent;

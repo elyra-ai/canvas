@@ -110,7 +110,13 @@ class CanvasBottomPanel extends React.Component {
 
 			bottomPanel = (
 				<div ref={this.bottomPanelRef} className="bottom-panel">
-					<div className={className} onMouseDown={this.onMouseDown} />
+					{/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+					<div className={className}
+						role="separator"
+						aria-orientation="horizontal"
+						aria-label={this.props.canvasController.labelUtil.getLabel("canvas.bottomPanelResize")}
+						onMouseDown={this.onMouseDown}
+					/>
 					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}
 					</div>
