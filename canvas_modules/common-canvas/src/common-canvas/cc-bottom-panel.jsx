@@ -110,6 +110,7 @@ class CanvasBottomPanel extends React.Component {
 
 			bottomPanel = (
 				<div ref={this.bottomPanelRef} className="bottom-panel">
+					{/* role="separator" is classified non-interactive by the linter, but a mouse-draggable divider is the standard accessible pattern for this. */}
 					{/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
 					<div className={className}
 						role="separator"

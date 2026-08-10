@@ -507,6 +507,7 @@ class CanvasContents extends React.Component {
 	getSVGCanvasDiv() {
 		if (this.props.canvasConfig.enableKeyboardNavigation) {
 			// Set tabindex to 0 so the focus can go to the <div>
+			// role="application" hands keyboard handling to this widget by design, but the linter still classifies it as non-interactive.
 			/* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
 			return (
 				<div role="application"
@@ -528,6 +529,7 @@ class CanvasContents extends React.Component {
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		return (
+			// This div isn't tabbable (tabIndex -1) and has no accurate native/ARIA equivalent role to give it.
 			// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 			<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
 				onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
