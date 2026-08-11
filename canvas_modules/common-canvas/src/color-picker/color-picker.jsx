@@ -137,14 +137,14 @@ class ColorPicker extends React.Component {
 			};
 
 			return (
-				<div className="color-picker" style={containerStyle} tabIndex={"-1"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
+				<div className="color-picker" style={containerStyle} tabIndex={"-1"} role="menu" onClick={this.onClick} onKeyDown={this.onKeyDown}>
 					{colorDivs}
 				</div>
 			);
 		}
 
 		return (
-			<div className="color-picker" tabIndex={"-1"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
+			<div className="color-picker" tabIndex={"-1"} role="menu" onClick={this.onClick} onKeyDown={this.onKeyDown}>
 				<div ref={this.refss[0]} tabIndex={"-1"} data-color={"bkg-col-white-0"} className="color-picker-item white-0" />
 				<div ref={this.refss[1]} tabIndex={"-1"} data-color={"bkg-col-yellow-20"} className="color-picker-item yellow-20" />
 				<div ref={this.refss[2]} tabIndex={"-1"} data-color={"bkg-col-gray-20"} className="color-picker-item gray-20" />
