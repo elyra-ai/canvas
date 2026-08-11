@@ -69,6 +69,56 @@ class DatepickerRangeControl extends React.Component {
 		});
 	}
 
+	onStartBlur(evt) {
+		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
+		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
+		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
+	}
+
+	onEndBlur(evt) {
+		const isoStartDate = getISODate(this.state.valueStart, this.dateFormat);
+		const isoEndDate = getISODate(evt.target.value, this.dateFormat);
+		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
+	}
+
+	getDatepickerSize() {
+		return this.props.tableControl ? "sm" : "md";
+	}
+
+	handleNativeKeydown(evt) {
+		if (evt.key === "Enter") {
+			this.defuseInvalidInputs(evt);
+		}
+	}
+
+	handleNativeBlur(evt) {
+		this.defuseInvalidInputs(evt);
+	}
+
+	// This handles changes for simple, single, and the start range date
+	handleDateRangeChange(evt) {
+		if (evt[0]) {
+			const isoStartDate = getISODate(evt[0]); // internal format
+			const valueStart = getFormattedDate(evt[0], this.dateFormat); // display value
+			let isoEndDate = "";
+			let valueEnd = "";
+
+			if (evt[1]) { // Cannot enter end date without specifying start date
+				isoEndDate = getISODate(evt[1]); // internal format
+				valueEnd = getFormattedDate(evt[1], this.dateFormat); // display value
+			}
+			this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
+			this.setState({ valueStart, valueEnd });
+		}
+	}
+
+	handleInputStartChange(evt) {
+		this.setState({ valueStart: evt.target.value });
+	}
+	handleInputEndChange(evt) {
+		this.setState({ valueEnd: evt.target.value });
+	}
+
 	// If either input holds an unparseable non-empty value at commit time
 	// (Enter or blur), clear the offending side(s) before Carbon's handler runs
 	// so flatpickr never receives a partial-parse pair.
@@ -101,56 +151,6 @@ class DatepickerRangeControl extends React.Component {
 		const isoEnd = nextEnd ? getISODate(nextEnd, this.dateFormat) : "";
 		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStart, isoEnd]);
 		return true;
-	}
-
-	handleNativeKeydown(evt) {
-		if (evt.key === "Enter") {
-			this.defuseInvalidInputs(evt);
-		}
-	}
-
-	handleNativeBlur(evt) {
-		this.defuseInvalidInputs(evt);
-	}
-
-	onStartBlur(evt) {
-		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
-		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
-		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
-	}
-
-	onEndBlur(evt) {
-		const isoStartDate = getISODate(this.state.valueStart, this.dateFormat);
-		const isoEndDate = getISODate(evt.target.value, this.dateFormat);
-		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
-	}
-
-	getDatepickerSize() {
-		return this.props.tableControl ? "sm" : "md";
-	}
-
-	// This handles changes for simple, single, and the start range date
-	handleDateRangeChange(evt) {
-		if (evt[0]) {
-			const isoStartDate = getISODate(evt[0]); // internal format
-			const valueStart = getFormattedDate(evt[0], this.dateFormat); // display value
-			let isoEndDate = "";
-			let valueEnd = "";
-
-			if (evt[1]) { // Cannot enter end date without specifying start date
-				isoEndDate = getISODate(evt[1]); // internal format
-				valueEnd = getFormattedDate(evt[1], this.dateFormat); // display value
-			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
-			this.setState({ valueStart, valueEnd });
-		}
-	}
-
-	handleInputStartChange(evt) {
-		this.setState({ valueStart: evt.target.value });
-	}
-	handleInputEndChange(evt) {
-		this.setState({ valueEnd: evt.target.value });
 	}
 
 	createInfoDesc(label, description, range) {
