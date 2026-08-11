@@ -190,7 +190,7 @@ class ToolbarSubMenuItem extends React.Component {
 
 		return (
 			<div ref={this.divRef} className={itemClassName} data-instance-id={this.props.instanceId}
-				data-toolbar-action={actionObj.action}
+				data-toolbar-action={actionObj.action} role="presentation"
 				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
 			>
 				<ToolbarButtonItem
