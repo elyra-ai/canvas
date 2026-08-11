@@ -482,6 +482,8 @@ class ToolTip extends React.Component {
 			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
 				link = (<div
 					ref={(ref) => (this.linkRef = ref)}
+					role="button"
+					tabIndex={0}
 					onKeyDown={(evt) => {
 						evt.stopPropagation();
 						evt.preventDefault();
@@ -532,6 +534,7 @@ class ToolTip extends React.Component {
 		if (tooltipContent || link) {
 			tooltip = (
 				<Portal>
+					{ /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */ }
 					<div
 						role="tooltip"
 						id={`${this.uuid}-${this.props.id}`}
@@ -549,6 +552,7 @@ class ToolTip extends React.Component {
 						}}
 						// Stop event propagation to prevent tooltip from performing toolbar button click
 						onClick={this.stopEventPropagation}
+						onKeyDown={this.stopEventPropagation}
 						onMouseDown={this.stopEventPropagation}
 					>
 						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1" aria-hidden>
