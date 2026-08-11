@@ -312,10 +312,11 @@ class CommonContextMenu extends React.Component {
 				} else {
 					const onClickFunction = this.itemSelected.bind(null, menuDefinition[i].action);
 					const ref = React.createRef();
+					const itemTabIndex = menuRefs.length === 0 ? 0 : -1;
 					menuRefs.push(ref);
-
+	
 					menuItem = (
-						<div key={i} ref={ref} tabIndex={-1} data-action={menuDefinition[i].action}
+						<div key={i} ref={ref} tabIndex={itemTabIndex} data-action={menuDefinition[i].action}
 							className={"context-menu-item"} onClick={onClickFunction} onKeyDown={this.onKeyDown} role="menuitem"
 						>
 							{menuDefinition[i].label}
@@ -375,6 +376,7 @@ class CommonContextMenu extends React.Component {
 		const onMouseLeave = (disabled ? null : this.subMenuClose.bind(this));
 
 		const ref = disabled ? null : React.createRef();
+		const itemTabIndex = (!disabled && menuRefs.length === 0) ? 0 : -1;
 		if (!disabled) {
 			menuRefs.push(ref);
 		}
@@ -384,7 +386,7 @@ class CommonContextMenu extends React.Component {
 		this.subMenuPosData[menuItem.action] = subMenuPosStyle;
 
 		return (
-			<div key={index} ref={ref} className={menuItemClass} aria-haspopup tabIndex={-1} data-action={menuItem.action} role="menuitem"
+			<div key={index} ref={ref} className={menuItemClass} aria-haspopup tabIndex={itemTabIndex} data-action={menuItem.action} role="menuitem"
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
 				onKeyDown={this.onKeyDown}
@@ -455,7 +457,7 @@ class CommonContextMenu extends React.Component {
 		this.menuRefs = menuInfo.menuRefs;
 
 		return (
-			<div ref={this.menuPopoverRef} id="context-menu-popover" role="menu" tabIndex={0} className="context-menu-popover" onContextMenu={this.onContextMenu}>
+			<div ref={this.menuPopoverRef} id="context-menu-popover" role="menu" className="context-menu-popover" onContextMenu={this.onContextMenu}>
 				{menuInfo.menuItems}
 			</div>
 		);
