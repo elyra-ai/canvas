@@ -276,7 +276,7 @@ class CommonContextMenu extends React.Component {
 					menuRefs.push(ref);
 
 					menuItem = (
-						<div key={i} ref={ref} tabIndex={0} className={"context-menu-item disabled"} onKeyDown={this.onKeyDown} role="menuitem" aria-disabled={true}>
+						<div key={i} ref={ref} tabIndex={0} className={"context-menu-item disabled"} onKeyDown={this.onKeyDown} role="menuitem" aria-disabled>
 							{menuDefinition[i].label}
 						</div>
 					);
@@ -304,7 +304,7 @@ class CommonContextMenu extends React.Component {
 
 				} else if (menuDefinition[i].enable === false) {
 					menuItem = (
-						<div key={i} className={"context-menu-item disabled"} role="menuitem" aria-disabled={true}>
+						<div key={i} className={"context-menu-item disabled"} role="menuitem" aria-disabled>
 							{menuDefinition[i].label}
 						</div>
 					);
@@ -314,7 +314,7 @@ class CommonContextMenu extends React.Component {
 					const ref = React.createRef();
 					const itemTabIndex = menuRefs.length === 0 ? 0 : -1;
 					menuRefs.push(ref);
-	
+
 					menuItem = (
 						<div key={i} ref={ref} tabIndex={itemTabIndex} data-action={menuDefinition[i].action}
 							className={"context-menu-item"} onClick={onClickFunction} onKeyDown={this.onKeyDown} role="menuitem"
