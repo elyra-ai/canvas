@@ -429,7 +429,7 @@ class ToolTip extends React.Component {
 			// If the content has a tooltip that can be shown via hover, then it must also be doable via keyboard
 			const canDisplayFullText = this.canDisplayFullText(this.triggerRef);
 			const textOverflowing = this.props.showToolTipIfTruncated && !canDisplayFullText;
-			const focusable = this.props.showToolTipOnClick || textOverflowing || this.props.alwaysTabbable;
+			const focusable = this.props.showToolTipOnClick || textOverflowing;
 
 			// If the children wrapped by the tooltip can be focused, then the tooltip should be shown on focus
 			const enableKeyboardAccess = focusable || !this.props.disable;
@@ -588,7 +588,6 @@ ToolTip.propTypes = {
 	delay: PropTypes.number,
 	showToolTipOnClick: PropTypes.bool,
 	hoverable: PropTypes.bool, // If true, mouse cursor can be hovered over to the tooltip, instead of immediately disappearing.
-	alwaysTabbable: PropTypes.bool, // Set to true to make the trigger a tab stop even when the content isn't truncated
 };
 
 ToolTip.defaultProps = {
@@ -596,8 +595,7 @@ ToolTip.defaultProps = {
 	direction: "bottom",
 	showToolTipIfTruncated: false, // False will always show Tooltip even when whole word can be displayed
 	showToolTipOnClick: false,
-	hoverable: false,
-	alwaysTabbable: false
+	hoverable: false
 };
 
 export default ToolTip;

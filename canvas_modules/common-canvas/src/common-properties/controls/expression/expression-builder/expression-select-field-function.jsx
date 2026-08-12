@@ -262,7 +262,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				content={expressionTableCellContent}
 				tooltipText={label}
 				disabled={disabled}
-				alwaysTabbable
 			/>
 		);
 		const contentObject = (
