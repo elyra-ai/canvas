@@ -455,7 +455,7 @@ class CommonContextMenu extends React.Component {
 		this.menuRefs = menuInfo.menuRefs;
 
 		return (
-			<div ref={this.menuPopoverRef} id="context-menu-popover" role="menu" className="context-menu-popover" onContextMenu={this.onContextMenu}>
+			<div ref={this.menuPopoverRef} id="context-menu-popover" role="menu" tabIndex={0} className="context-menu-popover" onContextMenu={this.onContextMenu}>
 				{menuInfo.menuItems}
 			</div>
 		);

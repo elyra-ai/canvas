@@ -386,7 +386,9 @@ class ToolbarButtonItem extends React.Component {
 			}
 			if (actionObj.purpose === "dual") {
 				const chevronMini = this.props.subAreaDisplayed ? (<ChevronUp size={12} />) : (<ChevronDown size={12} />);
-				return (<div className={"toolbar-up-down-chevron-mini"} onClick={this.miniChevronClicked.bind(this)}>{chevronMini}</div>);
+				return (
+					<div className={"toolbar-up-down-chevron-mini"} role="presentation" onClick={this.miniChevronClicked.bind(this)}>{chevronMini}</div>
+				);
 			}
 			return (
 				<svg className="toolbar-tick-svg" viewBox="0 0 32 32" aria-hidden="true">

@@ -37,6 +37,7 @@ const control = {
 propertyUtilsRTL.setControls(controller, [control]);
 
 const propertyId = { name: "toggle" };
+const controlItem = <span>Test Label</span>;
 
 const mockToggle = jest.fn();
 jest.mock("../../../src/common-properties/controls/toggle",
@@ -68,6 +69,7 @@ describe("toggle renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -86,6 +88,7 @@ describe("toggle renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expectJest(mockToggle).toHaveBeenCalledWith({
@@ -93,6 +96,7 @@ describe("toggle renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -104,6 +108,7 @@ describe("toggle renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -119,6 +124,7 @@ describe("toggle renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 				readOnly
 			/>
 		);

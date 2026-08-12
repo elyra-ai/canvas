@@ -85,6 +85,10 @@ class ReadonlyControl extends React.Component {
 			controlValue = controlValue.toString();
 		}
 
+		if (this.props.control.controlType === ControlType.PASSWORDFIELD) {
+			controlValue = ControlUtils.maskDisplayValue(controlValue);
+		}
+
 		controlValue = ControlUtils.truncateDisplayValue(controlValue);
 
 		if (this.props.control.controlType === ControlType.CUSTOM) {

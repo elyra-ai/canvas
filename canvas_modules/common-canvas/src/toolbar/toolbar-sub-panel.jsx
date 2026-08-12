@@ -93,7 +93,7 @@ class ToolbarSubPanel extends React.Component {
 
 		if (this.props.subPanel) {
 			return (
-				<div ref={(ref) => (this.areaRef = ref)} className={"toolbar-popover-list subpanel" + cascadeClass} tabIndex={-1}
+				<div ref={(ref) => (this.areaRef = ref)} className={"toolbar-popover-list subpanel" + cascadeClass} role="presentation" tabIndex={-1}
 					onKeyDown={this.onKeyDown} onFocus={this.onFocus}
 				>
 					<this.props.subPanel closeSubPanel={this.closeSubPanel} subPanelData={this.props.subPanelData} />

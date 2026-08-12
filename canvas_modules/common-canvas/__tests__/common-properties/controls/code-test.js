@@ -38,6 +38,7 @@ const propertiesInfo = {
 };
 const controller = new Controller();
 const propertyId = { name: "code" };
+const controlItem = <span>Test Label</span>;
 const control = {
 	name: "code",
 	label: {
@@ -92,6 +93,7 @@ describe("code control tests", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 				rightFlyout
 			/>
 		);
@@ -109,6 +111,7 @@ describe("code control tests", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 				rightFlyout
 			/>
 		);

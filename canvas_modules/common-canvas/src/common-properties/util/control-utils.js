@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { v4 as uuid4 } from "uuid";
-import { TRUNCATE_LIMIT, DEFAULT_DATEPICKER_FORMAT, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
+import { TRUNCATE_LIMIT, MASK_CHARACTER, DEFAULT_DATEPICKER_FORMAT, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
 import { ControlType } from "../constants/form-constants";
 
 /**
@@ -95,6 +95,14 @@ function truncateDisplayValue(value) {
 	return value;
 }
 
+// mask the value that gets displayed for controls that shouldn't show their value in plain text
+function maskDisplayValue(value) {
+	if (typeof value === "string") {
+		return MASK_CHARACTER.repeat(value.length);
+	}
+	return value;
+}
+
 function getValidationProps(messageInfo, inTable) {
 	const validationProps = {};
 	// inline in tables don't show carbon error/warn
@@ -131,6 +139,7 @@ export {
 	splitNewlines,
 	joinNewlines,
 	truncateDisplayValue,
+	maskDisplayValue,
 	getValidationProps,
 	getDateTimeFormat
 };

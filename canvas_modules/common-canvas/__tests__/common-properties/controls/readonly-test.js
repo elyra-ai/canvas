@@ -36,6 +36,7 @@ const controlWithValues = {
 };
 
 const propertyId = { name: "test-readonly" };
+const controlItem = <span>Test Label</span>;
 
 const mockReadonly = jest.fn();
 jest.mock("../../../src/common-properties/controls/readonly",
@@ -64,6 +65,7 @@ describe("textfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 
@@ -72,6 +74,7 @@ describe("textfield-control renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 	});
 	it("readonly should render correctly", () => {
@@ -81,10 +84,11 @@ describe("textfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
-		const text = readonlyWrapper.querySelectorAll("span");
+		const text = readonlyWrapper.querySelectorAll("span.properties-field-type");
 		expect(text).to.have.length(1);
 		expect(text[0].textContent).to.equal("Test value");
 	});
@@ -99,10 +103,11 @@ describe("textfield-control renders correctly", () => {
 				controller={controller}
 				propertyId={propertyId}
 				value="value 1"
+				controlItem={controlItem}
 			/>
 		);
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
-		const text = readonlyWrapper.querySelectorAll("span");
+		const text = readonlyWrapper.querySelectorAll("span.properties-field-type");
 
 		expect(text).to.have.length(1);
 		expect(text[0].textContent).to.equal("label 1");
@@ -117,10 +122,11 @@ describe("textfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
-		const text = readonlyWrapper.querySelector("span");
+		const text = readonlyWrapper.querySelector("span.properties-field-type");
 		expect(text.textContent).to.equal("");
 	});
 	it("readonly handles undefined correctly", () => {
@@ -133,10 +139,11 @@ describe("textfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
-		const text = readonlyWrapper.querySelector("span");
+		const text = readonlyWrapper.querySelector("span.properties-field-type");
 		expect(text.textContent).to.equal("");
 	});
 	it("readonly renders when disabled", () => {
@@ -147,10 +154,11 @@ describe("textfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
-		expect(readonlyWrapper.querySelector("span").outerHTML.includes("disabled")).to.equal(true);
+		expect(readonlyWrapper.querySelector("span.properties-field-type").outerHTML.includes("disabled")).to.equal(true);
 	});
 	it("readonly does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
@@ -160,6 +168,7 @@ describe("textfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
@@ -177,6 +186,7 @@ describe("textfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
