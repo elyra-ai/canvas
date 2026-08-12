@@ -48,6 +48,7 @@ class PaletteContentListItem extends React.Component {
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onFocus = this.onFocus.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
 	}
@@ -138,6 +139,14 @@ class PaletteContentListItem extends React.Component {
 
 	onMouseLeave() {
 		this.props.canvasController.closeTip();
+	}
+
+	// Displays the tip when the user moves focus to this item using the
+	// keyboard. This is the keyboard equivalent of onMouseOver.
+	onFocus() {
+		if (!this.props.isDisplaySearchResult) {
+			this.displayTip();
+		}
 	}
 
 	getHighlightedCategoryLabel() {
@@ -414,6 +423,8 @@ class PaletteContentListItem extends React.Component {
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				onFocus={this.onFocus}
+				onBlur={this.onMouseLeave}
 				onKeyDown={this.props.isEditingEnabled ? this.onKeyDown : null}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}

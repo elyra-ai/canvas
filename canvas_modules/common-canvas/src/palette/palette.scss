@@ -110,6 +110,11 @@ $palette-dialog-list-item-height: 46px;
 		color: carbon.$link-primary;
 		cursor: pointer;
 		padding: 5px 0 0;
+		display: block;
+		background: none;
+		border: none;
+		font: inherit;
+		text-align: left;
 	}
 
 	.palette-list-item {
