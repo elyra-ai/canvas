@@ -515,6 +515,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -523,6 +524,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		const dropdownInput = dropdownWrapper.querySelectorAll("input");
@@ -543,6 +545,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -551,6 +554,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		let dropdownInput = dropdownWrapper.querySelector("input");
@@ -571,6 +575,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -593,6 +598,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				control={customControl}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -615,6 +621,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				control={customControl}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -682,6 +689,7 @@ describe("oneofselect with filter true and custom value not allowed works correc
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -690,6 +698,7 @@ describe("oneofselect with filter true and custom value not allowed works correc
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		const dropdownInput = dropdownWrapper.querySelectorAll("input");
@@ -710,6 +719,7 @@ describe("oneofselect with filter true and custom value not allowed works correc
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -718,6 +728,7 @@ describe("oneofselect with filter true and custom value not allowed works correc
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		let dropdownInput = dropdownWrapper.querySelector("input");
@@ -744,6 +755,7 @@ describe("oneofselect with filter true and custom value not allowed works correc
 				control={customControl}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;

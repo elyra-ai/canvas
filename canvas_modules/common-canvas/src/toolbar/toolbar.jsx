@@ -56,6 +56,10 @@ class Toolbar extends React.Component {
 		this.rightItemRefs = [];
 		this.overflowItemRefs = [];
 
+		// Action name for the trailing overflow item shown when right bar
+		// items wrap but no left bar item has.
+		this.rightBarOverflowAction = "toolbar-right-bar-overflow";
+
 		// Reference for the toolbar <div>
 		this.toolbarRef = React.createRef();
 
@@ -320,11 +324,13 @@ class Toolbar extends React.Component {
 	// on the top (visible) row of the toolbar and are focusable.
 	// That is, not disabled. In addition, there may also be a
 	// reference to an overflow item if one is visible on the
-	// top (visible) row of the toolbar.
+	// top (visible) row of the toolbar, or the trailing overflow
+	// item if only right bar items have wrapped.
 	getLeftBarFocusableItemRefs() {
 		const focusableItemRefs = [];
 
 		if (this.leftItemRefs.length === 0) {
+			this.addTrailingOverflowItemRef(focusableItemRefs);
 			return focusableItemRefs;
 		}
 
@@ -347,6 +353,10 @@ class Toolbar extends React.Component {
 					focusableItemRefs.push(overflowItemRef);
 				}
 			}
+		}
+
+		if (!overflowItemRef) {
+			this.addTrailingOverflowItemRef(focusableItemRefs);
 		}
 
 		return focusableItemRefs;
@@ -423,26 +433,39 @@ class Toolbar extends React.Component {
 	}
 
 	// Returns the index of the overflow button that is currently displayed,
-	// or null if no overflow button is displayed.
-	// This happens when left bar items wrap to a second row.
+	// or null if no overflow button is displayed. This happens when a left bar
+	// item has wrapped to a second row, or, if none has, when a right bar item
+	// has wrapped (in which case the trailing item at this.leftBar.length is
+	// used instead).
 	getDisplayedOverflowIndex() {
-		if (this.leftItemRefs.length === 0) {
-			return null;
-		}
-
-		const firstItemRect = this.leftItemRefs[0].current?.getBoundingRect();
-
-		// Find the first item that has wrapped to a second row
-		for (let i = 1; i < this.leftItemRefs.length; i++) {
-			const itemRect = this.leftItemRefs[i].current?.getBoundingRect();
-			if (itemRect?.top !== firstItemRect?.top) {
-				// Return the index of the wrapped item
-				// This is the overflow button that should be displayed
-				return i;
+		if (this.leftItemRefs.length > 0) {
+			const firstItemRect = this.leftItemRefs[0].current?.getBoundingRect();
+			for (let i = 1; i < this.leftItemRefs.length; i++) {
+				const itemRect = this.leftItemRefs[i].current?.getBoundingRect();
+				if (itemRect?.top !== firstItemRect?.top) {
+					return i;
+				}
 			}
 		}
 
+		// No left bar wrap; fall back to the trailing item if the right bar has wrapped.
+		if (this.findFirstRightItemRefNotOnTopRow() !== null) {
+			return this.leftBar.length;
+		}
+
 		return null;
+	}
+
+	// Adds the trailing overflow item's ref to focusableItemRefs if it's the
+	// one currently displayed.
+	addTrailingOverflowItemRef(focusableItemRefs) {
+		if (this.state.displayedOverflowIndex === this.leftBar.length) {
+			const overflowAction = this.getOverflowAction(this.rightBarOverflowAction);
+			const trailingOverflowItemRef = this.overflowItemRefs.find((oRef) => this.getRefAction(oRef) === overflowAction);
+			if (trailingOverflowItemRef) {
+				focusableItemRefs.push(trailingOverflowItemRef);
+			}
+		}
 	}
 
 	// Returns true of the current focus action item is one of the focusable
@@ -476,6 +499,8 @@ class Toolbar extends React.Component {
 	// inside an overflow item container, for each left toolbar action. As the canvas is made
 	// narrower the regular action items wrap onto a second (hidden) row of the toolbar and
 	// the overflow item, associated with the last wrapped action item, is revealed.
+	// Also appends a trailing overflow item, after all the left bar items, for when
+	// right bar items wrap but no left bar item has (see getDisplayedOverflowIndex).
 	generateToolbarItems(toolbarActions, withOverflowItem, refs) {
 		const newItems = [];
 
@@ -490,6 +515,12 @@ class Toolbar extends React.Component {
 				newItems.push(this.generateToolbarItem(actionObj, i, refs));
 			}
 		}
+
+		// Only needed when there is a right bar for which items might wrap.
+		if (withOverflowItem && this.rightBar.length > 0) {
+			newItems.push(this.generateOverflowItem(toolbarActions.length, this.rightBarOverflowAction));
+		}
+
 		return newItems;
 	}
 
@@ -693,6 +724,10 @@ Toolbar.propTypes = {
 	closeToolbarOnEsc: PropTypes.bool,
 	closeToolbar: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm", "lg"])
+};
+
+Toolbar.defaultProps = {
+	size: "md"
 };
 
 export default Toolbar;

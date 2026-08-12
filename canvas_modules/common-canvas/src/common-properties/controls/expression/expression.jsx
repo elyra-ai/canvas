@@ -295,6 +295,7 @@ class ExpressionControl extends React.Component {
 		});
 
 		const linterExtension = this.props.control.language === "json" ? linter(jsonParseLinter()) : [];
+		const cspNonce = this.props.controller.getPropertiesConfig().cspNonce;
 
 		this.editor = new EditorView({
 			doc: this.props.value,
@@ -303,6 +304,7 @@ class ExpressionControl extends React.Component {
 				customCompletions,
 				...expressionEditorTheme,
 				this.themeCompartment.of(EditorView.theme({}, { dark: this.state.theme === themeG90 })),
+				...(cspNonce ? [EditorView.cspNonce.of(cspNonce)] : []),
 				lineNumbers(), // basicSetup start
 				highlightActiveLineGutter(),
 				highlightSpecialChars(),

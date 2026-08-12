@@ -315,6 +315,8 @@ class NotificationPanel extends React.Component {
 			: null;
 
 		return (
+			// role="region" is classified non-interactive by the linter, but this handler only traps focus cycling within the panel's own focusable elements.
+			// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
 			<div
 				className="notification-panel"
 				role="region"

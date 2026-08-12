@@ -157,6 +157,7 @@ class SelectColumnsControl extends AbstractTable {
 		const table =	(
 			<FlexibleTable
 				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
+				cspNonce={this.props.controller.getPropertiesConfig().cspNonce}
 				columns={headers}
 				data={rows}
 				scrollToRow={rowToScrollTo}
@@ -206,7 +207,7 @@ SelectColumnsControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.element.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux

@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "Visa föregående pipeline",
   "action.displaySubPipeline": "Visa hela sidan med supernoden",
   "action.editComment": "Redigera kommentar",
+  "action.editCommentDecorationLabel": "Redigera etiketten för kommentarens utformning",
   "action.editLinkDecorationLabel": "Ändra länkdekorationsetikett",
   "action.editNodeDecorationLabel": "Redigera noddekorationsetikett",
   "action.expandSuperNodeInPlace": "Expandera {node_label}-supernod på plats",

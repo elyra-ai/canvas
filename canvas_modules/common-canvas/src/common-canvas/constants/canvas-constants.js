@@ -318,13 +318,13 @@ export const SUPER_NODE_EXPAND_ICON =
 export const NODE_ERROR_ICON =
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\">" +
 	"<path d=\"M8 1C4.1 1 1 4.1 1 8s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm2.7 10.5L4.5 5.3l.8-.8 6.2 6.2-.8.8z\"></path>" +
-	"<path style=\"fill: #ffffff;\" d=\"M10.7 11.5L4.5 5.3l.8-.8 6.2 6.2-.8.8z\"></path>" +
+	"<path fill=\"#ffffff\" d=\"M10.7 11.5L4.5 5.3l.8-.8 6.2 6.2-.8.8z\"></path>" +
 	"</svg>";
 
 export const NODE_WARNING_ICON =
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\">" +
 	"<path d=\"M8 1C4.2 1 1 4.2 1 8s3.2 7 7 7 7-3.1 7-7-3.1-7-7-7zm-.5 3h1v5h-1V4zm.5 8.2c-.4 0-.8-.4-.8-.8s.3-.8.8-.8c.4 0 .8.4.8.8s-.4.8-.8.8z\"></path>" +
-	"<path style=\"stroke-width: 0; fill: #161616; opacity: 1;\" d=\"M7.5 4h1v5h-1V4zm.5 8.2c-.4 0-.8-.4-.8-.8s.3-.8.8-.8c.4 0 .8.4.8.8s-.4.8-.8.8z\"></path>" +
+	"<path stroke-width=\"0\" fill=\"#161616\" opacity=\"1\" d=\"M7.5 4h1v5h-1V4zm.5 8.2c-.4 0-.8-.4-.8-.8s.3-.8.8-.8c.4 0 .8.4.8.8s-.4.8-.8.8z\"></path>" +
 	"</svg>";
 
 // This image is stored in the format to be shown as an <img> in the JSX

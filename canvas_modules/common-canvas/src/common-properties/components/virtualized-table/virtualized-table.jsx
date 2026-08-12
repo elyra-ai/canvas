@@ -279,6 +279,7 @@ class VirtualizedTable extends React.Component {
 					}
 					position={{ x: 0 }}
 					zIndex={999}
+					nonce={this.props.cspNonce}
 				>
 					<div
 						role="button" tabIndex="0"
@@ -402,6 +403,7 @@ class VirtualizedTable extends React.Component {
 
 				selectOption = (<div className="properties-vt-row-checkbox"
 					role="gridcell"
+					tabIndex={-1}
 					onMouseEnter={(evt) => this.overSelectOption(evt)}
 					onMouseLeave={(evt) => this.overSelectOption(evt)}
 					onFocus={(evt) => this.overSelectOption(evt)}
@@ -458,7 +460,8 @@ class VirtualizedTable extends React.Component {
 		};
 
 		// This div wrapper is required to apply the onDoubleClick handler.
-		return (<div key={key} className="properties-vt-double-click" onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
+		// style is required on the outermost element by react-virtualized's cell range renderer.
+		return (<div key={key} className="properties-vt-double-click" style={rowStyle} onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
 			<div
 				className={classNames(className,
 					{ "properties-vt-row-selected": selectedRow },
@@ -467,6 +470,7 @@ class VirtualizedTable extends React.Component {
 				)}
 				data-role="properties-data-row"
 				role="row"
+				tabIndex={-1}
 				style={rowStyle}
 				onMouseDown={(evt) => this.onRowClick(evt, rowData, index)}
 			>
@@ -485,7 +489,7 @@ class VirtualizedTable extends React.Component {
 					{ "properties-vt-single-selection": this.props.rowSelection && this.props.rowSelection === ROW_SELECTION.SINGLE,
 						"properties-light-disabled": !this.props.light })}
 				>
-					<AutoSizer>
+					<AutoSizer nonce={this.props.cspNonce}>
 						{({ height, width }) => ( // Table height: subtract 50 for margin below the table.
 							<Table
 								ref={this.virtualizedTableRef}
@@ -578,7 +582,8 @@ VirtualizedTable.propTypes = {
 	tableState: PropTypes.string,
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired,
-	readOnly: PropTypes.bool
+	readOnly: PropTypes.bool,
+	cspNonce: PropTypes.string
 };
 
 export default injectIntl(VirtualizedTable);

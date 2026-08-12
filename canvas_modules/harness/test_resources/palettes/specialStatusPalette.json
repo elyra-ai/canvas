@@ -1,0 +1,140 @@
+{
+      "version": "3.0",
+      "categories": [
+        {
+          "label": "No Load",
+          "description": "Description for Import",
+           "image": "/images/palette-categories/operations_open.svg",
+          "id": "no_load_category",
+          "empty_text": "No items loaded",
+          "node_types": []
+        },
+        {
+          "label": "Disabled Palette Nodes",
+          "image": "/images/palette-categories/operations_open.svg",
+          "id": "disabled_nodes_category",
+          "node_types": [
+            {
+              "id": "",
+              "type": "binding",
+              "op": "userinput",
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Disabled image node",
+                  "description": "Shows a disbaled palette node with an embedded image.",
+                  "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0yNzYgMTc3IDQ2LjQgNDgiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgLTI3NiAxNzcgNDYuNCA0ODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCgkuc3Qwe2ZpbGw6IzFEMzY0OTt9DQoJLnN0MXtmaWxsOm5vbmU7c3Ryb2tlOiMxNTI5MzU7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDJ7ZmlsbDojRjlGOUZCO3N0cm9rZTojMTUyOTM1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qze2ZpbGw6bm9uZTtzdHJva2U6IzE1MjkzNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NHtmaWxsOm5vbmU7c3Ryb2tlOiM0MUQ2QzM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDV7ZmlsbDojNDFENkMzO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI0OSIgaGVpZ2h0PSI0OSIgeGxpbms6aHJlZj0iOTEwOUFBQjgzRTBCMzJENi5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIC0yNzYgMTc4KSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPGNpcmNsZSBjbGFzcz0ic3QwIiBjeD0iLTI1MyIgY3k9IjIwMC43IiByPSIyMCIvPg0KCQk8Y2lyY2xlIGNsYXNzPSJzdDEiIGN4PSItMjUzIiBjeT0iMjAwLjciIHI9IjIwIi8+DQoJPC9nPg0KPC9nPg0KPHJlY3QgeD0iLTI2Mi44IiB5PSIxOTEuNCIgY2xhc3M9InN0MiIgd2lkdGg9IjE0LjciIGhlaWdodD0iMTkuNiIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9Ii0yNjAiIHkxPSIxOTUuNSIgeDI9Ii0yNTAiIHkyPSIxOTUuNSIvPg0KPGxpbmUgY2xhc3M9InN0NCIgeDE9Ii0yNjAiIHkxPSIxOTguNSIgeDI9Ii0yNTAiIHkyPSIxOTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9Ii0yNjAiIHkxPSIyMDEuNSIgeDI9Ii0yNTAiIHkyPSIyMDEuNSIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9Ii0yNjAiIHkxPSIyMDQuNSIgeDI9Ii0yNTAiIHkyPSIyMDQuNSIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9Ii0yNjAiIHkxPSIyMDcuNSIgeDI9Ii0yNTAiIHkyPSIyMDcuNSIvPg0KPGc+DQoJPGcgaWQ9Ikljb25fMV8iPg0KCQk8Zz4NCgkJCQ0KCQkJCTxyZWN0IHg9Ii0yNDcuNSIgeT0iMTkzLjYiIHRyYW5zZm9ybT0ibWF0cml4KC0wLjcwNzEgMC43MDcxIC0wLjcwNzEgLTAuNzA3MSAtMjc5LjQyODYgNTA1LjI0MzgpIiBjbGFzcz0ic3Q1IiB3aWR0aD0iNi4yIiBoZWlnaHQ9IjIuMyIvPg0KCQkJDQoJCQkJPHJlY3QgeD0iLTI0MS41IiB5PSIxOTAuMiIgdHJhbnNmb3JtPSJtYXRyaXgoLTAuNzA3MSAwLjcwNzEgLTAuNzA3MSAtMC43MDcxIC0yNzYuMDI3MiA0OTcuMDMyNikiIGNsYXNzPSJzdDUiIHdpZHRoPSIxLjEiIGhlaWdodD0iMi4zIi8+DQoJCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9Ii0yNDguNiwxOTguOSAtMjQ3LjEsMTk4LjMgLTI0OCwxOTcuNSAJCQkiLz4NCgkJPC9nPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg0K",
+                  "palette_disabled": true,
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            },
+            {
+              "id": "",
+              "type": "execution_node",
+              "op": "select",
+              "inputs": [
+                {
+                  "id": "inPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": 1
+                      },
+                      "label": "Input Port"
+                    }
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Disabled SVG node",
+                  "description": "Shows a disbaled palette node with a referenced SVG image.",
+                  "image": "/images/carbon/db2--database.svg",
+                  "palette_disabled": true,
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "label": "Palette Nodes with palette images",
+          "image": "/images/palette-categories/operations_open.svg",
+          "id": "alt_image_category",
+          "node_types": [
+            {
+              "id": "",
+              "type": "binding",
+              "op": "userinput",
+              "outputs": [
+                {
+                  "id": "outPort",
+                  "app_data": {
+                    "ui_data": {
+                      "cardinality": {
+                        "min": 0,
+                        "max": -1
+                      },
+                      "label": "Output Port"
+                    }
+                  }
+                }
+              ],
+              "parameters": {},
+              "app_data": {
+                "ui_data": {
+                  "label": "Alternative palette image node",
+                  "description": "Shows a palette node with a palette image that changes when node is added to the flow.",
+                  "image": "/images/carbon/scales.svg",
+                  "palette_image": "/images/carbon/data-collection.svg",
+                  "x_pos": 0,
+                  "y_pos": 0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "label": "Loading Graphs",
+          "description": "This category defines chart builders",
+          "image": "images/custom-canvases/flows/palette/icons/palette-charts.svg",
+          "id": "loading_category",
+          "loading_text": "Loading category",
+          "node_types": [
+          ]
+        }
+      ]
+    }
