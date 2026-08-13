@@ -129,6 +129,64 @@ describe("datepicker-range-control renders correctly", () => {
 		expect(inputEnd.value).to.equal("10-29-2024");
 	});
 
+	// Typing an unparseable value into one input and committing it with Enter
+	// previously crashed via Carbon's fixEventsPlugin -> flatpickr rangePlugin
+	// ("Cannot read properties of undefined (reading 'getTime')"). The invalid
+	// side should now clear and the valid side remain.
+	it("should clear an invalid date on Enter and keep the valid side in `DatepickerRangeControl`", () => {
+		const wrapper = render(
+			<DatepickerRangeControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+			/>
+		);
+		const { container } = wrapper;
+		let dateWrapper = container.querySelector("div[data-id='properties-test-datepicker-range']");
+		let inputStart = dateWrapper.querySelectorAll("input")[0];
+		let inputEnd = dateWrapper.querySelectorAll("input")[1];
+		expect(inputStart.value).to.equal("03-17-2023");
+		expect(inputEnd.value).to.equal("03-30-2023");
+
+		// Enter an unparseable value in the start input and commit with Enter
+		fireEvent.change(inputStart, { target: { value: "03-17-202e" } });
+		fireEvent.keyDown(inputStart, { key: "Enter" });
+
+		dateWrapper = container.querySelector("div[data-id='properties-test-datepicker-range']");
+		inputStart = dateWrapper.querySelectorAll("input")[0];
+		inputEnd = dateWrapper.querySelectorAll("input")[1];
+		expect(inputStart.value).to.equal(""); // invalid side cleared
+		expect(inputEnd.value).to.equal("03-30-2023"); // valid side preserved
+		expect(controller.getPropertyValue(propertyId)[0]).to.equal(""); // Redux start cleared
+	});
+
+	it("should clear an invalid date on blur and keep the valid side in `DatepickerRangeControl`", () => {
+		const wrapper = render(
+			<DatepickerRangeControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+			/>
+		);
+		const { container } = wrapper;
+		let dateWrapper = container.querySelector("div[data-id='properties-test-datepicker-range']");
+		let inputStart = dateWrapper.querySelectorAll("input")[0];
+		let inputEnd = dateWrapper.querySelectorAll("input")[1];
+
+		fireEvent.change(inputEnd, { target: { value: "03-30-20e" } });
+		fireEvent.blur(inputEnd, { target: { value: "03-30-20e" } });
+
+		dateWrapper = container.querySelector("div[data-id='properties-test-datepicker-range']");
+		inputStart = dateWrapper.querySelectorAll("input")[0];
+		inputEnd = dateWrapper.querySelectorAll("input")[1];
+		expect(inputStart.value).to.equal("03-17-2023");
+		expect(inputEnd.value).to.equal("");
+	});
+
 	it("should allow a valid date to be updated in `DatepickerRangeControl`", async() => {
 		expect(controller.getPropertyValue(propertyId)).to.eql(["2023-03-17T00:00:00.00", "2023-03-30T00:00:00.00"]);
 		controller.setPropertyValues(
