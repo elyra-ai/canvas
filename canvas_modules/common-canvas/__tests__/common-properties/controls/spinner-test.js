@@ -84,6 +84,7 @@ propertyUtilsRTL.setControls(controller, [control, control2, control3]);
 const propertyId = { "name": "spinner_int" };
 const propertyId2 = { "name": "spinner_dbl" };
 const propertyId3 = { "name": "spinner_default" };
+const controlItem = <span>Test Label</span>;
 
 const mockSpinner = jest.fn();
 jest.mock("../../../src/common-properties/controls/numberfield",
@@ -106,6 +107,7 @@ describe("spinner-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expectJest(mockSpinner).toHaveBeenCalledWith({
@@ -113,6 +115,7 @@ describe("spinner-control renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -123,6 +126,7 @@ describe("spinner-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expect(wrapper.container.querySelectorAll(".cds--number--nosteppers")).to.have.length(0);
@@ -136,6 +140,7 @@ describe("spinner-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -157,6 +162,7 @@ describe("spinner-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -177,6 +183,7 @@ describe("spinner-control renders correctly", () => {
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -197,6 +204,7 @@ describe("spinner-control renders correctly", () => {
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -218,6 +226,7 @@ describe("spinner-control renders correctly", () => {
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -239,6 +248,7 @@ describe("spinner-control renders correctly", () => {
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -264,6 +274,7 @@ describe("spinner-control renders correctly", () => {
 				control={control3}
 				controller={controller}
 				propertyId={propertyId3}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;

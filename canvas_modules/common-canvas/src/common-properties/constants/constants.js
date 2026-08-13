@@ -139,6 +139,8 @@ export const MESSAGE_KEYS = {
 
 export const TRUNCATE_LIMIT = 10000;
 
+export const MASK_CHARACTER = "•";
+
 export const CONDITION_ERROR_MESSAGE = {
 	HIDDEN: "0px",
 	VISIBLE: "30px"

@@ -3117,6 +3117,10 @@ class App extends React.Component {
 		const keyboardConfig = {
 			actions: {
 				delete: true,
+				undo: true,
+				redo: true,
+				selectAll: true,
+				deselectAll: true,
 				cutToClipboard: true,
 				copyToClipboard: true,
 				pasteFromClipboard: true

@@ -45,6 +45,7 @@ describe("multiselect renders correctly", () => {
 	const propertyName = "test-multiselect";
 	const propertyId = { name: propertyName };
 	const emptyValueIndicator = "None selected";
+	const controlItem = <span>Test Label</span>;
 
 	let controller;
 	const control = {
@@ -92,6 +93,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expectJest(mockMultiselect).toHaveBeenCalledWith({
@@ -99,6 +101,7 @@ describe("multiselect renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -109,6 +112,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -132,6 +136,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -162,6 +167,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -187,6 +193,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -202,6 +209,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -217,6 +225,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -242,6 +251,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -262,6 +272,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -280,6 +291,7 @@ describe("multiselect renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;

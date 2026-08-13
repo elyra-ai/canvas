@@ -403,6 +403,7 @@ class VirtualizedTable extends React.Component {
 
 				selectOption = (<div className="properties-vt-row-checkbox"
 					role="gridcell"
+					tabIndex={-1}
 					onMouseEnter={(evt) => this.overSelectOption(evt)}
 					onMouseLeave={(evt) => this.overSelectOption(evt)}
 					onFocus={(evt) => this.overSelectOption(evt)}
@@ -459,7 +460,8 @@ class VirtualizedTable extends React.Component {
 		};
 
 		// This div wrapper is required to apply the onDoubleClick handler.
-		return (<div key={key} className="properties-vt-double-click" onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
+		// style is required on the outermost element by react-virtualized's cell range renderer.
+		return (<div key={key} className="properties-vt-double-click" style={rowStyle} onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
 			<div
 				className={classNames(className,
 					{ "properties-vt-row-selected": selectedRow },
@@ -468,6 +470,7 @@ class VirtualizedTable extends React.Component {
 				)}
 				data-role="properties-data-row"
 				role="row"
+				tabIndex={-1}
 				style={rowStyle}
 				onMouseDown={(evt) => this.onRowClick(evt, rowData, index)}
 			>

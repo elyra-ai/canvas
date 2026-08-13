@@ -70,30 +70,37 @@ class ToolTip extends React.Component {
 
 
 		if (this.showTooltip()) {
-			const tooltip = document.querySelector(`[data-id='${this.uuid}-${this.props.id}']`);
 			this.pendingTooltip = null;
+			// Already in the desired state -- skip the redundant re-render. This also avoids a duplicate
+			// re-render when focusing the link (below) triggers a blur on the trigger element, whose onBlur
+			// handler calls setTooltipVisible(true) again to keep the tooltip open.
+			if (visible === this.state.isTooltipVisible) {
+				return;
+			}
+			const tooltip = document.querySelector(`[data-id='${this.uuid}-${this.props.id}']`);
 			this.setState({
 				isTooltipVisible: visible
+			}, () => {
+				// updates the tooltip display
+				if (visible) {
+					let tooltipTrigger = null;
+					if (this.props.targetObj) {
+						tooltipTrigger = this.props.targetObj;
+					} else {
+						tooltipTrigger = document.querySelector(`[data-id='${this.uuid}-${this.props.id}-trigger']`);
+					}
+					if (tooltipTrigger && tooltip) {
+						this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
+					}
+
+					// Focus on link when tooltip with link is opened. The setState callback ensures
+					// the link element has been rendered to the DOM before we try to query and focus it.
+					const linkElement = this.targetRef?.querySelector("a");
+					if (linkElement) {
+						linkElement.focus();
+					}
+				}
 			});
-			// updates the tooltip display
-			if (visible) {
-				let tooltipTrigger = null;
-				if (this.props.targetObj) {
-					tooltipTrigger = this.props.targetObj;
-				} else {
-					tooltipTrigger = document.querySelector(`[data-id='${this.uuid}-${this.props.id}-trigger']`);
-				}
-				if (tooltipTrigger && tooltip) {
-					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
-				}
-
-				const linkElement = this.targetRef?.querySelector("a");
-
-				// Focus on link when tooltip with link is opened
-				if (linkElement) {
-					linkElement.focus();
-				}
-			}
 		}
 	}
 
@@ -429,9 +436,10 @@ class ToolTip extends React.Component {
 			// If the content has a tooltip that can be shown via hover, then it must also be doable via keyboard
 			const canDisplayFullText = this.canDisplayFullText(this.triggerRef);
 			const textOverflowing = this.props.showToolTipIfTruncated && !canDisplayFullText;
+			const focusable = this.props.showToolTipOnClick || textOverflowing;
 
 			// If the children wrapped by the tooltip can be focused, then the tooltip should be shown on focus
-			const enableKeyboardAccess = this.props.showToolTipOnClick || textOverflowing || !this.props.disable;
+			const enableKeyboardAccess = focusable || !this.props.disable;
 
 			triggerContent = (<div
 				data-id={`${this.uuid}-${this.props.id}-trigger`}
@@ -443,11 +451,11 @@ class ToolTip extends React.Component {
 				onFocus={enableKeyboardAccess ? onFocus : null} // When focused using keyboard
 				onBlur={enableKeyboardAccess ? onBlur : null}
 				onKeyDown={this.props.showToolTipOnClick ? onKeyDown : null}
-				tabIndex={this.props.showToolTipOnClick || textOverflowing ? 0 : null}
-				role={this.props.showToolTipOnClick || textOverflowing ? "button" : null}
-				aria-labelledby={this.props.showToolTipOnClick || textOverflowing ? `${this.uuid}-${this.props.id}` : null}
-				aria-expanded={this.props.showToolTipOnClick || textOverflowing ? this.state.isTooltipVisible : null}
-				aria-controls={this.props.showToolTipOnClick || textOverflowing ? `${this.uuid}-${this.props.id}` : null}
+				tabIndex={focusable ? 0 : null}
+				role={focusable ? "button" : null}
+				aria-labelledby={focusable ? `${this.uuid}-${this.props.id}` : null}
+				aria-expanded={focusable ? this.state.isTooltipVisible : null}
+				aria-controls={focusable ? `${this.uuid}-${this.props.id}` : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
@@ -482,19 +490,32 @@ class ToolTip extends React.Component {
 			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
 				link = (<div
 					ref={(ref) => (this.linkRef = ref)}
+					role="button"
+					tabIndex={0}
 					onKeyDown={(evt) => {
-						evt.stopPropagation();
-						evt.preventDefault();
-
 						// When 'Esc' is pressed shift the focus to tooltip icon so that user can navigate following elements.
 						if (evt.key === "Escape") {
+							evt.stopPropagation();
+							evt.preventDefault();
 							this.triggerRef.focus();
 							this.setTooltipVisible(false);
-						} else if (evt.key === "Enter") { // Open active/highlighted link when Enter or Return is clicked.
+						} else if (evt.key === "Enter" || evt.key === " ") { // Open active/highlighted link when Enter or Space is pressed.
+							evt.stopPropagation();
+							evt.preventDefault();
 							const focusedElement = this.linkRef.children[0];
 							if (focusedElement) {
 								window.open(focusedElement, "_blank");
 							}
+						} else if (evt.key === "Tab" && !evt.shiftKey) {
+							// The link is rendered through a Portal appended at the end of <body>, so it is the
+							// last focusable element in the document. Letting the browser handle Tab natively
+							// would move focus out of the page entirely (eg. to the browser's URL bar) instead
+							// of continuing on to the next control. Handle it ourselves and return focus to the
+							// tooltip icon so a subsequent Tab press continues normally from there.
+							evt.stopPropagation();
+							evt.preventDefault();
+							this.triggerRef.focus();
+							this.setTooltipVisible(false);
 						}
 					}}
 					onBlur={() => {
@@ -532,6 +553,7 @@ class ToolTip extends React.Component {
 		if (tooltipContent || link) {
 			tooltip = (
 				<Portal>
+					{ /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */ }
 					<div
 						role="tooltip"
 						id={`${this.uuid}-${this.props.id}`}
@@ -549,6 +571,7 @@ class ToolTip extends React.Component {
 						}}
 						// Stop event propagation to prevent tooltip from performing toolbar button click
 						onClick={this.stopEventPropagation}
+						onKeyDown={this.stopEventPropagation}
 						onMouseDown={this.stopEventPropagation}
 					>
 						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1" aria-hidden>
