@@ -63,8 +63,11 @@
 	position: relative; // Needed to allow sub-menu, if there is one,  to be positioned correctly
 
 	&.disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
+		color: carbon.$text-secondary;
+
+		& svg {
+			color: carbon.$text-secondary;
+		}
 	}
 
 	&:active,
