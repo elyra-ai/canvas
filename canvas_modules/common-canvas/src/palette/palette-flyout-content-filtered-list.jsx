@@ -32,7 +32,9 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 	}
 
 	onKeyDownResults(evt) {
-		if (KeyboardUtils.tabFocusOutOfPalette(evt)) {
+		// tabOutOfOfPalette is an optional callback so check it is provided before
+		// calling it, in the same way as the tabOut callback in palette-content-list-item.
+		if (KeyboardUtils.tabFocusOutOfPalette(evt) && this.props.tabOutOfOfPalette) {
 			this.props.tabOutOfOfPalette(evt);
 		}
 	}
@@ -41,7 +43,11 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 		const noResultsFound = this.props.intl.formatMessage({ id: "palette.flyout.search.noresults", defaultMessage: defaultMessages["palette.flyout.search.noresults"] });
 		const adjustSearch = this.props.intl.formatMessage({ id: "palette.flyout.search.adjustsearch", defaultMessage: defaultMessages["palette.flyout.search.adjustsearch"] });
 		return (
-			<div tabIndex={0} onKeyDown={this.onKeyDownResults}>
+			// role="status" announces the message when a search returns nothing. The message is
+			// also deliberately made focusable so that it, rather than nothing, receives the focus
+			// when the result list is empty.
+			// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex
+			<div role="status" tabIndex={0} onKeyDown={this.onKeyDownResults}>
 				<div className="palette-no-results-title">{noResultsFound}</div>
 				<br />
 				<div className="palette-no-results-desc">{adjustSearch}</div>
@@ -82,7 +88,7 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 					defaultMessage: defaultMessages["palette.flyout.search.resultsrestricted"]
 				});
 			contentItems.push(
-				<div key="restrict-item" className="palette-flyout-restrict-item" onKeyDown={this.onKeyDownResults}>
+				<div key="restrict-item" className="palette-flyout-restrict-item">
 					{resultsRestricted}
 				</div>
 			);
