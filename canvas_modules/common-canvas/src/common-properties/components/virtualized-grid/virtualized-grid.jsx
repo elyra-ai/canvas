@@ -231,7 +231,7 @@ const VirtualizedGrid = (props) => {
 					<RadioButton
 						id={`properties-vt-row-radio-${props.scrollKey}-${rowIndex}`}
 						key={`properties-vt-row-radio-${props.scrollKey}-${rowIndex}`}
-						name={`properties-vt-radio-group-${props.scrollKey}`}
+						name={`properties-vt-radio-group-${props.scrollKey}-${rowData.originalRowIndex}`}
 						labelText={translatedRowRadioLabel}
 						hideLabel
 						checked={rowSelected}

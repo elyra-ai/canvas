@@ -429,9 +429,10 @@ class ToolTip extends React.Component {
 			// If the content has a tooltip that can be shown via hover, then it must also be doable via keyboard
 			const canDisplayFullText = this.canDisplayFullText(this.triggerRef);
 			const textOverflowing = this.props.showToolTipIfTruncated && !canDisplayFullText;
+			const focusable = this.props.showToolTipOnClick || textOverflowing;
 
 			// If the children wrapped by the tooltip can be focused, then the tooltip should be shown on focus
-			const enableKeyboardAccess = this.props.showToolTipOnClick || textOverflowing || !this.props.disable;
+			const enableKeyboardAccess = focusable || !this.props.disable;
 
 			triggerContent = (<div
 				data-id={`${this.uuid}-${this.props.id}-trigger`}
@@ -443,11 +444,11 @@ class ToolTip extends React.Component {
 				onFocus={enableKeyboardAccess ? onFocus : null} // When focused using keyboard
 				onBlur={enableKeyboardAccess ? onBlur : null}
 				onKeyDown={this.props.showToolTipOnClick ? onKeyDown : null}
-				tabIndex={this.props.showToolTipOnClick || textOverflowing ? 0 : null}
-				role={this.props.showToolTipOnClick || textOverflowing ? "button" : null}
-				aria-labelledby={this.props.showToolTipOnClick || textOverflowing ? `${this.uuid}-${this.props.id}` : null}
-				aria-expanded={this.props.showToolTipOnClick || textOverflowing ? this.state.isTooltipVisible : null}
-				aria-controls={this.props.showToolTipOnClick || textOverflowing ? `${this.uuid}-${this.props.id}` : null}
+				tabIndex={focusable ? 0 : null}
+				role={focusable ? "button" : null}
+				aria-labelledby={focusable ? `${this.uuid}-${this.props.id}` : null}
+				aria-expanded={focusable ? this.state.isTooltipVisible : null}
+				aria-controls={focusable ? `${this.uuid}-${this.props.id}` : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
