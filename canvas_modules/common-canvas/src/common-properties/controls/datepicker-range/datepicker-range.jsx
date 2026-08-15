@@ -25,7 +25,7 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
-import { getFormattedDate, getISODate, isValidDate } from "../../util/date-utils";
+import { getFormattedDate, getISODate, getDateObject, isValidDate } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE, MESSAGE_KEYS, CARBON_ICONS } from "../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
 
@@ -43,6 +43,14 @@ class DatepickerRangeControl extends React.Component {
 			valueStart: props.value && props.value[0] ? getFormattedDate(props.value[0], this.dateFormat) : "",
 			valueEnd: props.value && props.value[1] ? getFormattedDate(props.value[1], this.dateFormat) : ""
 		};
+
+		// Carbon deprecated 'value' on DatePickerInput; the initial dates must be
+		// passed to the parent DatePicker instead, which hands them to flatpickr
+		// to populate the inputs.
+		this.initialValue = [
+			getDateObject(this.state.valueStart, this.dateFormat),
+			getDateObject(this.state.valueEnd, this.dateFormat)
+		].filter(Boolean);
 
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
 		this.createInfoDesc = this.createInfoDesc.bind(this);
@@ -209,6 +217,7 @@ class DatepickerRangeControl extends React.Component {
 					locale={this.locale}
 					allowInput
 					readOnly={this.props.readOnly}
+					value={this.initialValue}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -218,7 +227,6 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputStartChange.bind(this)}
-						value={this.state.valueStart}
 						onBlur={this.onStartBlur.bind(this)}
 						helperText={!this.props.tableControl && startHelperText}
 					/>
@@ -230,7 +238,6 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputEndChange.bind(this)}
-						value={this.state.valueEnd}
 						onBlur={this.onEndBlur.bind(this)}
 						helperText={!this.props.tableControl && endHelperText}
 					/>
