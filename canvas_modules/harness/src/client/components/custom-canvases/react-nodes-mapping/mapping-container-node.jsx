@@ -481,7 +481,7 @@ class MappingContainerNode extends React.Component {
 	getChevronIcon() {
 		const icon = this.isContainerResized() ? (<ChevronUp />) : (<ChevronDown />);
 		return (
-			<div className="node-header-chevron" onMouseDown={this.onMouseDownOnHeaderChevron}>
+			<div className="node-header-chevron" onMouseDown={this.onMouseDownOnHeaderChevron} role="presentation">
 				{icon}
 			</div>
 		);
@@ -622,7 +622,7 @@ class MappingContainerNode extends React.Component {
 	generateTopLeftIcon() {
 		if (this.props.nodeData.op === "output_link") {
 			return (
-				<div className="node-header-drag-icon" onMouseDown={this.onMouseDownOnDragContainerIcon}>
+				<div className="node-header-drag-icon" onMouseDown={this.onMouseDownOnDragContainerIcon} role="presentation">
 					<DragVertical />
 				</div>
 			);
@@ -633,6 +633,7 @@ class MappingContainerNode extends React.Component {
 					draggable
 					onDragStart={this.onDragStartOnContainerDataIcon}
 					onMouseDown={this.onMouseDownOnContainerDataIcon}
+					role="presentation"
 				>
 					<Draggable />
 				</div>
@@ -695,6 +696,7 @@ class MappingContainerNode extends React.Component {
 						draggable
 						onMouseDown={this.onMouseDownOnFieldIcon}
 						onDragStart={(evt) => this.onDragStartOnFieldIcon(evt, field)}
+						role="presentation"
 					>
 						<Draggable />
 					</div>
@@ -734,6 +736,7 @@ class MappingContainerNode extends React.Component {
 					id={this.getFieldElementId(field.id)}
 					className={className}
 					onMouseDown={(evt) => this.onMouseDownOnFieldRow(evt, index)}
+					role="presentation"
 				>
 					{beforeLabel}
 					<div>{index + 1}</div>
@@ -751,8 +754,8 @@ class MappingContainerNode extends React.Component {
 		return (
 			<div className="node-footer" >
 				<div className="footer-label">{"View 60 more"}</div>
-				<div className="node-footer-chevron" draggable="false" onMouseDown={this.onMouseDownOnResizeIcon} >
-					<img src={"./images/vector.svg"} />
+				<div className="node-footer-chevron" draggable="false" onMouseDown={this.onMouseDownOnResizeIcon} role="presentation">
+					<img src={"./images/vector.svg"} alt="" />
 				</div>
 			</div>
 		);
@@ -773,6 +776,7 @@ class MappingContainerNode extends React.Component {
 				onMouseDown={this.onMouseDownOnContainer}
 				onDrop={this.onFieldDrop}
 				className="node-container"
+				role="presentation"
 				onKeyDown={(evt) => evt.stopPropagation() }
 			>
 				{header}
