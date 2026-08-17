@@ -155,7 +155,7 @@ export default class PromptReactNode extends React.Component {
 		const intl = this.props.canvasController.getIntl();
 
 		return (
-			<div ref={this.divRef} className={"prompt-react"} onKeyDown={this.onKeyDownDiv} onFocus={this.onFocusDiv} onBlur={this.onBlurDiv}>
+			<div ref={this.divRef} className={"prompt-react"} onKeyDown={this.onKeyDownDiv} onFocus={this.onFocusDiv} onBlur={this.onBlurDiv} role="presentation">
 				<div className={"prompt-react-header"}>
 					<span className={"prompt-react-header-title"}>Node Suggestion</span>
 					<div className={"prompt-react-close-button"}>
