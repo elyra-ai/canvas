@@ -3800,14 +3800,14 @@ defaultNodeHeight: 40,
 
 // A space separated list of classes that will be added to the group &lt;g&gt;
 // DOM element for the node.
-className: &quot;&quot;,
+className: "",
 
 // Displays the node outline shape underneath the image and label.
 nodeShapeDisplay: true,
 
-// Default node shape. Can be &quot;rectangle&quot;, &quot;port-arcs&quot; or
-// &quot;rectangle-rounded-corners&quot;. Used when nodeShapeDisplay is true.
-nodeShape: &quot;port-arcs&quot;,
+// Default node shape. Can be "rectangle", "port-arcs" or
+// "rectangle-rounded-corners". Used when nodeShapeDisplay is true.
+nodeShape: "port-arcs",
 
 // An SVG path or a function that returns an SVG path. The paths define the node
 // shape and its selection highlighting respectively. If set to null, the paths
@@ -3832,7 +3832,7 @@ imageWidth: 26,
 imageHeight: 26,
 
 // Image position
-imagePosition: &quot;topLeft&quot;,
+imagePosition: "topLeft",
 imagePosX: 6,
 imagePosY: 7,
 
@@ -3844,17 +3844,17 @@ labelWidth: 112,
 labelHeight: 19,
 
 // Label position
-labelPosition: &quot;topLeft&quot;,
+labelPosition: "topLeft",
 labelPosX: 36,
 labelPosY: 12,
 
 // Label appearance
 labelEditable: false,
-labelAlign: &quot;left&quot;, // can be &quot;left&quot; or &quot;center&quot;
+labelAlign: "left", // can be "left" or "center"
 labelSingleLine: true, // false allow multi-line labels
 labelOutline: false,
 labelMaxCharacters: null, // null allows unlimited characters
-labelAllowReturnKey: false, // true allows line feed to be inserted into label, &quot;save&quot; to make the return key save the label.
+labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 // An array of decorations to be applied to the node. For details see:
 // https://elyra-ai.github.io/canvas/03.04.01-decorations/
@@ -3900,7 +3900,7 @@ nodeMovable: true,
 nodeSizingArea: 10,
 
 // Error indicator dimensions
-errorPosition: &quot;topLeft&quot;,
+errorPosition: "topLeft",
 errorXPos: 24,
 errorYPos: 5,
 errorWidth: 10.5,
@@ -3911,13 +3911,13 @@ errorHeight: 10.5,
 nodeCornerResizeArea: 10,
 
 // What point to draw the data links from and to when enableLinkType is set
-// to &quot;Straight&quot; and enableLinkMethod is set to &quot;Freeform&quot;.
-// Possible values are &quot;image_center&quot; or &quot;node_center&quot;.
-drawNodeLinkLineFromTo: &quot;node_center&quot;,
+// to "Straight" and enableLinkMethod is set to "Freeform".
+// Possible values are "image_center" or "node_center".
+drawNodeLinkLineFromTo: "node_center",
 
 // What point to draw the comment to node link line to. Possible values
-// are &quot;image_center&quot; or &quot;node_center&quot;.
-drawCommentLinkLineTo: &quot;node_center&quot;,
+// are "image_center" or "node_center".
+drawCommentLinkLineTo: "node_center",
 
 // This is the size of the horizontal line protruding from the
 // port on the source node when drawing an elbow or straight connection line.
@@ -3941,17 +3941,17 @@ inputPortFocusable: false,
 // An array of elements to control display of input ports. Each element
 // can have a number of different structures like this:
 // Either
-// { type: &quot;circle&quot; } // Can also be &quot;circleWithArrow&quot;
+// { type: "circle" } // Can also be "circleWithArrow"
 // Or
-// { type: &quot;image&quot;, src: &quot;path/picture.svg&quot;, width: 10, height: 10 }
+// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 // Or
-// { type: &quot;jsx&quot;, src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
+// { type: "jsx", src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
 //
 // The order of the elements corresponds to the order of ports in the
 // inputs array for the node. If there are more input ports than elements
 // in the array, the last element will be used for all remaining ports.
 inputPortDisplayObjects: [
-    { type: &quot;circleWithArrow&quot; }
+    { type: "circleWithArrow" }
 ],
 
 // Indicates whether multiple input ports should be automatically
@@ -3960,30 +3960,30 @@ inputPortDisplayObjects: [
 inputPortAutoPosition: true,
 
 // An array of input port positions. Each element is structured like
-// this: { x_pos: 5, y_pos: 10, pos: &quot;topLeft&quot; }. x_pos and y_pos are
+// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
 // offsets from the pos point on the node.
 // The order of the elements corresponds to the order of ports in the
 // inputs array for the node. If there are more input ports than elements
 // in the array, the last element will be used for all remaining ports.
 inputPortPositions: [
-    { x_pos: 0, y_pos: 20, pos: &quot;topLeft&quot; }
+    { x_pos: 0, y_pos: 20, pos: "topLeft" }
 ],
 
 // An array of elements to control display of input port guide objects.
 // That is the object drawn at the end of a new link as it is being dragged.
 // Each element can have a number of different structures like this:
 // Either
-// { type: &quot;circle&quot; } // Can also be &quot;circleWithArrow&quot;
+// { type: "circle" } // Can also be "circleWithArrow"
 // Or
-// { type: &quot;image&quot;, src: &quot;path/picture.svg&quot;, width: 10, height: 10 }
+// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 // Or
-// { type: &quot;jsx&quot;, src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
+// { type: "jsx", src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
 //
 // The order of the elements corresponds to the order of ports in the
 // inputs array for the node. If there are more input ports than elements
 // in the array, the last element will be used for all remaining ports.
 inputPortGuideObjects: [
-    { type: &quot;circle&quot; }
+    { type: "circle" }
 ],
 
 // Display output ports.
@@ -3995,17 +3995,17 @@ outputPortFocusable: false,
 // An array of elements to control display of output ports. Each element
 // can have a number of different structures like this:
 // Either
-// { type: &quot;circle&quot; } // Can also be &quot;circleWithArrow&quot;
+// { type: "circle" } // Can also be "circleWithArrow"
 // Or
-// { type: &quot;image&quot;, src: &quot;path/picture.svg&quot;, width: 10, height: 10 }
+// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 // Or
-// { type: &quot;jsx&quot;, src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
+// { type: "jsx", src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
 //
 // The order of the elements corresponds to the order of ports in the
 // outputs array for the node. If there are more output ports than elements
 // in the array, the last element will be used for all remaining ports.
 outputPortDisplayObjects: [
-    { type: &quot;circle&quot; }
+    { type: "circle" }
 ],
 
 // Indicates whether multiple output ports should be automatically
@@ -4014,30 +4014,30 @@ outputPortDisplayObjects: [
 outputPortAutoPosition: true,
 
 // An array of output port positions. Each element is structured like
-// this: { x_pos: 5, y_pos: 10, pos: &quot;topRight&quot; }. x_pos and y_pos are
+// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
 // offsets from the pos point on the node.
 // The order of the elements corresponds to the order of ports in the
 // outputs array for the node. If there are more output ports than elements
 // in the array, the last element will be used for all remaining ports.
 outputPortPositions: [
-    { x_pos: 0, y_pos: 20, pos: &quot;topRight&quot; }
+    { x_pos: 0, y_pos: 20, pos: "topRight" }
 ],
 
 // An array of elements to control display of output port guide objects.
 // That is the object drawn at the end of a new link as it is being dragged.
 // Each element can have a number of different structures like this:
 // Either
-// { type: &quot;circle&quot; } // Can also be &quot;circleWithArrow&quot;
+// { type: "circle" } // Can also be "circleWithArrow"
 // Or
-// { type: &quot;image&quot;, src: &quot;path/picture.svg&quot;, width: 10, height: 10 }
+// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 // Or
-// { type: &quot;jsx&quot;, src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
+// { type: "jsx", src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
 //
 // The order of the elements corresponds to the order of ports in the
 // outputs array for the node. If there are more output ports than elements
 // in the array, the last element will be used for all remaining ports.
 outputPortGuideObjects: [
-    { type: &quot;circle&quot; }
+    { type: "circle" }
 ],
 
 // When set to true, only a single output port (the last one) will be
@@ -4050,7 +4050,7 @@ singleOutputPortDisplay: false,
 // the node.
 autoSizeNode: true,
 
-// Radius of the either the input or output ports when they are set to &quot;circle&quot;
+// Radius of the either the input or output ports when they are set to "circle"
 portRadius: 3,
 
 // Size of an offset above and below the set of port arcs.
@@ -4066,11 +4066,11 @@ portArcSpacing: 3,
 
 // Position of the context toolbar relative to the node. Some adjustment
 // will be made to account for the width of the toolbar.
-contextToolbarPosition: &quot;topRight&quot;,
+contextToolbarPosition: "topRight",
 
 // Display of vertical ellipsis to show context menu
 ellipsisDisplay: true,
-ellipsisPosition: &quot;topLeft&quot;,
+ellipsisPosition: "topLeft",
 ellipsisWidth: 10,
 ellipsisHeight: 22,
 ellipsisPosX: 145,
@@ -4086,7 +4086,7 @@ ellipsisHoverAreaPadding: 2
 <p>For example, these settings:
 <div class="highlight"><pre><span></span><code>    const config = {
         enableNodeLayout: {
-            imagePosition: &quot;middleCenter&quot;,
+            imagePosition: "middleCenter",
             imagePosX: -10,
             imagePosY: -10,
             imageWidth: 20,
@@ -4101,8 +4101,8 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <p>Let&rsquo;s say you want your nodes to be displayed as ellipses. You could provide the following settings in <code>enableNodeLayout</code> in the canvas config:
 <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">canvasConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">bodyPath</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">selectionPath</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">bodyPath</span><span class="o">:</span><span class="w"> </span><span class="s2">"     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">selectionPath</span><span class="o">:</span><span class="w"> </span><span class="s2">"M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z"</span><span class="p">,</span>
 <span class="w">        </span><span class="nx">defaultNodeWidth</span><span class="o">:</span><span class="w"> </span><span class="mf">120</span><span class="p">,</span>
 <span class="w">        </span><span class="nx">defaultNodeHeight</span><span class="o">:</span><span class="w"> </span><span class="mf">60</span><span class="p">,</span>
 <span class="w">        </span><span class="nx">imageWidth</span><span class="o">:</span><span class="w"> </span><span class="mf">30</span><span class="p">,</span>
@@ -4141,7 +4141,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <p>Here is a simple example of a <code>layoutHandler</code> callback method which will override the width of the node based on the width of the main label for any node where the node&rsquo;s <code>op</code> field is set to <code>Sort</code>:
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">layoutHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">op</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;Sort&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">op</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"Sort"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">labLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">label</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">label</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">labLen</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">9</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">30</span><span class="p">;</span><span class="w"> </span><span class="c1">// Allow 9 pixels for each character plus some padding</span>
 <span class="w">            </span><span class="nx">customNodeLayout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -4187,8 +4187,8 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <span class="w">        </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nx">inputPortAutoPosition</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <span class="w">            </span><span class="nx">inputPortPositions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">x_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">y_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;topLeft&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">x_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">y_pos</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;bottomLeft&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">x_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">y_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="o">:</span><span class="w"> </span><span class="s2">"topLeft"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">x_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">y_pos</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="o">:</span><span class="w"> </span><span class="s2">"bottomLeft"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="p">]</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
@@ -4220,7 +4220,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <span class="w">            </span><span class="nx">imageHeight</span><span class="o">:</span><span class="w"> </span><span class="mf">26</span><span class="p">,</span>
 
 <span class="w">            </span><span class="c1">// Image position</span>
-<span class="w">            </span><span class="nx">imagePosition</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;topLeft&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">imagePosition</span><span class="o">:</span><span class="w"> </span><span class="s2">"topLeft"</span><span class="p">,</span>
 <span class="w">            </span><span class="nx">imagePosX</span><span class="o">:</span><span class="w"> </span><span class="mf">6</span><span class="p">,</span>
 <span class="w">            </span><span class="nx">imagePosY</span><span class="o">:</span><span class="w"> </span><span class="mf">7</span>
 <span class="w">        </span><span class="p">}</span>
@@ -4244,7 +4244,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">JoinInner</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="err">“@</span><span class="nx">carbon</span><span class="o">/</span><span class="nx">react</span><span class="o">/</span><span class="nx">icons</span><span class="err">”</span><span class="o">:</span>
 <span class="w">    </span><span class="p">...</span>
 <span class="w">    </span><span class="p">...</span>
-<span class="w">    </span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">setNodeProperties</span><span class="p">(</span><span class="s2">&quot;123&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">image</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;</span><span class="nx">JoinInner</span><span class="w"> </span><span class="nx">size</span><span class="o">=</span><span class="p">{</span><span class="mf">20</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">setNodeProperties</span><span class="p">(</span><span class="s2">"123"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">image</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;</span><span class="nx">JoinInner</span><span class="w"> </span><span class="nx">size</span><span class="o">=</span><span class="p">{</span><span class="mf">20</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">});</span>
 </code></pre></div>
 Alternatively, JSX images can be injected directly into the pipeline flow object or palette object before it is provided to Common Canvas.</p>
 <div class="admonition note">
@@ -4261,9 +4261,9 @@ Alternatively, JSX images can be injected directly into the pipeline flow object
 <span class="w">            </span><span class="c1">// Displays the node outline shape underneath the image and label.</span>
 <span class="w">            </span><span class="nx">nodeShapeDisplay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 
-<span class="w">            </span><span class="c1">// Default node shape. Can be &quot;rectangle&quot;, &quot;port-arcs&quot; or</span>
-<span class="w">            </span><span class="c1">// &quot;rectangle-rounded-corners&quot;. Used when nodeShapeDisplay is true.</span>
-<span class="w">            </span><span class="nx">nodeShape</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;rectangle&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="c1">// Default node shape. Can be "rectangle", "port-arcs" or</span>
+<span class="w">            </span><span class="c1">// "rectangle-rounded-corners". Used when nodeShapeDisplay is true.</span>
+<span class="w">            </span><span class="nx">nodeShape</span><span class="o">:</span><span class="w"> </span><span class="s2">"rectangle"</span><span class="p">,</span>
 
 <span class="w">            </span><span class="c1">// An SVG path or a function that returns an SVG path. The paths define the node</span>
 <span class="w">            </span><span class="c1">// shape and its selection highlighting respectively. If set to null, the paths</span>
@@ -4278,7 +4278,7 @@ Alternatively, JSX images can be injected directly into the pipeline flow object
 <h2 id="node-with-react-object">Node with React object<a class="headerlink" href="#node-with-react-object" title="Permanent link">&para;</a></h2>
 <p>The application can specify a React object to be displayed for the contents of a node. Typically this would replace the label, image and background shape which can all be switched off using properties in the node layout properties. The application specifies the React object in the <code>nodeExternalObject</code> node layout property.</p>
 <p>In this example, <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/src/client/components/custom-canvases/react-nodes-carbon/wrapper-card-node.jsx">CardNodeWrapper</a> display a Card node from Carbon Charts (@carbon/charts-react) package:</p>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="nx">CardNodeWrapper</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./wrapper-card-node.jsx&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="nx">CardNodeWrapper</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"./wrapper-card-node.jsx"</span><span class="p">;</span>
 <span class="w">    </span><span class="p">...</span>
 <span class="w">    </span><span class="p">...</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -4317,7 +4317,7 @@ externalUtils - an additional utilities file
 <li>By specifying a class name in the <code>className</code> field of the node layout properties in the canvas config. Like this
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">canvasConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">className</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-node-class&quot;</span>
+<span class="w">            </span><span class="nx">className</span><span class="o">:</span><span class="w"> </span><span class="s2">"my-node-class"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 </code></pre></div></li>

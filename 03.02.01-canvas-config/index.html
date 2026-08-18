@@ -4997,8 +4997,8 @@
 <h1 id="canvas-config-object">Canvas Config object<a class="headerlink" href="#canvas-config-object" title="Permanent link">&para;</a></h1>
 <p>The canvas config object is optional. If it is not provided, or any of the properties within it are not provided, Common Canvas will use reasonable defaults. Here&rsquo;s an example of a canvas config object:
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">commonCanvasConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">       </span><span class="s2">&quot;enableNodeFormatType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Vertical&quot;</span><span class="p">,</span>
-<span class="w">       </span><span class="s2">&quot;enableLinkType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Straight&quot;</span>
+<span class="w">       </span><span class="s2">"enableNodeFormatType"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Vertical"</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">"enableLinkType"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Straight"</span>
 <span class="w">       </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 </code></pre></div>
@@ -5121,26 +5121,26 @@ and this is how it is specified to Common Canvas:
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
 <h4 id="tipconfig"><strong>tipConfig</strong><a class="headerlink" href="#tipconfig" title="Permanent link">&para;</a></h4>
 <p>This is a simple JavaScript object that configures whether tips for palette items, nodes, ports, links, decorations or the state tag are enabled (value set to <code>true</code>) or disabled (value set to <code>false</code>). By default, all tips are enabled. The following would switch off tips for ports and links.
-<div class="highlight"><pre><span></span><code><span class="w">       </span><span class="s2">&quot;tipConfig&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">           </span><span class="s2">&quot;palette&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;nodes&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;ports&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;links&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;decorations&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;stateTag&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><span class="w">       </span><span class="s2">"tipConfig"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">           </span><span class="s2">"palette"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"nodes"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"ports"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"links"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"decorations"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"stateTag"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">       </span><span class="p">}</span>
 </code></pre></div>
 The tips displayed by the palette can be further refined. For example, this would prevent tips for palette categories from being displayed, but would still display tips for node templates in the categories:
-<div class="highlight"><pre><span></span><code><span class="w">       </span><span class="s2">&quot;tipConfig&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">           </span><span class="s2">&quot;palette&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">              </span><span class="s2">&quot;categories&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;nodeTemplates&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><span class="w">       </span><span class="s2">"tipConfig"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">           </span><span class="s2">"palette"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="s2">"categories"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">"nodeTemplates"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">           </span><span class="p">},</span>
-<span class="w">           </span><span class="s2">&quot;nodes&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;ports&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;links&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;decorations&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">           </span><span class="s2">&quot;stateTag&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">           </span><span class="s2">"nodes"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"ports"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"links"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"decorations"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">"stateTag"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">       </span><span class="p">}</span>
 </code></pre></div></p>
 <p>Note: The default content of tips can be overwritten by implementing the <a href="../03.03.06-tip-handler/">Tip Handler callback</a>.</p>

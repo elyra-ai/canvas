@@ -3388,10 +3388,10 @@
 <p>Note: When handling selections, the <a href="../03.03.08-selection-change-handler/">selectionChangeHandler</a> callback should be used in preference to this handler when possible. <code>selectionChangeHandler</code> will notify you of all selection changes regardless of how they occur, such as when the user presses <code>Ctrl+A</code> on the keyboard to select all objects.</p>
 <p>The clickActionHandler is called for click, double-click and context-menu-click actions on nodes, comments, links and the canvas background. It is provided with one parameter that looks like this:</p>
 <p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">clickType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;DOUBLE_CLICK&quot;</span>
-<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;node_1&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">objectType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">selectedObjectIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;node_2&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="nx">clickType</span><span class="o">:</span><span class="w"> </span><span class="s2">"DOUBLE_CLICK"</span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">"node_1"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">objectType</span><span class="o">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">selectedObjectIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"node_1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"node_2"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
 The fields can be:</p>

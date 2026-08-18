@@ -3735,7 +3735,7 @@
 <h1 id="custom-components-overview">Custom Components Overview<a class="headerlink" href="#custom-components-overview" title="Permanent link">&para;</a></h1>
 <p>Custom components allows applications to use custom code to drive different parts of the common-properties user interface.  For some panels and controls it might be necessary to listen to different types of redux state changes to cause the panel/control to rerender.
 Here is an example of a textfield listening to three state changes:
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">connect</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">connect</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"react-redux"</span><span class="p">;</span>
 
 <span class="c1">// ... application code</span>
 
@@ -3763,7 +3763,7 @@ Here is an example of a textfield listening to three state changes:
 <h2 id="custom-panels">Custom Panels<a class="headerlink" href="#custom-panels" title="Permanent link">&para;</a></h2>
 <p>Custom panels allow applications to create their own panels and controls that can live in the same dialogs as common-property panels and controls.</p>
 <h3 id="custom-panel-interface">Custom panel interface<a class="headerlink" href="#custom-panel-interface" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Returns the &#39;id&#39; for the group defined in uihints</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns the 'id' for the group defined in uihints</span>
 <span class="k">static</span><span class="w"> </span><span class="nx">id</span><span class="p">()</span>
 
 <span class="kr">constructor</span><span class="p">(</span><span class="nx">parameters</span><span class="p">,</span><span class="w"> </span><span class="nx">controller</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
@@ -3802,7 +3802,7 @@ Here is an example of a textfield listening to three state changes:
 <h2 id="custom-controls">Custom Controls<a class="headerlink" href="#custom-controls" title="Permanent link">&para;</a></h2>
 <p>Custom controls allow applications to create their own controls that can live in the same dialogs as common-property panels and controls.</p>
 <h3 id="custom-control-interface">Custom control interface<a class="headerlink" href="#custom-control-interface" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Returns the &#39;custom_control_id&#39; for the parameter defined in uihints</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns the 'custom_control_id' for the parameter defined in uihints</span>
 <span class="k">static</span><span class="w"> </span><span class="nx">id</span><span class="p">()</span>
 
 <span class="kr">constructor</span><span class="p">(</span><span class="nx">propertyId</span><span class="p">,</span><span class="w"> </span><span class="nx">controller</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">tableInfo</span><span class="p">)</span>
@@ -3845,7 +3845,7 @@ Here is an example of a textfield listening to three state changes:
 <h2 id="custom-actions">Custom Actions<a class="headerlink" href="#custom-actions" title="Permanent link">&para;</a></h2>
 <p>Custom actions allow applications to create their own actions that can live in the same dialogs as common-property panels and controls. Common-properties provide a placeholder to add a custom action. Host application should add appropriate CSS for custom action to match with design specs.</p>
 <h3 id="custom-action-interface">Custom action interface<a class="headerlink" href="#custom-action-interface" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Returns the &#39;custom_action_id&#39; for the action defined in uihints</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns the 'custom_action_id' for the action defined in uihints</span>
 <span class="k">static</span><span class="w"> </span><span class="nx">id</span><span class="p">()</span>
 
 <span class="kr">constructor</span><span class="p">(</span><span class="nx">propertyId</span><span class="p">,</span><span class="w"> </span><span class="nx">controller</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
@@ -3872,12 +3872,12 @@ Here is an example of a textfield listening to three state changes:
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="nx">OverflowMenu</span>
 <span class="w">            </span><span class="nx">flipped</span>
-<span class="w">            </span><span class="nx">aria</span><span class="o">-</span><span class="nx">label</span><span class="o">=</span><span class="s2">&quot;Overflow menu&quot;</span>
-<span class="w">            </span><span class="nx">size</span><span class="o">=</span><span class="s2">&quot;sm&quot;</span>
-<span class="w">            </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;harness-custom-action&quot;</span>
+<span class="w">            </span><span class="nx">aria</span><span class="o">-</span><span class="nx">label</span><span class="o">=</span><span class="s2">"Overflow menu"</span>
+<span class="w">            </span><span class="nx">size</span><span class="o">=</span><span class="s2">"sm"</span>
+<span class="w">            </span><span class="nx">className</span><span class="o">=</span><span class="s2">"harness-custom-action"</span>
 <span class="w">        </span><span class="o">&gt;</span>
-<span class="w">            </span><span class="o">&lt;</span><span class="nx">OverflowMenuItem</span><span class="w"> </span><span class="nx">itemText</span><span class="o">=</span><span class="s2">&quot;Menu item 1&quot;</span><span class="w"> </span><span class="o">/&gt;</span>
-<span class="w">            </span><span class="o">&lt;</span><span class="nx">OverflowMenuItem</span><span class="w"> </span><span class="nx">itemText</span><span class="o">=</span><span class="s2">&quot;Menu item 2&quot;</span><span class="w"> </span><span class="o">/&gt;</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">OverflowMenuItem</span><span class="w"> </span><span class="nx">itemText</span><span class="o">=</span><span class="s2">"Menu item 1"</span><span class="w"> </span><span class="o">/&gt;</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">OverflowMenuItem</span><span class="w"> </span><span class="nx">itemText</span><span class="o">=</span><span class="s2">"Menu item 2"</span><span class="w"> </span><span class="o">/&gt;</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="err">/OverflowMenu&gt;</span>
 <span class="w">    </span><span class="p">);</span>
 <span class="p">}</span>
@@ -3912,11 +3912,11 @@ Here is an example of a textfield listening to three state changes:
 </ul>
 <p>Example
 <div class="highlight"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">op</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;customMax&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="s2">"customMax"</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">evaluate</span><span class="p">(</span><span class="nx">paramInfo</span><span class="p">,</span><span class="w"> </span><span class="nx">param2Info</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">controller</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">supportedControls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;numberfield&quot;</span><span class="p">];</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">supportedControls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"numberfield"</span><span class="p">];</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">supportedControls</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">paramInfo</span><span class="p">.</span><span class="nx">control</span><span class="p">.</span><span class="nx">controlType</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">paramInfo</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
@@ -3929,11 +3929,11 @@ Here is an example of a textfield listening to three state changes:
 <span class="p">};</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;evaluate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;parameter_ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;custom_op_num&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;op&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;customMax&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">    </span><span class="nt">"evaluate"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"parameter_ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"custom_op_num"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customMax"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>

@@ -3514,15 +3514,15 @@ These properties are applicable to a JSX decoration:
 <p>A boolean that defaults to <code>false</code>. When <code>false</code>, if the user presses the return key nothing will happen. This means multi-line labels will only word-wrap at the <code>width</code> of the decorator. Preventing newline insertion is useful if the label text appears elsewhere in the UI which is not able to show text with newline characters. When set to <code>"save"</code>, if the user presses the return key, the editing will be completed and the label saved &ndash; this is the equivalent of clicking on the canvas background to complete the edit. If set to <code>true</code>, a new line character will be inserted in the label when the user presses return.</p>
 <h4 id="position"><strong>position</strong><a class="headerlink" href="#position" title="Permanent link">&para;</a></h4>
 <p>This is the anchor point to which the decoration is attached.  For a node or comment, this can be one of these 9 enumerated values:
-<div class="highlight"><pre><span></span><code>   &quot;topLeft&quot;, &quot;topCenter&quot;, &quot;topRight&quot;,
-   &quot;middleLeft&quot;, &quot;middleCenter&quot;, &quot;middleRight&quot;,
-   &quot;bottomLeft&quot;, &quot;bottomCenter&quot;, &quot;bottomRight&quot;.
+<div class="highlight"><pre><span></span><code>   "topLeft", "topCenter", "topRight",
+   "middleLeft", "middleCenter", "middleRight",
+   "bottomLeft", "bottomCenter", "bottomRight".
 </code></pre></div>
 If omitted it will default to &ldquo;topLeft&rdquo;.</p>
 <p>For a link, this can be one of these 3 enumerated values:
-<div class="highlight"><pre><span></span><code>   &quot;source&quot;
-   &quot;middle&quot;
-   &quot;target&quot;
+<div class="highlight"><pre><span></span><code>   "source"
+   "middle"
+   "target"
 </code></pre></div>
 <code>source</code> will position the decoration at the start point of the line and <code>target</code> will position it at the end point of the line. If omitted it will default to <code>middle</code>.</p>
 <h4 id="distance"><strong>distance</strong><a class="headerlink" href="#distance" title="Permanent link">&para;</a></h4>

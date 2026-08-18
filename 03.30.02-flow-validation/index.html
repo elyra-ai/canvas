@@ -3381,7 +3381,7 @@
 <h1 id="flow-validation-api">Flow Validation API<a class="headerlink" href="#flow-validation-api" title="Permanent link">&para;</a></h1>
 <h2 id="this-function-is-deprecated-and-will-be-removed-in-future-release"><strong>This function is deprecated and will be removed in  future release</strong><a class="headerlink" href="#this-function-is-deprecated-and-will-be-removed-in-future-release" title="Permanent link">&para;</a></h2>
 <p>The Flow Validation API allows application code to programmatically validate the nodes in the flow against it&rsquo;s property values.  The API can be invoked after setting the Canvas Controller pipeline flow, when opening a new flow, or associated with a canvas context menu item.  To use the Flow Validation API import the FlowValidation object from Common Canvas:
-<div class="highlight"><pre><span></span><code>import { FlowValidation } from &quot;@elyra/canvas&quot;;
+<div class="highlight"><pre><span></span><code>import { FlowValidation } from "@elyra/canvas";
 </code></pre></div>
 then call the API on the object, for example:
 <div class="highlight"><pre><span></span><code>FlowValidation.validateFlow( ... );
@@ -3412,11 +3412,11 @@ setNodeMessagesCallback(nodeId, messages)
 <p>The validateFlow() API will traverse the current flow and for each node invoke the parameterDataCallback() to get with a form data JSON or a parameterDef JSON.  It will validate the JSON for the node and store any messages in the node objects within the model.  The setNodeMessagesCallback() function will be called with all the messages generated for the node.  This is only useful if the application is not using the internal object model.
 The format of the message object is described in <a href="https://github.com/elyra-ai/wdp-pipeline-schemas/blob/master/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json">Pipeline Flow UI schema</a></p>
 <p>Here is an example of using the FlowValidation API to validate a flow on opening:</p>
-<div class="highlight"><pre><span></span><code>import { CanvasController, FlowValidation } from &quot;@elyra/canvas&quot;;
+<div class="highlight"><pre><span></span><code>import { CanvasController, FlowValidation } from "@elyra/canvas";
 
 getNodeForm(nodeId) {
     const parameterDef = getParameterDefJSON(nodeId);
-    return { type: &quot;parameterDef&quot;, data: parameterDef };
+    return { type: "parameterDef", data: parameterDef };
 }
 
 setNodeMessages(nodeId, messages) {

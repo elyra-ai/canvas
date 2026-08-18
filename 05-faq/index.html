@@ -3542,7 +3542,7 @@
 <details class="question">
 <summary>When displaying React nodes using nodeExternalObject field, how can the application pass in its own props to the component?</summary>
 <p>The application can add whatever it wants to pass in as a field in either the nodeData object or the Canvas Controller — making sure not to over write any of the existing fields that are there by default of course. So if you wanted to pass in your own data on a node-by-node basis you could set a field in the app_data field of each node. Something like:</p>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">nodeId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;123&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">nodeId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"123"</span><span class="p">;</span>
 
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">mydata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">field1</span><span class="o">:</span><span class="w"> </span><span class="nx">val1</span>

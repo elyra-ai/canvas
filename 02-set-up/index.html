@@ -3593,7 +3593,7 @@
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@elyra/canvas<span class="w"> </span>--save-dev
 </code></pre></div>
 or add this to your package.json file:</p>
-<p><div class="highlight"><pre><span></span><code>  &quot;@elyra/canvas&quot;: &quot;x.x.x&quot;
+<p><div class="highlight"><pre><span></span><code>  "@elyra/canvas": "x.x.x"
 </code></pre></div>
 where x.x.x is the latest build and then run:
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
@@ -3613,15 +3613,15 @@ where x.x.x is the latest build and then run:
 <p>In the examples below, we refer to files in the Elyra Canvas Test Harness. The Harness behaves like as a sample application that uses Common Canvas and Common Properties.</p>
 <h3 id="quick-start-using-css">Quick Start using CSS<a class="headerlink" href="#quick-start-using-css" title="Permanent link">&para;</a></h3>
 <p>If you just want to get up and running quickly without using SASS you can get the Carbon and Elyra Canvas styles by importing these CSS files:</p>
-<div class="highlight"><pre><span></span><code>  import &quot;@carbon/styles/css/styles.min.css&quot;;
-  import &quot;@elyra/canvas/dist/styles/common-canvas.min.css&quot;;
+<div class="highlight"><pre><span></span><code>  import "@carbon/styles/css/styles.min.css";
+  import "@elyra/canvas/dist/styles/common-canvas.min.css";
 </code></pre></div>
 <p>You can also specify which of the Carbon themes you want to use by wrapping the Elyra Canvas component with a <code>&lt;Theme&gt;</code> tag.</p>
-<div class="highlight"><pre><span></span><code>    import { Theme } from &#39;@carbon/react&#39;;
+<div class="highlight"><pre><span></span><code>    import { Theme } from '@carbon/react';
     ...
     ...
-    &lt;Theme theme=&quot;g10&quot;&gt;
-        &lt;IntlProvider locale=&quot;en&quot;&gt;
+    &lt;Theme theme="g10"&gt;
+        &lt;IntlProvider locale="en"&gt;
             &lt;CommonCanvas /&gt; or &lt;CommonProperties /&gt;
         &lt;/IntlProvider&gt;
     &lt;/Theme&gt;
@@ -3629,8 +3629,8 @@ where x.x.x is the latest build and then run:
 <p>where &ldquo;g10&rdquo; can also be set to &ldquo;g100&rdquo;, &ldquo;g90&rdquo; or &ldquo;white&rdquo; (the default).</p>
 <h3 id="styling-using-sass">Styling using SASS<a class="headerlink" href="#styling-using-sass" title="Permanent link">&para;</a></h3>
 <p>If you want to use the full power of SASS for styling to override default styling in Common Canvas or Common Properties then you must include this <code>@forward</code>  in your SCSS:</p>
-<div class="highlight"><pre><span></span><code>@forward &quot;@carbon/react&quot; with (
-    $font-path: &quot;/fonts/plex&quot;,
+<div class="highlight"><pre><span></span><code>@forward "@carbon/react" with (
+    $font-path: "/fonts/plex",
     $use-per-family-plex: true
 );
 </code></pre></div>
@@ -3645,7 +3645,7 @@ where x.x.x is the latest build and then run:
 <li>use <code>autoprefixer</code></li>
 <li>
 <p>if using webpack, make sure to include the following under the <code>sass-loader</code></p>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">includePaths</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">includePaths</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"node_modules"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 </li>
 <li>
@@ -3654,20 +3654,20 @@ where x.x.x is the latest build and then run:
 </ul>
 <h3 id="loading-fonts">Loading Fonts<a class="headerlink" href="#loading-fonts" title="Permanent link">&para;</a></h3>
 <p>To get the correct display of fonts in Elyra Canvas, the application&rsquo;s build process should copy the IBM Plex font files from <code>/node_modules/@ibm</code>to a <code>./fonts</code> folder and the following should be added to the <code>SCSS</code> for the application:</p>
-<div class="highlight"><pre><span></span><code>@use &quot;@ibm/plex-sans-condensed/scss&quot; as PlexSansCondensed with (
-    $font-prefix: &quot;/fonts/plex-sans-condensed&quot;
+<div class="highlight"><pre><span></span><code>@use "@ibm/plex-sans-condensed/scss" as PlexSansCondensed with (
+    $font-prefix: "/fonts/plex-sans-condensed"
 );
 
-@use &quot;@ibm/plex-sans/scss&quot; as PlexSans with (
-    $font-prefix: &quot;/fonts/plex-sans&quot;
+@use "@ibm/plex-sans/scss" as PlexSans with (
+    $font-prefix: "/fonts/plex-sans"
 );
 
-@use &quot;@ibm/plex-serif/scss&quot; as PlexSerif with (
-    $font-prefix: &quot;/fonts/plex-serif&quot;
+@use "@ibm/plex-serif/scss" as PlexSerif with (
+    $font-prefix: "/fonts/plex-serif"
 );
 
-@use &quot;@ibm/plex-mono/scss&quot; as PlexMono with (
-    $font-prefix: &quot;/fonts/plex-mono&quot;
+@use "@ibm/plex-mono/scss" as PlexMono with (
+    $font-prefix: "/fonts/plex-mono"
 );
 
 @include PlexSansCondensed.all();
@@ -3685,14 +3685,14 @@ where x.x.x is the latest build and then run:
         files: [{
             expand: true,
             flatten: false,
-            cwd: &quot;./node_modules/@ibm&quot;,
-            src: [&quot;plex-*/fonts/**&quot;],
-            dest: &quot;.build/fonts&quot;
+            cwd: "./node_modules/@ibm",
+            src: ["plex-*/fonts/**"],
+            dest: ".build/fonts"
         }]
     }
 }
 ...
-var buildTasks = [&quot;copy:fonts&quot;];
+var buildTasks = ["copy:fonts"];
 </code></pre></div></p>
 <h3 id="3rd-party-styling">3rd party styling<a class="headerlink" href="#3rd-party-styling" title="Permanent link">&para;</a></h3>
 <p>If you intend to configure Common Properties to use the, now superseded, React-virtualized tables by setting <code>enableTanstackTable</code> <a href="/04.08-properties-config/#properties-config">configuration</a> property to <code>false</code> then you will need to also include the react-virtualized styles:</p>

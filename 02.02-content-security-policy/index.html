@@ -3465,7 +3465,7 @@
 <span class="p">/&gt;</span>
 </code></pre></div>
 <p>Your server must generate a new cryptographically random nonce for each HTTP response and include the same nonce in the <code>Content-Security-Policy</code> response header, for example:</p>
-<div class="highlight"><pre><span></span><code><span class="err">Content-Security-Policy: default-src &#39;self&#39;; style-src &#39;self&#39; &#39;nonce-&lt;your-nonce-value&gt;&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="err">Content-Security-Policy: default-src 'self'; style-src 'self' 'nonce-&lt;your-nonce-value&gt;'</span>
 </code></pre></div>
 <p>See the <a href="../04.08-properties-config/#properties-config"><code>cspNonce</code></a> documentation for a fuller example.</p>
 <h2 id="svg-icons-and-images">SVG icons and images<a class="headerlink" href="#svg-icons-and-images" title="Permanent link">&para;</a></h2>

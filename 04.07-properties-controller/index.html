@@ -3813,7 +3813,7 @@
 
 <span class="cm">/*</span>
 <span class="cm"> * @propertyId - see above</span>
-<span class="cm"> * @state - valid values are &quot;enabled&quot;, &quot;disabled&quot;, &quot;visible&quot;, &quot;hidden&quot;</span>
+<span class="cm"> * @state - valid values are "enabled", "disabled", "visible", "hidden"</span>
 <span class="cm"> */</span>
 <span class="nx">updateControlState</span><span class="p">(</span><span class="nx">propertyId</span><span class="p">,</span><span class="w"> </span><span class="nx">state</span><span class="p">)</span>
 </code></pre></div>
@@ -3873,9 +3873,9 @@
 </code></pre></div>
 <h3 id="control-methods">Control methods<a class="headerlink" href="#control-methods" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cm">/*</span>
-<span class="cm"> * Update the enum values for a given control.  Used when enum values aren&#39;t static</span>
+<span class="cm"> * Update the enum values for a given control.  Used when enum values aren't static</span>
 <span class="cm"> * @propertyId - see above</span>
-<span class="cm"> * @valuesObj (array) [{ value: &lt;string, number, boolean&gt; , label: &quot;&lt;string&gt;&quot; }]</span>
+<span class="cm"> * @valuesObj (array) [{ value: &lt;string, number, boolean&gt; , label: "&lt;string&gt;" }]</span>
 <span class="cm"> */</span>
 <span class="nx">updateControlEnumValues</span><span class="p">(</span><span class="nx">propertyId</span><span class="p">,</span><span class="w"> </span><span class="nx">valuesObj</span><span class="p">)</span>
 </code></pre></div>
@@ -3887,7 +3887,7 @@
 
 <span class="cm">/*</span>
 <span class="cm"> * Sets default property values from parameter definition in the propertiesController.</span>
-<span class="cm"> * Note - These values won&#39;t be displayed on the UI. Host applications can call getPropertyValues() to retrieve the values.</span>
+<span class="cm"> * Note - These values won't be displayed on the UI. Host applications can call getPropertyValues() to retrieve the values.</span>
 <span class="cm"> * @paramDef - Follows the format of https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v3-schema.json</span>
 <span class="cm"> */</span>
 <span class="nx">setParamDef</span><span class="p">(</span><span class="nx">paramDef</span><span class="p">)</span>
@@ -3937,7 +3937,7 @@
 <span class="cm"> * Sets the content to be displayed in the summaryPanel for a customPanel property.</span>
 <span class="cm"> * The summary panel will directly display the content.</span>
 <span class="cm"> * @propertyId - see above</span>
-<span class="cm"> * @content = { value: &lt;object&gt; , label: &quot;&lt;value&gt;&quot; }</span>
+<span class="cm"> * @content = { value: &lt;object&gt; , label: "&lt;value&gt;" }</span>
 <span class="cm"> */</span>
 <span class="nx">updateCustPropSumPanelValue</span><span class="p">(</span><span class="nx">propertyId</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="p">)</span>
 
@@ -3972,7 +3972,7 @@
 </code></pre></div>
 <h3 id="enablingdisabling-addremoverows-methods">Enabling/disabling addRemoveRows methods<a class="headerlink" href="#enablingdisabling-addremoverows-methods" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cm">/*</span>
-<span class="cm"> * Set the addRemoveRows attribute to &#39;enabled&#39; for the given propertyId</span>
+<span class="cm"> * Set the addRemoveRows attribute to 'enabled' for the given propertyId</span>
 <span class="cm"> * @param propertyId The unique property identifier</span>
 <span class="cm"> * @param enabled boolean value to enable or disable addRemoveRows</span>
 <span class="cm"> */</span>
@@ -3987,13 +3987,13 @@
 </code></pre></div>
 <h3 id="enablingdisabling-properties-editor-save-button-methods">Enabling/disabling properties editor &ldquo;save&rdquo; button methods<a class="headerlink" href="#enablingdisabling-properties-editor-save-button-methods" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cm">/*</span>
-<span class="cm"> * Set the main &quot;save&quot; button to disabled(true) or enabled(false)</span>
+<span class="cm"> * Set the main "save" button to disabled(true) or enabled(false)</span>
 <span class="cm"> * @param saveDisable (boolean)</span>
 <span class="cm"> */</span>
 <span class="nx">setSaveButtonDisable</span><span class="p">(</span><span class="nx">saveDisable</span><span class="p">)</span>
 
 <span class="cm">/*</span>
-<span class="cm"> * Returns the true if the main &quot;save&quot; button is disabled, false otherwise</span>
+<span class="cm"> * Returns the true if the main "save" button is disabled, false otherwise</span>
 <span class="cm"> * @return boolean</span>
 <span class="cm"> */</span>
 <span class="nx">getSaveButtonDisable</span><span class="p">()</span>
@@ -4020,7 +4020,7 @@
 </code></pre></div>
 <h3 id="enablingdisabling-custom-table-buttons">Enabling/disabling custom table buttons<a class="headerlink" href="#enablingdisabling-custom-table-buttons" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cm">/*</span>
-<span class="cm"> * Set the table button to &#39;enabled&#39; for the given propertyId</span>
+<span class="cm"> * Set the table button to 'enabled' for the given propertyId</span>
 <span class="cm"> * @param propertyId The unique property identifier</span>
 <span class="cm"> * @param buttonId The unique button identifier</span>
 <span class="cm"> * @param enabled boolean value to enable or disable the button</span>
@@ -4060,7 +4060,7 @@
 </code></pre></div>
 <h3 id="enablingdisabling-wide-flyout-ok-button-methods">Enabling/disabling wide flyout &ldquo;OK&rdquo; button methods<a class="headerlink" href="#enablingdisabling-wide-flyout-ok-button-methods" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cm">/*</span>
-<span class="cm"> * Set the &quot;OK&quot; button in Wide Flyout to disabled(true) or enabled(false) for given summary panel</span>
+<span class="cm"> * Set the "OK" button in Wide Flyout to disabled(true) or enabled(false) for given summary panel</span>
 <span class="cm"> * @param panelId {name: panel.id}</span>
 <span class="cm"> * @param wideFlyoutPrimaryButtonDisable boolean</span>
 <span class="cm"> */</span>

@@ -3652,11 +3652,11 @@
 <h3 id="palette_disabled"><code>palette_disabled</code><a class="headerlink" href="#palette_disabled" title="Permanent link">&para;</a></h3>
 <p><strong>Type:</strong> <code>boolean</code></p>
 <p>When set to <code>true</code>, the node template is displayed in the palette in a visually dimmed state and cannot be dragged onto the canvas or added via single-click or double-click. The node icon is rendered at reduced opacity using the disabled fill color. This is useful for indicating that a node is not available under current conditions — for example, when a required license is inactive or a dependent service is not configured.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;app_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;ui_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Node&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/images/my-node.svg&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;palette_disabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><span class="nt">"app_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ui_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My Node"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/images/my-node.svg"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"palette_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3664,11 +3664,11 @@
 <p><strong>Type:</strong> <code>string</code> (URL or data URI)</p>
 <p>Specifies an alternative image to display for the node when it is shown in the palette. When this attribute is present it overrides the node&rsquo;s <code>image</code> field only within the palette. Once the user drags or adds the node to the canvas, the standard <code>image</code> value is used instead.</p>
 <p>This is useful when you want a distinct icon in the palette — for example a generic placeholder image — while preserving the intended node icon on the canvas.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;app_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;ui_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Node&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/images/canvas-icon.svg&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;palette_image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/images/palette-icon.svg&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">"app_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ui_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My Node"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/images/canvas-icon.svg"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"palette_image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/images/palette-icon.svg"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3676,11 +3676,11 @@
 <p><strong>Type:</strong> <code>string</code></p>
 <p>Adds one or more extra CSS class names to the node&rsquo;s outermost <code>&lt;div&gt;</code> element in the palette. This allows the host application to apply custom styles to specific node templates, independently of all other nodes.</p>
 <p>Multiple classes can be provided as a single space-separated string.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;app_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;ui_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Node&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/images/my-node.svg&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;palette_class_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-custom-node highlighted-node&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">"app_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ui_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My Node"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/images/my-node.svg"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"palette_class_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-custom-node highlighted-node"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>

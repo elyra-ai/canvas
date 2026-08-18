@@ -3448,12 +3448,12 @@
 <p>If Elyra Canvas components to display text without error, <code>&lt;CommonCanvas&gt;</code> and <code>&lt;CommonProperties&gt;</code> should be wrappered in an <code>&lt;IntlProvider&gt;</code> object.</p>
 <h3 id="english-only">English Only<a class="headerlink" href="#english-only" title="Permanent link">&para;</a></h3>
 <p>If only English is required the application can just do this:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">IntlProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react-intl&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">IntlProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"react-intl"</span><span class="p">;</span>
 
 <span class="kd">class</span><span class="w"> </span><span class="nx">App</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">    </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="o">&lt;</span><span class="nx">IntlProvider</span><span class="w"> </span><span class="nx">locale</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">IntlProvider</span><span class="w"> </span><span class="nx">locale</span><span class="o">=</span><span class="s2">"en"</span><span class="o">&gt;</span>
 <span class="w">            </span><span class="p">{</span><span class="nx">Add</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span><span class="o">/&gt;</span><span class="w"> </span><span class="nx">or</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">CommonProperties</span><span class="o">/&gt;</span><span class="w"> </span><span class="nx">element</span><span class="w"> </span><span class="nx">here</span><span class="p">.}</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="err">/IntlProvider&gt;</span>
 <span class="w">    </span><span class="p">}</span>
@@ -3461,18 +3461,18 @@
 </code></pre></div>
 <h3 id="translated-text">Translated Text<a class="headerlink" href="#translated-text" title="Permanent link">&para;</a></h3>
 <p>For displaying translated text, the translated messages must be bundled together and passed to the <code>&lt;IntlProvider&gt;</code>. The application can use the sample code from below. <code>this.locale</code> should be set to indicate which language should override English. The default locale will be used if <code>this.locale</code> is set to a language which is not currently supported.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">IntlProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react-intl&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">IntlProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"react-intl"</span><span class="p">;</span>
 
-<span class="k">import</span><span class="w"> </span><span class="nx">CommandActionsBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/command-actions/locales&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">CommonCanvasBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/common-canvas/locales&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">CommonPropsBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/common-properties/locales&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">PaletteBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/palette/locales&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">ToolbarBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/toolbar/locales&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">CommandActionsBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas/locales/command-actions/locales"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">CommonCanvasBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas/locales/common-canvas/locales"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">CommonPropsBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas/locales/common-properties/locales"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">PaletteBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas/locales/palette/locales"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">ToolbarBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas/locales/toolbar/locales"</span><span class="p">;</span>
 
 <span class="kd">class</span><span class="w"> </span><span class="nx">App</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">    </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">locale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;en&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">locale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"en"</span><span class="p">;</span>
 <span class="w">        </span><span class="c1">// Create messages object once (here in constructor) - do not create messages</span>
 <span class="w">        </span><span class="c1">// in the render method, otherwise unnecessary renders inside</span>
 <span class="w">        </span><span class="c1">// common-canvas/common-properties will be performed.</span>
@@ -3492,7 +3492,7 @@
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="o">&lt;</span><span class="nx">IntlProvider</span><span class="w"> </span><span class="nx">locale</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">locale</span><span class="p">}</span><span class="w"> </span><span class="nx">defaultLocale</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="w"> </span><span class="nx">messages</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">messages</span><span class="p">}</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">IntlProvider</span><span class="w"> </span><span class="nx">locale</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">locale</span><span class="p">}</span><span class="w"> </span><span class="nx">defaultLocale</span><span class="o">=</span><span class="s2">"en"</span><span class="w"> </span><span class="nx">messages</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">messages</span><span class="p">}</span><span class="o">&gt;</span>
 <span class="w">            </span><span class="p">{</span><span class="nx">Add</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span><span class="o">/&gt;</span><span class="w"> </span><span class="nx">or</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">CommonProperties</span><span class="o">/&gt;</span><span class="w"> </span><span class="nx">element</span><span class="w"> </span><span class="nx">here</span><span class="p">.}</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="err">/IntlProvider&gt;</span>
 <span class="w">    </span><span class="p">}</span>
@@ -3508,7 +3508,7 @@
 <li>Find the key for the text: the key is &ldquo;palette.flyout.search.placeholder&rdquo;</li>
 <li>Override the default text by setting the new text in <code>this.messages</code></li>
 </ul>
-<p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">palette</span><span class="p">.</span><span class="nx">flyout</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">placeholder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Find nodes&quot;</span><span class="p">;</span>
+<p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">palette</span><span class="p">.</span><span class="nx">flyout</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">placeholder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Find nodes"</span><span class="p">;</span>
 </code></pre></div>
 If the application is displaying a different language to English, the appropriate language would need to be used for the override text.</p>
 

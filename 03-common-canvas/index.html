@@ -3667,16 +3667,16 @@
 <h1 id="getting-started-with-common-canvas">Getting started with Common Canvas<a class="headerlink" href="#getting-started-with-common-canvas" title="Permanent link">&para;</a></h1>
 <h2 id="hello-canvas">Hello Canvas!<a class="headerlink" href="#hello-canvas" title="Permanent link">&para;</a></h2>
 <p>Common Canvas is a React component. The <code>&lt;CommonCanvas&gt;</code> component is displayed in a <code>&lt;div&gt;</code> provided by your application. Here&rsquo;s some sample code to show the <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx">minimum code</a> needed to get a working canvas.</p>
-<div class="highlight"><pre><span></span><code>import { IntlProvider } from &quot;react-intl&quot;;
-import { CommonCanvas, CanvasController } from &quot;@elyra/canvas&quot;;
-import { useMemo } from &quot;react&quot;;
-import { Theme } from &#39;@carbon/react&#39;;
+<div class="highlight"><pre><span></span><code>import { IntlProvider } from "react-intl";
+import { CommonCanvas, CanvasController } from "@elyra/canvas";
+import { useMemo } from "react";
+import { Theme } from '@carbon/react';
 
-import AllTypesCanvas from &quot;../../test_resources/diagrams/allTypesCanvas.json&quot;;
-import ModelerPalette from &quot;../../test_resources/palettes/modelerPalette.json&quot;;
+import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
+import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
 
-import &quot;@carbon/styles/css/styles.min.css&quot;;
-import &quot;@elyra/canvas/dist/styles/common-canvas.min.css&quot;;
+import "@carbon/styles/css/styles.min.css";
+import "@elyra/canvas/dist/styles/common-canvas.min.css";
 
 const TinyApp = () =&gt; {
     const canvasController = useMemo(() =&gt; {
@@ -3687,9 +3687,9 @@ const TinyApp = () =&gt; {
     }, []);
 
     return (
-        &lt;Theme theme=&quot;g10&quot;&gt;
-            &lt;div style={{ height: &quot;100vh&quot; }}&gt;
-                &lt;IntlProvider locale=&quot;en&quot;&gt;
+        &lt;Theme theme="g10"&gt;
+            &lt;div style={{ height: "100vh" }}&gt;
+                &lt;IntlProvider locale="en"&gt;
                     &lt;CommonCanvas
                         canvasController={canvasController}
                     /&gt;
@@ -3747,11 +3747,11 @@ export default TinyApp;
 <p>Complete the setup steps documented in the <a href="../02-set-up/">Initial Setup</a> page.</p>
 <h3 id="step-2-import-common-canvas">Step 2 : Import Common Canvas<a class="headerlink" href="#step-2-import-common-canvas" title="Permanent link">&para;</a></h3>
 <p>Import the Common Canvas and Canvas Controller from the Elyra Canvas library. Elyra Canvas produces both esm and cjs outputs. By default esm will be used when webpack is used to build the application.</p>
-<p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CommonCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">CanvasController</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas&quot;</span><span class="p">;</span>
+<p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CommonCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">CanvasController</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas"</span><span class="p">;</span>
 </code></pre></div>
 <strong>Common Canvas Only</strong></p>
 <p>To import only Common Canvas functionality in <code>cjs</code> format use:</p>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CommonCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">CanvasController</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/dist/lib/canvas&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CommonCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">CanvasController</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas/dist/lib/canvas"</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="step-3-create-an-instance-of-the-canvas-controller">Step 3 : Create an instance of the canvas controller<a class="headerlink" href="#step-3-create-an-instance-of-the-canvas-controller" title="Permanent link">&para;</a></h3>
 <p>To control the canvas you&rsquo;ll need an instance of the canvas controller. Create an instance like this (probably in the constructor of your object).
@@ -3784,7 +3784,7 @@ export default TinyApp;
 </div>
 <h3 id="step-6-display-common-canvas">Step 6 : Display Common Canvas<a class="headerlink" href="#step-6-display-common-canvas" title="Permanent link">&para;</a></h3>
 <p>Inside your object return the following JSX:</p>
-<p><div class="highlight"><pre><span></span><code><span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">style</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;100vh&quot;</span><span class="w"> </span><span class="p">}}</span><span class="o">&gt;</span>
+<p><div class="highlight"><pre><span></span><code><span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">style</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="s2">"100vh"</span><span class="w"> </span><span class="p">}}</span><span class="o">&gt;</span>
 <span class="w">            </span><span class="o">&lt;</span><span class="nx">IntlProvider</span><span class="o">&gt;</span>
 <span class="w">                </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span><span class="w"> </span><span class="nx">canvasController</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
 <span class="w">            </span><span class="o">&lt;</span><span class="err">/IntlProvider&gt;</span>

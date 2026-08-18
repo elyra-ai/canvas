@@ -3968,12 +3968,12 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 
 <span class="c1">// Returns a boolean to indicate whether there are any messages of</span>
 <span class="c1">// includeMsgsType in the pipeline identified by the pipeline ID passed in.</span>
-<span class="c1">// includeMsgsType - can be either &quot;error&quot; or &quot;warning&quot;</span>
+<span class="c1">// includeMsgsType - can be either "error" or "warning"</span>
 <span class="nx">isFlowValid</span><span class="p">(</span><span class="nx">includeMsgTypes</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Rearranges the nodes in the canvas in the direction specified for the</span>
 <span class="c1">// pipeline ID passed in.</span>
-<span class="c1">// layoutDirection - can be &quot;horizontal&quot; or &quot;vertical&quot;</span>
+<span class="c1">// layoutDirection - can be "horizontal" or "vertical"</span>
 <span class="nx">autoLayout</span><span class="p">(</span><span class="nx">layoutDirection</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="palette-methods">Palette methods<a class="headerlink" href="#palette-methods" title="Permanent link">&para;</a></h2>
@@ -4004,7 +4004,7 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="c1">// palette schema:</span>
 <span class="c1">//  https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/palette/palette-v3-schema.json</span>
 <span class="c1">// category - is the name of the palette category where the node will be</span>
-<span class="c1">// added. If the category doesn&#39;t exist it will be created.</span>
+<span class="c1">// added. If the category doesn't exist it will be created.</span>
 <span class="c1">// categoryLabel - Is an optional param. If a new category is created it will</span>
 <span class="c1">// be displayed with this label.</span>
 <span class="c1">// categoryDescription - Is an optional param. If a new category is created</span>
@@ -4019,7 +4019,7 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="c1">// in nodeTypes array in the palette schema:</span>
 <span class="c1">//  https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/palette/palette-v3-schema.json</span>
 <span class="c1">// category - is the name of the palette category where the node will be</span>
-<span class="c1">// added. If the category doesn&#39;t exist it will be created.</span>
+<span class="c1">// added. If the category doesn't exist it will be created.</span>
 <span class="c1">// categoryLabel - is an optional param. If a new category is created it will</span>
 <span class="c1">// be displayed with this label.</span>
 <span class="c1">// categoryImage - the image displayed for the category provided as a</span>
@@ -4073,7 +4073,7 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="c1">// newSelection - An array of object IDs for nodes and/or comments</span>
 <span class="c1">// pipelineId - Optional. The ID of the pipeline where the objects exist.</span>
 <span class="c1">// Selected objects can only be in one pipeline. If this parameter is omitted</span>
-<span class="c1">// it is assumed the selections will be for objects in the &#39;top-level&#39; pipeline</span>
+<span class="c1">// it is assumed the selections will be for objects in the 'top-level' pipeline</span>
 <span class="c1">// being displayed.</span>
 <span class="nx">setSelections</span><span class="p">(</span><span class="nx">newSelection</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
@@ -4121,18 +4121,18 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="c1">// not provided, all messages will be returned. The format of a notification</span>
 <span class="c1">// message is an object with these fields:</span>
 <span class="c1">// {</span>
-<span class="c1">//   &quot;id&quot;: string (Required),</span>
-<span class="c1">//   &quot;type&quot; : enum, oneOf [&quot;info&quot;, &quot;success&quot;, &quot;warning&quot;, &quot;error&quot;] (Required),</span>
-<span class="c1">//   &quot;callback&quot;: function, the callback function when a message is clicked (Required),</span>
-<span class="c1">//   &quot;title&quot;: string (Optional),</span>
-<span class="c1">//   &quot;content&quot;: string, html, JSX Object (Optional),</span>
-<span class="c1">//   &quot;timestamp&quot;: string (Optional),</span>
-<span class="c1">//   &quot;closeMessage&quot;: string (Optional)</span>
+<span class="c1">//   "id": string (Required),</span>
+<span class="c1">//   "type" : enum, oneOf ["info", "success", "warning", "error"] (Required),</span>
+<span class="c1">//   "callback": function, the callback function when a message is clicked (Required),</span>
+<span class="c1">//   "title": string (Optional),</span>
+<span class="c1">//   "content": string, html, JSX Object (Optional),</span>
+<span class="c1">//   "timestamp": string (Optional),</span>
+<span class="c1">//   "closeMessage": string (Optional)</span>
 <span class="c1">// }</span>
 <span class="nx">getNotificationMessages</span><span class="p">(</span><span class="nx">messageType</span><span class="p">)</span>
 
 <span class="c1">// Returns the maximum notification message type present in the current set</span>
-<span class="c1">// of notification messages. For this: (&quot;error&quot; &gt; &quot;warning&quot; &gt; &quot;success&quot; &gt; &quot;info&quot;)</span>
+<span class="c1">// of notification messages. For this: ("error" &gt; "warning" &gt; "success" &gt; "info")</span>
 <span class="nx">getNotificationMessagesMaxType</span><span class="p">()</span>
 </code></pre></div></p>
 <h2 id="node-and-comment-methods">Node AND comment methods<a class="headerlink" href="#node-and-comment-methods" title="Permanent link">&para;</a></h2>
@@ -4234,7 +4234,7 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="c1">// offsetY - the y coordinate of the new node</span>
 <span class="c1">//</span>
 <span class="c1">// If pipelineId is omitted the node will be created in the current</span>
-<span class="c1">// &quot;top-level&quot; pipeline.</span>
+<span class="c1">// "top-level" pipeline.</span>
 <span class="nx">createNodeCommand</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Deletes the node specified.</span>
@@ -4286,7 +4286,7 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="cm">/**</span>
 <span class="cm"> * Sets the class name to newClassName of the nodes identified by nodeIds</span>
 <span class="cm"> * array in the pipeline specified by pipeline ID. The class name will be</span>
-<span class="cm"> * applied to the nodes&#39; group (&lt;g&gt;) element in the DOM. To remove any</span>
+<span class="cm"> * applied to the nodes' group (&lt;g&gt;) element in the DOM. To remove any</span>
 <span class="cm"> * previously added classes an empty string can be specified.</span>
 <span class="cm"> * @param nodeIds - An array of node IDs</span>
 <span class="cm"> * @param newClassName - New class string. Can be a space separated list</span>
@@ -4446,7 +4446,7 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="c1">// Sets the focus function for the node identified by the node ID passed in.</span>
 <span class="c1">// The focus function will be function on a React object which is used to</span>
 <span class="c1">// display the contents of the node. The focus function will be called when the</span>
-<span class="c1">// user presses shortcuts to move the focus highlighting to the node&#39;s sub-objects.</span>
+<span class="c1">// user presses shortcuts to move the focus highlighting to the node's sub-objects.</span>
 <span class="nx">setSubObjectFocusFunction</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">focusFunction</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="comment-methods">Comment methods<a class="headerlink" href="#comment-methods" title="Permanent link">&para;</a></h2>
@@ -4490,7 +4490,7 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="cm">/**</span>
 <span class="cm"> * Sets the class name to newClassName of the comments identified by commentIds</span>
 <span class="cm"> * array in the pipeline specified by pipeline ID. The class name will be</span>
-<span class="cm"> * applied to the comments&#39; group (&lt;g&gt;) element in the DOM. To remove any</span>
+<span class="cm"> * applied to the comments' group (&lt;g&gt;) element in the DOM. To remove any</span>
 <span class="cm"> * previously added classes an empty string can be specified.</span>
 <span class="cm"> * @param commentIds - An array of comment IDs.</span>
 <span class="cm"> * @param newClassName - New class string. Can be a space separated list</span>
@@ -4576,8 +4576,8 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="c1">// Sets the properties in the link identified by the linkId. The</span>
 <span class="c1">// linkProperties is an object containing one or more properties that will</span>
 <span class="c1">// replace the corresponding properties in the link. For exam`ple: if</span>
-<span class="c1">// linkProperties is { trgNodeId: &quot;123&quot;, trgNodePortId: &quot;789&quot; } the target</span>
-<span class="c1">// node ID will be set to &quot;123&quot; and the target port ID set to &quot;789&quot;.</span>
+<span class="c1">// linkProperties is { trgNodeId: "123", trgNodePortId: "789" } the target</span>
+<span class="c1">// node ID will be set to "123" and the target port ID set to "789".</span>
 <span class="nx">setLinkProperties</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">linkProperties</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Sets the link parameters</span>
@@ -4643,7 +4643,7 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="cm">/**</span>
 <span class="cm"> * Sets the class name to newClassName of the links identified by linkIds</span>
 <span class="cm"> * array in the pipeline specified by pipeline ID. The class name will be</span>
-<span class="cm"> * applied to the links&#39; group (&lt;g&gt;) element in the DOM. To remove any</span>
+<span class="cm"> * applied to the links' group (&lt;g&gt;) element in the DOM. To remove any</span>
 <span class="cm"> * previously added classes an empty string can be specified.</span>
 <span class="cm"> * @param linkIds - An array of link IDs</span>
 <span class="cm"> * @param newClassName - New class string. Can be a space separated list</span>
@@ -4849,7 +4849,7 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="c1">// Displays a pipeline for a supernode (identified by the supernodeId</span>
 <span class="c1">// parameter) in a parent pipeline (identified by the pipelineId parameter).</span>
 <span class="c1">// This parent pipeline should be the last of the current set of breadcrumbs.</span>
-<span class="c1">// That is, the pipeline currently shown &quot;full page&quot; in the canvas.</span>
+<span class="c1">// That is, the pipeline currently shown "full page" in the canvas.</span>
 <span class="nx">displaySubPipelineForSupernode</span><span class="p">(</span><span class="nx">supernodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Displays full-page the previous pipeline from the one currently being displayed</span>
@@ -4865,10 +4865,10 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="nx">undo</span><span class="p">()</span>
 
 <span class="c1">// Undoes a number of commands on the command stack as indicated by the</span>
-<span class="c1">// &#39;count&#39; parameter. If &#39;count&#39; is bigger than the number of undoable commands</span>
+<span class="c1">// 'count' parameter. If 'count' is bigger than the number of undoable commands</span>
 <span class="c1">// on the stack, all undoable commands currently on the command stack</span>
 <span class="c1">// will be undone. Uses the editActionHandler method which will cause</span>
-<span class="c1">// the app&#39;s editActionHandler to be called.</span>
+<span class="c1">// the app's editActionHandler to be called.</span>
 <span class="nx">undoMulti</span><span class="p">(</span><span class="nx">count</span><span class="p">)</span>
 
 <span class="c1">// Calls the redo() method of the next available command on the command</span>
@@ -4876,10 +4876,10 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="nx">redo</span><span class="p">()</span>
 
 <span class="c1">// Redoes a number of commands on the command stack as indicated by the</span>
-<span class="c1">// &#39;count&#39; parameter. If &#39;count&#39; is bigger than the number of redoable commands</span>
+<span class="c1">// 'count' parameter. If 'count' is bigger than the number of redoable commands</span>
 <span class="c1">// on the stack, all redoable commands currently on the command stack</span>
 <span class="c1">// will be redone. Uses the editActionHandler method which will cause</span>
-<span class="c1">// the app&#39;s editActionHandler to be called.</span>
+<span class="c1">// the app's editActionHandler to be called.</span>
 <span class="nx">redoMulti</span><span class="p">(</span><span class="nx">count</span><span class="p">)</span>
 
 <span class="c1">// Returns true if there is a command on the command stack</span>
@@ -4939,7 +4939,7 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 
 <span class="cm">/**</span>
 <span class="cm"> * Returns a zoom object required to pan the objects (nodes and/or comments)</span>
-<span class="cm"> * identified by the objectIds array to &#39;reveal&#39; the objects in the viewport.</span>
+<span class="cm"> * identified by the objectIds array to 'reveal' the objects in the viewport.</span>
 <span class="cm"> * The zoom object returned can be provided to the CanvasController.zoomTo()</span>
 <span class="cm"> * method to perform the zoom/pan action.</span>
 <span class="cm"> * If the xPos and yPos variables are provided it will return a zoom object</span>
@@ -4966,7 +4966,7 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="c1">// Clears any saved zoom values stored in local storage. This means</span>
 <span class="c1">// newly opened flows will appear with the default zoom. This method</span>
 <span class="c1">// is only applicable when the `enableSaveZoom` config parameter is</span>
-<span class="c1">// set to &quot;LocalStorage&quot;.</span>
+<span class="c1">// set to "LocalStorage".</span>
 <span class="nx">clearSavedZoomValues</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="focus-management-methods">Focus management methods<a class="headerlink" href="#focus-management-methods" title="Permanent link">&para;</a></h2>
@@ -4978,11 +4978,11 @@ methods can omit <code>'unsafe-inline'</code> from <code>style-src</code>.</p>
 <span class="c1">// Sets focus on the flow editor canvas background.</span>
 <span class="nx">setFocusOnCanvas</span><span class="p">()</span>
 
-<span class="c1">// Returns the currently focused object or the string &quot;CanvasFocus&quot;.</span>
+<span class="c1">// Returns the currently focused object or the string "CanvasFocus".</span>
 <span class="nx">getFocusObject</span><span class="p">()</span>
 
 <span class="c1">// Sets the focus highlighting to parameter passed in which can be</span>
-<span class="c1">// either a canvas object or the string &quot;CanvasFocus&quot;.</span>
+<span class="c1">// either a canvas object or the string "CanvasFocus".</span>
 <span class="nx">setFocusObject</span><span class="p">(</span><span class="nx">focusObj</span><span class="p">,</span><span class="w"> </span><span class="nx">evt</span><span class="p">)</span>
 
 <span class="c1">// Returns true of the focus in currently on the flow editor canvas background.</span>

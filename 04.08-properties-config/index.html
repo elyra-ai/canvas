@@ -3385,13 +3385,13 @@
 <ol>
 <li>
 <p>On your server, generate a cryptographically random nonce for each HTTP response:
-    <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">crypto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;crypto&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">nonce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomBytes</span><span class="p">(</span><span class="mf">16</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s2">&quot;base64&quot;</span><span class="p">);</span>
+    <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">crypto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"crypto"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">nonce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomBytes</span><span class="p">(</span><span class="mf">16</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s2">"base64"</span><span class="p">);</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>Include the nonce in your <code>Content-Security-Policy</code> header:
-    <div class="highlight"><pre><span></span><code>style-src &#39;self&#39; &#39;nonce-&lt;your-nonce-value&gt;&#39;
+    <div class="highlight"><pre><span></span><code>style-src 'self' 'nonce-&lt;your-nonce-value&gt;'
 </code></pre></div></p>
 </li>
 <li>

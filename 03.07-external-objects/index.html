@@ -3397,7 +3397,7 @@
 <h2 id="dragging-object-from-within-the-browser">Dragging object from within the browser<a class="headerlink" href="#dragging-object-from-within-the-browser" title="Permanent link">&para;</a></h2>
 <p>Common Canvas can be extended to allow an object from the browser page to be dragged onto the canvas to initiate the creation of a node on the canvas. To do this the application should set the object that is to be dragged onto the canvas to be draggable:</p>
 <p><div class="highlight"><pre><span></span><code>    <span class="p">&lt;</span><span class="nt">div</span>
-      <span class="na">draggable</span><span class="o">=</span><span class="s">&quot;true&quot;</span>
+      <span class="na">draggable</span><span class="o">=</span><span class="s">"true"</span>
       <span class="na">onDragStart</span><span class="o">=</span><span class="s">{this.onDragStart}</span>
       <span class="na">onDragOver</span><span class="o">=</span><span class="s">{this.onDragOver}</span><span class="p">&gt;</span>
       ....
@@ -3407,16 +3407,16 @@
 and then specify the on drag behavior like this
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">onDragStart</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">       </span><span class="kd">const</span><span class="w"> </span><span class="nx">transferData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nx">operation</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;addToCanvas&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">operation</span><span class="o">:</span><span class="w"> </span><span class="s2">"addToCanvas"</span><span class="p">,</span>
 <span class="w">          </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">             </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;createExternalNode&quot;</span><span class="p">,</span>
-<span class="w">             </span><span class="nx">field1</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;field_val_1&quot;</span><span class="p">,</span>
-<span class="w">             </span><span class="nx">field2</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;field_val_2&quot;</span>
+<span class="w">             </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">"createExternalNode"</span><span class="p">,</span>
+<span class="w">             </span><span class="nx">field1</span><span class="o">:</span><span class="w"> </span><span class="s2">"field_val_1"</span><span class="p">,</span>
+<span class="w">             </span><span class="nx">field2</span><span class="o">:</span><span class="w"> </span><span class="s2">"field_val_2"</span>
 <span class="w">             </span><span class="p">....</span>
 <span class="w">             </span><span class="p">....</span>
 <span class="w">          </span><span class="p">}</span>
 <span class="w">       </span><span class="p">};</span>
-<span class="w">       </span><span class="nx">ev</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">transferData</span><span class="p">));</span>
+<span class="w">       </span><span class="nx">ev</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="s2">"text"</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">transferData</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
 where</p>
@@ -3431,11 +3431,11 @@ where</p>
 <p>If an object from the desktop or another application is dropped on the canvas the editActionHandler(data) callback method will be called with the <code>data</code> parameter set to an object like this:
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span>
 <span class="w">       </span><span class="nx">dataTransfer</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">The</span><span class="w"> </span><span class="nx">event</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">drag</span><span class="w"> </span><span class="nx">operation</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">       </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;createFromExternalObject&quot;</span><span class="p">,</span>
-<span class="w">       </span><span class="nx">editSource</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;canvas&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">"createFromExternalObject"</span><span class="p">,</span>
+<span class="w">       </span><span class="nx">editSource</span><span class="o">:</span><span class="w"> </span><span class="s2">"canvas"</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">offsetX</span><span class="o">:</span><span class="w"> </span><span class="mf">200</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">offsetY</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">,</span>
-<span class="w">       </span><span class="nx">pipelineId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1234-5678&quot;</span>
+<span class="w">       </span><span class="nx">pipelineId</span><span class="o">:</span><span class="w"> </span><span class="s2">"1234-5678"</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
 The application can examine the <code>dataTransfer</code> object to see what object was dragged onto the canvas and then take appropriate action.</p>
@@ -3447,13 +3447,13 @@ The application can examine the <code>dataTransfer</code> object to see what obj
 <li>the command will be added to the command-stack so the user can click undo to undo the addition of the node</li>
 </ul>
 <p><code>data</code> is the parameter passed into the <code>editActionHandler</code> callback method.
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">editType</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;createFromExternalObject&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">nodeTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">getPaletteNode</span><span class="p">(</span><span class="s2">&quot;variablefile&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">editType</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"createFromExternalObject"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">nodeTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">getPaletteNode</span><span class="p">(</span><span class="s2">"variablefile"</span><span class="p">);</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">nodeTemplate</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">convertedTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">convertNodeTemplate</span><span class="p">(</span><span class="nx">nodeTemplate</span><span class="p">);</span>
 <span class="w">            </span><span class="nx">convertedTemplate</span><span class="p">.</span><span class="nx">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">files</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">name</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;createNode&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">"createNode"</span><span class="p">,</span>
 <span class="w">                </span><span class="nx">nodeTemplate</span><span class="o">:</span><span class="w"> </span><span class="nx">convertedTemplate</span><span class="p">,</span>
 <span class="w">                </span><span class="nx">pipelineId</span><span class="o">:</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">pipelineId</span><span class="p">,</span>
 <span class="w">                </span><span class="nx">offsetX</span><span class="o">:</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">offsetX</span><span class="p">,</span>

@@ -3386,21 +3386,21 @@
 <h2 id="step-1-import-context-menu-wrapper">Step 1: Import Context Menu Wrapper<a class="headerlink" href="#step-1-import-context-menu-wrapper" title="Permanent link">&para;</a></h2>
 <p>To use Context Menu Wrapper in your React application you need to import the <code>ContextMenuWrapper</code> React component from the common-canvas library. It&rsquo;s recommended to use All Components if Common Canvas is also being imported, otherwise use ContextMenuWrapper only option.</p>
 <p><strong>All Components</strong>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">ContextMenuWrapper</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">ContextMenuWrapper</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas"</span><span class="p">;</span>
 </code></pre></div></p>
 <p><strong>ContextMenuWrapper only</strong>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="nx">ContextMenuWrapper</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/dist/lib/context-menu&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="nx">ContextMenuWrapper</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@elyra/canvas/dist/lib/context-menu"</span><span class="p">;</span>
 </code></pre></div></p>
 <h2 id="step-2-pass-in-the-correct-props">Step 2: Pass in the correct props<a class="headerlink" href="#step-2-pass-in-the-correct-props" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>contextMenuDef</strong> <code>array</code> (required): an array of menu item objects consisting of action and label. You can also pass in a divider item.</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">menuDef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="nx">ACTION</span><span class="p">.</span><span class="nx">BUILD</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Build&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="nx">ACTION</span><span class="p">.</span><span class="nx">EXTEND</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Extend&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="nx">ACTION</span><span class="p">.</span><span class="nx">CLEAR</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Clear&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="nx">ACTION</span><span class="p">.</span><span class="nx">BUILD</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">"Build"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="nx">ACTION</span><span class="p">.</span><span class="nx">EXTEND</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">"Extend"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="nx">ACTION</span><span class="p">.</span><span class="nx">CLEAR</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">"Clear"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">divider</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="nx">ACTION</span><span class="p">.</span><span class="nx">SCORE</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Score&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="nx">ACTION</span><span class="p">.</span><span class="nx">SCORE</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">"Score"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">];</span>
 </code></pre></div>
 <ul>
@@ -3414,9 +3414,9 @@
 <p><strong>contextMenuActionHandler</strong> <code>func</code> (required): this handler is where context menu actions are defined.
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">contextMenuActionHandler</span><span class="p">(</span><span class="nx">action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;BUILD&quot;</span><span class="o">:</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s2">"BUILD"</span><span class="o">:</span>
 <span class="w">            </span><span class="k">break</span><span class="p">;</span>
-<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;EXTEND&quot;</span><span class="o">:</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s2">"EXTEND"</span><span class="o">:</span>
 <span class="w">            </span><span class="k">break</span><span class="p">;</span>
 <span class="w">        </span><span class="k">default</span><span class="o">:</span>
 <span class="w">        </span><span class="p">}</span>
@@ -3430,7 +3430,7 @@
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">contextMenuWrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="nx">ContextMenuWrapper</span>
 <span class="w">            </span><span class="nx">contextMenuDef</span><span class="o">=</span><span class="p">{</span><span class="nx">menuDef</span><span class="p">}</span>
-<span class="w">            </span><span class="nx">containingDivId</span><span class="o">=</span><span class="s2">&quot;main-page&quot;</span>
+<span class="w">            </span><span class="nx">containingDivId</span><span class="o">=</span><span class="s2">"main-page"</span>
 <span class="w">            </span><span class="nx">contextMenuPos</span><span class="o">=</span><span class="p">{</span><span class="nx">menuPos</span><span class="p">}</span>
 <span class="w">            </span><span class="nx">contextMenuActionHandler</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">contextMenuActionHandler</span><span class="p">}</span>
 <span class="w">            </span><span class="nx">closeContextMenu</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">closeContextMenu</span><span class="p">}</span>

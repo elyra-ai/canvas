@@ -3593,24 +3593,24 @@
 <p>The parameter definition consists of the following sections:</p>
 <h2 id="title-definition">Title Definition<a class="headerlink" href="#title-definition" title="Permanent link">&para;</a></h2>
 <p>The title of the properties editor. If <code>editable</code> is set to true (default), the title can be edited. If set to false, the title will be readonly.</p>
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;titleDefinition&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;title&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Properties Title&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;editable&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<div class="highlight"><pre><span></span><code><span class="s2">"titleDefinition"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"title"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Properties Title"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"editable"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">}</span>
 </code></pre></div>
 <h2 id="current-parameters">Current Parameters<a class="headerlink" href="#current-parameters" title="Permanent link">&para;</a></h2>
 <p>A list of input parameters and initial values upon input.  The list is a set of key/value pairs with the key being the field name and the value is the initial value.</p>
 <p>Example
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;current_parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;targetField&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">    </span><span class="s2">&quot;inputFieldList&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">    </span><span class="s2">&quot;elasticNetParam&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;fitIntercept&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;maxIter&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">75</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;regParam&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;standardization&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;threshold&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;tol&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0000010</span>
+<div class="highlight"><pre><span></span><code><span class="s2">"current_parameters"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"targetField"</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="s2">"inputFieldList"</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="s2">"elasticNetParam"</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"fitIntercept"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"maxIter"</span><span class="o">:</span><span class="w"> </span><span class="mf">75</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"regParam"</span><span class="o">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"standardization"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"threshold"</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"tol"</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0000010</span>
 <span class="w">  </span><span class="p">}</span>
 </code></pre></div></p>
 <h2 id="parameter-definitions">Parameter Definitions<a class="headerlink" href="#parameter-definitions" title="Permanent link">&para;</a></h2>
@@ -3645,40 +3645,40 @@
 <li><code>new_column</code>: value represents the name of a new column to be added to the data model and must therefore not match an existing column and conform to existing syntactic restrictions.</li>
 </ul>
 <p>Example
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<div class="highlight"><pre><span></span><code><span class="s2">"parameters"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;targetField&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="s2">&quot;column&quot;</span>
+<span class="w">      </span><span class="s2">"id"</span><span class="o">:</span><span class="s2">"targetField"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"type"</span><span class="o">:</span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"default"</span><span class="o">:</span><span class="s2">""</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"role"</span><span class="o">:</span><span class="s2">"column"</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;inputFieldList&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;array[string]&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="p">[],</span>
-<span class="w">      </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="s2">&quot;column&quot;</span>
+<span class="w">      </span><span class="s2">"id"</span><span class="o">:</span><span class="s2">"inputFieldList"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"type"</span><span class="o">:</span><span class="s2">"array[string]"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"default"</span><span class="o">:</span><span class="p">[],</span>
+<span class="w">      </span><span class="s2">"role"</span><span class="o">:</span><span class="s2">"column"</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;impurity&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;enum&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;gini&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;entropy&quot;</span>
+<span class="w">      </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"impurity"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"enum"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"gini"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"entropy"</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gini&quot;</span>
+<span class="w">      </span><span class="s2">"default"</span><span class="o">:</span><span class="w"> </span><span class="s2">"gini"</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;elasticNetParam&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;double&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="mf">0.0</span>
+<span class="w">      </span><span class="s2">"id"</span><span class="o">:</span><span class="s2">"elasticNetParam"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"type"</span><span class="o">:</span><span class="s2">"double"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"default"</span><span class="o">:</span><span class="mf">0.0</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div></p>
 <h2 id="ui-only-parameters">UI-only Parameters<a class="headerlink" href="#ui-only-parameters" title="Permanent link">&para;</a></h2>
 <p>A list of input parameters and initial values upon input.  This set of parameters are separated from the backend parameters (current parameters).  The idea is that these parameters are not passed into the backend engine by the common-properties consumer.</p>
 <p>Example
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;current_ui_parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;databaseResource&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;tol&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0000010</span>
+<div class="highlight"><pre><span></span><code><span class="s2">"current_ui_parameters"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"databaseResource"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"tol"</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0000010</span>
 <span class="w">  </span><span class="p">}</span>
 </code></pre></div></p>
 <p>UI-only parameters require information about the parameters same as the parameter definition information used for the backend parameters.  The UI-only parameter definition information is stored in the UI-hints section in the sub-section named <code>ui_parameters</code>.  A description of the UI hints specifications can be found on the <a href="../04.03-ui-hints/">UI Hints</a> page.</p>
@@ -3693,24 +3693,24 @@
 <li><code>parameters</code> (<em>object</em>) <strong>Required</strong> List of parameters fields.  Each parameter can be defined as a parameter definition attribute or a complex type attribute.</li>
 </ul>
 <p>Example of complex types
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;complex_types&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<div class="highlight"><pre><span></span><code><span class="s2">"complex_types"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SortEntry&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;key_definition&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;field&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;column&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">      </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"SortEntry"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"key_definition"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"field"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"role"</span><span class="o">:</span><span class="w"> </span><span class="s2">"column"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"default"</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span>
 <span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="s2">&quot;parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"parameters"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;sort_order&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;enum&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;Ascending&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;Descending&quot;</span>
+<span class="w">          </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"sort_order"</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"enum"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">"Ascending"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"Descending"</span>
 <span class="w">          </span><span class="p">],</span>
-<span class="w">          </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Ascending&quot;</span>
+<span class="w">          </span><span class="s2">"default"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Ascending"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
@@ -3749,49 +3749,49 @@ record-id</code></li>
 <li><code>ranges</code> (<em>object</em>) Minimum and maximum discovered values for scalar data.</li>
 </ul>
 <p>Example
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;dataset_metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<div class="highlight"><pre><span></span><code><span class="s2">"dataset_metadata"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Schema-1&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;fields&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Schema-1"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"fields"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Age&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;range&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="w">        </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Age"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"integer"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"metadata"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">"description"</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"measure"</span><span class="o">:</span><span class="w"> </span><span class="s2">"range"</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"role"</span><span class="o">:</span><span class="w"> </span><span class="s2">"input"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Sex&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="w">        </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Sex"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"metadata"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">"description"</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"measure"</span><span class="o">:</span><span class="w"> </span><span class="s2">"discrete"</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"role"</span><span class="o">:</span><span class="w"> </span><span class="s2">"input"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BP&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="w">        </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"BP"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"metadata"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">"description"</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"measure"</span><span class="o">:</span><span class="w"> </span><span class="s2">"discrete"</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"role"</span><span class="o">:</span><span class="w"> </span><span class="s2">"input"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Schema-2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;fields&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Schema-2"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"fields"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Birthdate&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Date of birth&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;range&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="w">        </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Birthdate"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"date"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"metadata"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">"description"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Date of birth"</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"measure"</span><span class="o">:</span><span class="w"> </span><span class="s2">"range"</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"role"</span><span class="o">:</span><span class="w"> </span><span class="s2">"input"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
@@ -3801,17 +3801,17 @@ record-id</code></li>
 <h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
 <p>This is a map of string resources.</p>
 <p>Example:
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;resources&quot;</span><span class="o">:</span><span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;org.apache.spark.ml.classification.DecisionTreeClassifier.label&quot;</span><span class="o">:</span><span class="s2">&quot;Random Forest Classifier&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;org.apache.spark.ml.classification.DecisionTreeClassifier.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Fitted Random Forest Classification Model&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;inputFieldList.label&quot;</span><span class="o">:</span><span class="s2">&quot;Input columns&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;inputFieldList.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Select one or more input columns&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;targetField.label&quot;</span><span class="o">:</span><span class="s2">&quot;Target column&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;targetField.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Select a target column&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;max_depth_not_valid&quot;</span><span class="o">:</span><span class="s2">&quot;The max depth parameter must be greater than or equal to zero&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;max_iter_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The max iterations parameter must be greater than or equal to zero&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;min_instances_per_node_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The minimum instances per node value must be &gt;= 1&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;subsampling_rate_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The subsampling rate value must be &gt; 0 and &lt;= 1&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="s2">"resources"</span><span class="o">:</span><span class="p">{</span>
+<span class="w">  </span><span class="s2">"org.apache.spark.ml.classification.DecisionTreeClassifier.label"</span><span class="o">:</span><span class="s2">"Random Forest Classifier"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"org.apache.spark.ml.classification.DecisionTreeClassifier.desc"</span><span class="o">:</span><span class="s2">"Fitted Random Forest Classification Model"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"inputFieldList.label"</span><span class="o">:</span><span class="s2">"Input columns"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"inputFieldList.desc"</span><span class="o">:</span><span class="s2">"Select one or more input columns"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"targetField.label"</span><span class="o">:</span><span class="s2">"Target column"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"targetField.desc"</span><span class="o">:</span><span class="s2">"Select a target column"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"max_depth_not_valid"</span><span class="o">:</span><span class="s2">"The max depth parameter must be greater than or equal to zero"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"max_iter_not_valid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"The max iterations parameter must be greater than or equal to zero"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"min_instances_per_node_not_valid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"The minimum instances per node value must be &gt;= 1"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"subsampling_rate_not_valid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"The subsampling rate value must be &gt; 0 and &lt;= 1"</span>
 <span class="p">}</span>
 </code></pre></div></p>
 

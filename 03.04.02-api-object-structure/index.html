@@ -3406,33 +3406,33 @@
 <p>For the API methods that involve nodes, comments and links, those objects are passed in and out by the API in their internal formats rather than the formats defined in the schema files.</p>
 <p>The internal structure is a somewhat flattened version of that in the schema definition. That means, properties that are in <code>&lt;object&gt;.app_data.ui_data</code> are flattened out and appear as properties in the <code>&lt;object&gt;</code> itself. So for example a node that conforms to the schema might look like this:
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1234&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">op</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;select&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">op</span><span class="o">:</span><span class="w"> </span><span class="s2">"select"</span><span class="p">,</span>
 <span class="w">      </span><span class="p">...</span>
 <span class="w">      </span><span class="nx">app_data</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">ui_data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Selection node&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nx">image</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/images/select.svg&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;A node for selection&quot;</span>
+<span class="w">          </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">"Selection node"</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">image</span><span class="o">:</span><span class="w"> </span><span class="s2">"/images/select.svg"</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">"A node for selection"</span>
 <span class="w">          </span><span class="p">...</span>
 <span class="w">        </span><span class="p">},</span>
 <span class="w">        </span><span class="nx">other_data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nx">prop1</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Something interesting&quot;</span>
+<span class="w">          </span><span class="nx">prop1</span><span class="o">:</span><span class="w"> </span><span class="s2">"Something interesting"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
 whereas when it is passed through the API it looks like this:
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1234&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">op</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;select&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Selection node&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">image</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/images/select.svg&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;A node for selection&quot;</span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">op</span><span class="o">:</span><span class="w"> </span><span class="s2">"select"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">"Selection node"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">image</span><span class="o">:</span><span class="w"> </span><span class="s2">"/images/select.svg"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">"A node for selection"</span>
 <span class="w">      </span><span class="p">...</span>
 <span class="w">      </span><span class="nx">app_data</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">other_data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nx">prop1</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Something interesting&quot;</span>
+<span class="w">          </span><span class="nx">prop1</span><span class="o">:</span><span class="w"> </span><span class="s2">"Something interesting"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>

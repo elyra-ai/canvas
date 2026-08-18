@@ -3435,8 +3435,8 @@
 <ol>
 <li><strong>data parameter</strong> - This is the data for the initial request create by whatever action the user performed. The data fields can vary depending on the action. Here is an example:
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;createComment&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">editSource</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;contextmenu&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">"createComment"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">editSource</span><span class="o">:</span><span class="w"> </span><span class="s2">"contextmenu"</span><span class="p">,</span>
 <span class="w">      </span><span class="nx">selectedObjects</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
 <span class="w">      </span><span class="nx">selectedObjectIds</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
 <span class="w">      </span><span class="nx">offsetX</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">,</span>
@@ -3472,7 +3472,7 @@
 <p>The <code>editType</code> field of the first parameter, passed in to the callback, will be set to the action name.</p>
 <p>Here&rsquo;s a simple expmple:</p>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">editActionHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">command</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">editType</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;myAction&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">editType</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"myAction"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="c1">// Execute my action code here.</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
