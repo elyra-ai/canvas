@@ -284,10 +284,7 @@ class FlexibleTable extends React.Component {
 			const firstColWidth = parseInt(widths[0], 10);
 			widths[0] = firstColWidth + compare - sumColumnWidth + "px";
 		}
-		// Only write when something actually changed. This method is a pure function of
-		// props.columns and state.availableWidth, but it allocates a new widths array every
-		// call, so an unguarded setState schedules a render from componentDidUpdate on every
-		// parent re-render and advances React's nested-update count (elyra-ai/canvas#4433).
+
 		if (!isEqual(this.state.columnWidths, widths) || this.state.tableWidth !== sumColumnWidth) {
 			this.setState({ columnWidths: widths, tableWidth: sumColumnWidth });
 		}
@@ -313,9 +310,6 @@ class FlexibleTable extends React.Component {
 
 	_updateTableWidth(contentRect, target) {
 		const tableWidth = Math.floor(target?.childNodes?.[0].childNodes?.[0]?.clientWidth) || contentRect.width;
-		// A 0x0 rect means the element is hidden or not laid out yet, not that it is zero
-		// wide. Acting on it collapses every column to DEFAULT_COL_MIN_WIDTH and then springs
-		// back once the element is measurable again (elyra-ai/canvas#4433).
 		if (!tableWidth || tableWidth <= 0) {
 			return;
 		}
