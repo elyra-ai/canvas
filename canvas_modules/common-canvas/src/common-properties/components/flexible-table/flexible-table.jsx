@@ -21,7 +21,7 @@ import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import { Search, Layer } from "@carbon/react";
 import classNames from "classnames";
-import { has, isEmpty, isEqual } from "lodash";
+import { has, isEmpty } from "lodash";
 
 import VirtualizedGrid from "./../virtualized-grid/virtualized-grid.jsx";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
@@ -284,10 +284,7 @@ class FlexibleTable extends React.Component {
 			const firstColWidth = parseInt(widths[0], 10);
 			widths[0] = firstColWidth + compare - sumColumnWidth + "px";
 		}
-
-		if (!isEqual(this.state.columnWidths, widths) || this.state.tableWidth !== sumColumnWidth) {
-			this.setState({ columnWidths: widths, tableWidth: sumColumnWidth });
-		}
+		this.setState({ columnWidths: widths, tableWidth: sumColumnWidth });
 	}
 
 	updateHeaderHeight(contentRect) {
@@ -310,9 +307,6 @@ class FlexibleTable extends React.Component {
 
 	_updateTableWidth(contentRect, target) {
 		const tableWidth = Math.floor(target?.childNodes?.[0].childNodes?.[0]?.clientWidth) || contentRect.width;
-		if (!tableWidth || tableWidth <= 0) {
-			return;
-		}
 		if (this.state.availableWidth !== Math.floor(tableWidth - 2)) {
 			this.setState({
 				availableWidth: Math.floor(tableWidth - 2) // subtract 2 px for the borders

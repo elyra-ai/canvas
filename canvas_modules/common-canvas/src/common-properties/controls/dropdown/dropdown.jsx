@@ -182,7 +182,11 @@ class DropDown extends React.Component {
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		// Carbon fires onSelectedItemChange from a downshift effect that re-runs when the selected
+		// item is re-synced, so dispatching an unchanged value re-enters this handler via the store.
+		if (!isEqual(value, this.props.value)) {
+			this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		}
 	}
 
 	handleComboOnChange(evt) {
