@@ -195,7 +195,10 @@ class DropDown extends React.Component {
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (!isEqual(value, currentValue)) {
+			this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		}
 	}
 
 
