@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { InlineLoading } from "@carbon/react";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
 class PaletteDialogContentCategory extends React.Component {
 	constructor(props) {
@@ -26,19 +27,27 @@ class PaletteDialogContentCategory extends React.Component {
 		};
 
 		this.categorySelected = this.categorySelected.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
+
+	// Selects the category when the user presses Enter or Space, which is the
+	// keyboard equivalent of clicking on it.
+	onKeyDown(evt) {
+		if (KeyboardUtils.openCategory(evt)) {
+			// Stop the Space key scrolling the category list.
+			evt.preventDefault();
+			this.categorySelected(evt);
+		}
+	}
 
 	categorySelected(catSelEvent) {
 		this.props.categorySelectedMethod(catSelEvent);
 	}
 
 	render() {
-		var style = "palette-dialog-category";
-
-		if (this.props.selectedCategory === this.props.category.label) {
-			style = "palette-dialog-category-selected";
-		}
+		const isSelected = this.props.selectedCategory === this.props.category.label;
+		const style = isSelected ? "palette-dialog-category-selected" : "palette-dialog-category";
 
 		const content = this.props.category.loading_text
 			? (
@@ -56,7 +65,13 @@ class PaletteDialogContentCategory extends React.Component {
 			: this.props.category.label;
 
 		return (
-			<div data-id={this.props.category.id} data-label={this.props.category.label} className={style} onClick={this.categorySelected}>
+			<div data-id={this.props.category.id} data-label={this.props.category.label} className={style}
+				role="button"
+				tabIndex={0}
+				aria-current={isSelected ? true : null}
+				onClick={this.categorySelected}
+				onKeyDown={this.onKeyDown}
+			>
 				{content}
 			</div>
 		);

@@ -20,6 +20,7 @@ import { has } from "lodash";
 import SVG from "react-inlinesvg";
 // Carbon icons - direct imports for tree-shaking optimization
 import Warning from "@carbon/icons-react/lib/Warning";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
 	from "../common-canvas/constants/canvas-constants.js";
@@ -42,7 +43,9 @@ class PaletteDialogContentGridNode extends React.Component {
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onFocus = this.onFocus.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
 	onMouseDown() {
@@ -84,24 +87,45 @@ class PaletteDialogContentGridNode extends React.Component {
 		this.createAutoNode();
 	}
 
+	// Adds the node when the user presses Enter or Space. Unlike onClick this is
+	// not guarded by allowClickToAdd because the keyboard has no equivalent of
+	// the double click that adds a node when that option is turned off.
+	onKeyDown(evt) {
+		if (KeyboardUtils.createAutoNode(evt) || KeyboardUtils.createAutoNodeNoLink(evt)) {
+			// Stop the Space key scrolling the palette contents.
+			evt.preventDefault();
+			this.createAutoNode();
+		}
+	}
+
 	onMouseOver(ev) {
 		if (ev.buttons === 0) {
-			const nodeTemplate = this.props.category.empty_text
-				? { app_data: { ui_data: { label: this.props.category.empty_text } } }
-				: this.props.nodeTemplate;
-
-			this.props.canvasController.openTip({
-				id: "paletteTip_" + this.props.nodeTemplate.op,
-				type: TIP_TYPE_PALETTE_ITEM,
-				targetObj: ev.currentTarget,
-				nodeTemplate: nodeTemplate,
-				category: this.props.category
-			});
+			this.displayTip(ev);
 		}
 	}
 
 	onMouseLeave() {
 		this.props.canvasController.closeTip();
+	}
+
+	// Displays the tip when the user moves focus to this node using the
+	// keyboard. This is the keyboard equivalent of onMouseOver.
+	onFocus(ev) {
+		this.displayTip(ev);
+	}
+
+	displayTip(ev) {
+		const nodeTemplate = this.props.category.empty_text
+			? { app_data: { ui_data: { label: this.props.category.empty_text } } }
+			: this.props.nodeTemplate;
+
+		this.props.canvasController.openTip({
+			id: "paletteTip_" + this.props.nodeTemplate.op,
+			type: TIP_TYPE_PALETTE_ITEM,
+			targetObj: ev.currentTarget,
+			nodeTemplate: nodeTemplate,
+			category: this.props.category
+		});
 	}
 
 	/** Returns true if this node should be treated as disabled (not draggable/clickable). */
@@ -167,9 +191,15 @@ class PaletteDialogContentGridNode extends React.Component {
 		return (
 			<div id={this.props.nodeTemplate.id}
 				data-id={this.props.nodeTemplate.op}
+				role="button"
+				tabIndex={itemDisabled ? -1 : 0}
+				aria-disabled={itemDisabled}
 				draggable={draggable}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				onFocus={this.onFocus}
+				onBlur={this.onMouseLeave}
+				onKeyDown={itemDisabled ? null : this.onKeyDown}
 				onMouseDown={itemDisabled ? null : this.onMouseDown}
 				onDragStart={itemDisabled ? null : this.onDragStart}
 				onDragEnd={itemDisabled ? null : this.onDragEnd}
