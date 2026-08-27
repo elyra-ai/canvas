@@ -25,7 +25,7 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
-import { getFormattedDate, getISODate } from "../../util/date-utils";
+import { getFormattedDate, getISODate, getDateObject, isValidDate } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE, MESSAGE_KEYS, CARBON_ICONS } from "../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
 
@@ -44,8 +44,37 @@ class DatepickerRangeControl extends React.Component {
 			valueEnd: props.value && props.value[1] ? getFormattedDate(props.value[1], this.dateFormat) : ""
 		};
 
+		// Carbon deprecated 'value' on DatePickerInput; the initial dates must be
+		// passed to the parent DatePicker instead, which hands them to flatpickr
+		// to populate the inputs.
+		this.initialValue = [
+			getDateObject(this.state.valueStart, this.dateFormat),
+			getDateObject(this.state.valueEnd, this.dateFormat)
+		].filter(Boolean);
+
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
 		this.createInfoDesc = this.createInfoDesc.bind(this);
+		this.handleNativeKeydown = this.handleNativeKeydown.bind(this);
+		this.handleNativeBlur = this.handleNativeBlur.bind(this);
+	}
+
+	// Attaches capture-phase keydown/blur listeners on each input so we can defuse
+	// unparseable values before Carbon's fixEventsPlugin passes them to
+	// flatpickr.setDate.
+	componentDidMount() {
+		const container = document.querySelector(`[data-id="${ControlUtils.getDataId(this.props.propertyId)}"]`);
+		this.rangeInputs = container ? Array.prototype.slice.call(container.querySelectorAll("input")) : [];
+		this.rangeInputs.forEach((inp) => {
+			inp.addEventListener("keydown", this.handleNativeKeydown, true);
+			inp.addEventListener("blur", this.handleNativeBlur, true);
+		});
+	}
+
+	componentWillUnmount() {
+		(this.rangeInputs || []).forEach((inp) => {
+			inp.removeEventListener("keydown", this.handleNativeKeydown, true);
+			inp.removeEventListener("blur", this.handleNativeBlur, true);
+		});
 	}
 
 	onStartBlur(evt) {
@@ -55,13 +84,23 @@ class DatepickerRangeControl extends React.Component {
 	}
 
 	onEndBlur(evt) {
-		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
-		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
+		const isoStartDate = getISODate(this.state.valueStart, this.dateFormat);
+		const isoEndDate = getISODate(evt.target.value, this.dateFormat);
 		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
 	}
 
 	getDatepickerSize() {
 		return this.props.tableControl ? "sm" : "md";
+	}
+
+	handleNativeKeydown(evt) {
+		if (evt.key === "Enter") {
+			this.defuseInvalidInputs(evt);
+		}
+	}
+
+	handleNativeBlur(evt) {
+		this.defuseInvalidInputs(evt);
 	}
 
 	// This handles changes for simple, single, and the start range date
@@ -81,13 +120,45 @@ class DatepickerRangeControl extends React.Component {
 		}
 	}
 
-	// Allows user to manually type in the input
-	// Once the calendar closes, it will trigger an onChange evt that will correct any invalid dates
 	handleInputStartChange(evt) {
-		this.setState({ valueStart: evt.target.value }); // Display value as what user enters
+		this.setState({ valueStart: evt.target.value });
 	}
 	handleInputEndChange(evt) {
-		this.setState({ valueEnd: evt.target.value }); // Display value as what user enters
+		this.setState({ valueEnd: evt.target.value });
+	}
+
+	// If either input holds an unparseable non-empty value at commit time
+	// (Enter or blur), clear the offending side(s) before Carbon's handler runs
+	// so flatpickr never receives a partial-parse pair.
+	defuseInvalidInputs(evt) {
+		const inputs = this.rangeInputs || [];
+		const startInput = inputs[0];
+		const endInput = inputs[1];
+		const startValue = startInput ? startInput.value : "";
+		const endValue = endInput ? endInput.value : "";
+		const startInvalid = Boolean(startValue) && !isValidDate(startValue, this.dateFormat);
+		const endInvalid = Boolean(endValue) && !isValidDate(endValue, this.dateFormat);
+
+		if (!startInvalid && !endInvalid) {
+			return false;
+		}
+
+		evt.stopImmediatePropagation();
+		evt.preventDefault();
+
+		const nextStart = startInvalid ? "" : startValue;
+		const nextEnd = endInvalid ? "" : endValue;
+		if (startInvalid && startInput) {
+			startInput.value = "";
+		}
+		if (endInvalid && endInput) {
+			endInput.value = "";
+		}
+		this.setState({ valueStart: nextStart, valueEnd: nextEnd });
+		const isoStart = nextStart ? getISODate(nextStart, this.dateFormat) : "";
+		const isoEnd = nextEnd ? getISODate(nextEnd, this.dateFormat) : "";
+		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStart, isoEnd]);
+		return true;
 	}
 
 	createInfoDesc(label, description, range) {
@@ -146,6 +217,7 @@ class DatepickerRangeControl extends React.Component {
 					locale={this.locale}
 					allowInput
 					readOnly={this.props.readOnly}
+					value={this.initialValue}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -155,7 +227,6 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputStartChange.bind(this)}
-						value={this.state.valueStart}
 						onBlur={this.onStartBlur.bind(this)}
 						helperText={!this.props.tableControl && startHelperText}
 					/>
@@ -167,7 +238,6 @@ class DatepickerRangeControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputEndChange.bind(this)}
-						value={this.state.valueEnd}
 						onBlur={this.onEndBlur.bind(this)}
 						helperText={!this.props.tableControl && endHelperText}
 					/>

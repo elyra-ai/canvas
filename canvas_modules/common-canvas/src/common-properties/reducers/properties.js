@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { isEqual } from "lodash";
 import { UPDATE_PROPERTY_VALUE, SET_PROPERTY_VALUES, REMOVE_PROPERTY_VALUE } from "../actions";
 
 function properties(state = {}, action) {
@@ -23,7 +24,12 @@ function properties(state = {}, action) {
 		if (propertyId === null) {
 			return state;
 		}
-		var newState = state;
+		// A no-op write must not create a new state identity: every notification forces a
+		// SyncLane re-render, so re-setting a value to what it holds sustains an update loop.
+		if (typeof propertyId.row === "undefined" && isEqual(state[propertyId.name], action.property.value)) {
+			return state;
+		}
+		const newState = Object.assign({}, state);
 		if (typeof propertyId.row !== "undefined") {
 			if (typeof newState[propertyId.name] === "undefined") {
 				newState[propertyId.name] = [];
@@ -46,7 +52,7 @@ function properties(state = {}, action) {
 		} else {
 			newState[propertyId.name] = action.property.value;
 		}
-		return Object.assign({}, state, newState);
+		return newState;
 	}
 	case SET_PROPERTY_VALUES: {
 		return Object.assign({}, action.properties);

@@ -80,6 +80,23 @@ function getISODate(inDate, dateFormat) {
 	return inDate;
 }
 
+// Returns a Date object at local midnight so Carbon's DatePicker receives an
+// unambiguous value instead of a string that flatpickr would re-parse as UTC.
+function getDateObject(inDate, dateFormat) {
+	if (inDate instanceof Date) {
+		return isNaN(inDate) ? null : inDate;
+	}
+	if (typeof inDate === "string" && inDate.trim().length > 0 && dateFormat) {
+		const dateRegex = getDateFormatRegex(dateFormat);
+		if (new RegExp(dateRegex).test(inDate)) {
+			const { year, month, day } = getYearMonthDay(inDate, dateRegex, dateFormat);
+			const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+			return isNaN(date) ? null : date;
+		}
+	}
+	return null;
+}
+
 // Date libraries are able to parse dates such as 2023-02-31 into an actual Date object: Jan 31 2023
 // Given a date string (internal ISO format) and dateFormat,
 // test to see if the date is valid byt first parsing the given date for the year, month, and day
@@ -147,6 +164,7 @@ export {
 	getDateFormatRegex,
 	getFormattedDate,
 	getISODate,
+	getDateObject,
 	isValidDate,
 	getYearMonthDay
 };
