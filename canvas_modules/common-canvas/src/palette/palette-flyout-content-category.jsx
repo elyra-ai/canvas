@@ -153,6 +153,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 				ref={this.catRef}
 				data-id={get(this.props.category, "id", "")}
 				value={this.props.category.label}
+				// This div cannot receive focus, no onFocus to pair with onMouseOver. The tip
+				// is displayed for keyboard users by the onFocus on the AccordionItem
+				// this div is passed to as its title
+				// eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
 			>

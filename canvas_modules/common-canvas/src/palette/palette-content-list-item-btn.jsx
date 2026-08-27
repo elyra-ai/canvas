@@ -17,17 +17,42 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import defaultMessages from "../../locales/palette/locales/en.json";
 
 class PaletteContentListItemBtn extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.onClick = this.onClick.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
+	}
+
+	onClick(evt) {
+		// Stop the click reaching the parent palette list item which would
+		// otherwise add a node to the canvas.
+		evt.stopPropagation();
+		this.props.onClick(evt);
+	}
+
+	onKeyDown(evt) {
+		// Enter and Space activate the button (which generates a click event) so
+		// stop those keys reaching the parent palette list item which would
+		// otherwise add a node to the canvas.
+		if (KeyboardUtils.createAutoNode(evt) || KeyboardUtils.createAutoNodeNoLink(evt)) {
+			evt.stopPropagation();
+		}
+	}
 
 	render() {
 		const less =
 			this.props.intl.formatMessage({ id: this.props.id, defaultMessage: defaultMessages[this.props.id] });
 		return (
-			<div key="l_btn" className = "palette-list-item-desc-button" onClick={this.props.onClick}>
+			<button key="l_btn" type="button" className="palette-list-item-desc-button"
+				onClick={this.onClick} onKeyDown={this.onKeyDown}
+			>
 				{less}
-			</div>
+			</button>
 		);
 	}
 }
