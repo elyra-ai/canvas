@@ -107,7 +107,7 @@
 		clear: both;
 	}
 
-	a {
+	button {
 		display: block;
 		text-align: center;
 		padding: 14px 12px;
@@ -116,6 +116,8 @@
 		font-size: 16px;
 		background-color: carbon.$text-primary;
 		cursor: pointer;
+		border: none;
+		font-family: inherit;
 
 		&:hover {
 			background-color: #2D3F49;

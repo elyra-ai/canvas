@@ -247,19 +247,19 @@ class CommonPropertiesComponents extends React.Component {
 			<nav>
 				<ul className="harness-properties-documentation-navbar-items">
 					<li className="harness-properties-documentation-navbar-li">
-						<a id="harness-conditions-documentation-title">Elyra-ai/canvas Common Properties Conditions</a>
+						<span id="harness-conditions-documentation-title">Elyra-ai/canvas Common Properties Conditions</span>
 					</li>
 					<li className="harness-properties-documentation-navbar-li nav-divider">
-						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Conditions" } })}>Conditions</a>
+						<button onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Conditions" } })}>Conditions</button>
 					</li>
 					<li className="harness-properties-documentation-navbar-li">
-						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "SingleConditions" } })}>Single Conditions</a>
+						<button onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "SingleConditions" } })}>Single Conditions</button>
 					</li>
 					<li className="harness-properties-documentation-navbar-li">
-						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "GroupConditions" } })}>Group Conditions</a>
+						<button onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "GroupConditions" } })}>Group Conditions</button>
 					</li>
 					<li className="harness-properties-documentation-navbar-li">
-						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "PanelConditions" } })}>Panel Conditions</a>
+						<button onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "PanelConditions" } })}>Panel Conditions</button>
 					</li>
 				</ul>
 				{dropMenu}

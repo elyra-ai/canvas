@@ -80,7 +80,7 @@ class AppSettingsPanel extends React.Component {
 
 	render() {
 		return (
-			<div className="harness-app-x-panel" onClick={this.onClick} >
+			<div className="harness-app-x-panel" onClick={this.onClick} role="presentation">
 				<div className="harness-app-x-panel-header">
 					Test panel:
 					<button

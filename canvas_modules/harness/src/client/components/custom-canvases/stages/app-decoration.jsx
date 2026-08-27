@@ -37,7 +37,7 @@ class AppDecoration extends React.Component {
 		const stripPath = `M 0 0 L 0 ${d} ${w} ${d} ${w} 0 Z`;
 
 		return (
-			<div className="stages-app-decoration" onClick={this.onClick} >
+			<div className="stages-app-decoration" onClick={this.onClick} role="presentation">
 				<svg height="100%" width="100%">
 					<path className="stages-app-decoration-outline" d={outlinePath} />
 					<path className="stages-app-decoration-strip" d={stripPath} />

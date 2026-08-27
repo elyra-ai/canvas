@@ -75,6 +75,7 @@ export default class PromptSubPalette extends React.Component {
 		return (
 			<div ref={this.divRef} className={"prompt-sub-palette"}
 				onScroll={this.onScroll} onWheel={this.onScroll} onKeyDown={this.onKeyDown} onMouseDown={this.onMouseDown}
+				role="presentation"
 			>
 				<Provider store={this.canvasController.getStore()}>
 					<Palette canvasController={this.canvasController} createAutoNode={this.props.createAutoNode}

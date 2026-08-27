@@ -35,7 +35,7 @@ export default class Console extends React.Component {
 			const entry = log.timestamp + ": " + log.event;
 
 			return (
-				<li className="harness-console-entry" key={ind} onClick={that.showDetails.bind(that) }>
+				<li className="harness-console-entry" key={ind} role="presentation" onClick={that.showDetails.bind(that)}>
 					{entry}
 					<div id="harness_console_pretty_json_container" style={ { display: "none" } }>
 						<pre className="harness-console-pretty-json">{formatted}</pre>
