@@ -16,7 +16,7 @@ import { Theme } from "@carbon/react";
 import "@carbon/styles/css/styles.min.css";
 import "@elyra/canvas/dist/styles/common-canvas.min.css";
 
-// Copy starter-palette.json and starter-flow.json from this context/ folder
+// Copy starter-palette.json and starter-flow.json from the consumers/ folder
 // into your project src/ directory (or wherever your component lives), then:
 import myPalette from "./starter-palette.json";
 import myFlow from "./starter-flow.json";
