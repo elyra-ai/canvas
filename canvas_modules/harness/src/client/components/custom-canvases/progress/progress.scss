@@ -173,7 +173,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 	.d3-node-group.progress-node-running:hover .d3-node-body-outline {
 		fill: carbon.$support-warning;
-		stroke: carbon.$support-error;
+		stroke: $blue;
 		stroke-width: 5;
 	}
 
