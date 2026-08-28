@@ -40,12 +40,12 @@ This repo includes a [`context/`](./context/) folder — a curated knowledge bas
 
 **How to use it:**
 
-1. Download or copy the [`context/`](./context/) folder into your project.
+1. Download or copy the [`context/consumers/`](./context/consumers/) folder into your project.
 2. Paste the contents (or individual files) into your AI chat (ChatGPT, Claude, Cursor, GitHub Copilot, etc.).
 3. Tell your AI: *"I want to build a canvas app with @elyra/canvas. Use these context files."*
 4. The AI will ask what kind of canvas you need and generate working code in minutes.
 
-> The [`context/starter-flow.json`](./context/starter-flow.json) and [`context/starter-palette.json`](./context/starter-palette.json) files give you a running canvas with 3 connected nodes and a full palette — no image server or extra config needed. Drop them straight into your app.
+> The [`context/consumers/starter-flow.json`](./context/consumers/starter-flow.json) and [`context/consumers/starter-palette.json`](./context/consumers/starter-palette.json) files give you a running canvas with 3 connected nodes and a full palette — no image server or extra config needed. Drop them straight into your app.
 
 ---
 
