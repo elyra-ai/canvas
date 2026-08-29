@@ -13,6 +13,7 @@
 						"ui_data": {
 							"label": "Var. File",
 							"description": "Imports data from a comma-delimited file",
+							"keywords": ["tabular", "csv"],
 							"image": "data:image/svg+xml;base64,.."
 						}
 					}

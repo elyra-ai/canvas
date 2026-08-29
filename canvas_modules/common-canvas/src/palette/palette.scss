@@ -200,6 +200,26 @@ $palette-dialog-list-item-height: 46px;
 			}
 		}
 
+		.palette-list-item-keywords {
+			@include carbon.type-style("caption-01");
+			padding: carbon.$spacing-02 10px 2px 58px;
+			word-break: break-word;
+			width: 100%;
+
+			.palette-list-item-keywords-icon {
+				width: 12px;
+				height: 12px;
+				margin-right: carbon.$spacing-02;
+				vertical-align: middle;
+			}
+
+			& mark {
+				color: carbon.$tag-color-blue;
+				background-color: carbon.$tag-background-blue;
+				font-weight: 500;
+			}
+		}
+
 		& .highlight {
 			background-color: carbon.$button-primary;
 		}
@@ -240,7 +260,8 @@ $palette-dialog-list-item-height: 46px;
 		}
 
 		.palette-list-item-text-div,
-		.palette-list-item-description {
+		.palette-list-item-description,
+		.palette-list-item-keywords {
 			color: carbon.$button-disabled;
 		}
 	}
@@ -493,7 +514,8 @@ $palette-dialog-list-item-height: 46px;
 			}
 
 			.palette-list-item-text-div,
-			.palette-list-item-description {
+			.palette-list-item-description,
+			.palette-list-item-keywords {
 				color: carbon.$button-disabled;
 			}
 		}

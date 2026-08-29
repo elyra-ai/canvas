@@ -152,6 +152,10 @@ export default class PipelineOutHandler {
 			uiData.description = ciNode.description;
 		}
 
+		if (ciNode.keywords && !isEmpty(ciNode.keywords)) {
+			uiData.keywords = ciNode.keywords;
+		}
+
 		if (ciNode.type === SUPER_NODE) {
 			uiData.is_expanded = ciNode.is_expanded;
 			uiData.expanded_width = ciNode.expanded_width;
