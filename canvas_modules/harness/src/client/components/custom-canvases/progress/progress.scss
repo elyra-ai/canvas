@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,16 +163,51 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		fill: transparent;
 		pointer-events: none;
 	}
+
+	.d3-node-group.progress-node-running .d3-node-body-outline {
+		animation-duration: 1000ms;
+		animation-name: wiggle2;
+		animation-iteration-count: infinite;
+		fill: $blue;
+	}
+
+	.d3-node-group.progress-node-running:hover .d3-node-body-outline {
+		fill: carbon.$support-warning;
+		stroke: $blue;
+		stroke-width: 5;
+	}
+
+	.d3-node-group.progress-node-running .d3-node-label {
+		fill: carbon.$link-primary;
+	}
+
+	.d3-node-group.progress-node-running .d3-node-label-entry {
+		fill: carbon.$text-inverse;
+	}
+
+	.d3-link-group.progress-link-running .d3-link-line,
+	.d3-link-group.progress-link-running .d3-link-line-arrow {
+		animation-duration: 1000ms;
+		animation-name: blink;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
+	}
+
+	.d3-link-group.progress-link-running:hover .d3-link-line,
+	.d3-link-group.progress-link-running:hover .d3-link-line-arrow {
+		stroke: carbon.$support-warning;
+		stroke-width: 2;
+	}
 }
 
 /* Provide animation key frames for sample progress indication in harness */
 @keyframes blink {
 	from {
-		stroke: #008000; // Green
+		stroke: carbon.$support-success;
 		stroke-width: 4;
 	}
 	to {
-		stroke: #FFA500; // Orange
+		stroke: carbon.$support-warning;
 		stroke-width: 4;
 	}
 }
