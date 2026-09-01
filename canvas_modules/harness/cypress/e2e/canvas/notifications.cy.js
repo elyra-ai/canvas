@@ -68,6 +68,7 @@ describe("Test of notification center configuration", function() {
 
 	it("Test proper rendering of notification center components", function() {
 		cy.toggleCommonCanvasSidePanel();
+		cy.openAccordionSection("Notifications");
 
 		cy.verifyNotificationCenterDoesntExist();
 

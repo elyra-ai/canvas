@@ -597,9 +597,9 @@ class App extends React.Component {
 						values={{ br: <br /> }}
 					/>
 				</span>
-				<span className="harness-empty-link"
+				<button className="harness-empty-link"
 					onClick={this.handleEmptyCanvasLinkClick}
-				><FormattedMessage id={"canvas.emptyLink"} /></span>
+				><FormattedMessage id={"canvas.emptyLink"} /></button>
 			</div>
 		);
 

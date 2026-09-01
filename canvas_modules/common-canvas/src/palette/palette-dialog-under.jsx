@@ -535,6 +535,10 @@ class PaletteDialog extends React.Component {
 		);
 		return (
 			<div role="region" aria-label={label} >
+				{/* The handler on this div starts a resize when the pointer is in one of the sizing
+				    hover zones, a pointer gesture with no keyboard equivalent rather than a control,
+					no role to give it. */}
+				{/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
 				<div ref={this.dialogPaletteDivRef} className="palette-dialog-div"
 					onMouseDown={this.mouseDownOnPalette}
 				>

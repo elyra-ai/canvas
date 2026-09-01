@@ -255,7 +255,7 @@ class ToolbarSubMenu extends React.Component {
 
 			return (
 				<div ref={(ref) => (this.areaRef = ref)} className={"toolbar-popover-list submenu" + cascadeClass}
-					tabIndex={-1} onKeyDown={this.onKeyDown}
+					role="menu" tabIndex={-1} onKeyDown={this.onKeyDown}
 				>
 					{this.subMenuItems}
 				</div>

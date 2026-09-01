@@ -156,7 +156,7 @@ const rules = {
 	}],
 };
 
-const reactConfigs = [
+const reactConfigs = (jsxA11y) => [
 	{
         files: ["**/*.js", "**/*.jsx"],
         settings: {
@@ -166,6 +166,9 @@ const reactConfigs = [
         }
     },
 	{
+		plugins: {
+			"jsx-a11y": jsxA11y
+		},
 		languageOptions: {
 			ecmaVersion: "latest",
 			sourceType: "module",
@@ -178,8 +181,22 @@ const reactConfigs = [
 				}
 			}
 		},
-		rules: rules
+		rules: {
+			...Object.fromEntries(
+				Object.entries(jsxA11y.flatConfigs.recommended.rules).map(([k, v]) => {
+					if (v === "error") {
+						return [k, "warn"];
+					}
+					if (Array.isArray(v) && v[0] === "error") {
+						return [k, ["warn", ...v.slice(1)]];
+					}
+					return [k, v];
+				})
+			),
+			...rules
+		}
 	}
 ];
 
 export default reactConfigs;
+

@@ -28,6 +28,7 @@
   "action.displayPreviousPipeline": "Visualizar canalización anterior",
   "action.displaySubPipeline": "Visualizar página completa de supernodo",
   "action.editComment": "Editar comentario",
+  "action.editCommentDecorationLabel": "Editar la etiqueta de decoración del comentario",
   "action.editLinkDecorationLabel": "Editar etiqueta de decoración de enlace",
   "action.editNodeDecorationLabel": "Editar etiqueta de decoración de nodo",
   "action.expandSuperNodeInPlace": "Expandir supernodo {node_label} en su lugar",

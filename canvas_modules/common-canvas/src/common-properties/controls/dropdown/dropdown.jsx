@@ -182,7 +182,12 @@ class DropDown extends React.Component {
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		// Carbon fires onChange from a downshift effect that re-runs when the selected item is
+		// re-synced, so skip the dispatch when the value hasn't actually changed.
+		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (!isEqual(value, currentValue)) {
+			this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		}
 	}
 
 	handleComboOnChange(evt) {
@@ -190,7 +195,10 @@ class DropDown extends React.Component {
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (!isEqual(value, currentValue)) {
+			this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		}
 	}
 
 
@@ -342,7 +350,7 @@ DropDown.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.element.isRequired,
 	tableControl: PropTypes.bool,
 	controlOpts: PropTypes.oneOfType([
 		PropTypes.object,

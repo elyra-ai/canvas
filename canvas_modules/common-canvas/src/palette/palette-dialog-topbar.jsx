@@ -76,6 +76,9 @@ class PaletteDialogTopbar extends React.Component {
 
 
 		return (
+			// The handlers on this div move and resize the floating palette window, pointer gestures
+			// with no keyboard equivalent rather than a control, so no role to give it.
+			// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 			<div
 				className="palette-dialog-topbar"
 				onMouseDown={this.mouseDown}

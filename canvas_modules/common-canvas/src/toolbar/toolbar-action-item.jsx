@@ -240,7 +240,7 @@ class ToolbarActionItem extends React.Component {
 
 		return (
 			<div ref={this.divRef} className={itemClassName} data-instance-id={this.props.instanceId}
-				data-toolbar-action={actionObj.action} data-toolbar-item
+				data-toolbar-action={actionObj.action} data-toolbar-item role="presentation"
 				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
 			>
 				<div className="toolbar-button-item">

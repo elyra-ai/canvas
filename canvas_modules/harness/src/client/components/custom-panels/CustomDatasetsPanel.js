@@ -294,7 +294,7 @@ class CustomDatasetsPanel {
 							<div className={"datasets-columns-type-icon datasets-columns-" +
 								field.type + "-type-icon"}
 							>
-								<img src={icon} />
+								<img src={icon} alt="" />
 							</div>
 							{datasets[index].data[idx].name}
 						</div></Td>);
@@ -329,7 +329,7 @@ class CustomDatasetsPanel {
 			>
 				<div>
 					<div className={"datasets-columns-type-icon datasets-columns-string-type-icon"}>
-						<img src={icon} />
+						<img src={icon} alt="" />
 					</div>
 					{fieldName}
 				</div></Td>);

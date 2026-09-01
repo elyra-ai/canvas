@@ -9,6 +9,8 @@
   "edit.pasteSelection": "Paste",
   "canvas.label": "Flow Editor",
   "canvas.contents": "Flow editor contents",
+  "canvas.bottomPanelResize": "Resize bottom panel",
+  "canvas.rightFlyoutResize": "Resize right flyout panel",
   "canvas.addComment": "New comment",
   "canvas.addWysiwygComment": "New WYSIWYG comment",
   "canvas.selectAll": "Select all",

@@ -85,6 +85,7 @@ class NotificationsPanelWrapper extends React.Component {
 				className="notifications-panel-wrapper"
 				onKeyDown={this.onKeyDown}
 				tabIndex={-1}
+				role="presentation"
 			>
 				<NotificationsPanel
 					open

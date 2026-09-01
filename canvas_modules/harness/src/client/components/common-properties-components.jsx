@@ -468,16 +468,16 @@ class CommonPropertiesComponents extends React.Component {
 						<span id="harness-properties-documentation-title">Elyra-ai/canvas Common Properties Components</span>
 					</li>
 					<li className="harness-properties-documentation-navbar-li nav-divider">
-						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Groups" } })}>Groups</a>
+						<button onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Groups" } })}>Groups</button>
 					</li>
 					<li className="harness-properties-documentation-navbar-li">
-						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Controls" } })}>Controls</a>
+						<button onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Controls" } })}>Controls</button>
 					</li>
 					<li className="harness-properties-documentation-navbar-li">
-						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Complex" } })}>Complex Types</a>
+						<button onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Complex" } })}>Complex Types</button>
 					</li>
 					<li className="harness-properties-documentation-navbar-li">
-						<a onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Actions" } })}>Action Controls</a>
+						<button onClick={() => this.onMenuDropdownSelect({ selectedItem: { id: "Actions" } })}>Action Controls</button>
 					</li>
 				</ul>
 				{dropMenu}

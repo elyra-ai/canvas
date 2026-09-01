@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,26 +23,6 @@ import { Play, StopFilledAlt } from "@carbon/react/icons";
 import ProgressFlow from "./progress-flow.json";
 import ProgressPalette from "../../../../../test_resources/palettes/modelerPalette.json";
 
-const nodeAnimation =
-	"animation-duration:1000ms; animation-name:wiggle2; " +
-	"animation-iteration-count:infinite; fill: skyblue;";
-
-const nodeStyle = {
-	body: { default: nodeAnimation, hover: "fill: orange; stroke: coralred; stroke-width: 5;" },
-	// selection_outline: { default: animation },
-	image: { default: null },
-	label: { default: "fill: blue" },
-	text: { default: "fill: white" }
-};
-
-const removeNodeStyle = {
-	body: { default: null, hover: null },
-	// selection_outline: { default: animation },
-	image: { default: null },
-	label: { default: null },
-	text: { default: null }
-};
-
 const nodeCompleteDec = [{
 	id: "done",
 	position: "topCenter",
@@ -54,18 +34,6 @@ const nodeCompleteDec = [{
 	image: "/images/decorators/checkmark--filled.svg",
 	temporary: true
 }];
-
-const linkAnimation =
-	"animation-duration:1000ms; animation-name:blink; " +
-	"animation-iteration-count:infinite; animation-direction: alternate";
-
-const linkStyle = {
-	line: { default: linkAnimation, hover: "stroke: yellow; stroke-width: 2" }
-};
-
-const removeLinkStyle = {
-	line: { default: null, hover: null }
-};
 
 export default class ProgressCanvas extends React.Component {
 	constructor(props) {
@@ -135,33 +103,26 @@ export default class ProgressCanvas extends React.Component {
 		const pipelineId = "`~!@#$%^&*()_+=-{}][|:;<,>.9?/";
 
 		const bindingEntryNode = "id8I6RH2V91XW";
-		const executionNode = "|:;<,>.9?/`~!@#$%^&*()_+=-{}]["; // The executiion node id uses special characters for testing.
+		const executionNode = "|:;<,>.9?/`~!@#$%^&*()_+=-{}]["; // The execution node id uses special characters for testing.
 		const superNode = "nodeIDSuperNodePE";
 		const modelNode = "id125TTEEIK7V";
 		const bindingExitNode = "id5KIRGGJ3FYT";
 
-		this.objects1 = [];
-		this.objects2 = [];
-		this.objects3 = [];
-		this.objects4 = [];
+		this.pipelineId = pipelineId;
 
-		this.objects1[pipelineId] = [bindingEntryNode];
-		this.objects2[pipelineId] = [executionNode];
-		this.objects3[pipelineId] = [superNode];
-		this.objects4[pipelineId] = [modelNode, bindingExitNode];
+		this.nodes1 = [bindingEntryNode];
+		this.nodes2 = [executionNode];
+		this.nodes3 = [superNode];
+		this.nodes4 = [modelNode, bindingExitNode];
 
 		const lnk1 = this.canvasController.getNodeDataLinkFromInfo(bindingEntryNode, "outPort", executionNode, "inPort");
 		const lnk2 = this.canvasController.getNodeDataLinkFromInfo(executionNode, null, superNode, "input2SuperNodePE");
 		const lnk3 = this.canvasController.getNodeDataLinkFromInfo(superNode, null, modelNode, "inPort");
 		const lnk4 = this.canvasController.getNodeDataLinkFromInfo(superNode, "output1SuperNodePE", bindingExitNode, "inPort");
 
-		this.link1 = [];
-		this.link2 = [];
-		this.link3 = [];
-
-		this.link1[pipelineId] = [lnk1.id];
-		this.link2[pipelineId] = [lnk2.id];
-		this.link3[pipelineId] = [lnk3.id, lnk4.id];
+		this.link1 = [lnk1.id];
+		this.link2 = [lnk2.id];
+		this.link3 = [lnk3.id, lnk4.id];
 
 		const that = this;
 
@@ -170,43 +131,43 @@ export default class ProgressCanvas extends React.Component {
 
 		// Now begin displaying progress indication using setTimeout to
 		// simulate the passage of time.
-		that.canvasController.setObjectsStyle(this.objects1, nodeStyle, true);
+		that.canvasController.setNodesClassName(this.nodes1, "progress-node-running", pipelineId);
 
 		this.part1 = setTimeout(() => {
-			that.canvasController.setLinksStyle(this.link1, linkStyle, true);
-			that.canvasController.setObjectsStyle(this.objects2, nodeStyle, true);
+			that.canvasController.setLinksClassName(this.link1, "progress-link-running", pipelineId);
+			that.canvasController.setNodesClassName(this.nodes2, "progress-node-running", pipelineId);
 		}, 2000);
 
 		this.part2 = setTimeout(() => {
-			that.canvasController.setObjectsStyle(this.objects1, removeNodeStyle, true);
+			that.canvasController.setNodesClassName(this.nodes1, "", pipelineId);
 			that.canvasController.setNodeDecorations(bindingEntryNode, nodeCompleteDec);
-			that.canvasController.setLinksStyle(this.link1, removeLinkStyle, true);
+			that.canvasController.setLinksClassName(this.link1, "", pipelineId);
 		}, 4000);
 
 		this.part3 = setTimeout(() => {
-			that.canvasController.setLinksStyle(this.link2, linkStyle, true);
-			that.canvasController.setObjectsStyle(this.objects3, nodeStyle, true);
+			that.canvasController.setLinksClassName(this.link2, "progress-link-running", pipelineId);
+			that.canvasController.setNodesClassName(this.nodes3, "progress-node-running", pipelineId);
 		}, 6000);
 
 		this.part4 = setTimeout(() => {
-			that.canvasController.setObjectsStyle(this.objects2, removeNodeStyle, true);
+			that.canvasController.setNodesClassName(this.nodes2, "", pipelineId);
 			that.canvasController.setNodeDecorations(executionNode, nodeCompleteDec);
-			that.canvasController.setLinksStyle(this.link2, removeLinkStyle, true);
+			that.canvasController.setLinksClassName(this.link2, "", pipelineId);
 		}, 8000);
 
 		this.part5 = setTimeout(() => {
-			that.canvasController.setLinksStyle(this.link3, linkStyle, true);
-			that.canvasController.setObjectsStyle(this.objects4, nodeStyle, true);
+			that.canvasController.setLinksClassName(this.link3, "progress-link-running", pipelineId);
+			that.canvasController.setNodesClassName(this.nodes4, "progress-node-running", pipelineId);
 		}, 10000);
 
 		this.part6 = setTimeout(() => {
-			that.canvasController.setLinksStyle(this.link3, removeLinkStyle, true);
-			that.canvasController.setObjectsStyle(this.objects3, removeNodeStyle, true);
+			that.canvasController.setLinksClassName(this.link3, "", pipelineId);
+			that.canvasController.setNodesClassName(this.nodes3, "", pipelineId);
 			that.canvasController.setNodeDecorations(superNode, nodeCompleteDec);
 		}, 12000);
 
 		this.part7 = setTimeout(() => {
-			that.canvasController.setObjectsStyle(this.objects4, removeNodeStyle, true);
+			that.canvasController.setNodesClassName(this.nodes4, "", pipelineId);
 			that.canvasController.setNodeDecorations(modelNode, nodeCompleteDec);
 			that.canvasController.setNodeDecorations(bindingExitNode, nodeCompleteDec);
 		}, 14000);
@@ -225,16 +186,16 @@ export default class ProgressCanvas extends React.Component {
 		// Clear any current node decorations
 		this.clearNodeDecorations();
 
-		// Clear any current node styles
-		this.canvasController.setObjectsStyle(this.objects1, removeNodeStyle, true);
-		this.canvasController.setObjectsStyle(this.objects2, removeNodeStyle, true);
-		this.canvasController.setObjectsStyle(this.objects3, removeNodeStyle, true);
-		this.canvasController.setObjectsStyle(this.objects4, removeNodeStyle, true);
+		// Clear any current node classes
+		this.canvasController.setNodesClassName(this.nodes1, "", this.pipelineId);
+		this.canvasController.setNodesClassName(this.nodes2, "", this.pipelineId);
+		this.canvasController.setNodesClassName(this.nodes3, "", this.pipelineId);
+		this.canvasController.setNodesClassName(this.nodes4, "", this.pipelineId);
 
-		// Clear any current link styles
-		this.canvasController.setLinksStyle(this.link1, removeLinkStyle, true);
-		this.canvasController.setLinksStyle(this.link2, removeLinkStyle, true);
-		this.canvasController.setLinksStyle(this.link3, removeLinkStyle, true);
+		// Clear any current link classes
+		this.canvasController.setLinksClassName(this.link1, "", this.pipelineId);
+		this.canvasController.setLinksClassName(this.link2, "", this.pipelineId);
+		this.canvasController.setLinksClassName(this.link3, "", this.pipelineId);
 	}
 
 	clearNodeDecorations() {

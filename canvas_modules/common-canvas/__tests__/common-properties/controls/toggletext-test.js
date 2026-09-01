@@ -61,6 +61,7 @@ const controlNoIcons = {
 propertyUtilsRTL.setControls(controller, [control, controlNoIcons]);
 
 const propertyId = { name: "toggle" };
+const controlItem = <span>Test Label</span>;
 
 const mockToggletext = jest.fn();
 jest.mock("../../../src/common-properties/controls/toggletext",
@@ -96,6 +97,7 @@ describe("Toggletext renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expectJest(mockToggletext).toHaveBeenCalledWith({
@@ -103,6 +105,7 @@ describe("Toggletext renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -113,6 +116,7 @@ describe("Toggletext renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
@@ -128,6 +132,7 @@ describe("Toggletext renders correctly", () => {
 				control={controlNoIcons}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
@@ -145,6 +150,7 @@ describe("Toggletext renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
@@ -161,6 +167,7 @@ describe("Toggletext renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
@@ -175,6 +182,7 @@ describe("Toggletext renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
@@ -193,6 +201,7 @@ describe("Toggletext renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");

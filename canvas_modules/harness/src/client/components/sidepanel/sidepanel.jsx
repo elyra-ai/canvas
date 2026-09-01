@@ -26,7 +26,34 @@ import {
 	SIDE_PANEL_API
 } from "../../constants/harness-constants.js";
 
+const savedScrollTop = {};
+
 export default class SidePanel extends React.Component {
+	constructor(props) {
+		super(props);
+		this.panelRef = React.createRef();
+		this.onScroll = this.onScroll.bind(this);
+	}
+
+	componentDidMount() {
+		this.restoreScroll();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.selectedPanel !== this.props.selectedPanel) {
+			this.restoreScroll();
+		}
+	}
+
+	onScroll(evt) {
+		savedScrollTop[this.props.selectedPanel] = evt.target.scrollTop;
+	}
+
+	restoreScroll() {
+		if (this.panelRef.current) {
+			this.panelRef.current.scrollTop = savedScrollTop[this.props.selectedPanel] || 0;
+		}
+	}
 
 	render() {
 		if (this.props.openSidepanelCanvas ||
@@ -58,7 +85,7 @@ export default class SidePanel extends React.Component {
 			default:
 			}
 			return (
-				<div className={"harness-app-sidepanel open"} aria-label="Right Side Panel" role="region">
+				<div ref={this.panelRef} onScroll={this.onScroll} className={"harness-app-sidepanel open"} aria-label="Right Side Panel" role="region">
 					{view}
 				</div>
 			);

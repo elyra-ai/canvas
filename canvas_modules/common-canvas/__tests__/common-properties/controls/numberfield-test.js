@@ -47,6 +47,7 @@ describe("numberfield-control renders correctly", () => {
 		controlType: "numberfield"
 	};
 	const propertyId = { name: "test-number" };
+	const controlItem = <span>Test Label</span>;
 
 	propertyUtilsRTL.setControls(controller, [control]);
 
@@ -65,6 +66,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expectJest(mockNumberfieldControl).toHaveBeenCalledWith({
@@ -72,6 +74,7 @@ describe("numberfield-control renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": controlItem,
 		});
 	});
 
@@ -82,6 +85,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expect(wrapper.container.querySelectorAll("input[type='number']")).to.have.length(1);
@@ -94,6 +98,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -108,6 +113,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const { container } = wrapper;
@@ -123,6 +129,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-number']");
@@ -137,6 +144,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-number']");
@@ -155,6 +163,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-number']");
@@ -173,6 +182,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const helpTextWrapper = wrapper.container.querySelector("div[data-id='properties-test-number']");
@@ -190,6 +200,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 				readOnly
 			/>
 		);

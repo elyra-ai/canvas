@@ -30,8 +30,14 @@ class CommonCanvasStateTag extends React.Component {
 		super(props);
 		this.logger = new Logger("CC-StateTag");
 
+		this.onFocus = this.onFocus.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
+		this.onBlur = this.onBlur.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+	}
+
+	onFocus(ev) {
+		this.onMouseOver(ev);
 	}
 
 	onMouseOver(ev) {
@@ -53,6 +59,10 @@ class CommonCanvasStateTag extends React.Component {
 		});
 	}
 
+	onBlur() {
+		this.onMouseLeave();
+	}
+
 	onMouseLeave() {
 		this.props.canvasController.closeTip();
 	}
@@ -66,6 +76,8 @@ class CommonCanvasStateTag extends React.Component {
 			<div className={"state-tag"}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				onFocus={this.onFocus}
+				onBlur={this.onBlur}
 			>
 				{icon}
 				<span>{label}</span>
