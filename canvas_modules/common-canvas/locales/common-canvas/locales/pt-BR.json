@@ -9,6 +9,8 @@
   "edit.pasteSelection": "Colar",
   "canvas.label": "editor de fluxo",
   "canvas.contents": "Conteúdo do editor de fluxo",
+  "canvas.bottomPanelResize": "Redimensionar o painel inferior",
+  "canvas.rightFlyoutResize": "Redimensionar o painel suspenso à direita",
   "canvas.addComment": "Novo comentário",
   "canvas.addWysiwygComment": "Novo comentário WYSIWYG",
   "canvas.selectAll": "Selecionar tudo",
