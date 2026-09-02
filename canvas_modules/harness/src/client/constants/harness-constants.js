@@ -40,6 +40,7 @@ export const EXAMPLE_APP_WYSIWYG = "WYSIWYG Comments";
 export const EXAMPLE_APP_REACT_NODES_DRAGGABLE = "React Nodes - Draggable";
 export const EXAMPLE_APP_REACT_NODES_CARBON = "React Nodes - Carbon Charts";
 export const EXAMPLE_APP_REACT_NODES_MAPPING = "React Nodes - Mapping";
+export const EXAMPLE_APP_EXTERNAL = "External";
 
 export const PROPERTIES_FLYOUT = "Flyout";
 export const PROPERTIES_MODAL = "Modal";

@@ -46,6 +46,7 @@ import {
 	EXAMPLE_APP_REACT_NODES_DRAGGABLE,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
+	EXAMPLE_APP_EXTERNAL,
 	TIP_PALETTE_CATEGORIES,
 	TIP_PALETTE_NODE_TEMPLATES,
 	TIP_NODES,
@@ -1453,6 +1454,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={EXAMPLE_APP_PROGRESS}
 						labelText={EXAMPLE_APP_PROGRESS}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_EXTERNAL}
+						labelText={EXAMPLE_APP_EXTERNAL}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_JSX_ICONS}
