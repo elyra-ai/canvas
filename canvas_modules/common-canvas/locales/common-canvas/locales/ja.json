@@ -9,6 +9,8 @@
   "edit.pasteSelection": "貼り付け",
   "canvas.label": "フロー・エディター (flow editor)",
   "canvas.contents": "フローエディタの内容",
+  "canvas.bottomPanelResize": "下部パネルのサイズを変更する",
+  "canvas.rightFlyoutResize": "右側のフライアウトパネルのサイズを変更する",
   "canvas.addComment": "新規コメント",
   "canvas.addWysiwygComment": "新しい WYSIWYG コメント",
   "canvas.selectAll": "すべて選択",
