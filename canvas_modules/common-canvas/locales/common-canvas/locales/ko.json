@@ -9,6 +9,8 @@
   "edit.pasteSelection": "붙여넣기",
   "canvas.label": "플로우 편집기(flow editor)",
   "canvas.contents": "플로우 에디터 내용",
+  "canvas.bottomPanelResize": "하단 패널 크기 조정",
+  "canvas.rightFlyoutResize": "오른쪽 플라이아웃 패널 크기 조정",
   "canvas.addComment": "새로운 주석",
   "canvas.addWysiwygComment": "새 WYSIWYG 주석",
   "canvas.selectAll": "모두 선택",
