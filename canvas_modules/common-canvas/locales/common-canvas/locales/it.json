@@ -9,6 +9,8 @@
   "edit.pasteSelection": "Incolla",
   "canvas.label": "Editor di flusso",
   "canvas.contents": "Contenuti dell'editor di flusso",
+  "canvas.bottomPanelResize": "Ridimensiona il pannello inferiore",
+  "canvas.rightFlyoutResize": "Ridimensiona il pannello a comparsa a destra",
   "canvas.addComment": "Nuovo commento",
   "canvas.addWysiwygComment": "Nuovo commento WYSIWYG",
   "canvas.selectAll": "Seleziona tutto",
