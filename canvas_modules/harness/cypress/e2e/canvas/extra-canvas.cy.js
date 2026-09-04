@@ -66,14 +66,14 @@ describe("Test of extra canvas property edit operation", function() {
 		// Edit properties of node in extra canvas
 		cy.inExtraCanvas();
 		cy.getNodeWithLabel("Define Types").dblclick();
-		cy.setTextFieldValue("samplingRatio", 25);
+		cy.setNumberFieldValue("samplingRatio", 25);
 		cy.saveFlyout();
 		verifyApplyPropertyChangesEntryInConsole(25);
 
 		// Edit properties of node in regular canvas
 		cy.inRegularCanvas();
 		cy.getNodeWithLabel("C5.0").dblclick();
-		cy.setTextFieldValue("samplingRatio", 10);
+		cy.setNumberFieldValue("samplingRatio", 10);
 		cy.saveFlyout();
 		verifyApplyPropertyChangesEntryInConsole(10);
 	});
