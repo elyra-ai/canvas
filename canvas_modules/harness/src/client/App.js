@@ -61,6 +61,7 @@ import WysiwygCommentsCanvas from "./components/custom-canvases/wysiwyg-comments
 import ReactNodesDraggableCanvas from "./components/custom-canvases/react-nodes-draggable/react-nodes-draggable-canvas.jsx";
 import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon-canvas";
 import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping-canvas";
+import ExternalCanvas from "./components/custom-canvases/external/external-canvas";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console/console.jsx";
@@ -128,6 +129,7 @@ import {
 	EXAMPLE_APP_REACT_NODES_DRAGGABLE,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
+	EXAMPLE_APP_EXTERNAL,
 	CUSTOM,
 	PROPERTIES_FLYOUT,
 	INPUT_PORT,
@@ -3249,6 +3251,13 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_PROGRESS) {
 			firstCanvas = (
 				<ProgressCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_EXTERNAL) {
+			firstCanvas = (
+				<ExternalCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
