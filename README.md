@@ -30,6 +30,25 @@ See [here](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness) 
 * Elyra canvas documentation - https://elyra-ai.github.io/canvas/
 * Elyra canvas playground (Test harness) - https://ibm.biz/elyra-canvas-test-harness
 
+---
+
+## 🤖 Building with AI?
+
+This repo includes a [`context/`](./context/) folder — a curated knowledge base designed for AI-assisted development with `@elyra/canvas`.
+
+**What's in it:** setup guide, quick-start code, canvas type selector, node/link/CSS/decoration/callback/API reference, real example configs, and starter JSON files that work immediately with no server setup.
+
+**How to use it:**
+
+1. Download or copy the [`context/consumers/`](./context/consumers/) folder into your project.
+2. Paste the contents (or individual files) into your AI chat (ChatGPT, Claude, Cursor, GitHub Copilot, etc.).
+3. Tell your AI: *"I want to build a canvas app with @elyra/canvas. Use these context files."*
+4. The AI will ask what kind of canvas you need and generate working code in minutes.
+
+> The [`context/consumers/starter-flow.json`](./context/consumers/starter-flow.json) and [`context/consumers/starter-palette.json`](./context/consumers/starter-palette.json) files give you a running canvas with 3 connected nodes and a full palette — no image server or extra config needed. Drop them straight into your app.
+
+---
+
 ## Using local version of common-canvas and/or common-properties
 Clone elyra/canvas
 ```sh
