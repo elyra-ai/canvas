@@ -82,6 +82,33 @@ describe("Palette search renders correctly", () => {
 		});
 	});
 
+	it("should filter nodes based on keywords", async() => {
+
+		const { container } = createMountedPalette();
+
+		// Simulate click on search input to open palette with search bar
+		const searchInput = container.querySelector("div.palette-flyout-search-container");
+		fireEvent.click(searchInput);
+
+		// "tabular" is a keyword on the "Var. File" node only
+		await simulateSearchEntry(searchInput, "tabular");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(1);
+		});
+
+		// "csv" is another keyword on the "Var. File" node only
+		await simulateSearchEntry(searchInput, "csv");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(1);
+		});
+
+		// A keyword that exists on no node should return no results
+		await simulateSearchEntry(searchInput, "unknownkeyword");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(0);
+		});
+	});
+
 	it("should filter nodes based on search text when fields are missing", async() => {
 
 		const { container } = createMountedPalette({ palette: paletteMissingFields, showPalette: true });

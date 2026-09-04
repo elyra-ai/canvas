@@ -30,6 +30,11 @@
                 "ui_data": {
                   "label": "Database",
                   "description": "Imports data from a table in a relational database",
+                  "keywords": [
+                    "import",
+                    "ibm",
+                    "db2"
+                  ],
                   "image": "/images/carbon/db2--database.svg",
                   "x_pos": 0,
                   "y_pos": 0
@@ -59,6 +64,13 @@
                 "ui_data": {
                   "label": "Table",
                   "description": "Reads data from a relational database table",
+                  "keywords": [
+                    "read",
+                    "tabular",
+                    "cells",
+                    "table",
+                    "source"
+                  ],
                   "image": "/images/carbon/data-table.svg",
                   "x_pos": 0,
                   "y_pos": 0
@@ -607,6 +619,11 @@
                 "ui_data": {
                   "label": "Table",
                   "description": "Writes data to a relational database table.",
+                  "keywords": [
+                    "write",
+                    "tabular",
+                    "cells"
+                  ],
                   "image": "/images/carbon/data-table.svg",
                   "x_pos": 0,
                   "y_pos": 0
