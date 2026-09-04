@@ -9,6 +9,8 @@
   "edit.pasteSelection": "Einfügen",
   "canvas.label": "Ablaufeditor",
   "canvas.contents": "Inhalt des Flow-Editors",
+  "canvas.bottomPanelResize": "Größe des unteren Bereichs anpassen",
+  "canvas.rightFlyoutResize": "Größe des rechten Flyout-Fensters anpassen",
   "canvas.addComment": "Neuer Kommentar",
   "canvas.addWysiwygComment": "Neuer WYSIWYG-Kommentar",
   "canvas.selectAll": "Alles auswählen",
