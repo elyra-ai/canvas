@@ -21,7 +21,7 @@ export default defineConfig({
 	viewportHeight: 800,
 	numTestsKeptInMemory: 0,
 	video: false,
-	env: {
+	expose: {
 		compareRange: 2,
 	},
 	e2e: {
