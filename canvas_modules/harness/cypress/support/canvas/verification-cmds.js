@@ -1612,7 +1612,7 @@ function parseTransformString(transformString) {
 }
 
 function compareCloseTo(value, compareValue) {
-	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
+	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.expose("compareRange"));
 }
 
 function getNodeGroupSelector(node) {

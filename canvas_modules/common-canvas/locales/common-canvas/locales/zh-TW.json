@@ -9,6 +9,8 @@
   "edit.pasteSelection": "貼上",
   "canvas.label": "流程編輯器 (flow editor)",
   "canvas.contents": "流程編輯器內容",
+  "canvas.bottomPanelResize": "調整底部面板的大小",
+  "canvas.rightFlyoutResize": "調整右側彈出式面板的大小",
   "canvas.addComment": "新建註解",
   "canvas.addWysiwygComment": "新的 WYSIWYG 註解",
   "canvas.selectAll": "全選",
