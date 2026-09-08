@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,6 @@ class ImageAction extends React.Component {
 				onClick={this.applyAction}
 				kind="ghost"
 				iconDescription={this.props.action?.description?.text} // Text to appear in Tooltip
-				autoAlign
 				style={this.imageStyle}
 				disabled={disabled}
 				// Ensures the button is treated as icon-only when a description is present,

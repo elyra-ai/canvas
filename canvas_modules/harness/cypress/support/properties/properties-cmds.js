@@ -48,15 +48,26 @@ Cypress.Commands.add("clickSubPanelButtonInRow", (propertyId, row) => {
 });
 
 Cypress.Commands.add("setTextFieldValue", (propertyId, labelText) => {
-	// Replace the existing text with new text in input field by
-	// selecting all the text and typing new text
-	// This is a workaround for issue -
-	// cy.type() on input[type='number'] prepends text to current value instead of appending
 	cy.get("div[data-id='properties-" + propertyId + "']").find("input")
 		.as("input");
 	cy.get("@input").focus();
 	cy.get("@input").type("{selectall}");
 	cy.get("@input").type(labelText);
+});
+
+// Sets a value in an input[type="number"] field. Number inputs must be handled
+// differently to regular text fields because cy.type() does not reliably replace
+// existing values. The native HTMLInputElement value setter is used to bypass
+// React's synthetic event system, followed by dispatching input and change events
+// so that React's onChange handler picks up the new value.
+Cypress.Commands.add("setNumberFieldValue", (propertyId, value) => {
+	cy.get("div[data-id='properties-" + propertyId + "']").find("input")
+		.then(($input) => {
+			const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+			nativeInputValueSetter.call($input[0], String(value));
+			$input[0].dispatchEvent(new Event("input", { bubbles: true }));
+			$input[0].dispatchEvent(new Event("change", { bubbles: true }));
+		});
 });
 
 Cypress.Commands.add("backspaceTextFieldValue", (propertyId) => {

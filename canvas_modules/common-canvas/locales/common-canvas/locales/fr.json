@@ -9,6 +9,8 @@
   "edit.pasteSelection": "Coller",
   "canvas.label": "Editeur de flux",
   "canvas.contents": "Contenu de l'éditeur de flux",
+  "canvas.bottomPanelResize": "Redimensionner le panneau inférieur",
+  "canvas.rightFlyoutResize": "Redimensionner le panneau déroulant de droite",
   "canvas.addComment": "Nouveau commentaire",
   "canvas.addWysiwygComment": "Nouveau commentaire WYSIWYG",
   "canvas.selectAll": "Sélectionner tout",
