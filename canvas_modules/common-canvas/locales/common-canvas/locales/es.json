@@ -9,6 +9,8 @@
   "edit.pasteSelection": "Pegar",
   "canvas.label": "editor de flujos",
   "canvas.contents": "Contenido del editor de flujo",
+  "canvas.bottomPanelResize": "Cambiar el tamaño del panel inferior",
+  "canvas.rightFlyoutResize": "Ajustar el tamaño del panel desplegable de la derecha",
   "canvas.addComment": "Nuevo comentario",
   "canvas.addWysiwygComment": "Nuevo comentario WYSIWYG",
   "canvas.selectAll": "Seleccionar todo",

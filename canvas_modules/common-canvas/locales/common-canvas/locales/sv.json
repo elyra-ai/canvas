@@ -9,6 +9,8 @@
   "edit.pasteSelection": "Klistra in",
   "canvas.label": "Flödesredigerare",
   "canvas.contents": "Flödesredigerarens innehåll",
+  "canvas.bottomPanelResize": "Ändra storlek på den nedre panelen",
+  "canvas.rightFlyoutResize": "Ändra storlek på det högra utfällbara fönstret",
   "canvas.addComment": "Ny kommentar",
   "canvas.addWysiwygComment": "Ny WYSIWYG-kommentar",
   "canvas.selectAll": "Markera allt",
