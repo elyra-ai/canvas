@@ -200,13 +200,13 @@ $palette-dialog-list-item-height: 46px;
 			}
 		}
 
-		.palette-list-item-keywords {
+		.palette-list-item-tags {
 			@include carbon.type-style("caption-01");
 			padding: carbon.$spacing-02 10px 2px 58px;
 			word-break: break-word;
 			width: 100%;
 
-			.palette-list-item-keywords-icon {
+			.palette-list-item-tags-icon {
 				width: 12px;
 				height: 12px;
 				margin-right: carbon.$spacing-02;
@@ -261,7 +261,7 @@ $palette-dialog-list-item-height: 46px;
 
 		.palette-list-item-text-div,
 		.palette-list-item-description,
-		.palette-list-item-keywords {
+		.palette-list-item-tags {
 			color: carbon.$button-disabled;
 		}
 	}
@@ -515,7 +515,7 @@ $palette-dialog-list-item-height: 46px;
 
 			.palette-list-item-text-div,
 			.palette-list-item-description,
-			.palette-list-item-keywords {
+			.palette-list-item-tags {
 				color: carbon.$button-disabled;
 			}
 		}

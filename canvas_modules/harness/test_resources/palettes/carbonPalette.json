@@ -30,7 +30,7 @@
                 "ui_data": {
                   "label": "Database",
                   "description": "Imports data from a table in a relational database",
-                  "keywords": [
+                  "tags": [
                     "import",
                     "ibm",
                     "db2"
@@ -64,7 +64,7 @@
                 "ui_data": {
                   "label": "Table",
                   "description": "Reads data from a relational database table",
-                  "keywords": [
+                  "tags": [
                     "read",
                     "tabular",
                     "cells",
@@ -619,7 +619,7 @@
                 "ui_data": {
                   "label": "Table",
                   "description": "Writes data to a relational database table.",
-                  "keywords": [
+                  "tags": [
                     "write",
                     "tabular",
                     "cells"

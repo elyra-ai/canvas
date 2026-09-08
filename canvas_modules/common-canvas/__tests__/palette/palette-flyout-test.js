@@ -82,7 +82,7 @@ describe("Palette search renders correctly", () => {
 		});
 	});
 
-	it("should filter nodes based on keywords", async() => {
+	it("should filter nodes based on tags", async() => {
 
 		const { container } = createMountedPalette();
 

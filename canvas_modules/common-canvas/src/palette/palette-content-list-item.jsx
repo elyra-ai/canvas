@@ -162,8 +162,8 @@ class PaletteContentListItem extends React.Component {
 			this.props.nodeTypeInfo.occurrenceInfo.nodeLabelOccurrences);
 	}
 
-	getHighlightedKeywords() {
-		const occurrenceMap = this.props.nodeTypeInfo.occurrenceInfo.nodeKeywordsOccurrenceMap;
+	getHighlightedTags() {
+		const occurrenceMap = this.props.nodeTypeInfo.occurrenceInfo.nodeTagsOccurrenceMap;
 		if (!occurrenceMap || occurrenceMap.length === 0) {
 			return null;
 		}
@@ -174,7 +174,7 @@ class PaletteContentListItem extends React.Component {
 			}
 			elements.push(
 				<span key={"kw-wrap" + i} style={{ whiteSpace: "nowrap" }}>
-					{i === 0 && <Tag className="palette-list-item-keywords-icon" />}
+					{i === 0 && <Tag className="palette-list-item-tags-icon" />}
 					{this.getHighlightedKeywordText(keyword, occurrences, i)}
 				</span>
 			);
@@ -182,8 +182,8 @@ class PaletteContentListItem extends React.Component {
 		return elements;
 	}
 
-	// Returns highlighted text elements for a single keyword. Uses a keyword
-	// index prefix on all React keys to avoid collisions across multiple keywords.
+	// Returns highlighted text elements for a single tag. Uses a tag
+	// index prefix on all React keys to avoid collisions across multiple tags.
 	getHighlightedKeywordText(keyword, occurrences, kwIndex) {
 		if (!occurrences || occurrences.length === 0) {
 			return [<span key={"kw" + kwIndex + "o"}>{keyword}</span>];
@@ -455,11 +455,11 @@ class PaletteContentListItem extends React.Component {
 			? (<div className={"palette-list-item-description"}>{this.getHighlightedDesc()}</div>)
 			: null;
 
-		const highlightedKeywords = this.props.isDisplaySearchResult
-			? this.getHighlightedKeywords()
+		const highlightedTags = this.props.isDisplaySearchResult
+			? this.getHighlightedTags()
 			: null;
-		const keywords = highlightedKeywords
-			? (<div className={"palette-list-item-keywords"}>{highlightedKeywords}</div>)
+		const tags = highlightedTags
+			? (<div className={"palette-list-item-tags"}>{highlightedTags}</div>)
 			: null;
 
 		const nodeLabel = itemText
@@ -495,7 +495,7 @@ class PaletteContentListItem extends React.Component {
 					{ranking}
 				</div>
 				{description}
-				{keywords}
+				{tags}
 			</div>
 		);
 	}
