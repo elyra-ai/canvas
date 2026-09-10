@@ -38,6 +38,7 @@ export default class ExternalCanvas extends React.Component {
 			enableParentClass: "external",
 			enableMarkdownInComments: true,
 			enableMarkdownHTML: false,
+			enableContextToolbar: true,
 			enableInternalObjectModel: true
 		});
 
