@@ -452,7 +452,7 @@
               "width": 233,
               "height": 111.99999237060547,
               "class_name": "canvas-comment",
-              "content": "This canvas contains a supernode that references an external pipeline flow. It needs to be opened in the Elyra Canvas test harness which is modified to serve up the external flow in the 'beforeEditaActionHandler' callback.",
+              "content": "This canvas contains a supernode that references an external pipeline flow. It needs to be opened in the Elyra Canvas test harness which is modified to serve up the external flow in the 'beforeEditActionHandler' callback.",
               "associated_id_refs": []
             }
           ]

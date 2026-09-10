@@ -14,38 +14,40 @@
  * limitations under the License.
  */
 
-import React, { useRef } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import { createExternalFlow, loadExternalPipelineFlow, saveExternalPipelineFlow } from "./external-canvas-api";
 
-import ExternalMainCanvas from "./externalMainCanvas.json";
-import ExternalSubFlow1 from "./externalSubFlow1.json";
-import ExternalSubFlow2 from "./externalSubFlow2.json";
+import ExternalMainCanvas from "./extMainCanvas.json";
 
 /**
  * Sample application demonstrating management of external pipeline flows.
- * Loads externalMainCanvas.json as the primary flow and handles supernode
+ * Loads extMainCanvas.json as the primary flow and handles supernode
  * operations that create, expand, display, and convert external sub-flows.
- *
- * @param {object} props.config - Canvas configuration overrides.
  */
-const ExternalCanvas = ({ config }) => {
-	const canvasController = useRef(new CanvasController());
-	canvasController.current.setPipelineFlow(ExternalMainCanvas);
+export default class ExternalCanvas extends React.Component {
+	constructor(props) {
+		super(props);
 
-	// Keyed by external URL, holds the pipeline flows for external sub-flows.
-	const externalPipelineFlows = useRef({
-		"external-sub-flow-url-1": ExternalSubFlow1,
-		"external-sub-flow-url-2": ExternalSubFlow2
-	});
+		this.canvasController = new CanvasController();
 
-	const canvasConfig = useRef(Object.assign({}, config, {
-		enableParentClass: "external",
-		enableInternalObjectModel: true
-	}));
+		this.canvasConfig = Object.assign({}, props.config, {
+			enableParentClass: "external",
+			enableMarkdownInComments: true,
+			enableMarkdownHTML: false,
+			enableInternalObjectModel: true
+		});
+
+		this.beforeEditActionHandler = this.beforeEditActionHandler.bind(this);
+		this.editActionHandler = this.editActionHandler.bind(this);
+	}
+
+	componentDidMount() {
+		this.canvasController.setPipelineFlow(ExternalMainCanvas);
+	}
 
 	/**
 	 * Handles edit actions before they are committed to the canvas model.
@@ -57,7 +59,7 @@ const ExternalCanvas = ({ config }) => {
 	 * @param {object} cmndData - The command data object for the pending edit action.
 	 * @returns {object|null} The original command data object, or null to defer.
 	 */
-	const beforeEditActionHandler = (cmndData) => {
+	beforeEditActionHandler(cmndData) {
 		const data = { ...cmndData };
 
 		switch (data.editType) {
@@ -66,7 +68,7 @@ const ExternalCanvas = ({ config }) => {
 			createExternalFlow().then(({ extUrl, extPipelineFlowId }) => {
 				data.externalUrl = extUrl;
 				data.externalPipelineFlowId = extPipelineFlowId;
-				canvasController.current.editAction(data);
+				this.canvasController.editAction(data);
 			});
 			return null;
 		}
@@ -76,9 +78,9 @@ const ExternalCanvas = ({ config }) => {
 		case "deconstructSuperNode":
 		case "convertSuperNodeExternalToLocal": {
 			if (data.externalPipelineFlowLoad) {
-				loadExternalPipelineFlow(externalPipelineFlows.current, data.externalUrl).then((extPipelineFlow) => {
+				loadExternalPipelineFlow(data.externalUrl).then((extPipelineFlow) => {
 					data.externalPipelineFlow = extPipelineFlow;
-					canvasController.current.editAction(data);
+					this.canvasController.editAction(data);
 				});
 				return null;
 			}
@@ -88,7 +90,7 @@ const ExternalCanvas = ({ config }) => {
 		}
 
 		return data;
-	};
+	}
 
 	/**
 	 * Handles edit actions after they have been applied to the canvas model.
@@ -97,31 +99,31 @@ const ExternalCanvas = ({ config }) => {
 	 *
 	 * @param {object} data - The command data object for the completed edit action.
 	 */
-	const editActionHandler = (data) => {
+	editActionHandler(data) {
 		switch (data.editType) {
 		case "createSuperNodeExternal":
 		case "convertSuperNodeLocalToExternal": {
-			saveExternalPipelineFlow(externalPipelineFlows.current, data.externalUrl,
-				canvasController.current.getExternalPipelineFlow(data.externalUrl));
+			saveExternalPipelineFlow(data.externalUrl,
+				this.canvasController.getExternalPipelineFlow(data.externalUrl));
 			break;
 		}
 		default: {
 		}
 		}
-	};
+	}
 
-	return (
-		<CommonCanvas
-			canvasController={canvasController.current}
-			config={canvasConfig.current}
-			beforeEditActionHandler={beforeEditActionHandler}
-			editActionHandler={editActionHandler}
-		/>
-	);
-};
+	render() {
+		return (
+			<CommonCanvas
+				canvasController={this.canvasController}
+				config={this.canvasConfig}
+				beforeEditActionHandler={this.beforeEditActionHandler}
+				editActionHandler={this.editActionHandler}
+			/>
+		);
+	}
+}
 
 ExternalCanvas.propTypes = {
 	config: PropTypes.object,
 };
-
-export default ExternalCanvas;

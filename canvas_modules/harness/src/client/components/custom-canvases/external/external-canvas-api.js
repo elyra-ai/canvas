@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+import ExternalSubFlow1 from "./extSubFlow1.json";
+import ExternalSubFlow2 from "./extSubFlow2.json";
+
+// Keyed by external URL, holds the pipeline flows for external sub-flows.
+const externalPipelineFlows = {
+	"external-sub-flow-url-1": ExternalSubFlow1,
+	"external-sub-flow-url-2": ExternalSubFlow2
+};
+
 /**
  * Simulates a back-end call to create a new external pipeline flow.
  * In a real application this would call a server to generate and persist
@@ -31,11 +40,10 @@ export const createExternalFlow = async() => ({
  * In a real application this would fetch the pipeline flow from a server
  * using the provided URL.
  *
- * @param {object} externalPipelineFlows - The local store of external pipeline flows keyed by URL.
  * @param {string} externalUrl - The URL key to look up in the external pipeline flows store.
  * @returns {Promise<object>} The pipeline flow object for the given URL.
  */
-export const loadExternalPipelineFlow = async(externalPipelineFlows, externalUrl) =>
+export const loadExternalPipelineFlow = async(externalUrl) =>
 	externalPipelineFlows[externalUrl];
 
 /**
@@ -43,11 +51,10 @@ export const loadExternalPipelineFlow = async(externalPipelineFlows, externalUrl
  * In a real application this would persist the pipeline flow to a server
  * using the provided URL.
  *
- * @param {object} externalPipelineFlows - The local store of external pipeline flows keyed by URL.
  * @param {string} externalUrl - The URL key under which to save the pipeline flow.
  * @param {object} pipelineFlow - The pipeline flow object to save.
  * @returns {Promise<void>}
  */
-export const saveExternalPipelineFlow = async(externalPipelineFlows, externalUrl, pipelineFlow) => {
+export const saveExternalPipelineFlow = async(externalUrl, pipelineFlow) => {
 	externalPipelineFlows[externalUrl] = pipelineFlow;
 };
