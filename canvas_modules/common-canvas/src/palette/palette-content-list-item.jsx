@@ -21,6 +21,7 @@ import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import PaletteContentListItemBtn from "./palette-content-list-item-btn.jsx";
 import SVG from "react-inlinesvg";
 // Carbon icons - direct imports for tree-shaking optimization
+import Tag from "@carbon/icons-react/lib/Tag";
 import Warning from "@carbon/icons-react/lib/Warning";
 import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
@@ -159,6 +160,54 @@ class PaletteContentListItem extends React.Component {
 		return this.getHighlightedText(
 			labelText,
 			this.props.nodeTypeInfo.occurrenceInfo.nodeLabelOccurrences);
+	}
+
+	getHighlightedTags() {
+		const occurrenceMap = this.props.nodeTypeInfo.occurrenceInfo.nodeTagsOccurrenceMap;
+		if (!occurrenceMap || occurrenceMap.length === 0) {
+			return null;
+		}
+		const elements = [];
+		occurrenceMap.forEach(({ keyword, occurrences }, i) => {
+			if (i > 0) {
+				elements.push(<span key={"kw-sep" + i}>{",\u00a0"}</span>);
+			}
+			elements.push(
+				<span key={"kw-wrap" + i} style={{ whiteSpace: "nowrap" }}>
+					{i === 0 && <Tag className="palette-list-item-tags-icon" />}
+					{this.getHighlightedKeywordText(keyword, occurrences, i)}
+				</span>
+			);
+		});
+		return elements;
+	}
+
+	// Returns highlighted text elements for a single tag. Uses a tag
+	// index prefix on all React keys to avoid collisions across multiple tags.
+	getHighlightedKeywordText(keyword, occurrences, kwIndex) {
+		if (!occurrences || occurrences.length === 0) {
+			return [<span key={"kw" + kwIndex + "o"}>{keyword}</span>];
+		}
+
+		const highlightedElements = [];
+		let index = 0;
+		let text = "";
+		occurrences.forEach((occ, i) => {
+			text = keyword.substring(index, occ.start);
+			highlightedElements.push(<span key={"kw" + kwIndex + "s" + i}>{text}</span>);
+
+			text = keyword.substring(occ.start, occ.end);
+			highlightedElements.push(<mark key={"kw" + kwIndex + "m" + i}>{text}</mark>);
+
+			index = occ.end;
+
+			if (i === occurrences.length - 1 && occ.end < keyword.length) {
+				text = keyword.substring(occ.end);
+				highlightedElements.push(<span key={"kw" + kwIndex + "f" + i}>{text}</span>);
+			}
+		});
+
+		return highlightedElements;
 	}
 
 	getHighlightedDesc() {
@@ -406,6 +455,13 @@ class PaletteContentListItem extends React.Component {
 			? (<div className={"palette-list-item-description"}>{this.getHighlightedDesc()}</div>)
 			: null;
 
+		const highlightedTags = this.props.isDisplaySearchResult
+			? this.getHighlightedTags()
+			: null;
+		const tags = highlightedTags
+			? (<div className={"palette-list-item-tags"}>{highlightedTags}</div>)
+			: null;
+
 		const nodeLabel = itemText
 			? <div className="palette-list-item-text-div">{itemText}</div>
 			: null;
@@ -439,6 +495,7 @@ class PaletteContentListItem extends React.Component {
 					{ranking}
 				</div>
 				{description}
+				{tags}
 			</div>
 		);
 	}

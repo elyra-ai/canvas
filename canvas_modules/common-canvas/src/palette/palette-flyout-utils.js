@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,20 +46,23 @@ function getFilteredNodeTypeInfosByCategory(category, filterStrings) {
 	return filteredNodeTypeInfos;
 }
 
-// Returns an object containing the label and description occurrences of the
-// stings in the filterString array passed in based on the nodeType and category
-// passed in. The returned object also contains a ranking which can be used
-// to rank the object returned against other objects returned from this method.
+// Returns an object containing the label, description and tags occurrences
+// of the strings in the filterString array passed in based on the nodeType and
+// category passed in. The returned object also contains a ranking which can be
+// used to rank the object returned against other objects returned from this method.
 function getOccurrences(nodeType, category, filterStrings) {
 	if (filterStrings.length > 0) {
 
 		const { catLabelOccurrences, catLabelHitCounts } = getCategoryLabelInfo(category, filterStrings);
 		const { nodeLabelOccurrences, nodeLabelHitCounts } = getNodeLabelInfo(nodeType, filterStrings);
 		const { nodeDescOccurrences, nodeDescHitCounts } = getNodeDescInfo(nodeType, filterStrings);
+		const { nodeTagsOccurrences, nodeTagsOccurrenceMap, nodeTagsHitCounts } = getNodeTagsInfo(nodeType, filterStrings);
 
-		if (catLabelOccurrences.length > 0 || nodeLabelOccurrences.length > 0 || nodeDescOccurrences.length > 0) {
-			const ranking = calcRanking(catLabelHitCounts, nodeLabelHitCounts, nodeDescHitCounts, filterStrings.length);
-			return { catLabelOccurrences, nodeLabelOccurrences, nodeDescOccurrences, ranking };
+		if (catLabelOccurrences.length > 0 || nodeLabelOccurrences.length > 0 ||
+				nodeDescOccurrences.length > 0 || nodeTagsOccurrences.length > 0) {
+			const ranking = calcRanking(catLabelHitCounts, nodeLabelHitCounts, nodeDescHitCounts, nodeTagsHitCounts, filterStrings.length);
+			return { catLabelOccurrences, nodeLabelOccurrences, nodeDescOccurrences,
+				nodeTagsOccurrences, nodeTagsOccurrenceMap, ranking };
 		}
 	}
 	return null;
@@ -95,22 +98,54 @@ function getNodeDescInfo(nodeType, filterStrings) {
 	return { nodeDescOccurrences: occurrences, nodeDescHitCounts: hitCounts };
 }
 
+// Returns the occurrences and hit counts info for the tags of the node
+// passed in based on the filterStrings. Each tag is searched individually.
+// Returns:
+//   nodeTagsOccurrences    - flat merged occurrences used for hit detection
+//   nodeTagsOccurrenceMap  - per-tag array of { keyword, occurrences }
+//                            used for rendering highlighted tag text
+//   nodeTagsHitCounts      - per-filterString hit counts used for ranking
+function getNodeTagsInfo(nodeType, filterStrings) {
+	const tags = has(nodeType, "app_data.ui_data.tags") && Array.isArray(nodeType.app_data.ui_data.tags)
+		? nodeType.app_data.ui_data.tags
+		: [];
+
+	let occurrences = [];
+	const hitCounts = filterStrings.map(() => 0);
+	const nodeTagsOccurrenceMap = [];
+
+	tags.forEach((tag) => {
+		const tagLower = tag.toLowerCase();
+		const { occurrences: tagOccurrences, hitCounts: tagHitCounts } = wordOccurrences(tagLower, filterStrings);
+		occurrences = joinOccurrences(occurrences, tagOccurrences);
+		tagHitCounts.forEach((hit, i) => {
+			if (hit > hitCounts[i]) {
+				hitCounts[i] = hit;
+			}
+		});
+		nodeTagsOccurrenceMap.push({ keyword: tagLower, occurrences: tagOccurrences });
+	});
+
+	return { nodeTagsOccurrences: occurrences, nodeTagsOccurrenceMap, nodeTagsHitCounts: hitCounts };
+}
+
 // Calculates a ranking value for the node type info object being processed,
 // based on the various hit count arrays passed in. Each hit count array has
 // one element for each filter string entered by the user. Each element
 // contains either a 1 or 0 to indicate a hit on that filter string or not.
 // Ranking is based on:
-// * The number of hits across the 3 areas (category label, node label, description)
+// * The number of hits across the 4 areas (category label, node label, description, tags)
 // * Whether or not multiple filter strings (if more than one is provided)
 //   appear in any of the areas.
-function calcRanking(catLabelHitCounts, nodeLabelHitCounts, descHitCounts, filterStringsLength) {
+// Tags are given the same weight as node labels.
+function calcRanking(catLabelHitCounts, nodeLabelHitCounts, descHitCounts, tagsHitCounts, filterStringsLength) {
 	let ranking = 0;
 	let multiStringHits = 0;
 
 	for (let i = 0; i < filterStringsLength; i++) {
-		ranking += catLabelHitCounts[i] + (10 * nodeLabelHitCounts[i]) + descHitCounts[i]; // Give extra weight to node label hit
+		ranking += catLabelHitCounts[i] + (10 * nodeLabelHitCounts[i]) + descHitCounts[i] + (10 * tagsHitCounts[i]);
 
-		if (catLabelHitCounts[i] + nodeLabelHitCounts[i] + descHitCounts[i] > 0) {
+		if (catLabelHitCounts[i] + nodeLabelHitCounts[i] + descHitCounts[i] + tagsHitCounts[i] > 0) {
 			multiStringHits++;
 		}
 	}

@@ -127,6 +127,9 @@ export default class PipelineInHandler {
 		if (has(node, "app_data.ui_data.description")) {
 			obj.description = node.app_data.ui_data.description;
 		}
+		if (has(node, "app_data.ui_data.tags")) {
+			obj.tags = node.app_data.ui_data.tags;
+		}
 		if (has(node, "app_data.ui_data.image")) {
 			obj.image = node.app_data.ui_data.image;
 		}
