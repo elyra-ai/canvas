@@ -1,0 +1,26 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "empty-canvas-flow",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "runtime_ref": "default-runtime",
+      "nodes": [],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      }
+    }
+  ],
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "default-runtime",
+      "name": "Default Runtime"
+    }
+  ]
+}

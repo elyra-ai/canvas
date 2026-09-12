@@ -148,6 +148,36 @@ If you intend to configure Common Properties to use the, now superseded, React-v
 
 - react-virtualized/styles.css
 
+## create-elyra-canvas-app module
+
+To create a working Elyra Canvas application is to use the `create-elyra-canvas-app` tool. 
+
+Run it directly without installing anything:
+
+```sh
+npx create-elyra-canvas-app
+```
+
+If no app name is specified the project will be created in a directory called `elyra-canvas-app`. You can supply a name as the first argument to use a different directory:
+
+```sh
+npx create-elyra-canvas-app my-canvas-app
+```
+
+The tool will walk you through a short set of questions (node display format, link type, snap-to-grid, etc.) and then scaffold the project in a new directory. To accept all defaults without being prompted, pass the `-y` flag:
+
+```sh
+npx create-elyra-canvas-app -y
+```
+
+Once the project has been created:
+
+```sh
+cd elyra-canvas-app
+npm run dev
+```
+
+This opens the application at `http://localhost:5173`.
 ## Content Security Policy
 
 Applications can use Elyra Canvas with a `Content-Security-Policy` that omits `'unsafe-inline'` from `style-src`. See the [Content Security Policy](02.02-content-security-policy.md) page for the setup requirements, nonce usage, SVG guidance, and feature constraints.
