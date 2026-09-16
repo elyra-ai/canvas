@@ -18,6 +18,7 @@
 
 // Modules
 
+const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
 const babelOptions = require("./scripts/babel/babelOptions.cjs");
@@ -132,9 +133,8 @@ const plugins = [
 	new webpack.SourceMapDevToolPlugin({
 		filename: "[file].map",
 		moduleFilenameTemplate: (info) => {
-			const fs = require("fs");
 			let absPath = info.absoluteResourcePath;
-			try { absPath = fs.realpathSync(absPath); } catch (e) { /* use as-is if path doesn't exist */ }
+			try { absPath = fs.realpathSync(absPath); } catch (e) { /* non-existent paths used as-is */ }
 			const relPath = path.relative(path.join(__dirname, ".."), absPath);
 			return `webpack:///./${relPath.replace(/\\/g, "/")}`;
 		},
