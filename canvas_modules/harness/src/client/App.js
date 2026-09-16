@@ -340,7 +340,7 @@ class App extends React.Component {
 			selectedHighlightNodeOnNewLinkDrag: false,
 			selectedHighlightUnavailableNodes: false,
 			selectedCreateSupernodeNonContiguous: false,
-			selectedExternalPipelineFlows: true,
+			selectedExternalPipelineFlows: false,
 			selectedEditingActions: true,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedRaiseNodesToTopOnHover: true,
