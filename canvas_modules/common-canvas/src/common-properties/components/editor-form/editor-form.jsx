@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -378,7 +378,12 @@ class EditorForm extends React.Component {
 			textClass = classNames("properties-static-text", uiItem.textType);
 			icon = uiItem.textType === "info" ? <div><Icon type={CARBON_ICONS.INFORMATION} className="properties-static-text-icon-info" /></div> : null;
 			text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
-			return <div key={"static-text." + key} className="properties-static-text-container">{icon}{text}</div>;
+			return (
+				<div key={"static-text." + key} className={classNames("properties-static-text-container", uiItem.className)}>
+					{icon}
+					{text}
+				</div>
+			);
 		case ("linkText"): // linkText used for Alerts tab. Only used internally
 			textClass = classNames("properties-link-text-container", uiItem.textType);
 			if (uiItem.textType === "warning") {

@@ -102,6 +102,9 @@ $primary-tab-height: carbon.$spacing-08;
 	display: flex;
 	align-items: center;
 	padding: carbon.$spacing-02 0;
+	&.properties-text-before {
+		padding-bottom: 1rem;
+	}
 	.properties-static-text {
 		@include carbon.type-style("body-short-01");
 		color: carbon.$text-primary;

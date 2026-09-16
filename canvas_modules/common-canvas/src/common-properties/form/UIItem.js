@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,11 +95,19 @@ export class UIItem {
 		});
 	}
 
-	static makeStaticText(text, textType) {
+	/**
+	 * Creates a static text UIItem.
+	 * @param {string} text The static text content.
+	 * @param {string} textType The type of static text (e.g., "info").
+	 * @param {string} [className] Optional custom class name.
+	 * @returns {UIItem} A new UIItem instance.
+	 */
+	static makeStaticText(text, textType, className) {
 		return new UIItem({
 			itemType: ItemType.STATIC_TEXT,
 			text: text,
-			textType: textType
+			textType: textType,
+			className: className
 		});
 	}
 
