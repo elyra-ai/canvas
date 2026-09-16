@@ -59,7 +59,7 @@ $primary-tab-height: carbon.$spacing-08;
 	.properties-category-content .cds--accordion__content {
 		padding: carbon.$spacing-05;
 
-		/*  
+		/*
 			Accordion Carbon Component currently doesn't support Accordions inside an Accordion
 			By default inner Accordions will be in open state and won't close on click
 		*/
@@ -93,7 +93,7 @@ $primary-tab-height: carbon.$spacing-08;
 	}
 
 	// Remove default accordion padding
-	.properties-category-content .cds--accordion__wrapper { 
+	.properties-category-content .cds--accordion__wrapper {
 		padding: 0;
 	}
 }
@@ -102,6 +102,9 @@ $primary-tab-height: carbon.$spacing-08;
 	display: flex;
 	align-items: center;
 	padding: carbon.$spacing-02 0;
+	&.properties-text-before {
+		padding-bottom: carbon.$spacing-05;
+	}
 	.properties-static-text {
 		@include carbon.type-style("body-short-01");
 		color: carbon.$text-primary;

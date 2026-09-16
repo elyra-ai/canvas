@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -294,7 +294,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 				uiItems.push(UIItem.makeHSeparator());
 			}
 			if (prop.textBefore) {
-				uiItems.push(UIItem.makeStaticText(prop.getTextBefore(l10nProvider), prop.getTextBeforeType()));
+				uiItems.push(UIItem.makeStaticText(prop.getTextBefore(l10nProvider), prop.getTextBeforeType(), "properties-text-before"));
 			}
 			uiItems.push(control);
 			if (prop.textAfter) {
