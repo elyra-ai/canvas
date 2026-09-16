@@ -24,6 +24,7 @@ const babelOptions = require("./scripts/babel/babelOptions.cjs");
 const constants = require("./lib/constants.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // Globals
 
@@ -70,10 +71,7 @@ const rules = [
 		test: /\.s*css$/u,
 		use: [
 			{
-				loader: "style-loader",
-				options: {
-					esModule: false
-				}
+				loader: MiniCssExtractPlugin.loader
 			},
 			{
 				loader: "css-loader",
@@ -118,6 +116,9 @@ const rules = [
 
 const plugins = [
 	new webpack.NoEmitOnErrorsPlugin(),
+	new MiniCssExtractPlugin({
+		filename: "css/[name].css"
+	}),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
