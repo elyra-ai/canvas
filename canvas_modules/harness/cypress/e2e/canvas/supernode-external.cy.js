@@ -422,7 +422,10 @@ describe("Test navigate into and out of an external sub-flow inside a sub-flow",
 describe("Test copy and paste with external pipeline flows", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true } });
+		cy.setCanvasConfig({
+			"selectedNodeLayout": { labelEditable: true },
+			 "selectedExternalPipelineFlows": true
+		});
 	});
 
 	it("Test copy and paste of external supernode]", function() {
