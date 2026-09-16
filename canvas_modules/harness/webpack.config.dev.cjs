@@ -18,6 +18,7 @@
 
 // Modules
 
+const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
 const babelOptions = require("./scripts/babel/babelOptions.cjs");
@@ -28,7 +29,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // Globals
 
-// Entry & Output files ------------------------------------------------------------>
+// Entry & Output files -------------------------------------------------------------->
 
 const entry = [
 	"webpack-hot-middleware/client",
@@ -45,7 +46,6 @@ const output = {
 	filename: "js/canvasharness.js",
 	chunkFilename: "js/canvasharness.chunk.[id].js",
 	sourceMapFilename: "[file].map",
-	devtoolModuleFilenameTemplate: "[resource]",
 	pathinfo: true
 };
 
@@ -126,10 +126,19 @@ const plugins = [
 		template: "./index-dev.html"
 	}),
 	new webpack.HotModuleReplacementPlugin(),
-	// generates the source maps used for debugging.  Used instead of `devtool` option
+	// generates the source maps used for debugging.  Used instead of `devtool` option.
+	// moduleFilenameTemplate normalizes paths so that all source files (including those
+	// outside the harness directory) appear as ./-relative paths under webpack://,
+	// which Chrome DevTools can resolve correctly for breakpoints.
 	new webpack.SourceMapDevToolPlugin({
-		module: true,
-		columns: false
+		filename: "[file].map",
+		moduleFilenameTemplate: (info) => {
+			let absPath = info.absoluteResourcePath;
+			try { absPath = fs.realpathSync(absPath); } catch (e) { /* non-existent paths used as-is */ }
+			const relPath = path.relative(path.join(__dirname, ".."), absPath);
+			return `webpack:///./${relPath.replace(/\\/g, "/")}`;
+		},
+		module: true
 	}),
 	new ReactRefreshWebpackPlugin(),
 ];
@@ -152,7 +161,8 @@ module.exports = {
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"
 		},
-		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
+		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+		symlinks: false
 	},
 	output: output,
 	module: {
