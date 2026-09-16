@@ -24,11 +24,10 @@ const babelOptions = require("./scripts/babel/babelOptions.cjs");
 const constants = require("./lib/constants.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // Globals
 
-// Entry & Output files ------------------------------------------------------------>
+// Entry & Output files -------------------------------------------------------------->
 
 const entry = [
 	"webpack-hot-middleware/client",
@@ -45,7 +44,6 @@ const output = {
 	filename: "js/canvasharness.js",
 	chunkFilename: "js/canvasharness.chunk.[id].js",
 	sourceMapFilename: "[file].map",
-	devtoolModuleFilenameTemplate: "[resource]",
 	pathinfo: true
 };
 
@@ -72,7 +70,10 @@ const rules = [
 		test: /\.s*css$/u,
 		use: [
 			{
-				loader: MiniCssExtractPlugin.loader
+				loader: "style-loader",
+				options: {
+					esModule: false
+				}
 			},
 			{
 				loader: "css-loader",
@@ -117,19 +118,26 @@ const rules = [
 
 const plugins = [
 	new webpack.NoEmitOnErrorsPlugin(),
-	new MiniCssExtractPlugin({
-		filename: "css/[name].css"
-	}),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
 		template: "./index-dev.html"
 	}),
 	new webpack.HotModuleReplacementPlugin(),
-	// generates the source maps used for debugging.  Used instead of `devtool` option
+	// generates the source maps used for debugging.  Used instead of `devtool` option.
+	// moduleFilenameTemplate normalizes paths so that all source files (including those
+	// outside the harness directory) appear as ./-relative paths under webpack://,
+	// which Chrome DevTools can resolve correctly for breakpoints.
 	new webpack.SourceMapDevToolPlugin({
-		module: true,
-		columns: false
+		filename: "[file].map",
+		moduleFilenameTemplate: (info) => {
+			const fs = require("fs");
+			let absPath = info.absoluteResourcePath;
+			try { absPath = fs.realpathSync(absPath); } catch (e) { /* use as-is if path doesn't exist */ }
+			const relPath = path.relative(path.join(__dirname, ".."), absPath);
+			return `webpack:///./${relPath.replace(/\\/g, "/")}`;
+		},
+		module: true
 	}),
 	new ReactRefreshWebpackPlugin(),
 ];
@@ -152,7 +160,8 @@ module.exports = {
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"
 		},
-		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
+		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+		symlinks: false
 	},
 	output: output,
 	module: {
