@@ -89,7 +89,7 @@ function renderTemplate(filePath, vars = {}) {
 
 async function main() {
 	console.log("\nCreate Elyra Canvas App\n");
-	console.log("This will scaffold a working Elyra Canvas application.\n");
+	console.log("This will create a working Elyra Canvas application.\n");
 
 	const args = process.argv.slice(2);
 	const useDefaults =
@@ -101,7 +101,6 @@ async function main() {
 	const SNAP_TYPES = ["None", "During", "After"];
 
 	let appName;
-	let includeSamplePalette;
 	let includeSampleFlow;
 	let nodeFormat;
 	let useContextToolbar;
@@ -110,14 +109,12 @@ async function main() {
 
 	if (useDefaults) {
 		appName = slugify(nameArg || "elyra-canvas-app");
-		includeSamplePalette = true;
 		includeSampleFlow = true;
 		nodeFormat = "Horizontal";
 		useContextToolbar = true;
 		linkType = "Curve";
 		snapToGrid = "None";
 		console.log(`App name:           ${appName}`);
-		console.log(`Sample palette:     yes`);
 		console.log(`Sample flow:        yes`);
 		console.log(`Node format:        ${nodeFormat}`);
 		console.log(`Context toolbar:    yes`);
@@ -133,12 +130,6 @@ async function main() {
 				const raw = await prompt(rl, "App name", "elyra-canvas-app");
 				appName = slugify(raw);
 			}
-
-			includeSamplePalette = await confirm(
-				rl,
-				"\nInclude a sample palette with node types?",
-				true
-			);
 
 			includeSampleFlow = await confirm(
 				rl,
@@ -185,7 +176,7 @@ async function main() {
 			process.exit(1);
 		}
 
-		console.log(`\nScaffolding project in ${projectDir}...\n`);
+		console.log(`\nCreating project in ${projectDir}...\n`);
 
 		// Create directory structure
 		mkdirSync(join(projectDir, "public", "icons"), { recursive: true });
@@ -235,7 +226,7 @@ async function main() {
 		// ── Palette & flow data ──
 		const templateSrc = join(TEMPLATE_DIR, "src");
 		copyFileSync(
-			join(templateSrc, includeSamplePalette ? "palette.json" : "empty-palette.json"),
+			join(templateSrc, "palette.json"),
 			join(projectDir, "src", "palette.json")
 		);
 		copyFileSync(
@@ -243,13 +234,11 @@ async function main() {
 			join(projectDir, "src", "pipeline-flow.json")
 		);
 
-		// Icons are referenced by both the palette and the flow, copy if either is included
-		if (includeSamplePalette || includeSampleFlow) {
-			copyDir(
-				join(TEMPLATE_DIR, "public", "icons"),
-				join(projectDir, "public", "icons")
-			);
-		}
+		// Icons are referenced by both the palette and the flow
+		copyDir(
+			join(TEMPLATE_DIR, "public", "icons"),
+			join(projectDir, "public", "icons")
+		);
 
 		// ── Install dependencies ──
 		if (!args.includes("--no-install")) {
@@ -258,10 +247,10 @@ async function main() {
 		}
 
 		console.log(`\nDone! Your Elyra Canvas app is ready.\n`);
-		console.log("Get started:\n");
+		console.log("Get started. Enter the following:\n");
 		console.log(`  cd ${appName}`);
 		console.log(`  npm run dev\n`);
-		console.log("Opens http://localhost:5173 in your browser.\n");
+		console.log("Open http://localhost:5173 in your browser.\n");
 	} catch (err) {
 		console.error("\nFailed to create project:", err.message);
 		process.exit(1);
