@@ -11,7 +11,7 @@
   "dependencies": {
     "@carbon/icons-react": "^11.78.0",
     "@carbon/react": "^1.105.0",
-    "@elyra/canvas": "^13.46.1",
+    "@elyra/canvas": "^13.50.0",
     "@ibm/plex-mono": "^1.1.0",
     "@ibm/plex-sans": "^1.1.0",
     "@ibm/plex-sans-condensed": "^2.0.0",
