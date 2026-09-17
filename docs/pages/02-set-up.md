@@ -192,7 +192,7 @@ If no app name is specified the project will be created in a directory called `e
 npx create-elyra-canvas-app my-canvas-app
 ```
 
-The tool will walk you through a short set of questions (node display format, link type, snap-to-grid, etc.) and then scaffold the project in a new directory. To accept all defaults without being prompted, pass the `-y` flag:
+The tool will walk you through a short set of questions (node display format, link type, snap-to-grid, etc.) and then create the project in a new directory. To accept all defaults without being prompted, pass the `-y` flag:
 
 ```sh
 npx create-elyra-canvas-app -y
