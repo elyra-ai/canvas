@@ -80,6 +80,7 @@ nav:
     - Installation: 02-set-up.md
     - Localization: 02.01-localization.md
     - Content Security Policy: 02.02-content-security-policy.md
+    - Create Sample App using npx: 02.03-create-sample-app.md
 
   - Common Canvas:
     - Getting Started: 03-common-canvas.md
