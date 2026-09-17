@@ -1,7 +1,7 @@
 
 @forward "@carbon/react" with (
-	$use-per-family-plex: true,
-	$font-path: "@ibm/plex"
+	$font-path: "@ibm/plex",
+	$use-per-family-plex: true
 );
 
 

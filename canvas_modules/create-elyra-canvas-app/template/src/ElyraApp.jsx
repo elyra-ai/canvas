@@ -5,9 +5,9 @@ import { Toggle } from '@carbon/react';
 import flowData from './pipeline-flow.json';
 import paletteData from './palette.json';
 import '@elyra/canvas/dist/styles/common-canvas.min.css';
-import './App.scss';
+import './ElyraApp.scss';
 
-function App() {
+function ElyraApp() {
   const title = "{{APP_TITLE}}";
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
@@ -38,7 +38,7 @@ function App() {
 
   return (
     <IntlProvider locale="en">
-      <div className="App">
+      <div className="ElyraApp">
         <div className="header">
           <h1>{title}</h1>
           <div className="theme-toggle">
@@ -64,4 +64,4 @@ function App() {
   );
 }
 
-export default App;
+export default ElyraApp;
