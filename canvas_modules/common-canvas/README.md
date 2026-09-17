@@ -44,6 +44,14 @@ The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengi
 - Zooming in and out using the scroll gesture
 - Create a new node by dragging one from the palette
 
+## Create a sample Elyra Canvas application
+
+A sample Elyra Canvas app can be created using the npx command:
+
+```
+npx create-elyra-canvas-app
+```
+
 ## Getting started
 
 Elyra Canvas requires react, react-dom, react-intl, and react-redux libraries to be installed. For versions requirements, see `peerDependencies` in [package.json](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/common-canvas/package.json).

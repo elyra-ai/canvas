@@ -1,0 +1,23 @@
+{
+  "name": "create-elyra-canvas-app",
+  "version": "1.0.0",
+  "description": "Create a working Elyra Canvas application",
+  "type": "module",
+  "bin": {
+    "create-elyra-canvas-app": "./bin/create-elyra-canvas-app.mjs"
+  },
+  "files": [
+    "bin",
+    "template"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "elyra",
+    "canvas",
+    "create-app",
+    "scaffold"
+  ],
+  "license": "Apache-2.0"
+}

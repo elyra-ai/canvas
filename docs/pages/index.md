@@ -56,6 +56,10 @@ The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengi
 * Zooming in and out using the scroll gesture
 * And much more ...
 
+## Create a sample Elyra Canvas application
+
+A sample Elyra Canvas app can be created using the [npx command](02.03-create-sample-app.md)
+
 
 ## Elyra Canvas Modules
 
