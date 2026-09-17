@@ -81,7 +81,7 @@ export default class ConfigUtils {
 			enableHighlightUnavailableNodes: false,
 			enableMoveNodesOnSupernodeResize: true,
 			enableRaiseNodesToTopOnHover: true,
-			enableExternalPipelineFlows: true,
+			enableExternalPipelineFlows: false,
 			enableEditingActions: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
