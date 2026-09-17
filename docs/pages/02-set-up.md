@@ -175,4 +175,3 @@ Data is transmitted to IBM's telemetry ingestion endpoint. The collected metrics
 By installing this package as a dependency you are agreeing to telemetry collection. To opt out, set the environment variable `IBM_TELEMETRY_DISABLED=true` in your build environment, or follow the instructions at [Opting out of IBM Telemetry data collection](https://github.com/ibm-telemetry/telemetry-js/tree/main#opting-out-of-ibm-telemetry-data-collection).
 
 For further details on what IBM Telemetry collects and how it works, see the [IBM Telemetry documentation](https://github.com/ibm-telemetry/telemetry-js/tree/main#ibm-telemetry-collection-basics).
-
