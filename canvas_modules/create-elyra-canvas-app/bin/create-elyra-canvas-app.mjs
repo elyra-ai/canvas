@@ -207,8 +207,8 @@ async function main() {
 			join(projectDir, "src", "main.jsx")
 		);
 		writeFileSync(
-			join(projectDir, "src", "App.jsx"),
-			renderTemplate(join(TEMPLATE_DIR, "src", "App.jsx"), {
+			join(projectDir, "src", "elyra-canvas-app.jsx"),
+			renderTemplate(join(TEMPLATE_DIR, "src", "elyra-canvas-app.jsx"), {
 				APP_TITLE: appTitle,
 				NODE_FORMAT: nodeFormat,
 				USE_CONTEXT_TOOLBAR: useContextToolbar,
@@ -219,7 +219,7 @@ async function main() {
 
 		// ── Carbon styling files ──
 		const src = join(TEMPLATE_DIR, "src");
-		copyFileSync(join(src, "App.scss"), join(projectDir, "src", "App.scss"));
+		copyFileSync(join(src, "elyra-canvas-app.scss"), join(projectDir, "src", "elyra-canvas-app.scss"));
 		copyFileSync(join(src, "carbon.scss"), join(projectDir, "src", "carbon.scss"));
 		copyFileSync(join(src, "common.scss"), join(projectDir, "src", "common.scss"));
 
