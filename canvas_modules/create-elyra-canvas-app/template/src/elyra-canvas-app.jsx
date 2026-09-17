@@ -5,7 +5,7 @@ import { Toggle } from '@carbon/react';
 import flowData from './pipeline-flow.json';
 import paletteData from './palette.json';
 import '@elyra/canvas/dist/styles/common-canvas.min.css';
-import './elyra-app.scss';
+import './elyra-canvas-app.scss';
 
 function ElyraApp() {
   const title = "{{APP_TITLE}}";
