@@ -5,7 +5,7 @@ import { Toggle } from '@carbon/react';
 import flowData from './pipeline-flow.json';
 import paletteData from './palette.json';
 import '@elyra/canvas/dist/styles/common-canvas.min.css';
-import './ElyraApp.scss';
+import './elyra-app.scss';
 
 function ElyraApp() {
   const title = "{{APP_TITLE}}";
@@ -21,7 +21,7 @@ function ElyraApp() {
 
   useEffect(() => {
     document.documentElement.setAttribute(
-      'data-carbon-theme',
+      'elyra-canvas-theme',
       isDarkTheme ? 'g90' : 'g10'
     );
   }, [isDarkTheme]);
