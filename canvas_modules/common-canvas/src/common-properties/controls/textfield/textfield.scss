@@ -41,11 +41,22 @@ $textinput-bottom-padding: 5px;
 	.properties-control-description {
 		padding-bottom: carbon.$spacing-05;
 	}
-	.cds--text-input__label-wrapper {
+	// When a visible external label exists, overlay the counter on the label row (absolute).
+	// When there is no visible label (label_visible: false), keep the counter in normal
+	// document flow so it appears above the input with justify-content pushing it right.
+	.properties-control-item:has(.properties-label-container) + .cds--form-item .cds--text-input__label-wrapper {
 		position: absolute;
 		top: 0;
 		right: 0;
 		inline-size: auto;
+	}
+	.properties-control-item:not(:has(.properties-label-container)) + .cds--form-item .cds--text-input__label-wrapper {
+		justify-content: flex-end;
+	}
+	// Carbon 1.116.0 added border-block-end to .cds--text-input but does not
+	// remove it in the :disabled state.  Make it transparent to match textarea behaviour.
+	input:disabled {
+		border-block-end: 1px solid transparent;
 	}
 }
 

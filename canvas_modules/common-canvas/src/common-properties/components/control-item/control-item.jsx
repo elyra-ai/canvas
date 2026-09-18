@@ -53,13 +53,14 @@ class ControlItem extends React.Component {
 				// only show tooltip when control enabled and visible
 				} else {
 					// If tooltip has a link, add propertyId in the link object
-					if (this.props.control.description.link) {
-						this.props.control.description.link.propertyId = this.props.propertyId;
+					const link = typeof this.props.control.description.link === "object" ? this.props.control.description.link : null;
+					if (link) {
+						link.propertyId = this.props.propertyId;
 					}
 					tooltip = (<Tooltip
 						id={`tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
-						link={this.props.control.description.link ? this.props.control.description.link : null}
+						link={link}
 						tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 						direction="bottom"
 						disable={hidden || disabled}

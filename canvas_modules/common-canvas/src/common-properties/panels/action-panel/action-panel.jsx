@@ -36,13 +36,14 @@ class ActionPanel extends Component {
 			if (this.props.panel.description && !isEmpty(this.props.panel.description.text)) {
 				const dynamicDescriptionText = evaluateText(this.props.panel.description.text, this.props.controller);
 				// If tooltip has a link, add propertyId in the link object
-				if (this.props.panel.description.link) {
-					this.props.panel.description.link.propertyId = { name: this.props.panel.id };
+				const link = typeof this.props.panel.description.link === "object" ? this.props.panel.description.link : null;
+				if (link) {
+					link.propertyId = { name: this.props.panel.id };
 				}
 				tooltip = (<Tooltip
 					id={`tooltip-label-${this.props.panel.id}`}
 					tip={dynamicDescriptionText}
-					link={this.props.panel.description.link ? this.props.panel.description.link : null}
+					link={link}
 					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 					direction="bottom"
 					disable={hidden || disabled}
