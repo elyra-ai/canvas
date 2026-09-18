@@ -41,6 +41,9 @@
 			display: flex;
 			align-items: center;
 			margin: 2.5px 0 1.5px 0;
+			.properties-control-description-icon-info {
+				margin-block-start: -0.0625rem; // -1px to align icon with label text centre
+			}
 		}
 		.label-tooltip-container {
 			display: flex;
@@ -52,6 +55,19 @@
 		}
 		&:last-of-type {
 			margin-bottom: 0; // don't want margin when last radio button in group
+		}
+	}
+	// In vertical orientation the wrapper has margin-block-end: 6px making the
+	// flex centre sit below the label text. Switch to flex-start + a small nudge
+	// to align the icon with the label text instead.
+	// Note: cds--radio-button-group--vertical is on the <fieldset> (child of the
+	// outer <div> that carries properties-radio-button-group).
+	.cds--radio-button-group--vertical {
+		.properties-radioset-tooltip {
+			align-items: flex-start;
+			.properties-control-description-icon-info {
+				margin-block-start: 0.0625rem; // 1px – aligns icon with vertical label text
+			}
 		}
 	}
 	&.error:not([disabled]) {
