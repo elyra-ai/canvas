@@ -21,7 +21,21 @@
 	&.hide {
 		display: none;
 	}
-	// Position counter to the right of the label row
+	// When there is no description, restore the label container's default padding
+	// so there is a gap between the label and the input.
+	// When there IS a description, zero it out so label and description are tight.
+	.properties-control-item .properties-label-container:last-child {
+		padding-bottom: carbon.$spacing-03;
+		padding-right: carbon.$spacing-09;
+	}
+	.properties-control-item .properties-label-container:not(:last-child) {
+		padding-bottom: 0;
+		padding-right: carbon.$spacing-09;
+	}
+	// Increase gap between description and input to match pre-Carbon-1.116 spacing.
+	.properties-control-description {
+		padding-bottom: carbon.$spacing-05;
+	}
 	.cds--text-area__label-wrapper {
 		position: absolute;
 		top: 0;

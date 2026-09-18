@@ -17,6 +17,19 @@
 @use "../../../carbon.scss";
 
 .properties-numberfield {
+	// When there is no description, restore the label container's default padding
+	// so there is a gap between the label and the input.
+	// When there IS a description, zero it out so label and description are tight.
+	.properties-control-item .properties-label-container:last-child {
+		padding-bottom: carbon.$spacing-03;
+	}
+	.properties-control-item .properties-label-container:not(:last-child) {
+		padding-bottom: 0;
+	}
+	// Increase gap between description and input to match pre-Carbon-1.116 spacing.
+	.properties-control-description {
+		padding-bottom: carbon.$spacing-05;
+	}
 	.properties-numberfield-layer {
 		inline-size: 100%;
 	}
