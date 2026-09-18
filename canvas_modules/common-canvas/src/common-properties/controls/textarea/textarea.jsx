@@ -84,8 +84,8 @@ class TextareaControl extends React.Component {
 					disabled
 					placeholder={this.props.control.additionalText}
 					value={value}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
@@ -103,8 +103,8 @@ class TextareaControl extends React.Component {
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
@@ -139,6 +139,7 @@ class TextareaControl extends React.Component {
 		const className = classNames("properties-textarea", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{display}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

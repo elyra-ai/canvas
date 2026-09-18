@@ -240,6 +240,7 @@ class NumberfieldControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{this.props.tableControl ? null : this.props.controlItem}
 				<NumberInput
 					{...validationProps}
 					ref={this.numberInput}
@@ -250,8 +251,8 @@ class NumberfieldControl extends React.Component {
 					step={this.props.control.increment}
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
-					label={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+					label={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					allowEmpty
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
 					helperText={this.props.control.helperText}

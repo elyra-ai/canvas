@@ -168,7 +168,8 @@ class MultiSelectControl extends React.Component {
 					initialSelectedItems={this.multiSelectDropdown.selectedOptions}
 					onChange={this.handleOnChange}
 					placeholder={label}
-					titleText={this.props.tableControl ? null : this.props.controlItem}
+					titleText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 				/>
@@ -184,7 +185,8 @@ class MultiSelectControl extends React.Component {
 					selectedItems={this.multiSelectDropdown.selectedOptions}
 					onChange={this.handleOnChange}
 					label={label}
-					titleText={this.props.tableControl ? null : this.props.controlItem}
+					titleText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 				/>
@@ -195,6 +197,7 @@ class MultiSelectControl extends React.Component {
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
 				className={classNames("properties-dropdown", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{dropdownComponent}
 				<ValidationMessage state={this.props.state} tableOnly messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>

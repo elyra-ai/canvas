@@ -87,6 +87,7 @@ class DatepickerControl extends React.Component {
 
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{!this.props.tableControl && this.props.controlItem}
 				<DatePicker
 					ref={this.pickerRef}
 					className="properties-datepicker-wrapper-parent"
@@ -103,7 +104,8 @@ class DatepickerControl extends React.Component {
 						id={this.id}
 						className="properties-datepicker-wrapper-input"
 						placeholder={this.props.control.additionalText}
-						labelText={!this.props.tableControl && this.props.controlItem}
+						labelText={this.props.control.label ? this.props.control.label.text : ""}
+						hideLabel
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}

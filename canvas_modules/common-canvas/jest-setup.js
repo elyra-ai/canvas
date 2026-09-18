@@ -16,6 +16,10 @@
 
 /* global jest, beforeEach, afterEach */
 import fetchMock from "jest-fetch-mock";
+import { enable as enableFeatureFlag } from "@carbon/feature-flags";
+
+enableFeatureFlag("enable-v12-dynamic-floating-styles");
+
 fetchMock.enableMocks();
 fetch.mockResponse("<svg />");
 
