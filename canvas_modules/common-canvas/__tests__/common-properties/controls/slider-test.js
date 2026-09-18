@@ -75,7 +75,7 @@ describe("SliderControl renders correctly", () => {
 				<SliderControl control = {control}
 					propertyId = {propertyId}
 					controller = {controller}
-					controlItem = {<label className="properties-control-label">Slider Label</label>}
+					controlItem = {<label htmlFor="dummy-slider" className="properties-control-label">Slider Label</label>}
 				/>
 			</Provider>
 		);

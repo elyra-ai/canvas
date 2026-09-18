@@ -19,11 +19,19 @@
 $textinput-bottom-padding: 5px;
 
 .properties-input-control {
+	position: relative;
 	&.hide {
 		display: none;
 	}
 	input {
 		min-width: unset;
+	}
+	// Position counter to the right of the label row
+	.cds--text-input__label-wrapper {
+		position: absolute;
+		top: 0;
+		right: 0;
+		inline-size: auto;
 	}
 }
 

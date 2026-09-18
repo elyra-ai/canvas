@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-datepicker-range {
 	.properties-datepicker-range-label-container {
 		display: flex;
 		justify-content: space-between;
 		.properties-label-container {
 			flex: 1 1 0;
-			margin-bottom: carbon.$spacing-03;
 		}
 	}
 	.cds--date-picker-container {

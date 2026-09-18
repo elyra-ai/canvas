@@ -20,17 +20,22 @@
 	.properties-numberfield-layer {
 		inline-size: 100%;
 	}
+	.properties-numberfield-input-container {
+		display: flex;
+		align-items: flex-end;
+		.cds--form-item.cds--number-input-wrapper,
+		.cds--number {
+			width: 100%;
+		}
+	}
 	.properties-number-generator {
 		margin-left: carbon.$spacing-05;
 	}
 	&.numberfield-with-number-generator {
 		width: 100%;
-		display: inline-flex;
-		align-items: flex-end;
 		&.error, &.warning {
-			align-items: flex-start;
 			.properties-number-generator {
-				margin-top: carbon.$spacing-05 + carbon.$spacing-03;  // 1rem label + 0.5 rem spacing below label
+				margin-top: 0;
 			}
 		}
 	}

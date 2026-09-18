@@ -17,8 +17,16 @@
 @use "../../../carbon.scss";
 
 .properties-textarea {
+	position: relative;
 	&.hide {
 		display: none;
+	}
+	// Position counter to the right of the label row
+	.cds--text-area__label-wrapper {
+		position: absolute;
+		top: 0;
+		right: 0;
+		inline-size: auto;
 	}
 }
 

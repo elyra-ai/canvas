@@ -162,21 +162,23 @@ class DatepickerRangeControl extends React.Component {
 	}
 
 	createInfoDesc(label, description, range) {
-		return description
-			? (<div className="properties-label-container">
-				{label}
-				<Tooltip
-					id={`${this.uuid}-tooltip-label-${this.props.control.name}-${range}`}
-					tip={description}
-					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
-					direction="bottom"
-					disable={this.props.state === STATES.DISABLED}
-					showToolTipOnClick
-				>
-					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
-				</Tooltip>
-			</div>)
-			: label;
+		return (
+			<div className="properties-label-container">
+				<label>{label}</label>
+				{description && (
+					<Tooltip
+						id={`${this.uuid}-tooltip-label-${this.props.control.name}-${range}`}
+						tip={description}
+						tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+						direction="bottom"
+						disable={this.props.state === STATES.DISABLED}
+						showToolTipOnClick
+					>
+						<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+					</Tooltip>
+				)}
+			</div>
+		);
 	}
 
 	render() {
