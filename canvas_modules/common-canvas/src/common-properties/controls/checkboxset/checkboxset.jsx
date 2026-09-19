@@ -127,8 +127,9 @@ class CheckboxsetControl extends React.Component {
 		}
 		return (
 			<div className={classNames("properties-checkboxset", { "hide": hidden })} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{this.props.tableControl ? null : this.props.controlItem}
 				<CheckboxGroup
-					legendText={this.props.controlItem}
+					legendText={this.props.control.label ? this.props.control.label.text : ""}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}

@@ -45,7 +45,12 @@ class ControlItem extends React.Component {
 
 		let label;
 		let description;
-		if (this.props.control.label && this.props.control.labelVisible !== false) {
+		const hasVisibleLabel = Boolean(this.props.control.label &&
+			this.props.control.label.text &&
+			this.props.control.label.text.trim().length > 0 &&
+			this.props.control.labelVisible !== false);
+
+		if (hasVisibleLabel) {
 			let tooltip;
 			if (this.props.control.description && !isEmpty(this.props.control.description.text)) {
 				if (this.props.control.description.placement === "on_panel") {
@@ -53,13 +58,14 @@ class ControlItem extends React.Component {
 				// only show tooltip when control enabled and visible
 				} else {
 					// If tooltip has a link, add propertyId in the link object
-					if (this.props.control.description.link) {
-						this.props.control.description.link.propertyId = this.props.propertyId;
+					const link = typeof this.props.control.description.link === "object" ? this.props.control.description.link : null;
+					if (link) {
+						link.propertyId = this.props.propertyId;
 					}
 					tooltip = (<Tooltip
 						id={`tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
-						link={this.props.control.description.link ? this.props.control.description.link : null}
+						link={link}
 						tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 						direction="bottom"
 						disable={hidden || disabled}

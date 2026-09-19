@@ -17,20 +17,38 @@
 @use "../../../carbon.scss";
 
 .properties-numberfield {
+	// When there is no description, restore the label container's default padding
+	// so there is a gap between the label and the input.
+	// When there IS a description, zero it out so label and description are tight.
+	.properties-control-item .properties-label-container:last-child {
+		padding-bottom: carbon.$spacing-03;
+	}
+	.properties-control-item .properties-label-container:not(:last-child) {
+		padding-bottom: 0;
+	}
+	// Increase gap between description and input to match pre-Carbon-1.116 spacing.
+	.properties-control-description {
+		padding-bottom: carbon.$spacing-05;
+	}
 	.properties-numberfield-layer {
 		inline-size: 100%;
+	}
+	.properties-numberfield-input-container {
+		display: flex;
+		align-items: flex-end;
+		.cds--form-item.cds--number-input-wrapper,
+		.cds--number {
+			width: 100%;
+		}
 	}
 	.properties-number-generator {
 		margin-left: carbon.$spacing-05;
 	}
 	&.numberfield-with-number-generator {
 		width: 100%;
-		display: inline-flex;
-		align-items: flex-end;
 		&.error, &.warning {
-			align-items: flex-start;
 			.properties-number-generator {
-				margin-top: carbon.$spacing-05 + carbon.$spacing-03;  // 1rem label + 0.5 rem spacing below label
+				margin-top: 0;
 			}
 		}
 	}

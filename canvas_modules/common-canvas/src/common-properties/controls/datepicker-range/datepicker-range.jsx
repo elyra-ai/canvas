@@ -162,21 +162,23 @@ class DatepickerRangeControl extends React.Component {
 	}
 
 	createInfoDesc(label, description, range) {
-		return description
-			? (<div className="properties-label-container">
-				{label}
-				<Tooltip
-					id={`${this.uuid}-tooltip-label-${this.props.control.name}-${range}`}
-					tip={description}
-					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
-					direction="bottom"
-					disable={this.props.state === STATES.DISABLED}
-					showToolTipOnClick
-				>
-					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
-				</Tooltip>
-			</div>)
-			: label;
+		return (
+			<div className="properties-label-container">
+				<label>{label}</label>
+				{description && (
+					<Tooltip
+						id={`${this.uuid}-tooltip-label-${this.props.control.name}-${range}`}
+						tip={description}
+						tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+						direction="bottom"
+						disable={this.props.state === STATES.DISABLED}
+						showToolTipOnClick
+					>
+						<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+					</Tooltip>
+				)}
+			</div>
+		);
 	}
 
 	render() {
@@ -194,15 +196,15 @@ class DatepickerRangeControl extends React.Component {
 		const defaultDatepickerRangeStartLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.DATEPICKER_RANGE_START_LABEL);
 		const defaultDatepickerRangeEndLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.DATEPICKER_RANGE_END_LABEL);
 
-		let startLabel = this.props.controller.getResource(datepickerRangeStartLabel, defaultDatepickerRangeStartLabel);
+		const startLabel = this.props.controller.getResource(datepickerRangeStartLabel, defaultDatepickerRangeStartLabel);
 		const startDesc = this.props.controller.getResource(datepickerRangeStartDesc, null);
 		const startHelperText = this.props.controller.getResource(datepickerRangeStartHelper, null);
-		let endLabel = this.props.controller.getResource(datepickerRangeEndLabel, defaultDatepickerRangeEndLabel);
+		const endLabel = this.props.controller.getResource(datepickerRangeEndLabel, defaultDatepickerRangeEndLabel);
 		const endDesc = this.props.controller.getResource(datepickerRangeEndDesc, null);
 		const endHelperText = this.props.controller.getResource(datepickerRangeEndHelper, null);
 
-		startLabel = this.createInfoDesc(startLabel, startDesc, "start");
-		endLabel = this.createInfoDesc(endLabel, endDesc, "end");
+		const startLabelItem = this.createInfoDesc(startLabel, startDesc, "start");
+		const endLabelItem = this.createInfoDesc(endLabel, endDesc, "end");
 
 		const className = classNames("properties-datepicker-range", "properties-input-control", { "hide": hidden },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
@@ -210,6 +212,12 @@ class DatepickerRangeControl extends React.Component {
 
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{!this.props.tableControl && (
+					<div className="properties-datepicker-range-label-container">
+						{startLabelItem}
+						{endLabelItem}
+					</div>
+				)}
 				<DatePicker
 					datePickerType={DATEPICKER_TYPE.RANGE}
 					dateFormat={this.dateFormat}
@@ -223,7 +231,8 @@ class DatepickerRangeControl extends React.Component {
 						{...validationProps}
 						id={`${this.id}-start`}
 						placeholder={this.props.control.additionalText}
-						labelText={!this.props.tableControl && startLabel}
+						labelText={startLabel}
+						hideLabel
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputStartChange.bind(this)}
@@ -234,7 +243,8 @@ class DatepickerRangeControl extends React.Component {
 						{...validationProps}
 						id={`${this.id}-end`}
 						placeholder={this.props.control.additionalText}
-						labelText={!this.props.tableControl && endLabel}
+						labelText={endLabel}
+						hideLabel
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputEndChange.bind(this)}

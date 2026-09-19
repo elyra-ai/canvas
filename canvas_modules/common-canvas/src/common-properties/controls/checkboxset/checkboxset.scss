@@ -20,6 +20,9 @@
 	&.hide {
 		display: none;
 	}
+	legend.cds--label {
+		display: none;
+	}
 	.cds--form-item.cds--checkbox-wrapper:first-of-type { //override carbon checkbox styling
 		margin-block-start: 0.1875rem;
 		margin-block-end: carbon.$spacing-03;

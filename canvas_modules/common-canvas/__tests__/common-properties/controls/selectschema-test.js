@@ -154,7 +154,7 @@ describe("selectschema works correctly in common-properties", () => {
 	it("selectschema control should have aria-label", () => {
 		const dropDown = wrapper.container.querySelector("div[data-id='properties-selectschema']");
 		const dropdownAriaLabelledby = dropDown.querySelector(".cds--list-box__menu").getAttribute("aria-labelledby");
-		expect(dropDown.querySelector(`label[id='${dropdownAriaLabelledby}']`).textContent).to.equal("selectschema(required)");
+		expect(dropDown.querySelector(`label[id='${dropdownAriaLabelledby}']`).textContent).to.equal("selectschema");
 	});
 });
 

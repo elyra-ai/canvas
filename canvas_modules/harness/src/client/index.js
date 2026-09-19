@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { enable as enableFeatureFlag } from "@carbon/feature-flags";
+enableFeatureFlag("enable-v12-dynamic-floating-styles");
+
 import React from "react";
 import { createRoot } from "react-dom/client.js";
 

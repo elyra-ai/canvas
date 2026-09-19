@@ -306,7 +306,8 @@ class DropDown extends React.Component {
 					onChange={this.handleComboOnChange}
 					onInputChange={(evt) => this.handleOnInputChange(evt, dropDown.options)}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-					titleText={this.props.controlItem}
+					titleText=""
+					size="md"
 					helperText={this.props.control.helperText}
 					allowCustomValue={this.props.control.customValueAllowed}
 					{...shouldFilterItem}
@@ -327,7 +328,8 @@ class DropDown extends React.Component {
 					selectedItem={dropDown.selectedOption}
 					label={this.emptyLabel}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-					titleText={this.props.controlItem}
+					titleText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
@@ -339,6 +341,7 @@ class DropDown extends React.Component {
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
 				className={classNames("properties-dropdown", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{dropdownComponent}
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} tableOnly />
 			</div>

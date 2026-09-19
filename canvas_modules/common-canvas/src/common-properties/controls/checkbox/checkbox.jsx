@@ -45,20 +45,21 @@ class CheckboxControl extends React.Component {
 		const label = this.props.control.label ? this.props.control.label.text : "";
 		const tooltipId = "tooltip-" + this.props.control.name;
 		let tooltip = "";
+		const link = typeof this.props.control.description?.link === "object" ? this.props.control.description.link : null;
 		if (this.props.control.description && !(this.props.state === STATES.DISABLED || hidden) && !this.props.tableControl) {
 			tooltip = (
 				<span >{this.props.control.description.text}</span>
 			);
 			// If tooltip has a link, add propertyId in the link object
-			if (this.props.control.description.link) {
-				this.props.control.description.link.propertyId = this.props.propertyId;
+			if (link) {
+				link.propertyId = this.props.propertyId;
 			}
 		}
 		const tooltipIcon = isEmpty(tooltip) ? "" : (
 			<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				link={this.props.control.description.link ? this.props.control.description.link : null}
+				link={link}
 				tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 				direction="bottom"
 				className="properties-tooltips"

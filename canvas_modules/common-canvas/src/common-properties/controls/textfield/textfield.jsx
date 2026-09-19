@@ -114,8 +114,8 @@ class TextfieldControl extends React.Component {
 					onChange={this.handleChange.bind(this)}
 					value={value}
 					title={value}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 					ref={this.textInputRef}
 					readOnly={this.props.readOnly}
@@ -127,6 +127,7 @@ class TextfieldControl extends React.Component {
 
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{textInput}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

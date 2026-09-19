@@ -462,7 +462,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 	it("selectcolumn control should have aria-label", () => {
 		const selectColumnWrapper = wrapper.container.querySelector("div[data-id='properties-ctrl-field1_panel']");
 		const selectColumnAriaLabelledby = selectColumnWrapper.querySelector(".cds--list-box__menu").getAttribute("aria-labelledby");
-		expect(selectColumnWrapper.querySelector(`label[id='${selectColumnAriaLabelledby}']`).textContent).to.equal("Field1 Panel(required)");
+		expect(selectColumnWrapper.querySelector(`label[id='${selectColumnAriaLabelledby}']`).textContent).to.equal("Field1 Panel");
 	});
 
 	it("selectcolumn control should show warning for invalid selected values", () => {

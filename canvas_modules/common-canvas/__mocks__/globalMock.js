@@ -25,6 +25,9 @@ const createContextualFragment = (html) => {
 
 global.Range.prototype.createContextualFragment = (html) => createContextualFragment(html);
 
+// Enable Carbon v12 dynamic floating styles feature flag before any modules load
+process.env.CARBON_ENABLE_V12_DYNAMIC_FLOATING_STYLES = "true";
+
 // HACK: Polyfil that allows codemirror to render in a JSDOM env.
 global.window.document.createRange = function createRange() {
 	return {

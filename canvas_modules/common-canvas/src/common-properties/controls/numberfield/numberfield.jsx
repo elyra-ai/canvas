@@ -240,26 +240,29 @@ class NumberfieldControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<NumberInput
-					{...validationProps}
-					ref={this.numberInput}
-					id={this.id}
-					onChange={this.handleChange.bind(this)}
-					onKeyUp={this.onKeyUp}
-					disabled={disabled}
-					step={this.props.control.increment}
-					value={controlValue}
-					placeholder={this.props.control.additionalText}
-					label={this.props.controlItem}
-					hideLabel={this.props.tableControl}
-					allowEmpty
-					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
-					helperText={this.props.control.helperText}
-					readOnly={this.props.readOnly}
-					disableWheel
-					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
-				/>
-				{numberGenerator}
+				{this.props.tableControl ? null : this.props.controlItem}
+				<div className="properties-numberfield-input-container">
+					<NumberInput
+						{...validationProps}
+						ref={this.numberInput}
+						id={this.id}
+						onChange={this.handleChange.bind(this)}
+						onKeyUp={this.onKeyUp}
+						disabled={disabled}
+						step={this.props.control.increment}
+						value={controlValue}
+						placeholder={this.props.control.additionalText}
+						label={this.props.control.label ? this.props.control.label.text : ""}
+						hideLabel
+						allowEmpty
+						hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
+						helperText={this.props.control.helperText}
+						readOnly={this.props.readOnly}
+						disableWheel
+						aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
+					/>
+					{numberGenerator}
+				</div>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);

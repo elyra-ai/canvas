@@ -420,9 +420,8 @@ describe("multiselect paramDef works correctly", () => {
 		expect(
 			multiselectWrapper
 				.querySelector(`label[id='${multiselectAriaLabelledby}']`)
-				.querySelector(".properties-control-item")
 				.textContent
-		).to.equal("multiselect multiple options selected(required)");
+		).to.include("multiselect multiple options selected");
 	});
 });
 

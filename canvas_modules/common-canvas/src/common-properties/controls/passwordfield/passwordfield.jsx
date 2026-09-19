@@ -55,6 +55,7 @@ class PasswordControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{this.props.tableControl ? null : this.props.controlItem}
 				<PasswordInput
 					{...validationProps}
 					autoComplete="off"
@@ -63,8 +64,8 @@ class PasswordControl extends React.Component {
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					tooltipAlignment="end"
 					showPasswordLabel={showPasswordLabel}
 					hidePasswordLabel={hidePasswordLabel}

@@ -54,6 +54,7 @@ class SliderControl extends React.Component {
 			<div className={classNames("properties-slider ", { "hide": hidden },
 				this.props.messageInfo ? this.props.messageInfo.type : null)} data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
+				{this.props.tableControl ? null : this.props.controlItem}
 				<Slider
 					value={this.props.value !== null && typeof this.props.value !== "undefined" ? this.props.value : minValue}
 					min={minValue}
@@ -61,7 +62,9 @@ class SliderControl extends React.Component {
 					minLabel={minLabel}
 					maxLabel={maxLabel}
 					step={step}
-					labelText={this.props.controlItem}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
+					hideTextInput={false}
 					onChange={this.handleChange}
 					disabled={this.props.state === STATES.DISABLED}
 					ariaLabelInput={formatMessage(this.reactIntl, MESSAGE_KEYS.SLIDER_NUMBER_INPUT_LABEL)}
