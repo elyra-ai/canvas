@@ -37,15 +37,15 @@
 		padding-bottom: carbon.$spacing-05;
 	}
 	// When a visible external label exists, overlay the counter on the label row (absolute).
-	// When there is no visible label (label_visible: false), keep the counter in normal
+	// When there is no visible label (label_visible: false or empty label), keep the counter in normal
 	// document flow so it appears above the textarea with justify-content pushing it right.
-	.properties-control-item:has(.properties-label-container) + .cds--form-item .cds--text-area__label-wrapper {
+	.properties-control-item:has(.properties-label-container:not(:empty)) + .cds--form-item .cds--text-area__label-wrapper {
 		position: absolute;
 		top: 0;
 		right: 0;
 		inline-size: auto;
 	}
-	.properties-control-item:not(:has(.properties-label-container)) + .cds--form-item .cds--text-area__label-wrapper {
+	.properties-control-item:not(:has(.properties-label-container:not(:empty))) + .cds--form-item .cds--text-area__label-wrapper {
 		justify-content: flex-end;
 	}
 }
