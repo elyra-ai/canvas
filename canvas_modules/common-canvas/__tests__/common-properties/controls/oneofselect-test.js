@@ -327,12 +327,11 @@ describe("oneofselect paramDef works correctly", () => {
 		const { container } = wrapper;
 		// Dropdown should have aria-label
 		const dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect']");
-		const dropdownAriaLabelledby = dropdownWrapper.querySelector(".cds--list-box__menu").getAttribute("aria-labelledby");
-		expect(dropdownWrapper.querySelector(`label[id='${dropdownAriaLabelledby}']`).textContent).to.equal("oneofselect");
+		expect(dropdownWrapper.querySelector(".properties-control-item").textContent).to.equal("oneofselect(required)");
 
 		// combobox should have aria-label
 		const comboboxWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect_custom_value']");
-		expect(comboboxWrapper.querySelector(".properties-control-label").textContent).to.equal("oneofselect custom value allowed");
+		expect(comboboxWrapper.querySelector(".properties-control-item").textContent).to.equal("oneofselect custom value allowed(required)");
 	});
 });
 

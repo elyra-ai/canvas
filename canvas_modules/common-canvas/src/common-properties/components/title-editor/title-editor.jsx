@@ -25,8 +25,7 @@ import Help from "@carbon/icons-react/lib/Help";
 import Edit from "@carbon/icons-react/lib/Edit";
 import Close from "@carbon/icons-react/lib/Close";
 import Information from "@carbon/icons-react/lib/Information";
-import { TextInput, Button, Layer, Link } from "@carbon/react";
-import { Toggletip, ToggletipButton, ToggletipContent, ToggletipActions } from "@carbon/react";
+import { TextInput, Button, Layer, Link, Popover, PopoverContent } from "@carbon/react";
 
 import { setTitle } from "./../../actions";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
@@ -38,10 +37,13 @@ class TitleEditor extends Component {
 		super(props);
 		this.state = {
 			focused: false,
-			titleValidation: null
+			titleValidation: null,
+			descOpen: false
 		};
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
+		this.toggleDesc = this.toggleDesc.bind(this);
+		this.closeDesc = this.closeDesc.bind(this);
 		this.id = PropertyUtils.generateId();
 		this.textInputRef = React.createRef();
 		this.labelText = PropertyUtils.formatMessage(props.controller.getReactIntl(),
@@ -71,6 +73,14 @@ class TitleEditor extends Component {
 				this.props.controller.getAppData());
 		}
 	}
+	toggleDesc() {
+		this.setState((prev) => ({ descOpen: !prev.descOpen }));
+	}
+
+	closeDesc() {
+		this.setState({ descOpen: false });
+	}
+
 	textInputOnFocus() {
 		this.setState({ focused: true });
 	}
@@ -147,7 +157,7 @@ class TitleEditor extends Component {
 			const { description } = this.props;
 			// If description is present and has a link, show help button
 			const tooltipButton = isDescWithLink ? (
-				<ToggletipActions>
+				<div className="cds--toggletip-actions">
 					<Link
 						className="properties-title-editor-desc-btn desc-help"
 						onClick={this.helpClickHandler}
@@ -155,19 +165,45 @@ class TitleEditor extends Component {
 					>
 						{helpButtonLabel}
 					</Link>
-				</ToggletipActions>
+				</div>
 			) : null;
 
 			return (
-				<Toggletip className="properties-title-desc-tooltip" align="bottom" autoAlign>
-					<ToggletipButton label={descButtonLabel}>
+				<Popover
+					className="properties-title-desc-tooltip"
+					align="bottom"
+					autoAlign
+					dropShadow={false}
+					highContrast
+					open={this.state.descOpen}
+					onKeyDown={(e) => {
+						if (e.key === "Escape") {
+							e.stopPropagation();
+							this.closeDesc();
+						}
+					}}
+					onBlur={(e) => {
+						if (!e.currentTarget.contains(e.relatedTarget)) {
+							this.closeDesc();
+						}
+					}}
+				>
+					<button
+						type="button"
+						className="cds--toggletip-button"
+						aria-label={descButtonLabel}
+						aria-expanded={this.state.descOpen}
+						onClick={this.toggleDesc}
+					>
 						<Information />
-					</ToggletipButton>
-					<ToggletipContent>
-						<p className="properties-title-editor-desc">{description}</p>
-						{tooltipButton}
-					</ToggletipContent>
-				</Toggletip>
+					</button>
+					<PopoverContent>
+						<div className="cds--toggletip-content">
+							<p className="properties-title-editor-desc">{description}</p>
+							{tooltipButton}
+						</div>
+					</PopoverContent>
+				</Popover>
 			);
 		};
 

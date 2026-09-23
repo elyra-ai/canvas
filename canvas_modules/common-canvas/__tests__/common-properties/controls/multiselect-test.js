@@ -416,12 +416,11 @@ describe("multiselect paramDef works correctly", () => {
 	it("multiselect control should have aria-label", () => {
 		const { container } = wrapper;
 		const multiselectWrapper = container.querySelector("div[data-id='properties-ctrl-multiselect_multiple_selected']");
-		const multiselectAriaLabelledby = multiselectWrapper.querySelector(".cds--list-box__menu").getAttribute("aria-labelledby");
 		expect(
 			multiselectWrapper
-				.querySelector(`label[id='${multiselectAriaLabelledby}']`)
+				.querySelector(".properties-control-item")
 				.textContent
-		).to.include("multiselect multiple options selected");
+		).to.equal("multiselect multiple options selected(required)");
 	});
 });
 
