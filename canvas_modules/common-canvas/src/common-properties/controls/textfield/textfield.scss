@@ -38,8 +38,12 @@ $textinput-bottom-padding: 5px;
 		padding-right: carbon.$spacing-09;
 	}
 	// Increase gap between description and input to match pre-Carbon-1.116 spacing.
+	// Constrain description width so it does not extend under the character counter.
+	// Uses $spacing-08 (2.5rem) rather than $spacing-09 (3rem) used by the label because
+	// the counter's natural rendered width is narrower than $spacing-09.
 	.properties-control-description {
 		padding-bottom: carbon.$spacing-05;
+		padding-right: carbon.$spacing-08;
 	}
 	// When a visible external label exists, overlay the counter on the label row (absolute).
 	// When there is no visible label (label_visible: false or empty label), keep the counter in normal

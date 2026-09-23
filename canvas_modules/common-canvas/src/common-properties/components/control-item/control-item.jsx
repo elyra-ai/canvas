@@ -45,36 +45,37 @@ class ControlItem extends React.Component {
 
 		let label;
 		let description;
+		let tooltip;
 		const hasVisibleLabel = Boolean(this.props.control.label &&
 			this.props.control.label.text &&
 			this.props.control.label.text.trim().length > 0 &&
 			this.props.control.labelVisible !== false);
 
-		if (hasVisibleLabel) {
-			let tooltip;
-			if (this.props.control.description && !isEmpty(this.props.control.description.text)) {
-				if (this.props.control.description.placement === "on_panel") {
-					description = <div className="properties-control-description">{this.props.control.description.text}</div>;
-				// only show tooltip when control enabled and visible
-				} else {
-					// If tooltip has a link, add propertyId in the link object
-					const link = typeof this.props.control.description.link === "object" ? this.props.control.description.link : null;
-					if (link) {
-						link.propertyId = this.props.propertyId;
-					}
-					tooltip = (<Tooltip
-						id={`tooltip-label-${this.props.control.name}`}
-						tip={this.props.control.description.text}
-						link={link}
-						tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
-						direction="bottom"
-						disable={hidden || disabled}
-						showToolTipOnClick
-					>
-						<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
-					</Tooltip>);
+		if (this.props.control.description && !isEmpty(this.props.control.description.text)) {
+			if (this.props.control.description.placement === "on_panel") {
+				description = <div className="properties-control-description">{this.props.control.description.text}</div>;
+			// only show tooltip when control enabled and visible
+			} else {
+				// If tooltip has a link, add propertyId in the link object
+				const link = typeof this.props.control.description.link === "object" ? this.props.control.description.link : null;
+				if (link) {
+					link.propertyId = this.props.propertyId;
 				}
+				tooltip = (<Tooltip
+					id={`tooltip-label-${this.props.control.name}`}
+					tip={this.props.control.description.text}
+					link={link}
+					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+					direction="bottom"
+					disable={hidden || disabled}
+					showToolTipOnClick
+				>
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+				</Tooltip>);
 			}
+		}
+
+		if (hasVisibleLabel) {
 			let indicator;
 			if (this.showRequiredIndicator && this.props.control.required) {
 				indicator = (
@@ -96,11 +97,25 @@ class ControlItem extends React.Component {
 					{tooltip}
 				</div>);
 		} else {
-			// Provide a label for controls with hidden labels to support accessibility
+			// Provide a label for controls with hidden labels to support accessibility.
+			// If labelVisible is not explicitly false and there is a description tooltip but no
+			// visible label text (e.g. empty string label), render the tooltip in its own
+			// container so the info icon is still displayed.
+			// When labelVisible is false the control renders its own label/tooltip, so we
+			// must not add any extra container here.
+			const showTooltipOnly = this.props.control.labelVisible !== false && tooltip;
 			label = (
-				<div className={classNames("properties-label-container-hidden")}>
-					<label className="properties-control-label-hidden">{this.props.control?.label?.text}</label>
-				</div>);
+				<>
+					<div className="properties-label-container-hidden">
+						<label className="properties-control-label-hidden">{this.props.control?.label?.text}</label>
+					</div>
+					{showTooltipOnly && (
+						<div className="properties-label-container">
+							{tooltip}
+						</div>
+					)}
+				</>
+			);
 		}
 
 		const action = this.actionFactory.generateAction(0, this.props.control.action);

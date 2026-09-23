@@ -19,9 +19,10 @@
 .properties-datepicker-range {
 	.properties-datepicker-range-label-container {
 		display: flex;
-		justify-content: space-between;
+		gap: 1px;
 		.properties-label-container {
-			flex: 1 1 0;
+			width: 143.5px;
+			flex: none;
 		}
 	}
 	.cds--date-picker-container {
