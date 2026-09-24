@@ -16,6 +16,7 @@
 
 /* global jest, beforeEach, afterEach */
 import fetchMock from "jest-fetch-mock";
+
 fetchMock.enableMocks();
 fetch.mockResponse("<svg />");
 

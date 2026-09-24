@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,5 +20,14 @@
 		.cds--multi-select__wrapper > label { // hidden label should not take any space in table cell
 			display: none;
 		}
+	}
+}
+
+// TODO - This overrides the multi-select height which is defaulting to the
+// large ("lg") size in older versions of @carbon/react.  It can be removed when
+// we upgrade to v1.117.0 or beyond.
+.cds--multi-select__wrapper {
+	.cds--multi-select {
+		block-size: 2.5rem;
 	}
 }

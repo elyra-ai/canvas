@@ -77,23 +77,22 @@ class TextareaControl extends React.Component {
 				validation_id: this.props.control.name
 			};
 			validationProps = ControlUtils.getValidationProps(errorMessage, this.props.tableControl);
-			textArea = (<div>
+			textArea = (
 				<TextArea
 					{...validationProps}
 					id={this.id}
 					disabled
 					placeholder={this.props.control.additionalText}
 					value={value}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 					enableCounter={shouldShowCounter}
 					maxCount={this.charLimit}
 				/>
-				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
-			</div>);
+			);
 		} else {
 			textArea = (
 				<TextArea
@@ -103,8 +102,8 @@ class TextareaControl extends React.Component {
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
@@ -137,10 +136,16 @@ class TextareaControl extends React.Component {
 			</Tooltip>);
 		}
 		const className = classNames("properties-textarea", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null);
+		const messageInfo = truncated ? {
+			text: formatMessage(this.reactIntl, MESSAGE_KEYS.TRUNCATE_LONG_STRING_ERROR, { truncate_limit: TRUNCATE_LIMIT }),
+			type: CONDITION_MESSAGE_TYPE.ERROR,
+			validation_id: this.props.control.name
+		} : this.props.messageInfo;
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{display}
-				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={truncated ? "" : this.props.state} messageInfo={messageInfo} />
 			</div>
 
 		);

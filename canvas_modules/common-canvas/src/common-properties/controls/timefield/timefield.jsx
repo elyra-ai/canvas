@@ -75,6 +75,7 @@ class TimefieldControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{this.props.tableControl ? null : this.props.controlItem}
 				<TextInput
 					{...validationProps}
 					autoComplete="off"
@@ -83,8 +84,8 @@ class TimefieldControl extends React.Component {
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
 					value={this.value}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}

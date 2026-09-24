@@ -19,11 +19,56 @@
 $textinput-bottom-padding: 5px;
 
 .properties-input-control {
+	position: relative;
 	&.hide {
 		display: none;
 	}
 	input {
 		min-width: unset;
+	}
+	// When there is no description, restore the label container's default padding
+	// so there is a gap between the label and the input.
+	// When there IS a description, zero it out so label and description are tight.
+	.properties-control-item {
+		display: flex;
+		flex-direction: column;
+
+		&:has(.properties-label-container:not(:empty)) {
+			padding-right: carbon.$spacing-09;
+		}
+
+		.properties-label-container:last-child {
+			padding-bottom: carbon.$spacing-03;
+		}
+		.properties-label-container:not(:last-child) {
+			padding-bottom: 0;
+		}
+	}
+	// Increase gap between description and input to match pre-Carbon-1.116 spacing.
+	.properties-control-description {
+		padding-bottom: carbon.$spacing-05;
+	}
+	// When a visible external label exists, overlay the counter on the label row (absolute).
+	// When there is no visible label (label_visible: false or empty label), keep the counter in normal
+	// document flow so it appears above the input with justify-content pushing it right.
+	.properties-control-item:has(.properties-label-container:not(:empty)) + .cds--form-item .cds--text-input__label-wrapper {
+		position: absolute;
+		top: 0;
+		right: 0;
+		inline-size: auto;
+		justify-content: flex-end;
+
+		.cds--label.cds--visually-hidden {
+			display: none;
+		}
+	}
+	.properties-control-item:not(:has(.properties-label-container:not(:empty))) + .cds--form-item .cds--text-input__label-wrapper {
+		justify-content: flex-end;
+	}
+	// Carbon 1.116.0 added border-block-end to .cds--text-input but does not
+	// remove it in the :disabled state.  Make it transparent to match textarea behaviour.
+	input:disabled {
+		border-block-end: 1px solid transparent;
 	}
 }
 
