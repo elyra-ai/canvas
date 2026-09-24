@@ -23,6 +23,9 @@
 		.properties-label-container {
 			width: 143.5px;
 			flex: none;
+			label.properties-label-disabled {
+				color: carbon.$text-disabled;
+			}
 		}
 	}
 	.cds--date-picker-container {

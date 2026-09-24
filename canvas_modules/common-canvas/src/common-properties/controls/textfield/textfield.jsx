@@ -85,7 +85,6 @@ class TextfieldControl extends React.Component {
 				validation_id: this.props.control.name
 			};
 			textInput = (<div className="properties-textinput-readonly">
-				{this.props.tableControl ? null : this.props.controlItem}
 				<ReadonlyControl
 					control={this.props.control}
 					propertyId={this.props.propertyId}

@@ -162,9 +162,10 @@ class DatepickerRangeControl extends React.Component {
 	}
 
 	createInfoDesc(label, description, range) {
+		const disabled = this.props.state === STATES.DISABLED;
 		return (
 			<div className="properties-label-container">
-				<label>{label}</label>
+				<label className={disabled ? "properties-label-disabled" : null}>{label}</label>
 				{description && (
 					<Tooltip
 						id={`${this.uuid}-tooltip-label-${this.props.control.name}-${range}`}

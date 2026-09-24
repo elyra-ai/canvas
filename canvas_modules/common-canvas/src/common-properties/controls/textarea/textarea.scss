@@ -24,13 +24,20 @@
 	// When there is no description, restore the label container's default padding
 	// so there is a gap between the label and the input.
 	// When there IS a description, zero it out so label and description are tight.
-	.properties-control-item .properties-label-container:last-child {
-		padding-bottom: carbon.$spacing-03;
-		padding-right: carbon.$spacing-09;
-	}
-	.properties-control-item .properties-label-container:not(:last-child) {
-		padding-bottom: 0;
-		padding-right: carbon.$spacing-09;
+	.properties-control-item {
+		display: flex;
+		flex-direction: column;
+
+		&:has(.properties-label-container:not(:empty)) {
+			padding-right: carbon.$spacing-09;
+		}
+
+		.properties-label-container:last-child {
+			padding-bottom: carbon.$spacing-03;
+		}
+		.properties-label-container:not(:last-child) {
+			padding-bottom: 0;
+		}
 	}
 	// Increase gap between description and input to match pre-Carbon-1.116 spacing.
 	.properties-control-description {
@@ -44,6 +51,11 @@
 		top: 0;
 		right: 0;
 		inline-size: auto;
+		justify-content: flex-end;
+
+		.cds--label.cds--visually-hidden {
+			display: none;
+		}
 	}
 	.properties-control-item:not(:has(.properties-label-container:not(:empty))) + .cds--form-item .cds--text-area__label-wrapper {
 		justify-content: flex-end;

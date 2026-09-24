@@ -29,21 +29,24 @@ $textinput-bottom-padding: 5px;
 	// When there is no description, restore the label container's default padding
 	// so there is a gap between the label and the input.
 	// When there IS a description, zero it out so label and description are tight.
-	.properties-control-item .properties-label-container:last-child {
-		padding-bottom: carbon.$spacing-03;
-		padding-right: carbon.$spacing-09;
-	}
-	.properties-control-item .properties-label-container:not(:last-child) {
-		padding-bottom: 0;
-		padding-right: carbon.$spacing-09;
+	.properties-control-item {
+		display: flex;
+		flex-direction: column;
+
+		&:has(.properties-label-container:not(:empty)) {
+			padding-right: carbon.$spacing-09;
+		}
+
+		.properties-label-container:last-child {
+			padding-bottom: carbon.$spacing-03;
+		}
+		.properties-label-container:not(:last-child) {
+			padding-bottom: 0;
+		}
 	}
 	// Increase gap between description and input to match pre-Carbon-1.116 spacing.
-	// Constrain description width so it does not extend under the character counter.
-	// Uses $spacing-08 (2.5rem) rather than $spacing-09 (3rem) used by the label because
-	// the counter's natural rendered width is narrower than $spacing-09.
 	.properties-control-description {
 		padding-bottom: carbon.$spacing-05;
-		padding-right: carbon.$spacing-08;
 	}
 	// When a visible external label exists, overlay the counter on the label row (absolute).
 	// When there is no visible label (label_visible: false or empty label), keep the counter in normal
@@ -53,6 +56,11 @@ $textinput-bottom-padding: 5px;
 		top: 0;
 		right: 0;
 		inline-size: auto;
+		justify-content: flex-end;
+
+		.cds--label.cds--visually-hidden {
+			display: none;
+		}
 	}
 	.properties-control-item:not(:has(.properties-label-container:not(:empty))) + .cds--form-item .cds--text-input__label-wrapper {
 		justify-content: flex-end;
