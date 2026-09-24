@@ -175,6 +175,11 @@
 	padding: 0;
 }
 
+// When right flyout is under toolbar, position close button below the toolbar
+.right-flyout-panel.under-toolbar .properties-title-with-heading > .properties-close-button {
+	top: calc(carbon.$spacing-08 + carbon.$spacing-03); // toolbar height (32px) + original spacing (8px)
+}
+
 
 .properties-title-editor {
 	.tooltip-container {
@@ -182,4 +187,5 @@
 		cursor: pointer;
 	}
 }
+
 
