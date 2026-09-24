@@ -76,3 +76,10 @@
 	display: flex;
 	justify-content: space-between;
 }
+
+// TODO - This overrides the combo-box height which is defaulting to the
+// large ("lg") size in older versions of @carbon/react.  It can be removed when
+// we upgrade to v1.117.0 or beyond.
+.cds--combo-box.cds--list-box {
+	block-size: 2.5rem;
+}

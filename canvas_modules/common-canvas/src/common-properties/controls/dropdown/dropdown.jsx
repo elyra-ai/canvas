@@ -307,7 +307,6 @@ class DropDown extends React.Component {
 					onInputChange={(evt) => this.handleOnInputChange(evt, dropDown.options)}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText=""
-					size="md"
 					helperText={this.props.control.helperText}
 					allowCustomValue={this.props.control.customValueAllowed}
 					{...shouldFilterItem}
