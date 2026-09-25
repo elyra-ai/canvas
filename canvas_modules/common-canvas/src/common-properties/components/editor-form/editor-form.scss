@@ -55,7 +55,15 @@ $primary-tab-height: carbon.$spacing-08;
 	}
 }
 
+
 .properties-categories {
+	// Override to get bigger heading as specified by design.
+	.cds--accordion__item {
+		.cds--accordion__heading {
+			min-block-size: 3rem;
+		}
+	}
+
 	.properties-category-content .cds--accordion__content {
 		padding: carbon.$spacing-05;
 
