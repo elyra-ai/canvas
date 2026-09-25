@@ -259,7 +259,7 @@ class EditorForm extends React.Component {
 					{tabContent.length ? (<div key={"cat." + key} className="properties-categories">
 						{tabContent}
 					</div>) : null}
-					{tabContentAcc.length ? (<Accordion size="lg">
+					{tabContentAcc.length ? (<Accordion>
 						<div key={"cat." + key} className="properties-categories">
 							{tabContentAcc}
 						</div>

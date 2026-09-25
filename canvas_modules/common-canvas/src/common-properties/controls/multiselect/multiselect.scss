@@ -22,12 +22,3 @@
 		}
 	}
 }
-
-// TODO - This overrides the multi-select height which is defaulting to the
-// large ("lg") size in older versions of @carbon/react.  It can be removed when
-// we upgrade to v1.117.0 or beyond.
-.cds--multi-select__wrapper {
-	.cds--multi-select {
-		block-size: 2.5rem;
-	}
-}

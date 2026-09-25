@@ -55,7 +55,15 @@ $primary-tab-height: carbon.$spacing-08;
 	}
 }
 
+
 .properties-categories {
+	// Override to get bigger heading than components in the accordion, as specified by design.
+	.cds--accordion__item {
+		.cds--accordion__heading {
+			min-block-size: carbon.$spacing-09;
+		}
+	}
+
 	.properties-category-content .cds--accordion__content {
 		padding: carbon.$spacing-05;
 
