@@ -104,7 +104,6 @@ function mockConsole(consoleMethod) {
 		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message && typeof message === "string" && message.includes(ignoredMessage));
 		if (!hasIgnoredMessage) {
 			consoleMethod(message, ...args);
-			
 			unexpectedMessages.push(message);
 		}
 	};
