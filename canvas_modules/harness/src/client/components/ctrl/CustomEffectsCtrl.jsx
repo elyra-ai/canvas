@@ -235,6 +235,7 @@ class CustomEffectsCtrl extends React.Component {
 			onChange={this.handleDropdownChange}
 			selectedItem={dropOpts.selectedOption}
 			label={"T"}
+			titleText={"T"}
 		/>);
 		return (<div>
 			<span className="glmm-move-label">Type:</span>

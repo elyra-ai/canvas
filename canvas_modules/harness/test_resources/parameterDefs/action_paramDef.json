@@ -293,7 +293,9 @@
         "label": {
           "default": "Currency type"
         },
-        "description": "Try pressing the currency image",
+        "description": {
+          "default": "Try pressing the currency image"
+        },
         "control": "readonly",
         "action_ref": "currency"
       },

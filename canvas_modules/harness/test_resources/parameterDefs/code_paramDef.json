@@ -136,7 +136,7 @@
       },
       {
         "parameter_ref": "code_json",
-        "language": "json",
+        "language": "javascript",
         "enable_maximize": true,
         "data": {
           "tearsheet_ref": "tearsheet1"
