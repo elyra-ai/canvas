@@ -8,10 +8,12 @@
       "Field 2",
       false
     ],
-    "custom_name_checkbox": false,
-    "hidden_field": true,
-    "custom_name": "",
-    "annotation": [],
+    "layout_struct": [
+      true,
+      "",
+      false,
+      []
+    ],
     "options": " ",
     "option_one": [
       null,
