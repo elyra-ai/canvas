@@ -83,7 +83,6 @@ function mockConsole(consoleMethod) {
 		"[WARNING]: Control not found for annotation:",
 		"[WARNING]: Control not found for custom_name_checkbox:",
 		"[WARNING]: Control not found for defaultOperations:",
-		"[WARNING]: Control not found for default_boolean:",
 		"[WARNING]: Control not found for keys:",
 		"[WARNING]: Control not found for textfield:",
 		"[WARNING]: Ignoring unknown condition operation 'customSyntaxCheck' for parameter_ref expression:",
