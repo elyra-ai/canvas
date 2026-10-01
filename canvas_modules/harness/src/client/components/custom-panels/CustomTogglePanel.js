@@ -46,4 +46,10 @@ class CustomTogglePanel {
 	}
 }
 
+export class CustomTogglePanel2 extends CustomTogglePanel {
+	static id() {
+		return "harness-custom-toggle-panel2";
+	}
+}
+
 export default CustomTogglePanel;
