@@ -313,7 +313,7 @@
       {
         "parameter_ref": "meteor_showers",
         "label": {
-          "default": "Current meteoer showers"
+          "default": "Current meteor showers"
         },
         "description": {
           "default": "Try pressing the star image"

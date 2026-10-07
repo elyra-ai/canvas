@@ -2083,7 +2083,7 @@ describe("Properties Controller addRemoveRows", () => {
 
 		const parameters = Object.keys(structureListEditorParamDef.current_parameters);
 		parameters.forEach((parameterName) => {
-			if (parameterName === "inlineEditingTableNoButtons") { // 'add_remove_rows' is set to false in parameterDef
+			if (parameterName === "inlineEditingTableNoButtons" || parameterName === "inlineEditingTableError3") { // 'add_remove_rows' is set to false in parameterDef
 				expect(controller.getAddRemoveRows({ name: parameterName })).to.be.false;
 			} else {
 				expect(controller.getAddRemoveRows({ name: parameterName })).to.be.true;
