@@ -68,7 +68,7 @@ import Console from "./components/console/console.jsx";
 import SidePanel from "./components/sidepanel/sidepanel.jsx";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
-import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
+import CustomTogglePanel, { CustomTogglePanel2 } from "./components/custom-panels/CustomTogglePanel";
 import CustomButtonPanel from "./components/custom-panels/CustomButtonPanel";
 import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel";
 import EMMeansPanel from "./components/custom-panels/EMMeansPanel";
@@ -89,6 +89,7 @@ import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 import * as CustomOpFilterKeys from "./custom/condition-ops/customFilterKeys";
 import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDuplicates";
 import * as CustomRequiredColumn from "./custom/condition-ops/customRequiredColumn";
+import * as CustomTableUniqueValue from "./custom/condition-ops/customTableUniqueValue";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
@@ -929,6 +930,10 @@ class App extends React.Component {
 	}
 
 	setPropertiesJSON(propertiesJson) {
+		if (this.state.selectedPropertiesDropdownFile === "convertValueDataTypes_paramDef.json") {
+			window.console.warn("Warning: This param def file requires the convertValueDataTypes toggle to be switched on to prevent errors ");
+		}
+
 		this.setState({ propertiesJson: propertiesJson }, () => {
 			this.openPropertiesEditorDialog();
 		});
@@ -2257,12 +2262,12 @@ class App extends React.Component {
 				}}
 				propertiesInfo={this.state.propertiesInfo}
 				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel,
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomTogglePanel2,
 					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
 					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomFlexibleTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomOpFilterKeys, CustomOpFilterDuplicates, CustomRequiredColumn]}
+				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomOpFilterKeys, CustomOpFilterDuplicates, CustomRequiredColumn, CustomTableUniqueValue]}
 				customActions={[CustomOverflowAction]}
 				light={this.state.light}
 			/>);
@@ -2293,7 +2298,7 @@ class App extends React.Component {
 				}}
 				propertiesInfo={this.state.propertiesInfo2}
 				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomButtonPanel, CustomDatasetsPanel,
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomTogglePanel2, CustomButtonPanel, CustomDatasetsPanel,
 					EMMeansPanel, FixedEffectsPanel, RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
