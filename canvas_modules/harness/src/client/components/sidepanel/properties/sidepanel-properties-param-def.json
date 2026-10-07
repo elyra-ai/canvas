@@ -885,7 +885,7 @@
 						]
 					},
 					{
-						"id": "static-rows-panel",
+						"id": "active-tab-panel",
 						"type": "actionPanel",
 						"action_refs": [
 							"submit-active-tabs"

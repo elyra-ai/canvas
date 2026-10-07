@@ -245,6 +245,11 @@
       }
     },
     {
+      "id": "default_boolean",
+      "type": "boolean",
+      "default": true
+    },
+    {
       "id": "field_types",
       "type": "map[string,FieldStorageEntry]",
       "role": "column",
@@ -648,6 +653,12 @@
         }
       },
       {
+        "parameter_ref": "default_boolean",
+        "label": {
+          "default": "Default boolean"
+        }
+      },
+      {
         "parameter_ref": "sLE_DefaultSortOrder",
         "label": {
           "default": "Default sort order"
@@ -831,7 +842,8 @@
                 "id": "structureListEditor-default",
                 "parameter_refs": [
                   "structureListEditorDefault",
-                  "sLE_DefaultSortOrder"
+                  "sLE_DefaultSortOrder",
+                  "default_boolean"
                 ]
               }
             ]

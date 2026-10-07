@@ -679,7 +679,7 @@
             },
             "group_info": [
               {
-                "id": "readonlyTable",
+                "id": "readonlyTable-conditions",
                 "type": "controls",
                 "label": {
                   "default": "Readonly table conditions"

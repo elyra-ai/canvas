@@ -50,7 +50,7 @@
       "id": "field_types",
       "type": "map[string,fieldFilterEntry]",
       "role": "column",
-      "default": []
+      "default": {}
     },
     {
       "id": "custom_name",
@@ -64,12 +64,12 @@
       "enum": [
         "Add Description"
       ],
-      "default": ""
+      "default": false
     },
     {
       "id": "annotation",
       "type": "array[string]",
-      "default": "",
+      "default": [],
       "role": "new_column"
     }
   ],
@@ -79,7 +79,7 @@
     "label": {
       "default": "Filter Test"
     },
-    "editor_size": "max",
+    "editor_size": "large",
     "complex_type_info": [
       {
         "complex_type_ref": "fieldFilterEntry",
