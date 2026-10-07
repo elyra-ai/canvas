@@ -2270,7 +2270,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "Structure Table Inline Control",
+                "id": "Structure Table Inline Control - Objects",
                 "parameter_refs": [
                   "structurelisteditorObjectType",
                   "structurelisteditorDefaultObjectType"
@@ -2364,7 +2364,7 @@
             },
             "group_info": [
               {
-                "id": "Inline editing2",
+                "id": "Inline editing3",
                 "parameter_refs": [
                   "inlineEditingTableError3"
                 ]
@@ -2863,7 +2863,7 @@
     "textfield.desc": "",
     "sort_order.label": "Order",
     "sort_order.desc": "Update sort order",
-    "checkbox.label": "checkbo  x",
+    "checkbox.label": "checkbox",
     "checkbox.desc": "",
     "structurelisteditorObjectType.name.label": "Name",
     "structurelisteditorObjectType.name.desc": "Enter a name",

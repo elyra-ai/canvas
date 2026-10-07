@@ -981,7 +981,6 @@
 					"default": "BAD Functions"
 				},
 				"function_refs": [
-					"not_exist",
 					"no_parameter",
 					"no_description",
 					"no_parameter_type"
