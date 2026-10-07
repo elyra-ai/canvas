@@ -136,7 +136,7 @@
       },
       {
         "parameter_ref": "code_json",
-        "language": "javascript",
+        "language": "json",
         "enable_maximize": true,
         "data": {
           "tearsheet_ref": "tearsheet1"
@@ -150,8 +150,7 @@
         "text_before": {
           "default": "Press ctrl-space to autocomplete"
         },
-        "control": "code",
-        "class_name": "code-control-class"
+        "control": "code"
       },
       {
         "parameter_ref": "code_rows",

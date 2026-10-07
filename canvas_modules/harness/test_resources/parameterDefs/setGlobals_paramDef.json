@@ -266,6 +266,9 @@
           {
             "id": "globals",
             "type": "controls",
+            "label": {
+              "default": "Columns"
+            },
             "parameter_refs": [
               "globals"
             ]
@@ -283,6 +286,9 @@
           {
             "id": "defaultOperations",
             "type": "controls",
+            "label": {
+              "default": "Columns"
+            },
             "parameter_refs": [
               "defaultMean",
               "defaultSum",
@@ -555,7 +561,7 @@
     "globals.sdev.desc": "Standard Deviation of all appearances of this variable",
     "defaultOperations.label": "Default Operation(s)",
     "globalOptionsText.label": "Globals Options",
-    "globalOptionsText.description": "Set global expection behavior",
+    "globalOptionsText.description": "Set global expectation behavior",
     "defaultOperationsText.label": "Default Operations",
     "defaultOperationsText.description": "Choose default global operations for new fields",
     "tableMain.header": "Set Globals"
