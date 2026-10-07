@@ -419,6 +419,7 @@ class RandomEffectsPanel {
 			onChange={this.handleDropdownChange}
 			selectedItem={selectedObject}
 			label={label}
+			titleText={label}
 		/>);
 		const paramDef = this.getParamDef();
 		const ctrlLabel = paramDef.resources["random_effects_listStructure.SubjectSpec"];

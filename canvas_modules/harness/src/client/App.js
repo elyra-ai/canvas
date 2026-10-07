@@ -929,6 +929,10 @@ class App extends React.Component {
 	}
 
 	setPropertiesJSON(propertiesJson) {
+		if (this.state.selectedPropertiesDropdownFile === "convertValueDataTypes_paramDef.json") {
+			window.console.warn("Warning: This param def file requires the convertValueDataTypes toggle to be switched on to prevent errors ");
+		}
+
 		this.setState({ propertiesJson: propertiesJson }, () => {
 			this.openPropertiesEditorDialog();
 		});
