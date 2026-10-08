@@ -59,6 +59,9 @@ $row-left-padding: carbon.$spacing-02;
 	width: 100%;
 	position: relative;
 	overflow: hidden;
+	// Prevent the inner TanStack table (whose columns have explicit pixel widths) from
+	// inflating this container's width and triggering a ResizeObserver feedback loop.
+	contain: inline-size;
 	&.error {
 		border: 1px solid carbon.$support-error;
 	}
