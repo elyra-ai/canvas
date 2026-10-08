@@ -50,6 +50,8 @@ export default class PropertiesModal extends Component {
 					onSecondarySubmit={this.props.cancelHandler}
 					aria-label=""
 					size={modalSize}
+					selectorPrimaryFocus={this.props.selectorPrimaryFocus}
+					selectorsFloatingMenus={this.props.selectorsFloatingMenus}
 				>
 					<div className="properties-modal-children">
 						{this.props.children}
@@ -69,5 +71,7 @@ PropertiesModal.propTypes = {
 	showPropertiesButtons: PropTypes.bool,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
-	classNames: PropTypes.string
+	classNames: PropTypes.string,
+	selectorPrimaryFocus: PropTypes.string,
+	selectorsFloatingMenus: PropTypes.arrayOf(PropTypes.string)
 };
