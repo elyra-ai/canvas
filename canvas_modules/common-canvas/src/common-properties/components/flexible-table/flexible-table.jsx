@@ -114,7 +114,8 @@ class FlexibleTable extends React.Component {
 
 		if (prevProps.columns !== this.props.columns ||
 			prevProps.noAutoSize !== this.props.noAutoSize ||
-			prevState.availableWidth !== this.state.availableWidth
+			prevState.availableWidth !== this.state.availableWidth ||
+			prevState.headerHeight !== this.state.headerHeight
 		) {
 			this._adjustTableHeight();
 			this.calculateColumnWidths();
