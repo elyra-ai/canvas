@@ -80,17 +80,21 @@
 }
 
 .properties-title-heading {
-	padding: 0 carbon.$spacing-05 carbon.$spacing-02;
-	height: carbon.$spacing-06;
+	padding: 0 carbon.$spacing-05;
 	display: flex;
 	align-items: center;
 	.properties-title-heading-icon {
+		flex-shrink: 0; // prevent long label from squashing the icon
 		height: carbon.$spacing-06;
 		width: carbon.$spacing-06;
 		margin-right: carbon.$spacing-03;
 	}
 	.properties-title-heading-label {
 		@include carbon.type-style("label-01");
+		min-width: 0; // allow flex item to shrink below content size for truncation
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 	.properties-title-editor-btn.help {
 		&.help {
@@ -164,20 +168,24 @@
 	padding-right: carbon.$spacing-03;
 }
 
-// Close icon with heading
-.properties-title-with-heading > .properties-close-button {
-	position: absolute;
-	top: carbon.$spacing-03;
-	right: carbon.$spacing-03;
+// Close icon with heading — flex row keeps heading and close button on one line.
+.properties-title-with-heading {
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 0;
-}
+	flex-direction: row;
+	align-items: center; // vertically centre both heading and close button on the same line
+	justify-content: space-between;
 
-// When right flyout is under toolbar, position close button below the toolbar
-.right-flyout-panel.under-toolbar .properties-title-with-heading > .properties-close-button {
-	top: calc(carbon.$spacing-08 + carbon.$spacing-03); // toolbar height (32px) + original spacing (8px)
+	> .properties-title-heading {
+		flex: 1;
+		min-width: 0; // allow long heading text to truncate rather than overflow
+	}
+
+	> .properties-close-button {
+		flex-shrink: 0;
+		align-self: center; // ensure the button stays centred regardless of heading height
+		justify-content: center;
+		padding: 0 carbon.$spacing-03 0 0;
+	}
 }
 
 
