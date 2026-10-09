@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,9 @@ export default class SubPanelInvoker extends React.Component {
 	render() {
 		let propertiesDialog = [];
 		if (this.state.subPanelVisible && !this.props.rightFlyout) {
-			const className = this.props.controller.isTearsheetContainer() ? "properties-subpanel-modal-in-tearsheet" : "";
+			const className = this.props.controller.isTearsheetContainer()
+				? "properties-subpanel-modal-in-tearsheet"
+				: "properties-subpanel-modal";
 			propertiesDialog = (<PropertiesModal
 				title={this.state.title}
 				okHandler={this.hideSubDialog.bind(this, true)}
