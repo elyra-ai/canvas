@@ -1475,7 +1475,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "Numberfield",
+                "id": "Numberfield1",
                 "label": {
                   "default": "Numbers"
                 },
@@ -1489,7 +1489,7 @@
             ]
           },
           {
-            "id": "Numberfield",
+            "id": "Numberfield2",
             "label": {
               "default": "Numbers"
             },
@@ -1686,7 +1686,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "group1",
+                "id": "field_types_group",
                 "type": "controls",
                 "label": {
                   "default": "Fields"
@@ -1705,7 +1705,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "group1",
+                "id": "dummy_types_group",
                 "type": "columnSelection",
                 "label": {
                   "default": "Columns"

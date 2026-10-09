@@ -133,6 +133,7 @@ class CustomFlexibleTableCtrl extends React.Component {
 							checked={this.state.checkedAll === true || this.state.checkedRows[ridx]}
 							onChange={this.handleRowChecked.bind(this, ridx)}
 							hideLabel
+							labelText=""
 						/>
 					</div>)
 				}]
@@ -143,8 +144,10 @@ class CustomFlexibleTableCtrl extends React.Component {
 						column: this.headers[cidx].key,
 						content: (<div>
 							<TextInput
+								id={"custom-ft-text_input-value-" + cidx}
 								defaultValue={`${this.headers[cidx].label} row ${ridx}`}
 								size="sm"
+								labelText=""
 							/>
 						</div>)
 					});

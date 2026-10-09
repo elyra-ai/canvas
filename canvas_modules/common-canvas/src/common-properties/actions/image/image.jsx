@@ -85,6 +85,7 @@ class ImageAction extends React.Component {
 			{ "right": this.props.action.image.placement === "right" }, { "hide": this.props.state === STATES.HIDDEN },
 			{ "disabled": disabled }, customClassName);
 
+		const iconDescription = this.props.action?.description?.text || this.props.action?.label?.text;
 		const image = (
 			<Button
 				data-id={this.props.action.name}
@@ -92,7 +93,7 @@ class ImageAction extends React.Component {
 				className="properties-action-image-button"
 				onClick={this.applyAction}
 				kind="ghost"
-				iconDescription={this.props.action?.description?.text} // Text to appear in Tooltip
+				iconDescription={iconDescription} // Text to appear in Tooltip
 				style={this.imageStyle}
 				disabled={disabled}
 				// Ensures the button is treated as icon-only when a description is present,

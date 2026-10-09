@@ -28,12 +28,14 @@ class CustomToggleCtrl extends React.Component {
 
 	handleChange(checked) {
 		this.props.controller.updatePropertyValue(this.props.propertyId, checked);
-		if (checked) {
-			this.props.controller.updateControlEnumValues({ name: "colors" },
-				[{ value: "green", label: "Green" }, { value: "yellow", label: "Yellow" }]);
-		} else {
-			this.props.controller.updateControlEnumValues({ name: "colors" },
-				[{ value: "blue", label: "Blue" }, { value: "red", label: "Red" }, { value: "black", label: "Black" }]);
+		if (this.props.controller.getControl({ name: "colors" })) {
+			if (checked) {
+				this.props.controller.updateControlEnumValues({ name: "colors" },
+					[{ value: "green", label: "Green" }, { value: "yellow", label: "Yellow" }]);
+			} else {
+				this.props.controller.updateControlEnumValues({ name: "colors" },
+					[{ value: "blue", label: "Blue" }, { value: "red", label: "Red" }, { value: "black", label: "Black" }]);
+			}
 		}
 	}
 	render() {

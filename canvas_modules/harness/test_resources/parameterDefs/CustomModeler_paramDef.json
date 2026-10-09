@@ -355,7 +355,7 @@
       }
     }
   ],
-  "dataset_metadata": {
+  "dataset_metadata": [{
     "fields": [
       {
         "name": "Field 1",
@@ -466,7 +466,7 @@
         }
       }
     ]
-  },
+  }],
   "resources": {
     "include_from.main.label": "Main dataset only",
     "include_from.all.label": "All datasets"

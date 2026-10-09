@@ -128,6 +128,31 @@ describe("code control tests", () => {
 	});
 });
 
+describe("code_paramDef uihints language field", () => {
+	it("parameter_info entry for 'code_json' has language set to 'json'", () => {
+		const paramInfo = CodeParamdef.uihints.parameter_info;
+		const codeJsonEntry = paramInfo.find((p) => p.parameter_ref === "code_json");
+		expect(codeJsonEntry).to.exist;
+		expect(codeJsonEntry.language).to.equal("json");
+	});
+
+	it("only 'code_json' parameter_info entry has language set to 'json'", () => {
+		const paramInfo = CodeParamdef.uihints.parameter_info;
+		const jsonLanguageEntries = paramInfo.filter((p) => p.language === "json");
+		expect(jsonLanguageEntries).to.have.length(1);
+		expect(jsonLanguageEntries[0].parameter_ref).to.equal("code_json");
+	});
+
+	it("all code control entries with a 'language' field have a non-empty string value", () => {
+		const paramInfo = CodeParamdef.uihints.parameter_info;
+		const entriesWithLanguage = paramInfo.filter((p) => Object.prototype.hasOwnProperty.call(p, "language"));
+		entriesWithLanguage.forEach((entry) => {
+			expect(entry.language).to.be.a("string");
+			expect(entry.language.length).to.be.greaterThan(0);
+		});
+	});
+});
+
 describe("code classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
