@@ -627,6 +627,7 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
+					selectorsFloatingMenus={[".properties-subpanel-popup"]}
 				>
 					{editorForm}
 				</PropertiesModal>);
