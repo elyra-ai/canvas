@@ -114,7 +114,8 @@ class FlexibleTable extends React.Component {
 
 		if (prevProps.columns !== this.props.columns ||
 			prevProps.noAutoSize !== this.props.noAutoSize ||
-			prevState.availableWidth !== this.state.availableWidth
+			prevState.availableWidth !== this.state.availableWidth ||
+			prevState.headerHeight !== this.state.headerHeight
 		) {
 			this._adjustTableHeight();
 			this.calculateColumnWidths();
@@ -308,7 +309,12 @@ class FlexibleTable extends React.Component {
 	}
 
 	_updateTableWidth(contentRect, target) {
-		const tableWidth = Math.floor(target?.childNodes?.[0].childNodes?.[0]?.clientWidth) || contentRect.width;
+		// For the TanStack grid the inner table's clientWidth is driven by column widths, not
+		// by the container, so reading it would cause a feedback loop. Use contentRect.width
+		// (the observed container element's layout size) directly instead.
+		const tableWidth = this.props.enableTanstackTable
+			? Math.floor(contentRect.width)
+			: Math.floor(target?.childNodes?.[0].childNodes?.[0]?.clientWidth) || contentRect.width;
 		if (!tableWidth || tableWidth <= 0) {
 			return;
 		}
