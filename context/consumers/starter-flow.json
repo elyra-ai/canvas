@@ -1,0 +1,132 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "starter-flow-001",
+  "primary_pipeline": "starter-pipeline-001",
+  "pipelines": [
+    {
+      "id": "starter-pipeline-001",
+      "nodes": [
+        {
+          "id": "node-source-001",
+          "type": "binding",
+          "op": "source",
+          "app_data": {
+            "ui_data": {
+              "label": "Data Source",
+              "description": "Reads data from an external source",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%234CAF50'/><rect x='10' y='14' width='12' height='2' fill='white'/><rect x='10' y='10' width='12' height='2' fill='white'/><rect x='10' y='18' width='12' height='2' fill='white'/></svg>",
+              "x_pos": 80,
+              "y_pos": 180
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": -1 },
+                  "label": "Output"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-filter-001",
+          "type": "execution_node",
+          "op": "filter",
+          "app_data": {
+            "ui_data": {
+              "label": "Filter",
+              "description": "Filter rows based on a condition",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%23FF9800'/><path d='M10 11 L22 11 L18 17 L18 22 L14 22 L14 17 Z' fill='white'/></svg>",
+              "x_pos": 320,
+              "y_pos": 180
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": 1 },
+                  "label": "Input"
+                }
+              },
+              "links": [
+                {
+                  "id": "link-001",
+                  "node_id_ref": "node-source-001",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": -1 },
+                  "label": "Output"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-output-001",
+          "type": "binding",
+          "op": "output",
+          "app_data": {
+            "ui_data": {
+              "label": "Data Output",
+              "description": "Write processed data to a destination",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='6' y='6' width='20' height='20' rx='3' fill='%23607D8B'/><path d='M16 10 L16 20 M16 20 L12 16 M16 20 L20 16' stroke='white' stroke-width='2' fill='none'/></svg>",
+              "x_pos": 560,
+              "y_pos": 180
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": 1 },
+                  "label": "Input"
+                }
+              },
+              "links": [
+                {
+                  "id": "link-002",
+                  "node_id_ref": "node-filter-001",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "comment-001",
+              "x_pos": 80,
+              "y_pos": 80,
+              "width": 500,
+              "height": 60,
+              "class_name": "d3-comment-rect",
+              "content": "👋 Starter flow — 3 connected nodes. Edit labels by double-clicking. Drag from palette to add more nodes.",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}

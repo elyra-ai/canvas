@@ -1,0 +1,227 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "id": "sources",
+      "label": "Sources",
+      "description": "Data input nodes",
+      "image": "",
+      "node_types": [
+        {
+          "id": "",
+          "type": "binding",
+          "op": "source",
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": -1 },
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Data Source",
+              "description": "Reads data from an external source",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%234CAF50'/><rect x='10' y='14' width='12' height='2' fill='white'/><rect x='10' y='10' width='12' height='2' fill='white'/><rect x='10' y='18' width='12' height='2' fill='white'/></svg>",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "binding",
+          "op": "file-input",
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": -1 },
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "File Input",
+              "description": "Read data from a file (CSV, JSON, etc.)",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='6' y='4' width='14' height='24' rx='2' fill='%232196F3'/><path d='M20 4 L26 10 L20 10 Z' fill='%231565C0'/><rect x='10' y='14' width='12' height='2' fill='white'/><rect x='10' y='18' width='8' height='2' fill='white'/></svg>",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "transform",
+      "label": "Transform",
+      "description": "Data transformation and processing nodes",
+      "image": "",
+      "node_types": [
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "filter",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": 1 },
+                  "label": "Input"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": -1 },
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Filter",
+              "description": "Filter rows based on a condition",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%23FF9800'/><path d='M10 11 L22 11 L18 17 L18 22 L14 22 L14 17 Z' fill='white'/></svg>",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "sort",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": 1 },
+                  "label": "Input"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": -1 },
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Sort",
+              "description": "Sort rows by one or more columns",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%239C27B0'/><path d='M12 10 L12 22 M12 22 L9 18 M12 22 L15 18' stroke='white' stroke-width='2' fill='none'/><path d='M20 22 L20 10 M20 10 L17 14 M20 10 L23 14' stroke='white' stroke-width='2' fill='none'/></svg>",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "join",
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": 1 },
+                  "label": "Left Input"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": 1 },
+                  "label": "Right Input"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": -1 },
+                  "label": "Output"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Join",
+              "description": "Join two datasets on a common key",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='12' cy='16' r='8' fill='%232196F3' fill-opacity='0.7'/><circle cx='20' cy='16' r='8' fill='%23F44336' fill-opacity='0.7'/></svg>",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "outputs",
+      "label": "Outputs",
+      "description": "Data output and export nodes",
+      "image": "",
+      "node_types": [
+        {
+          "id": "",
+          "type": "binding",
+          "op": "output",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": { "min": 0, "max": 1 },
+                  "label": "Input"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Data Output",
+              "description": "Write processed data to a destination",
+              "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='6' y='6' width='20' height='20' rx='3' fill='%23607D8B'/><path d='M16 10 L16 20 M16 20 L12 16 M16 20 L20 16' stroke='white' stroke-width='2' fill='none'/></svg>",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
