@@ -349,7 +349,7 @@ describe("title-editor renders correctly", () => {
 		);
 		const { container } = wrapper;
 		expect(container.getElementsByClassName("properties-title-heading")).to.have.length(1);
-		expect(container.getElementsByClassName("properties-title-editor properties-title-with-heading")).to.have.length(1);
+		expect(container.getElementsByClassName("properties-title-with-heading")).to.have.length(1);
 		expect(container.getElementsByClassName("properties-title-heading-label")).to.have.length(1);
 	});
 	it("heading should not render if disabled", () => {
