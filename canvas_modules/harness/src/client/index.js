@@ -19,6 +19,7 @@ import { createRoot } from "react-dom/client.js";
 
 import CommonPropertiesComponents from "./components/common-properties-components.jsx";
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
+import StudioPage from "./components/studio/StudioPage.jsx";
 import App from "./App.js";
 import AppSmall from "./app-small.js";
 import AppTiny from "./app-tiny.js";
@@ -38,6 +39,7 @@ root.render(
 				<Route exact path="/app-tiny-ts" component={ AppTinyTS } />
 				<Route path="/properties" component={ CommonPropertiesComponents } />
 				<Route path="/conditions" component={ CommonPropertiesConditions } />
+				<Route exact path="/studio" component={ StudioPage } />
 			</div>
 		</IntlProvider>
 	</HashRouter>
