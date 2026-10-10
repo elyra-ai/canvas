@@ -47,7 +47,9 @@ export default class PropertiesController {
 			tooltipLinkHandler: null,
 			propertyIconHandler: null,
 			filterItemsHandler: null,
-			panelTitleHandler: null
+			panelTitleHandler: null,
+			expressionLanguageHandler: null,
+			expressionVariablesHandler: null
 		};
 		this.propertiesConfig = {};
 		this.visibleDefinitions = {};

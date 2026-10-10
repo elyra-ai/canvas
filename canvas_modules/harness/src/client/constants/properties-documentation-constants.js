@@ -1716,6 +1716,50 @@ export const EXPRESSION_PROPS_INFO = {
 		]
 	}
 };
+export const EXPRESSION_JUEL_PROPS_INFO = {
+	"title": "Expression Title (Custom Language)",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: Expression (Custom Language — JUEL)",
+			"editable": false
+		},
+		"current_parameters": {
+			"juelExpression": ""
+		},
+		"parameters": [
+			{
+				"id": "juelExpression",
+				"type": "string",
+				"default": "",
+				"role": "expression"
+			}
+		],
+		"uihints": {
+			"id": "juelExpression",
+			"parameter_info": [
+				{
+					"parameter_ref": "juelExpression",
+					"language": "juel",
+					"label": {
+						"default": "JUEL Expression"
+					},
+					"description": {
+						"default": "Press Ctrl+Space to see variables supplied by expressionVariablesHandler"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "JUEL Expression Control",
+					"type": "controls",
+					"parameter_refs": [
+						"juelExpression"
+					]
+				}
+			]
+		}
+	}
+};
 export const CODE_PROPS_INFO = {
 	"title": "Code Title",
 	"parameterDef": {
