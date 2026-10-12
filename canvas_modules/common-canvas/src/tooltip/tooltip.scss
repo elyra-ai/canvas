@@ -46,6 +46,13 @@
 			color: carbon.$link-inverse;
 			text-decoration: underline;
 		}
+		&:focus:not(:focus-visible) {
+			outline: none;
+		}
+		&:focus-visible {
+			outline: 1px solid carbon.$focus-inverse;
+			outline-offset: carbon.$spacing-01;
+		}
 	}
 }
 
