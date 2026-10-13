@@ -99,6 +99,9 @@ class ImageAction extends React.Component {
 				// Ensures the button is treated as icon-only when a description is present,
 				// preventing an empty tooltip from appearing.
 				hasIconOnly={Boolean(this.props.action.description?.text)}
+				// Position the tooltip with floating-ui so it flips/shifts to stay fully visible
+				// instead of being clipped by containers with overflow hidden.
+				autoAlign
 			/>
 		);
 
