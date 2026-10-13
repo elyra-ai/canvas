@@ -392,9 +392,16 @@ class ToolTip extends React.Component {
 	// Handles mouseover events on the document to detect when the user hovers
 	// over a different tooltip trigger element. If detected, closes the current
 	// tooltip to prevent multiple tooltips from being displayed simultaneously.
+	// Other triggers are either this component's own triggers or Carbon tooltip
+	// triggers (eg. icon-only buttons and images).
+	// Hovering over an information icon (a click-activated trigger) never closes an open tooltip.
 	handleMouseOverOtherTrigger(evt) {
-		const target = evt.target.closest(".tooltip-trigger");
-		if (target && target !== this.triggerRef && this.state.isTooltipVisible) {
+		if (!this.state.isTooltipVisible) {
+			return;
+		}
+		const target = evt.target.closest(".tooltip-trigger, .cds--tooltip-trigger__wrapper");
+		if (target && !target.classList.contains("tooltip-trigger-click") &&
+			target !== this.triggerRef && !this.triggerRef?.contains(target)) {
 			this.setTooltipVisible(false);
 		}
 	}
@@ -581,7 +588,11 @@ class ToolTip extends React.Component {
 						}}
 						onMouseLeave={() => {
 							this.inTooltip = false;
-							this.setTooltipVisible(false);
+							// Tooltips opened by clicking an information icon stay open when the cursor leaves the tooltip.
+							// They are closed by clicking the icon again, pressing Escape, or moving focus elsewhere.
+							if (!this.props.showToolTipOnClick) {
+								this.setTooltipVisible(false);
+							}
 						}}
 						// Stop event propagation to prevent tooltip from performing toolbar button click
 						onClick={this.stopEventPropagation}
