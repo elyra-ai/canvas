@@ -20,6 +20,15 @@
 	height: 100%;
 }
 
+// Trigger of tooltips shown on click (information icons). Use the standard Carbon focus indicator.
+.tooltip-trigger-click {
+	outline: none;
+	&:focus {
+		outline: 1px solid carbon.$focus;
+		outline-offset: 0;
+	}
+}
+
 .common-canvas-tooltip {
 	font-size: 12px;
 	position: fixed;
