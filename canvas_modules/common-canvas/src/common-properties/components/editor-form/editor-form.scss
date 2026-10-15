@@ -55,6 +55,10 @@ $primary-tab-height: carbon.$spacing-08;
 	}
 }
 
+.properties-primaryTabs {
+	padding-left: carbon.$spacing-05;
+}
+
 
 .properties-categories {
 	// Override to get bigger heading than components in the accordion, as specified by design.
