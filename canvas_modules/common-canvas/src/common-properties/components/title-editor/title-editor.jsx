@@ -275,11 +275,15 @@ class TitleEditor extends Component {
 
 		return (
 			<div className={classNames("properties-title-editor",
-				{ "properties-title-with-heading": this.headingEnabled },
 				{ "properties-title-right-flyout-tabs-view": this.props.rightFlyoutTabsView })}
 			>
-				{closeButton}
-				{heading}
+				{this.headingEnabled
+					? (<div className="properties-title-with-heading">
+						{heading}
+						{closeButton}
+					</div>)
+					: closeButton
+				}
 				<div className={classNames(
 					"properties-title-editor-input",
 					{
