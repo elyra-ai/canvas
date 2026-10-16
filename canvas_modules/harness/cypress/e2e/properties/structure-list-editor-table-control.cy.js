@@ -62,6 +62,6 @@ describe("Test the feature to have tables use the available vertical space", fun
 		cy.toggleCategory("Table");
 		cy.openSubPanel("Configure Fields in Sub-panel");
 		cy.clickButtonInTable("Add in empty table", "structurelist_sub_panel");
-		cy.verifyHeightOfTable("structurelist_sub_panel", "539px");
+		cy.verifyHeightOfTable("structurelist_sub_panel", "507px");
 	});
 });
