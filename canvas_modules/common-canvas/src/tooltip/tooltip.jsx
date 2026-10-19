@@ -95,9 +95,12 @@ class ToolTip extends React.Component {
 
 					// Focus on link when tooltip with link is opened. The setState callback ensures
 					// the link element has been rendered to the DOM before we try to query and focus it.
-					const linkElement = this.targetRef?.querySelector("a");
-					if (linkElement) {
-						linkElement.focus();
+					// Tooltips shown on click (information icons) keep focus on the trigger instead.
+					if (!this.props.showToolTipOnClick) {
+						const linkElement = this.targetRef?.querySelector("a");
+						if (linkElement) {
+							linkElement.focus();
+						}
 					}
 				}
 			});
@@ -106,12 +109,35 @@ class ToolTip extends React.Component {
 
 	setKeyPressed(evt) {
 		if (evt.key === "Tab") {
-			this.tabKeyPressed = true;
+			const firstTabbable = !evt.shiftKey && this.state.isTooltipVisible
+				? this.getFirstTabbableInTooltip()
+				: null;
+			if (firstTabbable) {
+				// Move focus into the open tooltip. tabKeyPressed is not set so the trigger's
+				// onBlur keeps the tooltip open because focus moves to an element inside it.
+				evt.preventDefault();
+				firstTabbable.focus();
+			} else {
+				// No tabbable tooltip content (or shift-tab). The tooltip closes on blur and focus
+				// moves natively to the adjacent component.
+				this.tabKeyPressed = true;
+			}
+		}
+		if ((evt.key === "Enter" || evt.key === " ") && evt.target === evt.currentTarget) {
+			// Open the tooltip and keep focus on the trigger
+			evt.preventDefault();
+			this.setTooltipVisible(true);
 		}
 		if (evt.key === "Escape") {
 			this.triggerRef.focus();
 			this.setTooltipVisible(false);
 		}
+	}
+
+	getFirstTabbableInTooltip() {
+		return this.targetRef?.querySelector(
+			"a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])"
+		) || null;
 	}
 
 	getStyleValue(value) {
@@ -176,18 +202,6 @@ class ToolTip extends React.Component {
 			return canDisplayFullText;
 		}
 		return false; // Show tooltip if we cannot read the width (Canvas objects)
-	}
-
-	showTooltipWithDelay() {
-
-		// set a delay on displaying the tooltip
-		if (!this.pendingTooltip && this.showTooltip()) {
-			const that = this;
-			this.pendingTooltip = setTimeout(function() {
-				that.setTooltipVisible(true);
-			}, this.props.delay);
-		}
-
 	}
 
 	updateTooltipLayout(tooltip, tooltipTrigger, direction) {
@@ -378,9 +392,16 @@ class ToolTip extends React.Component {
 	// Handles mouseover events on the document to detect when the user hovers
 	// over a different tooltip trigger element. If detected, closes the current
 	// tooltip to prevent multiple tooltips from being displayed simultaneously.
+	// Other triggers are either this component's own triggers or Carbon tooltip
+	// triggers (eg. icon-only buttons and images).
+	// Hovering over an information icon (a click-activated trigger) never closes an open tooltip.
 	handleMouseOverOtherTrigger(evt) {
-		const target = evt.target.closest(".tooltip-trigger");
-		if (target && target !== this.triggerRef && this.state.isTooltipVisible) {
+		if (!this.state.isTooltipVisible) {
+			return;
+		}
+		const target = evt.target.closest(".tooltip-trigger, .cds--tooltip-trigger__wrapper");
+		if (target && !target.classList.contains("tooltip-trigger-click") &&
+			target !== this.triggerRef && !this.triggerRef?.contains(target)) {
 			this.setTooltipVisible(false);
 		}
 	}
@@ -408,9 +429,9 @@ class ToolTip extends React.Component {
 			// Ref - https://stackoverflow.com/a/49512400
 			const onKeyDown = (evt) => this.setKeyPressed(evt);
 			const onFocus = () => {
-				if (this.props.showToolTipOnClick) {
-					this.showTooltipWithDelay();
-				} else {
+				// Tooltips shown on click (information icons) do not open on focus. They open
+				// on click, or on Enter/Space while the trigger has focus.
+				if (!this.props.showToolTipOnClick) {
 					// For regular hover tooltips, show immediately on focus for better keyboard accessibility
 					this.setTooltipVisible(true);
 				}
@@ -443,7 +464,7 @@ class ToolTip extends React.Component {
 
 			triggerContent = (<div
 				data-id={`${this.uuid}-${this.props.id}-trigger`}
-				className="tooltip-trigger"
+				className={this.props.showToolTipOnClick ? "tooltip-trigger tooltip-trigger-click" : "tooltip-trigger"}
 				onMouseOver={!this.props.showToolTipOnClick ? mouseover : null}
 				onMouseLeave={!this.props.showToolTipOnClick ? mouseleave : null}
 				onMouseDown={!this.props.showToolTipOnClick ? mousedown : null}
@@ -567,7 +588,11 @@ class ToolTip extends React.Component {
 						}}
 						onMouseLeave={() => {
 							this.inTooltip = false;
-							this.setTooltipVisible(false);
+							// Tooltips opened by clicking an information icon stay open when the cursor leaves the tooltip.
+							// They are closed by clicking the icon again, pressing Escape, or moving focus elsewhere.
+							if (!this.props.showToolTipOnClick) {
+								this.setTooltipVisible(false);
+							}
 						}}
 						// Stop event propagation to prevent tooltip from performing toolbar button click
 						onClick={this.stopEventPropagation}

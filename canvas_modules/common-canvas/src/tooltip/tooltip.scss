@@ -20,6 +20,15 @@
 	height: 100%;
 }
 
+// Trigger of tooltips shown on click (information icons). Use the standard Carbon focus indicator.
+.tooltip-trigger-click {
+	outline: none;
+	&:focus {
+		outline: 1px solid carbon.$focus;
+		outline-offset: 0;
+	}
+}
+
 .common-canvas-tooltip {
 	font-size: 12px;
 	position: fixed;
@@ -36,16 +45,30 @@
 	max-width: 228px;
 	border-radius: carbon.$spacing-01;
 	white-space: pre-wrap; // Add a line break for \n in tooltip
-	.cds--link {
-		display: block;
-		color: carbon.$link-inverse;
-		margin-top: carbon.$spacing-05;
-		pointer-events: auto; // To make link clickable inside tooltip
-		cursor: pointer;
-		&:hover {
-			color: carbon.$link-inverse;
+	// Set Carbon's link custom properties so .cds--link picks up inverse
+	// colors automatically — same approach as Carbon's own toggletip.
+	--cds-link-text-color: #{carbon.$link-inverse};
+	--cds-link-hover-text-color: #{carbon.$link-inverse-hover};
+	--cds-link-visited-text-color: #{carbon.$link-inverse-visited};
+	--cds-link-focus-text-color: #{carbon.$focus-inverse};
+
+	// The div[role="button"] wrapping the link is the tab stop, not the <a>
+	// itself. Suppress the browser default ring on the wrapper and instead
+	// draw Carbon's own focus indicator (white, square-cornered) on the link
+	// whenever the wrapper is focused.
+	[role="button"] {
+		outline: none;
+		&:focus .cds--link,
+		&:focus-visible .cds--link {
+			outline: 1px solid carbon.$focus-inverse;
 			text-decoration: underline;
 		}
+	}
+
+	.cds--link {
+		display: block;
+		margin-top: carbon.$spacing-05;
+		pointer-events: auto; // To make link clickable inside tooltip
 	}
 }
 
