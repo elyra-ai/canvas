@@ -112,6 +112,15 @@ beforeEach(() => {
 		configurable: true,
 		value: 1000
 	});
+	// virtual-core >= 3.19.6 measures the scroll viewport using client dimensions
+	Object.defineProperty(HTMLElement.prototype, "clientHeight", {
+		configurable: true,
+		value: 1000
+	});
+	Object.defineProperty(HTMLElement.prototype, "clientWidth", {
+		configurable: true,
+		value: 1000
+	});
 });
 
 // Fail the test if any unexpected console.warn/console.error message was
