@@ -97,13 +97,23 @@ const VirtualizedGrid = (props) => {
 		enableSortingRemoval: false // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
 	});
 
-	// Calculate column sizes when changed from resizing
+	// Calculate column sizes when changed from resizing.
+	// When columns change (e.g. FlexibleTable recalculates widths after a nested panel expands),
+	// TanStack's columnSizingInfo only tracks user drag-resizes and does not update from new
+	// column `size` definitions. In that case we fall back to props.columns[idx].width so the
+	// fresh widths are used without mutating TanStack's internal state (which would cause an
+	// infinite update loop via resizeItem side-effects).
 	const colSizes = React.useMemo(() => {
 		const virtualizedItems = columnVirtualizer.getMeasurements();
 		const headers = table.getLeafHeaders();
+		const hasUserResized = Object.keys(table.getState().columnSizing).length > 0;
 		const colSizeDefs = {};
 		headers.forEach((header, idx) => {
-			colSizeDefs[idx] = header.column.getSize();
+			// When no user drag-resize has occurred, read directly from the column definition
+			// so that prop-driven width recalculations (e.g. from container resize) take effect.
+			colSizeDefs[idx] = hasUserResized
+				? header.column.getSize()
+				: (props.columns[idx]?.width || header.column.getSize());
 
 			// This is needed for scrolling smoothly
 			if (virtualizedItems[idx].size !== colSizeDefs[idx]) {
@@ -111,20 +121,22 @@ const VirtualizedGrid = (props) => {
 			}
 		});
 		return colSizeDefs;
-	}, [table.getState().columnSizingInfo, columns, props.excessWidth]);
+	}, [table.getState().columnSizingInfo, columns]);
 
+	// Notify FlexibleTable of the current total column width so it can recalculate
+	// excessWidth (the trailing spacer). This must fire on colSizes changes — not just
+	// on columnSizingInfo — so that prop-driven width recalculations (e.g. container
+	// resize after a nested panel expands) also update the spacer and remove the scrollbar.
 	useEffect(() => {
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
 			return;
 		}
 		if (props.onColumnResize) {
-			const totalWidth = table.getLeafHeaders().reduce((sum, header, idx) =>
-				sum + Math.max(header.column.getSize(), props.columns[idx]?.width || 0)
-			, 0);
+			const totalWidth = Object.values(colSizes).reduce((sum, w) => sum + w, 0);
 			props.onColumnResize(totalWidth);
 		}
-	}, [table.getState().columnSizingInfo]);
+	}, [colSizes]);
 
 	useEffect(() => {
 		if (props.onSort && table.getState().sorting.length > 0) {
