@@ -2301,7 +2301,7 @@ class CommonPropertiesComponents extends React.Component {
 					propertiesInfo={this.state.rightFlyoutContent}
 					callbacks={{ actionHandler: this.flyoutActionHandler, controllerHandler: this.flyoutControllerHandler }}
 					propertiesConfig={{ containerType: "Custom", rightFlyout: true, enableResize: false }}
-				/>);
+				/>
 			</div>);
 		}
 
