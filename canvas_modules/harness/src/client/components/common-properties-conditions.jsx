@@ -1288,7 +1288,7 @@ class CommonPropertiesComponents extends React.Component {
 				<CommonProperties
 					propertiesInfo={this.state.rightFlyoutContent}
 					propertiesConfig={{ containerType: "Custom", rightFlyout: true }}
-				/>);
+				/>
 			</div>);
 		}
 
