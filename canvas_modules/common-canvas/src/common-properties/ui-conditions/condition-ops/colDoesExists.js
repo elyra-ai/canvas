@@ -44,6 +44,10 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		}
 		return typeof valueInDataset(dataModelFields, paramInfo.value) !== "undefined";
 	}
+	case "structuretable":
+	case "structurelisteditor":
+		// No column validation is performed for the table as a whole.
+		return true;
 	default:
 		logger.warn("Ignoring unsupported condition operation 'colDoesExists' for control type " + controlType);
 		return true;
