@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,10 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		}
 		return typeof valueInDataset(dataModelFields, paramInfo.value) !== "undefined";
 	}
+	case "structuretable":
+	case "structurelisteditor":
+		// No column validation is performed for the table as a whole.
+		return true;
 	default:
 		logger.warn("Ignoring unsupported condition operation 'colDoesExists' for control type " + controlType);
 		return true;
