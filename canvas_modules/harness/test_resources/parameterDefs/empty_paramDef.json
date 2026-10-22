@@ -8,8 +8,7 @@
     "label": {
       "default": "Empty parameter definition",
       "resource_key": "emptyDefinition.uihints.label"
-    },
-    "help": {}
+    }
   },
   "resources": {
     "emptyDefinition.uihints.label": "Empty Definition Label"

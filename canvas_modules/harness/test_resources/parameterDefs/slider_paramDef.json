@@ -108,7 +108,7 @@
         "min_value": 10,
         "max_value": 100,
         "increment": 10,
-        "class_name": "slider-control-class",
+        "class_name": "slider-control-readonly-class",
         "read_only": true
       },
       {
@@ -195,7 +195,7 @@
         "control": "slider",
         "min_value": 10,
         "max_value": 100,
-        "increment": 1,
+        "increment": 10,
         "description": {
           "default": "Slider error with range more than Max'"
         }
@@ -349,7 +349,7 @@
     }
   ],
   "resources": {
-    "slider.min.label": "Min",
+    "slider.min.label": "MinLabelWIthLongText",
     "slider.max.label": "Max"
   }
 }

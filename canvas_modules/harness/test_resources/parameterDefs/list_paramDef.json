@@ -8,7 +8,7 @@
       "list item 2",
       "list item 3"
     ],
-    "list_readonly": [
+    "list_string_readonly": [
       "list item 1",
       "list item 2",
       "list item 3"
@@ -53,7 +53,7 @@
       "type": "array[string]"
     },
     {
-      "id": "list_readonly",
+      "id": "list_string_readonly",
       "type": "array[string]"
     },
     {
@@ -171,7 +171,7 @@
         "class_name": "string-list-control-class"
       },
       {
-        "parameter_ref": "list_readonly",
+        "parameter_ref": "list_string_readonly",
         "label": {
           "default": "readonly list of strings"
         },
@@ -386,7 +386,7 @@
         "type": "controls",
         "parameter_refs": [
           "list_string",
-          "list_readonly",
+          "list_string_readonly",
           "list_integer"
         ]
       },

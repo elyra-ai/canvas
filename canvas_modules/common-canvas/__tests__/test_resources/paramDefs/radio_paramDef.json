@@ -289,12 +289,13 @@
       {
         "parameter_ref": "radioString_readonly",
         "label": {
-          "default": "Radio String"
+          "default": "Readonly Radio String"
         },
         "description": {
           "default": "Readonly RadioSet with enum string type"
         },
         "resource_key": "withradioString",
+        "class_name": "radioset-control-readonly-class",
         "helper_text": {
           "default": "Readonly RadioSet with enum string type"
         },

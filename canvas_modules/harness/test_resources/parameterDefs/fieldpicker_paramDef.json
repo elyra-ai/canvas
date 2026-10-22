@@ -204,7 +204,7 @@
             "modeling_role": "input"
           }
         },
-				{
+        {
           "name": "Vector",
           "type": "vectorType",
           "metadata": {

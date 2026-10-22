@@ -7,6 +7,10 @@
       "orange",
       "green"
     ],
+    "readonly_someofselect": [
+      "orange",
+      "green"
+    ],
     "someofselect_null": null,
     "someofselect_empty_array": [],
     "someofselect_error": [
@@ -32,6 +36,19 @@
   "parameters": [
     {
       "id": "someofselect",
+      "type": "array[string]",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "readonly_someofselect",
       "type": "array[string]",
       "enum": [
         "red",
@@ -194,6 +211,17 @@
         "class_name": "someofselect-control-class"
       },
       {
+        "parameter_ref": "readonly_someofselect",
+        "label": {
+          "default": "Readonly someofselect"
+        },
+        "description": {
+          "default": "readonly someofselect with parameter value set to 'blue'"
+        },
+        "class_name": "readonly-someofselect-control-class",
+        "read_only": true
+      },
+      {
         "parameter_ref": "someofselect_null",
         "label": {
           "default": "someofselect null"
@@ -303,6 +331,7 @@
         "type": "controls",
         "parameter_refs": [
           "someofselect",
+          "readonly_someofselect",
           "someofselect_null",
           "someofselect_empty_array",
           "someofselect_undefined",

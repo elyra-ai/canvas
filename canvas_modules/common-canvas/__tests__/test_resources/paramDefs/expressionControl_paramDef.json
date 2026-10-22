@@ -139,7 +139,7 @@
         "parameter_ref": "expression_readonly",
         "language": "CLEM",
         "label": {
-          "default": "Expression"
+          "default": "Readonly Expression"
         },
         "description": {
           "default": "Enter a Clem expression"

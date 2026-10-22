@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "toggle_null": null,
+    "toggle_readonly": true,
     "toggle_error": false,
     "toggle_warning":false,
     "toggle_hide": true,
@@ -41,6 +42,10 @@
     },
     {
       "id": "toggle_null",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_readonly",
       "type": "boolean"
     },
     {
@@ -125,6 +130,17 @@
         "description": {
           "default": "toggle with parameter value set to 'null'"
         }
+      },
+      {
+        "parameter_ref": "toggle_readonly",
+        "label": {
+          "default": "readonly toggle"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "readonly toggle with parameter value set to 'null'"
+        },
+        "read_only": true
       },
       {
         "parameter_ref": "toggle_undefined",
@@ -243,7 +259,8 @@
         "parameter_refs": [
           "toggle_default",
           "toggle_undefined",
-          "toggle_null"
+          "toggle_null",
+          "toggle_readonly"
         ]
       },
       {
@@ -412,6 +429,8 @@
     "toggle_undefined.toggle.on.label": "toggle_undefined ON",
     "toggle_undefined.toggle.off.label": "toggle_undefined OFF",
     "toggle_null.toggle.on.label": "toggle_null ON",
-    "toggle_null.toggle.off.label": "toggle_null OFF"
+    "toggle_null.toggle.off.label": "toggle_null OFF",
+    "toggle_readonly.toggle.on.label": "toggle_readonly ON",
+    "toggle_readonly.toggle.off.label": "toggle_readonly OFF"
   }
 }

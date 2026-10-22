@@ -213,7 +213,7 @@
             "modeling_role": "input"
           }
         },
-				{
+        {
           "name": "age",
           "type": "integer",
           "metadata": {

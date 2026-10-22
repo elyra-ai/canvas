@@ -173,10 +173,10 @@
       {
         "parameter_ref": "list_string_readonly",
         "label": {
-          "default": "list of strings"
+          "default": "readonly list of strings"
         },
         "description": {
-          "default": "list with a string array value"
+          "default": "readonly list with a string array value"
         },
         "control": "list",
         "moveable_rows": true,
