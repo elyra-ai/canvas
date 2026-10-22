@@ -53,7 +53,7 @@
     "label": {
       "default": "Panels"
     },
-		"help": {},
+    "help": {},
     "editor_size": "medium",
     "parameter_info": [
       {
@@ -241,45 +241,45 @@
     ]
   },
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "set",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  }
-	]
+    {
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ]
 }

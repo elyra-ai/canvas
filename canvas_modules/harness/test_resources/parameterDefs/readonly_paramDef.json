@@ -510,7 +510,7 @@
           }
         },
         "evaluate": {
-					"and": [
+          "and": [
             {
               "condition": {
                 "parameter_ref": "readonly_table_cond[0]",
@@ -526,7 +526,7 @@
               }
             }
           ]
-				}
+        }
       }
     },
     {

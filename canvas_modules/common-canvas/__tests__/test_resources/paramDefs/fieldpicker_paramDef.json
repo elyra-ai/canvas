@@ -11,21 +11,39 @@
       ],
       [
         2,
-        { "link_ref": "0", "field_name": "BADVAR" },
+        {
+          "link_ref": "0",
+          "field_name": "BADVAR"
+        },
         "BADVAR"
       ],
       [
         3,
-        { "link_ref": "3", "field_name": "Cholesterol" },
+        {
+          "link_ref": "3",
+          "field_name": "Cholesterol"
+        },
         "BADVAR"
       ]
     ],
     "fields": [
-      { "link_ref": "0", "field_name": "age" },
+      {
+        "link_ref": "0",
+        "field_name": "age"
+      },
       "BADVAR",
-      { "link_ref": "data_1", "field_name": "BADVAR" },
-      { "link_ref": "data_1", "field_name": "K" },
-      { "link_ref": "schema", "field_name": "drug" }
+      {
+        "link_ref": "data_1",
+        "field_name": "BADVAR"
+      },
+      {
+        "link_ref": "data_1",
+        "field_name": "K"
+      },
+      {
+        "link_ref": "schema",
+        "field_name": "drug"
+      }
     ]
   },
   "parameters": [
@@ -158,7 +176,7 @@
               }
             ]
           }
-				]
+        ]
       },
       {
         "id": "selectcolumns",
@@ -249,15 +267,15 @@
             "modeling_role": "input"
           }
         },
-				{
-					"name": "Time",
-					"type": "time",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				}
+        {
+          "name": "Time",
+          "type": "time",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
       ]
     },
     {
@@ -299,39 +317,39 @@
             "modeling_role": "input"
           }
         },
-				{
-					"name": "Time",
-					"type": "time",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Timestamp",
-					"type": "timestamp",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				}
+        {
+          "name": "Time",
+          "type": "time",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Timestamp",
+          "type": "timestamp",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
       ]
     },
     {
-			"name": "data",
+      "name": "data",
       "fields": [
-				{
-					"name": "Drug",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "set",
-						"modeling_role": "input"
-					}
-				},
-				{
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
           "name": "drug",
           "type": "string",
           "metadata": {
@@ -349,37 +367,37 @@
             "modeling_role": "input"
           }
         },
-				{
-					"name": "Time",
-					"type": "time",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Timestamp",
-					"type": "timestamp",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Date",
-					"type": "date",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				}
+        {
+          "name": "Time",
+          "type": "time",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Timestamp",
+          "type": "timestamp",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Date",
+          "type": "date",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
       ]
     },
     {
-			"name": "",
+      "name": "",
       "fields": [
         {
           "name": "Age",
@@ -438,7 +456,7 @@
       ]
     },
     {
-			"name": "schema",
+      "name": "schema",
       "fields": [
         {
           "name": "Age",

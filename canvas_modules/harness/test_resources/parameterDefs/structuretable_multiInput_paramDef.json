@@ -5,12 +5,18 @@
   "current_parameters": {
     "structuretableReadonlyColumnStartValue": [
       [
-        { "link_ref": "0", "field_name": "Cholesterol" },
+        {
+          "link_ref": "0",
+          "field_name": "Cholesterol"
+        },
         1,
         "Ascending"
       ],
       [
-        { "link_ref": "0", "field_name": "Age" },
+        {
+          "link_ref": "0",
+          "field_name": "Age"
+        },
         2,
         "Ascending"
       ]
@@ -29,15 +35,24 @@
     "structuretable_filter": [
       [
         1,
-        { "link_ref": "0", "field_name": "BP" }
+        {
+          "link_ref": "0",
+          "field_name": "BP"
+        }
       ],
       [
         2,
-        { "link_ref": "2", "field_name": "BP" }
+        {
+          "link_ref": "2",
+          "field_name": "BP"
+        }
       ],
       [
         3,
-        { "link_ref": "data", "field_name": "BP" }
+        {
+          "link_ref": "data",
+          "field_name": "BP"
+        }
       ]
     ]
   },
@@ -183,7 +198,6 @@
           "default": "Use arrows to reorder the sorting priority. The index column will be auto-populated with an integer value for each row starting at 5. Subsequent rows will be incremented by 1.",
           "placement": "on_panel"
         }
-
       },
       {
         "parameter_ref": "structuretable_filter",
@@ -224,7 +238,7 @@
             "resource_key": "structuretableReadonlyColumnStartValue.field.label"
           },
           "summary": true,
-          "dm_image":"measure"
+          "dm_image": "measure"
         },
         "parameters": [
           {
@@ -256,7 +270,7 @@
               "/images/up-triangle.svg",
               "/images/down-triangle.svg"
             ],
-            "dm_image":"measure"
+            "dm_image": "measure"
           }
         ]
       },
@@ -342,7 +356,7 @@
             "width": 26,
             "summary": true,
             "sortable": true,
-            "dm_image":"measure"
+            "dm_image": "measure"
           },
           {
             "parameter_ref": "new_name",

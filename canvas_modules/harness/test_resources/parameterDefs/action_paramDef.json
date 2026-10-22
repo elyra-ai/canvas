@@ -4,7 +4,7 @@
     "editable": false
   },
   "current_parameters": {
-    "icon_button":"Click the Icon button for the name of icon",
+    "icon_button": "Click the Icon button for the name of icon",
     "number": 0,
     "fields": [
       "age"
@@ -104,7 +104,7 @@
       "required": true
     },
     {
-      "id":"oneofselect-custom-action-left",
+      "id": "oneofselect-custom-action-left",
       "enum": [
         "red",
         "orange",
@@ -218,7 +218,11 @@
       "id": "dropdown_right",
       "type": "string",
       "required": true,
-      "enum": ["Alpha", "Beta", "Gamma"]
+      "enum": [
+        "Alpha",
+        "Beta",
+        "Gamma"
+      ]
     }
   ],
   "uihints": {
@@ -378,7 +382,7 @@
         "action_ref": "moon"
       },
       {
-        "parameter_ref":"oneofselect-custom-action-left",
+        "parameter_ref": "oneofselect-custom-action-left",
         "label": {
           "default": "Control with custom action left"
         },
@@ -957,7 +961,7 @@
         },
         "control": "custom",
         "data": {
-          "parameter_ref":"oneofselect-custom-action-left"
+          "parameter_ref": "oneofselect-custom-action-left"
         },
         "custom_action_id": "harness-custom-overflow-action",
         "class_name": "custom-action-left"
@@ -1139,7 +1143,7 @@
             "id": "oneofselect-control-left",
             "type": "controls",
             "parameter_refs": [
-             "oneofselect-custom-action-left"
+              "oneofselect-custom-action-left"
             ]
           },
           {
@@ -1555,4 +1559,3 @@
     "weather.action.panel.desc": "Weather action panel description"
   }
 }
-

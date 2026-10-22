@@ -258,7 +258,7 @@
     "group_info": [
       {
         "id": "TableMain",
-        "label" : {
+        "label": {
           "resource_key": "tableMain.header"
         },
         "type": "panels",
@@ -328,7 +328,6 @@
         "parameter_refs": [
           "globals[1]"
         ],
-
         "evaluate": {
           "or": [
             {

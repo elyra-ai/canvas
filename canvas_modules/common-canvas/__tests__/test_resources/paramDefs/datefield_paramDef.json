@@ -245,8 +245,8 @@
             "label": {
               "default": "Standard"
             },
-		        "date_format": "M/D/YYYY",
-		        "class_name": "table-datefield-control-class"
+            "date_format": "M/D/YYYY",
+            "class_name": "table-datefield-control-class"
           },
           {
             "parameter_ref": "datefield2",
@@ -254,7 +254,7 @@
             "label": {
               "default": "Additional"
             },
-		        "date_format": "M/D/YYYY"
+            "date_format": "M/D/YYYY"
           },
           {
             "parameter_ref": "datefield_on_panel",
@@ -266,8 +266,8 @@
               "default": "datefield with `edit_style=on_panel`"
             },
             "edit_style": "on_panel",
-		        "date_format": "M/D/YYYY",
-		        "class_name": "table-on-panel-datefield-control-class"
+            "date_format": "M/D/YYYY",
+            "class_name": "table-on-panel-datefield-control-class"
           },
           {
             "parameter_ref": "datefield_sub_panel",
@@ -279,8 +279,8 @@
               "default": "datefield with `edit_style=sub_panel`"
             },
             "edit_style": "subpanel",
-		        "date_format": "M/D/YYYY",
-		        "class_name": "table-subpanel-datefield-control-class"
+            "date_format": "M/D/YYYY",
+            "class_name": "table-subpanel-datefield-control-class"
           }
         ]
       }

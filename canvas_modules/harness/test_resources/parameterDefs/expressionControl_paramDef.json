@@ -88,29 +88,29 @@
   ],
   "complex_types": [
     {
-        "id": "expressionCellTable",
-        "parameters": [
-          {
-            "id": "valueName",
-            "type": "string",
-            "default": "Value",
-            "role": "new_column"
-          },
-          {
-            "id": "condition",
-            "type": "string",
-            "default": "",
-            "role": "expression"
-          },
-          {
-            "id": "condition2",
-            "type": "string",
-            "default": "",
-            "role": "expression"
-          }
-        ]
-      }
-    ],
+      "id": "expressionCellTable",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "string",
+          "default": "Value",
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        },
+        {
+          "id": "condition2",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
+    }
+  ],
   "uihints": {
     "id": "Expressions.test",
     "icon": "images/modelbuildspark.svg",
@@ -359,7 +359,6 @@
           }
         ]
       }
-
     ]
   },
   "conditions": [
@@ -703,6 +702,5 @@
     "expressionCellTable.name.desc": "Enter a name",
     "expressionCellTable.description.subPanelLabel": "subpanel Condition",
     "expressionCellTable.description.onPanelLabel": "on_panel Condition"
-
   }
 }
