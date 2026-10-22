@@ -16,7 +16,7 @@
 
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "../../_utils_/table-utilsRTL";
-import summarypanelParamDef from "./../../test_resources/paramDefs/summarypanel_paramDef.json";
+import summaryPanelParamDef from "./../../test_resources/paramDefs/summaryPanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
 import { expect } from "chai";
 import { cleanup, waitFor, fireEvent } from "@testing-library/react";
@@ -24,7 +24,7 @@ import { cleanup, waitFor, fireEvent } from "@testing-library/react";
 describe("summary renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summarypanelParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summaryPanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -61,7 +61,7 @@ describe("summary renders correctly", () => {
 describe("summary panel renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summarypanelParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summaryPanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -91,7 +91,7 @@ describe("summary panel renders correctly", () => {
 describe("summary panel renders error/warning status correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summarypanelParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summaryPanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -184,7 +184,7 @@ describe("summary panel renders error/warning status correctly", () => {
 
 		// remove all rows from Table Input table
 		const tableInputBodyData = wideflyout.querySelector("div[data-id='properties-ft-structurelisteditorTableInput']");
-		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
+		summaryPanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
 			tableUtilsRTL.selectCheckboxes(tableInputBodyData, [0]);
 			const tableInputRemoveButton = container.querySelectorAll(".toolbar-item.delete-action button");
 			expect(tableInputRemoveButton).to.have.length(1);
