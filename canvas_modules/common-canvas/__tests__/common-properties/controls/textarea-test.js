@@ -25,7 +25,7 @@ import { TRUNCATE_LIMIT } from "../../../src/common-properties/constants/constan
 import { render } from "../../_utils_/mount-utils.js";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import textareaParamDef from "../../test_resources/paramDefs/textarea_paramDef.json";
+import textareaParamDef from "../../test_resources/paramDefs/textArea_paramDef.json";
 
 const controller = new Controller();
 

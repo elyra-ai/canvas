@@ -24,7 +24,7 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import { suppressConsoleError } from "../../_utils_/message-utils.js";
 
-import multiselectParamDef from "../../test_resources/paramDefs/multiselect_paramDef.json";
+import multiselectParamDef from "../../test_resources/paramDefs/multiSelect_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 

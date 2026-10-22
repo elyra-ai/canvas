@@ -71,7 +71,7 @@ describe("Test if tips show up for textfields in tables when there is overflow",
 		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.toggleCommonPropertiesSidePanel();
-		cy.openPropertyDefinition("textfield_paramDef.json");
+		cy.openPropertyDefinition("textField_paramDef.json");
 	});
 
 	it("Test if tips show up for the textfields with ellipsis", function() {
@@ -92,7 +92,7 @@ describe("Test if tips show up in table headers truncate correctly", function() 
 		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.toggleCommonPropertiesSidePanel();
-		cy.openPropertyDefinition("structuretable_paramDef.json");
+		cy.openPropertyDefinition("structureTable_paramDef.json");
 	});
 
 	it("Test if tips show when simple header has ellipsis", function() {
@@ -113,7 +113,7 @@ describe("Test if tips show up in table headers correctly", function() {
 		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.toggleCommonPropertiesSidePanel();
-		cy.openPropertyDefinition("Conditions_paramDef.json");
+		cy.openPropertyDefinition("conditions_paramDef.json");
 	});
 
 	it("Test if tips show when checkbox in header has ellipsis", function() {

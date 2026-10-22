@@ -21,7 +21,7 @@ import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
-import numberfieldParamDef from "../../test_resources/paramDefs/numberfield_paramDef.json";
+import numberfieldParamDef from "../../test_resources/paramDefs/numberField_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 const mockNumberfieldControl = jest.fn();

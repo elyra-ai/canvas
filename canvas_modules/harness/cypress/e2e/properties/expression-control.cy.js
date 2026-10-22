@@ -18,7 +18,7 @@ import * as testUtils from "../../utils/eventlog-utils";
 describe("Test of expression editor control", function() {
 	before(() => {
 		cy.visit("/");
-		cy.openPropertyDefinition("CLEM_FilterRows_paramDef.json");
+		cy.openPropertyDefinition("clemFilterRows_paramDef.json");
 	});
 
 	it("Test syntax highlighting and autocomplete features in expression editor control", function() {
@@ -55,7 +55,7 @@ describe("Test of expression editor control", function() {
 
 		// placeholder text and validation
 		cy.toggleCommonPropertiesSidePanel(); // Close sidepanel before reopening
-		cy.openPropertyDefinition("Javascript_FilterRows_paramDef.json");
+		cy.openPropertyDefinition("javascriptFilterRows_paramDef.json");
 		cy.verifyPlaceholderTextInExpressionEditor("Enter JavaScript text");
 		cy.selectFirstAutoCompleteForText("i", "conditionExpr");
 		cy.verifyTypeOfSelectedAutoComplete("if", "keyword");
@@ -147,7 +147,7 @@ describe("Test of expression builder", function() {
 describe("Test of Python and R expression controls", function() {
 	before(() => {
 		cy.visit("/");
-		cy.openPropertyDefinition("Python_ExpressionControl_paramDef.json");
+		cy.openPropertyDefinition("pythonExpressionControl_paramDef.json");
 	});
 
 	it("Test Python autocomplete and syntax highlighting, Test R autocomplete and syntax highlighting", function() {
@@ -175,7 +175,7 @@ describe("Test of Python and R expression controls", function() {
 
 		// placeholder text and validation
 		cy.toggleCommonPropertiesSidePanel(); // Close sidepanel before reopening
-		cy.openPropertyDefinition("R_ExpressionControl_paramDef.json");
+		cy.openPropertyDefinition("rExpressionControl_paramDef.json");
 
 		// test R autocomplete and syntax highlighting
 		cy.verifyTypeOfWordInExpressionEditor("# syntax testing", "comment", "conditionExpr");

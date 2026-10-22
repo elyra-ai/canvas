@@ -17,7 +17,7 @@
 describe("Test of text styling and word wrapping", function() {
 	before(() => {
 		cy.visit("/");
-		cy.openPropertyDefinition("readonly_paramDef.json");
+		cy.openPropertyDefinition("readOnly_paramDef.json");
 	});
 
 	it("Test of readonly text value and CSS style", function() {
@@ -30,7 +30,7 @@ describe("Test of text styling and word wrapping", function() {
 describe("Test of ellipsis activation for a long readonly text", function() {
 	before(() => {
 		cy.visit("/");
-		cy.openPropertyDefinition("structuretable_paramDef.json");
+		cy.openPropertyDefinition("structureTable_paramDef.json");
 	});
 
 	it("Test of ellipsis activation for a long readonly text", function() {

@@ -25,9 +25,9 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import Controller from "../../../src/common-properties/properties-controller";
 
-import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
-import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
-import filterColumnParamDef from "../../test_resources/paramDefs/Filter_paramDef.json";
+import structuretableParamDef from "../../test_resources/paramDefs/structureTable_paramDef.json";
+import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structureTableMultiInput_paramDef.json";
+import filterColumnParamDef from "../../test_resources/paramDefs/filter_paramDef.json";
 import setGlobalsParamDef from "../../test_resources/paramDefs/setGlobals_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 

@@ -22,7 +22,7 @@ import sinon from "sinon";
 import { Provider } from "react-redux";
 import { renderWithIntl } from "../../_utils_/intl-utils";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import textfieldParamDef from "../../test_resources/paramDefs/textfield_paramDef.json";
+import textfieldParamDef from "../../test_resources/paramDefs/textField_paramDef.json";
 import { cleanup, fireEvent } from "@testing-library/react";
 
 const controller = new Controller();

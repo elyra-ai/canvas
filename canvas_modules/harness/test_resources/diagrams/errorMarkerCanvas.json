@@ -201,7 +201,7 @@
         {
           "id": "f37f8ae1-b314-4d17-a0ad-3942bcfea01a",
           "type": "execution_node",
-          "op": "Filter_paramDef",
+          "op": "filter_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Error",
@@ -529,7 +529,7 @@
         {
           "id": "ac584be2-8a3c-474f-a046-e10a3665b875",
           "type": "execution_node",
-          "op": "Filter_paramDef",
+          "op": "filter_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Filter",

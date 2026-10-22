@@ -22,7 +22,7 @@ import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
-import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
+import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldPicker_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 import sinon from "sinon";
 import { SelectWindow } from "@carbon/react/icons";
