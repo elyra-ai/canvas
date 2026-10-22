@@ -23,7 +23,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
-import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
+import oneofselectParamDef from "../../test_resources/paramDefs/oneOfSelect_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { cloneDeep } from "lodash";
 
@@ -288,7 +288,7 @@ describe("oneofselect paramDef works correctly", () => {
 		fireEvent.click(dropdownButton);
 		dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
-		// In oneofselect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
+		// In oneOfSelect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.gold.label"]).to.equal("Goldilocks");
 		// Enum label "Goldilocks" has been rendered for enum value "gold".
 		expect(dropdownList[9].textContent).to.equal("Goldilocks");

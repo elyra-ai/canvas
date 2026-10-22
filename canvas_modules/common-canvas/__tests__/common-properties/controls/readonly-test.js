@@ -21,7 +21,7 @@ import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import readonlyParamDef from "../../test_resources/paramDefs/readonly_paramDef.json";
+import readonlyParamDef from "../../test_resources/paramDefs/readOnly_paramDef.json";
 
 const controller = new Controller();
 

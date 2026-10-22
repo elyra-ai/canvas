@@ -20,7 +20,7 @@ describe("Test of subpanel editing in a structuretable", function() {
 		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.toggleCommonPropertiesSidePanel();
-		cy.openPropertyDefinition("structuretable_paramDef.json");
+		cy.openPropertyDefinition("structureTable_paramDef.json");
 	});
 
 	it("Test of subpanel editing in a structuretable", function() {
@@ -43,7 +43,7 @@ describe("Test the feature to have tables use the available vertical space", fun
 		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.toggleCommonPropertiesSidePanel();
-		cy.openPropertyDefinition("structuretable_paramDef.json");
+		cy.openPropertyDefinition("structureTable_paramDef.json");
 	});
 
 	it("Test the feature to have tables use the available vertical space", function() {

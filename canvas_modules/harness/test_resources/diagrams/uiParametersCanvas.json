@@ -11,7 +11,7 @@
         {
           "id": "a9d5c402-2dba-4766-b854-37cbdcac8770",
           "type": "execution_node",
-          "op": "Spark_SelectColumns_paramDef",
+          "op": "sparkSelectColumns_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Select Columns",

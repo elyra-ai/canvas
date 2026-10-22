@@ -25,8 +25,8 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import Controller from "../../../src/common-properties/properties-controller";
 
-import selectcolumnsParamDef from "../../test_resources/paramDefs/selectcolumns_paramDef.json";
-import selectcolumnsMultiInputParamDef from "../../test_resources/paramDefs/selectcolumns_multiInput_paramDef.json";
+import selectcolumnsParamDef from "../../test_resources/paramDefs/selectColumns_paramDef.json";
+import selectcolumnsMultiInputParamDef from "../../test_resources/paramDefs/selectColumnsMultiInput_paramDef.json";
 import rowDisplayParamDef from "../../test_resources/paramDefs/displayRows_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 

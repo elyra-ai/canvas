@@ -16,8 +16,8 @@
 
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
-import numberfieldParamDef from "../../test_resources/paramDefs/numberfield_paramDef.json";
-import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
+import numberfieldParamDef from "../../test_resources/paramDefs/numberField_paramDef.json";
+import structuretableParamDef from "../../test_resources/paramDefs/structureTable_paramDef.json";
 import actionParamDef from "../../test_resources/paramDefs/action_paramDef.json";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import { fireEvent, cleanup } from "@testing-library/react";

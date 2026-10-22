@@ -19,7 +19,7 @@ import key from "../../support/canvas/key.js";
 describe("Test of custom panels", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.openPropertyDefinition("CustomPanel_paramDef.json");
+		cy.openPropertyDefinition("customPanel_paramDef.json");
 	});
 
 	it("Test custom panels are working correctly", function() {

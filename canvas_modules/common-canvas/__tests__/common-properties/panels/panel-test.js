@@ -21,7 +21,7 @@ import { expect } from "chai";
 import { cleanup } from "@testing-library/react";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
-import customPanelParamDef from "./../../test_resources/paramDefs/CustomPanel_paramDef.json";
+import customPanelParamDef from "./../../test_resources/paramDefs/customPanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
 import nestedPanelParamDef from "./../../test_resources/paramDefs/panelNested_paramDef.json";
 import AddtlCmptsTest from "./../../_utils_/custom-components/AddtlCmptsTest.jsx";

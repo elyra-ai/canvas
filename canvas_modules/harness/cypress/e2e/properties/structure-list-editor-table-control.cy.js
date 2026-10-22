@@ -20,7 +20,7 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.toggleCommonPropertiesSidePanel();
-		cy.openPropertyDefinition("selectcolumns_paramDef.json");
+		cy.openPropertyDefinition("selectColumns_paramDef.json");
 	});
 
 	it("Test of subpanel editing of selectcolumns in a structurelisteditor", function() {
@@ -55,7 +55,7 @@ describe("Test the feature to have tables use the available vertical space", fun
 		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.toggleCommonPropertiesSidePanel();
-		cy.openPropertyDefinition("selectcolumns_paramDef.json");
+		cy.openPropertyDefinition("selectColumns_paramDef.json");
 	});
 
 	it("Test the feature to have tables use the available vertical space", function() {

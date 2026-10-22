@@ -365,7 +365,7 @@ describe("Test tip location adjusted based on boundaries of canvas", function() 
 describe("Test tip location adjusted based on boundaries of browser", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.openPropertyDefinition("CLEM_FilterRows_paramDef.json");
+		cy.openPropertyDefinition("clemFilterRows_paramDef.json");
 	});
 
 	it("Test tip location adjusted based on boundaries of browser", function() {
@@ -607,7 +607,7 @@ describe("Test undo redo tooltips for different actions", function() {
 	});
 
 	it("Test undo redo tooltips for common properties action", function() {
-		cy.openPropertyDefinition("readonly_paramDef.json");
+		cy.openPropertyDefinition("readOnly_paramDef.json");
 		// Save properties flyout
 		cy.saveFlyout();
 

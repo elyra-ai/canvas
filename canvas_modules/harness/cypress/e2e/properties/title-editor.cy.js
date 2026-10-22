@@ -17,7 +17,7 @@
 describe("Properties title editor test", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.openPropertyDefinition("numberfield_paramDef.json");
+		cy.openPropertyDefinition("numberField_paramDef.json");
 	});
 
 	it("Test multi-line warning message", function() {

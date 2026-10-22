@@ -11,7 +11,7 @@
         {
           "id": "428a247b-e126-452c-bd10-5970af945dcd",
           "type": "execution_node",
-          "op": "columnSelectionPanel_multiInput_paramDef",
+          "op": "columnSelectionPanelMultiInput_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Charts",
@@ -60,7 +60,7 @@
         {
           "id": "bf082e34-bf1c-4927-9f87-89d2d9033b55",
           "type": "binding",
-          "op": "selectcolumn_multiInput_paramDef",
+          "op": "selectcolumnMultiInput_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Sim Gen",

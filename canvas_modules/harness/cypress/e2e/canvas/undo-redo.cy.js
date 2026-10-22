@@ -168,7 +168,7 @@ describe("Test basic undo/redo operations", function() {
 		cy.verifyNumberOfComments(0);
 
 		// Set a text value in common-properties
-		cy.openPropertyDefinition("textfield_paramDef.json");
+		cy.openPropertyDefinition("textField_paramDef.json");
 		cy.setTextFieldValue("string_empty", "testValue");
 		cy.saveFlyout();
 		verifyTextEntryInConsole("testValue");

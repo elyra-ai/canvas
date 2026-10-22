@@ -24,7 +24,7 @@ import { expect as expectJest } from "@jest/globals";
 import { format } from "date-fns";
 import Controller from "../../../src/common-properties/properties-controller";
 
-import TIMEFIELD_PARAM_DEF from "../../test_resources/paramDefs/timefield_paramDef.json";
+import TIMEFIELD_PARAM_DEF from "../../test_resources/paramDefs/timeField_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const controlItem = (<span>Test Label</span>);
