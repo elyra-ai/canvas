@@ -777,7 +777,7 @@ class App extends React.Component {
 			}
 		}
 		return {
-			fileName: "default.json",
+			fileName: "appDefault_paramDef.json",
 			type: PARAMETER_DEFS
 		};
 	}
