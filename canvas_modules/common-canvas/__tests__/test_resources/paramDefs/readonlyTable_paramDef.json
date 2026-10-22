@@ -439,7 +439,6 @@
             "operation": "index"
           },
           "control": "readonly"
-
         },
         "parameters": [
           {
@@ -449,7 +448,7 @@
             },
             "width": 15,
             "summary": true,
-            "dm_image":"measure"
+            "dm_image": "measure"
           },
           {
             "parameter_ref": "new_name",

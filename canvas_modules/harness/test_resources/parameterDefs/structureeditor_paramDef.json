@@ -20,9 +20,9 @@
       "choice A"
     ],
     "option_two": [
-       null,
-       "choice A"
-     ],
+      null,
+      "choice A"
+    ],
     "option_three": [
       null,
       "choice A"
@@ -30,12 +30,18 @@
     "structureeditorObjectType": {
       "first_field": "hi",
       "first_field_checkbox": false,
-      "field_annotation": [ "there", "you" ]
+      "field_annotation": [
+        "there",
+        "you"
+      ]
     },
     "readonly_structureeditorObjectType": {
       "first_field": "hi",
       "first_field_checkbox": false,
-      "field_annotation": [ "there", "you" ]
+      "field_annotation": [
+        "there",
+        "you"
+      ]
     },
     "nestedStructureeditor": [
       "name",
@@ -53,12 +59,16 @@
         [
           "address1",
           90210,
-          ["rental address"]
+          [
+            "rental address"
+          ]
         ],
         [
           "address2",
           90211,
-          ["work address"]
+          [
+            "work address"
+          ]
         ]
       ]
     ],
@@ -69,9 +79,10 @@
         [
           "Field 5",
           1,
-          ["annotation for field 5"]
+          [
+            "annotation for field 5"
+          ]
         ]
-
       ]
     ]
   },
@@ -419,8 +430,13 @@
       {
         "complex_type_ref": "nameLayout",
         "layout": [
-          ["custom_name_checkbox", "custom_name"],
-          ["annotation"]
+          [
+            "custom_name_checkbox",
+            "custom_name"
+          ],
+          [
+            "annotation"
+          ]
         ],
         "parameters": [
           {
@@ -509,8 +525,13 @@
       {
         "complex_type_ref": "fieldLayout",
         "layout": [
-          ["first_field_checkbox", "first_field"],
-          ["field_annotation"]
+          [
+            "first_field_checkbox",
+            "first_field"
+          ],
+          [
+            "field_annotation"
+          ]
         ],
         "parameters": [
           {
@@ -554,8 +575,13 @@
       {
         "complex_type_ref": "userInfo",
         "layout": [
-          ["userName", "userAge"],
-          ["userAddressInfo"]
+          [
+            "userName",
+            "userAge"
+          ],
+          [
+            "userAddressInfo"
+          ]
         ],
         "parameters": [
           {
@@ -582,8 +608,13 @@
       {
         "complex_type_ref": "userAddressStructure",
         "layout": [
-          ["userAddress", "userZip"],
-          ["annotation"]
+          [
+            "userAddress",
+            "userZip"
+          ],
+          [
+            "annotation"
+          ]
         ],
         "parameters": [
           {
@@ -610,8 +641,13 @@
       {
         "complex_type_ref": "userInfoTable",
         "layout": [
-          ["userName", "userAge"],
-          ["userAddressTable"]
+          [
+            "userName",
+            "userAge"
+          ],
+          [
+            "userAddressTable"
+          ]
         ],
         "parameters": [
           {
@@ -667,8 +703,13 @@
       {
         "complex_type_ref": "userHealth",
         "layout": [
-          ["userName", "userAge"],
-          ["userFieldsInfo"]
+          [
+            "userName",
+            "userAge"
+          ],
+          [
+            "userFieldsInfo"
+          ]
         ],
         "parameters": [
           {

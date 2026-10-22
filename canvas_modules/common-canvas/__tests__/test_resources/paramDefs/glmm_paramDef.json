@@ -2,8 +2,7 @@
   "titleDefinition": {
     "title": "GLMM"
   },
-  "current_parameters": {
-  },
+  "current_parameters": {},
   "complex_types": [
     {
       "id": "effectStructure",
@@ -289,7 +288,6 @@
       "type": "array[string]",
       "role": "column"
     },
-
     {
       "id": "custom_target",
       "type": "boolean",
@@ -382,10 +380,9 @@
     {
       "id": "link_function_param",
       "type": "double",
-      "default": 1.0,
+      "default": 1,
       "required": true
     },
-
     {
       "id": "use_predefined_inputs",
       "type": "boolean",
@@ -400,13 +397,11 @@
       "id": "fixed_effects_list",
       "type": "array[effectStructure]"
     },
-
     {
       "id": "random_effects_list",
       "type": "array[random_effects_listStructure]",
       "default": []
     },
-
     {
       "id": "regression_weight_field",
       "type": "string",
@@ -431,7 +426,6 @@
       "type": "string",
       "role": "column"
     },
-
     {
       "id": "target_category_order",
       "enum": [
@@ -476,7 +470,6 @@
       ],
       "default": "Model"
     },
-
     {
       "id": "stop_criteria",
       "type": "stop_criteriaStructure"
@@ -491,7 +484,6 @@
       "type": "double",
       "default": 1e-12
     },
-
     {
       "id": "use_model_name",
       "enum": [
@@ -530,7 +522,6 @@
       ],
       "default": "NotCalculate"
     },
-
     {
       "id": "emeans",
       "type": "array[emMeansStructure]"
@@ -591,9 +582,21 @@
       {
         "complex_type_ref": "stop_criteriaStructure",
         "layout": [
-          ["parameterCheck", "ParameterConvInnMin", "ParameterConvInnType"],
-          ["loglikelihoodCheck", "LoglikelihoodConvMin", "LoglikelihoodConvType"],
-          ["hessianCheck", "HessianConvMin", "HessianConvType"]
+          [
+            "parameterCheck",
+            "ParameterConvInnMin",
+            "ParameterConvInnType"
+          ],
+          [
+            "loglikelihoodCheck",
+            "LoglikelihoodConvMin",
+            "LoglikelihoodConvType"
+          ],
+          [
+            "hessianCheck",
+            "HessianConvMin",
+            "HessianConvType"
+          ]
         ],
         "parameters": [
           {
@@ -726,7 +729,7 @@
           {
             "parameter_ref": "effect",
             "control": "readonly"
-        	}
+          }
         ]
       }
     ],
@@ -786,7 +789,7 @@
         },
         "moveable_rows": true,
         "separator": "before",
-        "dm_image":"measure"
+        "dm_image": "measure"
       },
       {
         "parameter_ref": "repeated_ui_measures",
@@ -797,7 +800,7 @@
           "resource_key": "repeated_ui_measures.desc"
         },
         "moveable_rows": true,
-        "dm_image":"measure"
+        "dm_image": "measure"
       },
       {
         "parameter_ref": "residual_group_spec",
@@ -820,7 +823,6 @@
           "resource_key": "SpatialFields.label"
         }
       },
-
       {
         "parameter_ref": "custom_target",
         "label": {
@@ -898,7 +900,6 @@
         },
         "separator": "after"
       },
-
       {
         "parameter_ref": "use_predefined_inputs",
         "label": {
@@ -939,7 +940,6 @@
         "parameter_ref": "randomEffectsIndex",
         "visible": false
       },
-
       {
         "parameter_ref": "regression_weight_field",
         "label": {
@@ -970,7 +970,6 @@
           "resource_key": "offset_field.label"
         }
       },
-
       {
         "parameter_ref": "target_category_order",
         "label": {
@@ -1015,7 +1014,6 @@
         },
         "orientation": "vertical"
       },
-
       {
         "parameter_ref": "stop_criteria",
         "label": {
@@ -1035,7 +1033,6 @@
           "resource_key": "sing_tolerance.label"
         }
       },
-
       {
         "parameter_ref": "use_model_name",
         "label": {
@@ -1075,7 +1072,6 @@
         },
         "separator": "after"
       },
-
       {
         "parameter_ref": "emeansUI",
         "label": {
@@ -1120,14 +1116,12 @@
           "resource_key": "data-structure.label"
         },
         "type": "panels",
-        "parameter_refs": [
-        ],
+        "parameter_refs": [],
         "group_info": [
           {
             "id": "fields-panel",
             "type": "controls",
-            "parameter_refs": [
-            ],
+            "parameter_refs": [],
             "group_info": [
               {
                 "id": "target-field",
@@ -1301,8 +1295,7 @@
                       "residual_subject_spec",
                       "repeated_measures"
                     ],
-                    "data": {
-                    }
+                    "data": {}
                   }
                 ]
               },
@@ -1334,8 +1327,7 @@
           "resource_key": "effects-weight.label"
         },
         "type": "subTabs",
-        "parameter_refs": [
-        ],
+        "parameter_refs": [],
         "group_info": [
           {
             "id": "fixed-effects-panel",
@@ -1420,8 +1412,7 @@
           "resource_key": "build-options.label"
         },
         "type": "subTabs",
-        "parameter_refs": [
-        ],
+        "parameter_refs": [],
         "group_info": [
           {
             "id": "general-options",
@@ -1429,8 +1420,7 @@
               "resource_key": "general-options.label"
             },
             "type": "panels",
-            "parameter_refs": [
-            ],
+            "parameter_refs": [],
             "group_info": [
               {
                 "id": "sorting-order",
@@ -2312,52 +2302,52 @@
     }
   ],
   "resources": {
-  	"effectStructure.subjects": "Subjects",
-  	"effectStructure.fields": "Fields",
-  	"effectStructure.nestingLevel": "Nesting Level",
-  	"residual_subject_ui_spec.label": "Subjects",
-  	"residual_subject_ui_spec.desc": "Residual subject specification",
-  	"repeated_ui_measures.label": "Repeated Measures",
-  	"repeated_ui_measures.desc": "Repeated Measures",
-  	"residual_group_spec.label": "Define covariance groups by:",
-  	"residual_covariance_type.label": "Repeated covariance type:",
-  	"residual_covariance_type.AR1.label": "First-order autoregressive (AR1)",
-  	"residual_covariance_type.ARMA11.label": "Autoregressive moving average (1,1) (ARMA11)",
-  	"residual_covariance_type.CS.label": "Compound symmetry",
-  	"residual_covariance_type.DIAG.label": "Diagonal",
-  	"residual_covariance_type.ID.label": "Scaled identity",
-  	"residual_covariance_type.TP.label": "Toeplitz",
-  	"residual_covariance_type.UN.label": "Unstructured",
-  	"residual_covariance_type.VC.label": "Variance component",
-  	"residual_covariance_type.SPPOW.label": "Spatial: Power",
-  	"residual_covariance_type.SPEXP.label": "Spatial: Exponential",
-  	"residual_covariance_type.SPGAU.label": "Spatial: Gaussian",
-  	"residual_covariance_type.SPLIN.label": "Spatial: Linear",
-  	"residual_covariance_type.SPLINLOG.label": "Spatial: Linear-log",
-  	"residual_covariance_type.SPSPH.label": "Spatial: Spherical",
-  	"SpatialFields.label": "Spatial covariance coordinates:",
-  	"custom_target.true.label": "Use custom target",
-  	"custom_target.false.label": "Use predefined target",
-  	"target_field.label": "Target:",
-  	"target_field.desc": "Select a target field for analysis",
-  	"use_trials.label": "Use number of trials as denominator",
+    "effectStructure.subjects": "Subjects",
+    "effectStructure.fields": "Fields",
+    "effectStructure.nestingLevel": "Nesting Level",
+    "residual_subject_ui_spec.label": "Subjects",
+    "residual_subject_ui_spec.desc": "Residual subject specification",
+    "repeated_ui_measures.label": "Repeated Measures",
+    "repeated_ui_measures.desc": "Repeated Measures",
+    "residual_group_spec.label": "Define covariance groups by:",
+    "residual_covariance_type.label": "Repeated covariance type:",
+    "residual_covariance_type.AR1.label": "First-order autoregressive (AR1)",
+    "residual_covariance_type.ARMA11.label": "Autoregressive moving average (1,1) (ARMA11)",
+    "residual_covariance_type.CS.label": "Compound symmetry",
+    "residual_covariance_type.DIAG.label": "Diagonal",
+    "residual_covariance_type.ID.label": "Scaled identity",
+    "residual_covariance_type.TP.label": "Toeplitz",
+    "residual_covariance_type.UN.label": "Unstructured",
+    "residual_covariance_type.VC.label": "Variance component",
+    "residual_covariance_type.SPPOW.label": "Spatial: Power",
+    "residual_covariance_type.SPEXP.label": "Spatial: Exponential",
+    "residual_covariance_type.SPGAU.label": "Spatial: Gaussian",
+    "residual_covariance_type.SPLIN.label": "Spatial: Linear",
+    "residual_covariance_type.SPLINLOG.label": "Spatial: Linear-log",
+    "residual_covariance_type.SPSPH.label": "Spatial: Spherical",
+    "SpatialFields.label": "Spatial covariance coordinates:",
+    "custom_target.true.label": "Use custom target",
+    "custom_target.false.label": "Use predefined target",
+    "target_field.label": "Target:",
+    "target_field.desc": "Select a target field for analysis",
+    "use_trials.label": "Use number of trials as denominator",
     "trials_field.label": "Field:",
     "trials_value.label": "Value:",
-  	"use_custom_target_reference.label": "Custom reference category",
-  	"target_reference_value.label": "Reference value:",
+    "use_custom_target_reference.label": "Custom reference category",
+    "target_reference_value.label": "Reference value:",
     "use_trials_field_or_value.label": "",
-  	"use_trials_field_or_value.field.label": "Use field",
-  	"use_trials_field_or_value.value.label": "Use value",
-  	"dist_link_combination.label": "Target Distribution and Relationship (Link) with the Linear Model",
-  	"dist_link_combination.NormalIdentity.label": "Linear model",
-  	"dist_link_combination.NominalLogit.label": "Multinomial logistic regression",
-  	"dist_link_combination.GammaLog.label": "Gamma regression",
-  	"dist_link_combination.BinomialLogit.label": "Binary logistic regression",
-  	"dist_link_combination.PoissonLog.label": "Loglinear",
-  	"dist_link_combination.BinomialProbit.label": "Binary probit",
-  	"dist_link_combination.NegbinLog.label": "Negative binomial regression",
-  	"dist_link_combination.BinomialLogC.label": "Interval censored survival",
-  	"dist_link_combination.Custom.label": "Custom",
+    "use_trials_field_or_value.field.label": "Use field",
+    "use_trials_field_or_value.value.label": "Use value",
+    "dist_link_combination.label": "Target Distribution and Relationship (Link) with the Linear Model",
+    "dist_link_combination.NormalIdentity.label": "Linear model",
+    "dist_link_combination.NominalLogit.label": "Multinomial logistic regression",
+    "dist_link_combination.GammaLog.label": "Gamma regression",
+    "dist_link_combination.BinomialLogit.label": "Binary logistic regression",
+    "dist_link_combination.PoissonLog.label": "Loglinear",
+    "dist_link_combination.BinomialProbit.label": "Binary probit",
+    "dist_link_combination.NegbinLog.label": "Negative binomial regression",
+    "dist_link_combination.BinomialLogC.label": "Interval censored survival",
+    "dist_link_combination.Custom.label": "Custom",
     "target_distribution.label": "Distribution",
     "target_distribution.NORMAL.label": "Normal",
     "target_distribution.BINOMIAL.label": "Binomial",
@@ -2366,7 +2356,7 @@
     "target_distribution.IGAUSS.label": "Inverse Gaussian",
     "target_distribution.NEGBIN.label": "Negative Binomial",
     "target_distribution.POISSON.label": "Poisson",
-  	"link_function_type.label": "Link function:",
+    "link_function_type.label": "Link function:",
     "link_function_type.IDENTITY.label": "Identity",
     "link_function_type.LOGC.label": "Log complement",
     "link_function_type.LOG.label": "Log",
@@ -2376,68 +2366,68 @@
     "link_function_type.PROBIT.label": "Probit",
     "link_function_type.POWER.label": "Power",
     "link_function_type.CAUCHIT.label": "Cauchit",
-  	"link_function_param.label": "Power:",
-  	"use_predefined_inputs.true.label": "Use predefined inputs",
-  	"use_predefined_inputs.false.label": "Use custom inputs",
-  	"use_intercept.label": "Include intercept",
-  	"fixed_effects_list.label": "Effect builder:",
-  	"random_effects_list.label": "Random effect blocks:",
-  	"regression_weight_field.label": "Analysis weight:",
-  	"use_offset.label": "Offset",
-  	"use_offset.None.label": "This model does not need to be offset",
-  	"use_offset.Value.label": "Use offset value",
-  	"use_offset.Variable.label": "Use offset field",
-  	"offset_value.label": "Offset value:",
-  	"offset_field.label": "Offset field:",
-  	"target_category_order.label": "Sorting order for categorical targets:",
-  	"target_category_order.Ascending.label": "Ascending",
-  	"target_category_order.Descending.label": "Descending",
-  	"target_category_order.Data.label": "Order found in data",
-  	"inputs_category_order.label": "Sorting order for categorical predictors:",
-  	"inputs_category_order.Ascending.label": "Ascending",
-  	"inputs_category_order.Descending.label": "Descending",
-  	"inputs_category_order.Data.label": "Order found in data",
-  	"max_iterations.label": "Maximum iterations (for both inner and outer loops):",
-  	"confidence_level.label": "Confidence level (%):",
-  	"degrees_of_freedom_method.Residual.label": "Fixed for all tests (Residual method)",
-  	"degrees_of_freedom_method.Satterthwaite.label": "Varied across tests (Satterthwaite approximation)",
-  	"test_fixed_effects_coeffecients.Model.label": "Assume model assumptions are correct",
-  	"test_fixed_effects_coeffecients.Robust.label": "Use robust estimation to handle violations of model assumptions",
-  	"stop_criteria.label": " ",
-  	"stop_criteriaStructure.loglikelihoodCheck.label": "Log-Likelihood Convergence",
-  	"stop_criteriaStructure.LoglikelihoodConvMin.label": "Value:",
-  	"stop_criteriaStructure.LoglikelihoodConvType.label": "Type:",
-  	"stop_criteriaStructure.parameterCheck.label": "Parameter Convergence",
-  	"stop_criteriaStructure.ParameterConvInnMin.label": "Value:",
-  	"stop_criteriaStructure.ParameterConvInnType.label": "Type:",
-  	"stop_criteriaStructure.hessianCheck.label": "Hessian Convergence",
-  	"stop_criteriaStructure.HessianConvMin.label": "Value:",
-  	"stop_criteriaStructure.HessianConvType.label": "Type:",
-  	"max_fisher_step.label": "Maximum Fisher scoring steps:",
-  	"sing_tolerance.label": "Singularity tolerance:",
-  	"modelRename.label": "Model Name:",
-  	"modelRename.true.label": "Custom",
-  	"modelRename.false.label": "Automatic",
-  	"confidence.label": "Confidence is based on:",
-  	"confidence.onProbability.label": "The probability of the predicted value",
-  	"confidence.onIncrease.label": "The increase in probability from the next most likely value",
-  	"score_category_probabilities.label": "Predicted probability for categorical targets",
-  	"max_categories.label": "Maximum categories to save:",
-  	"score_propensity.label": "Propensity scores for flag targets",
+    "link_function_param.label": "Power:",
+    "use_predefined_inputs.true.label": "Use predefined inputs",
+    "use_predefined_inputs.false.label": "Use custom inputs",
+    "use_intercept.label": "Include intercept",
+    "fixed_effects_list.label": "Effect builder:",
+    "random_effects_list.label": "Random effect blocks:",
+    "regression_weight_field.label": "Analysis weight:",
+    "use_offset.label": "Offset",
+    "use_offset.None.label": "This model does not need to be offset",
+    "use_offset.Value.label": "Use offset value",
+    "use_offset.Variable.label": "Use offset field",
+    "offset_value.label": "Offset value:",
+    "offset_field.label": "Offset field:",
+    "target_category_order.label": "Sorting order for categorical targets:",
+    "target_category_order.Ascending.label": "Ascending",
+    "target_category_order.Descending.label": "Descending",
+    "target_category_order.Data.label": "Order found in data",
+    "inputs_category_order.label": "Sorting order for categorical predictors:",
+    "inputs_category_order.Ascending.label": "Ascending",
+    "inputs_category_order.Descending.label": "Descending",
+    "inputs_category_order.Data.label": "Order found in data",
+    "max_iterations.label": "Maximum iterations (for both inner and outer loops):",
+    "confidence_level.label": "Confidence level (%):",
+    "degrees_of_freedom_method.Residual.label": "Fixed for all tests (Residual method)",
+    "degrees_of_freedom_method.Satterthwaite.label": "Varied across tests (Satterthwaite approximation)",
+    "test_fixed_effects_coeffecients.Model.label": "Assume model assumptions are correct",
+    "test_fixed_effects_coeffecients.Robust.label": "Use robust estimation to handle violations of model assumptions",
+    "stop_criteria.label": " ",
+    "stop_criteriaStructure.loglikelihoodCheck.label": "Log-Likelihood Convergence",
+    "stop_criteriaStructure.LoglikelihoodConvMin.label": "Value:",
+    "stop_criteriaStructure.LoglikelihoodConvType.label": "Type:",
+    "stop_criteriaStructure.parameterCheck.label": "Parameter Convergence",
+    "stop_criteriaStructure.ParameterConvInnMin.label": "Value:",
+    "stop_criteriaStructure.ParameterConvInnType.label": "Type:",
+    "stop_criteriaStructure.hessianCheck.label": "Hessian Convergence",
+    "stop_criteriaStructure.HessianConvMin.label": "Value:",
+    "stop_criteriaStructure.HessianConvType.label": "Type:",
+    "max_fisher_step.label": "Maximum Fisher scoring steps:",
+    "sing_tolerance.label": "Singularity tolerance:",
+    "modelRename.label": "Model Name:",
+    "modelRename.true.label": "Custom",
+    "modelRename.false.label": "Automatic",
+    "confidence.label": "Confidence is based on:",
+    "confidence.onProbability.label": "The probability of the predicted value",
+    "confidence.onIncrease.label": "The increase in probability from the next most likely value",
+    "score_category_probabilities.label": "Predicted probability for categorical targets",
+    "max_categories.label": "Maximum categories to save:",
+    "score_propensity.label": "Propensity scores for flag targets",
     "score_propensity.Calculate.label": "Calculate",
     "score_propensity.NotCalculate.label": "Do not calculate",
-  	"emeans.label": "Terms:",
-  	"covariance_list.label": "Fields:",
+    "emeans.label": "Terms:",
+    "covariance_list.label": "Fields:",
     "emMeansCovariatesStructure.Field": "Continuous Fields",
     "emMeansCovariatesStructure.Constant": "Constant",
     "emMeansCovariatesStructure.Value": "Value",
-  	"mean_scale.label": "Display estimated means in terms of:",
-  	"mean_scale.Original.label": "Original target scale",
-  	"mean_scale.Transformed.label": "Link function transformation",
-  	"comparison_adjustment_method.label": "Adjust for multiple comparisons using:",
-  	"comparison_adjustment_method.LSD.label": "Least significant difference",
-  	"comparison_adjustment_method.SEQBONFERRONI.label": "sequential Bonferroni",
-  	"comparison_adjustment_method.SEQSIDAK.label": "sequential Sidak",
+    "mean_scale.label": "Display estimated means in terms of:",
+    "mean_scale.Original.label": "Original target scale",
+    "mean_scale.Transformed.label": "Link function transformation",
+    "comparison_adjustment_method.label": "Adjust for multiple comparisons using:",
+    "comparison_adjustment_method.LSD.label": "Least significant difference",
+    "comparison_adjustment_method.SEQBONFERRONI.label": "sequential Bonferroni",
+    "comparison_adjustment_method.SEQSIDAK.label": "sequential Sidak",
     "data-structure.label": "Fields",
     "effects-weight.label": "Effects and Weight",
     "target-options-summary.label": "Define Target...",
