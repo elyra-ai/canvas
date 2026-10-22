@@ -147,7 +147,7 @@
         "text_before": {
           "default": "Press ctrl-space to autocomplete, enter a '?' for validate to fail."
         },
-        "class_name": "expression-control-class",
+        "class_name": "expression-control-class-readonly",
         "read_only": true
       },
       {

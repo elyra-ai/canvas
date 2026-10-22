@@ -244,7 +244,7 @@
           "default": "readonly checkboxset with integers for values"
         },
         "control": "checkboxset",
-        "class_name": "checkboxset-control-class",
+        "class_name": "checkboxset-control-readonly-class",
         "read_only": true
       },
       {

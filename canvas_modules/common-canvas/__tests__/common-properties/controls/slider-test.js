@@ -203,7 +203,7 @@ describe("error messages renders correctly for slider controls", () => {
 	});
 
 	it("slider component should have correct classnames", () => {
-		expect(container.querySelectorAll("div.properties-slider")).to.have.length(8);
+		expect(container.querySelectorAll("div.properties-slider")).to.have.length(9);
 	});
 
 	it("shows error message for slider component", () => {

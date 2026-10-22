@@ -206,7 +206,7 @@
         "description": {
           "default": "Readonly textarea with sting value"
         },
-        "class_name": "string-textarea-control-class",
+        "class_name": "string-textarea-control-readonly-class",
         "helper_text": {
           "default": "Readonly textarea with string value"
         },

@@ -289,12 +289,13 @@
       {
         "parameter_ref": "radioString_readonly",
         "label": {
-          "default": "Radio String"
+          "default": "Readonly Radio String"
         },
         "description": {
           "default": "Readonly RadioSet with enum string type"
         },
         "resource_key": "withradioString",
+        "class_name": "radioset-control-readonly-class",
         "helper_text": {
           "default": "Readonly RadioSet with enum string type"
         },
@@ -931,11 +932,14 @@
     "withradioString.entropy.label": "Entropy",
     "withradioString.entropy.desc": "desc for Entropy",
     "withradioBoolean.true.label": "trueBoolean",
+    "radioInteger.2.desc":"desc for 2",
+    "radioInteger.4.desc":"desc for 4",
     "withradioBoolean.false.label": "falseBoolean",
     "radioBooleanWithLabels.true.label": "True Label",
     "radioBooleanWithLabels.false.label": "False Label",
     "withradioLabelWrapped.firstN.label": "First N",
     "withradioLabelWrapped.oneInN.label": "One in N",
-    "withradioLabelWrapped.longLabel.label": "This is really a longgggggggggggg label"
+    "withradioLabelWrapped.longLabel.label": "This is really a longgggggggggggg label",
+    "withradioLabelWrapped.longLabel.desc": "This is really a longgggggggggggg label"
   }
 }

@@ -4,7 +4,7 @@
   },
   "current_parameters": {
     "field": "Age",
-    "field_readonly": "Age",
+    "field_readonly": "age",
     "field_null": null,
     "field_empty_string": "",
     "field_placeholder": "",
@@ -207,9 +207,9 @@
           "default": "Readonly Field"
         },
         "description": {
-          "default": "readonly selectcolumn with parameter value set to 'Age'"
+          "default": "readonly selectcolumn with parameter value set to 'age'"
         },
-        "class_name": "selectcolumn-control-class",
+        "class_name": "selectcolumn-control-readonly-class",
         "read_only": true
       },
       {

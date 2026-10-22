@@ -118,7 +118,7 @@
         },
         "control": "datepicker",
         "date_format": "m-d-Y",
-        "class_name": "datepicker-control-unique-class",
+        "class_name": "datepicker-control-readonly-unique-class",
         "place_holder_text": {
           "default": "Enter a date: mm-dd-yyyy"
         },

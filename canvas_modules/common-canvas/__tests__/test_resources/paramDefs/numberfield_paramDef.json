@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "number_int": 10,
+    "number_int_readonly": 10,
     "number_dbl": 11.012,
     "number_null": null,
     "number_random": 12345,
@@ -20,11 +21,26 @@
     "number_zero": 0,
     "number_table": [
       []
+    ],
+    "number_table_disabled": [
+      [
+        55,
+        true
+      ],
+      [
+        77,
+        false
+      ]
     ]
   },
   "parameters": [
     {
       "id": "number_int",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_int_readonly",
       "type": "integer",
       "required": true
     },
@@ -121,6 +137,10 @@
     {
       "id": "number_table",
       "type": "array[numberfields]"
+    },
+    {
+      "id": "number_table_disabled",
+      "type": "array[numberfieldsDisabled]"
     }
   ],
   "complex_types": [
@@ -144,6 +164,19 @@
           "type": "integer"
         }
       ]
+    },
+    {
+      "id": "numberfieldsDisabled",
+      "parameters": [
+        {
+          "id": "numberfield",
+          "type": "integer"
+        },
+        {
+          "id": "isEnabled",
+          "type": "boolean"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -161,7 +194,24 @@
         "description": {
           "default": "numberfield with parameter value set to '10'"
         },
-        "class_name": "numberfield-control-class"
+        "class_name": "numberfield-control-class",
+        "helper_text": {
+          "default": "numberfield with parameter value set to '10'"
+        }
+      },
+      {
+        "parameter_ref": "number_int_readonly",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "Readonly numberfield with parameter value set to '10'"
+        },
+        "class_name": "numberfield-readonly-control-class",
+        "helper_text": {
+          "default": "Readonly numberfield with parameter value set to '10'"
+        },
+        "read_only": true
       },
       {
         "parameter_ref": "number_dbl",
@@ -355,6 +405,16 @@
           "default": "clear numbers to show error and warning",
           "placement": "on_panel"
         }
+      },
+       {
+        "parameter_ref": "number_table_disabled",
+        "label": {
+          "default": "Numberfield control disabled in a table"
+        },
+        "description": {
+          "default": "use checkbox to change number input state",
+          "placement": "on_panel"
+        }
       }
     ],
     "complex_type_info": [
@@ -401,6 +461,26 @@
             "class_name": "table-subpanel-numberfield-control-class"
           }
         ]
+      },
+       {
+        "complex_type_ref": "numberfieldsDisabled",
+        "parameters": [
+          {
+            "parameter_ref": "numberfield",
+            "width": 10,
+            "label": {
+              "default": "Value"
+            },
+            "class_name": "table-numberfield-disabled-control-class"
+          },
+          {
+            "parameter_ref": "isEnabled",
+            "width": 10,
+            "label": {
+              "default": "Enable"
+            }
+          }
+        ]
       }
     ],
     "group_info": [
@@ -421,7 +501,8 @@
           "number_random",
           "number_random_resource_key",
           "number_longControlName",
-          "number_placeholder"
+          "number_placeholder",
+          "number_int_readonly"
         ]
       },
       {
@@ -458,7 +539,8 @@
               {
                 "id": "numberfield-table-summary-ctrls",
                 "parameter_refs": [
-                  "number_table"
+                  "number_table",
+                  "number_table_disabled"
                 ]
               }
             ]
@@ -566,6 +648,20 @@
             "parameter_ref": "disable",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "number_table_disabled[0]"
+        ],
+          "evaluate": {
+          "condition": {
+            "parameter_ref": "number_table_disabled[1]",
+            "op": "equals",
+            "value": true
           }
         }
       }

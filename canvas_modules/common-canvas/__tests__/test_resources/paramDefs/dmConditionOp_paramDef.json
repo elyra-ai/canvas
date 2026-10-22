@@ -4,11 +4,11 @@
 	},
 	"current_parameters": {
 	},
-	"parameters": [{
+	"parameters": [
+		{
 			"id": "dmTypeEqualList",
 			"type": "object",
 			"role": "column"
-
 		},
 		{
 			"id": "checkbox",
@@ -55,12 +55,26 @@
 			"type": "object",
 			"role": "column"
 
+		},
+		{
+			"id": "dmTypeParam2List",
+			"type": "object",
+			"role": "column"
+		},
+		{
+			"id": "dmTypeParam2List2",
+			"type": "object",
+			"role": "column"
+		},
+		{
+			"id": "checkbox4",
+			"type": "boolean"
 		}
-
 	],
 	"uihints": {
 		"id": "dm-conditions",
-		"parameter_info": [{
+		"parameter_info": [
+			{
 				"parameter_ref": "dmTypeEqualList",
 				"label": {
 					"default": "To enable checkbox control, select a field with a type of string"
@@ -119,6 +133,24 @@
 				"label": {
 					"default": "To validate a text control, select a field that does not have a measure of discrete."
 				}
+			},
+			{
+				"parameter_ref": "checkbox4",
+				"label": {
+					"default": "Enable"
+				}
+			},
+			{
+					"parameter_ref": "dmTypeParam2List",
+					"label": {
+						"default": "To enable checkbox control, select two fields with the same type."
+					}
+				},
+			{
+					"parameter_ref": "dmTypeParam2List2",
+					"label":{
+						"default": " "
+					}
 			}
 		],
 		"group_info": [{
@@ -148,7 +180,16 @@
           "dmMeasurementEqualList",
 					"dmMeasurementNotEqualList"
         ]
-      }
+      },
+			{
+				"id": "Conditions with parameter_2_ref",
+				"type": "columnSelection",
+				"parameter_refs": [
+					"checkbox4",
+					"dmTypeParam2List",
+					"dmTypeParam2List2"
+				]
+			}
 		]
 	},
 
@@ -240,6 +281,20 @@
 						"parameter_ref": "dmMeasurementNotEqualList",
 						"op": "dmMeasurementNotEquals",
 						"value": "discrete"
+					}
+				}
+			}
+		},
+		{
+			"enabled": {
+				"parameter_refs": [
+					"checkbox4"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "dmTypeParam2List",
+						"op": "dmTypeEquals",
+						"parameter_2_ref": "dmTypeParam2List2"
 					}
 				}
 			}
