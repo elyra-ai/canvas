@@ -80,6 +80,7 @@ class ImageAction extends React.Component {
 	render() {
 
 		const disabled = this.props.state === STATES.DISABLED;
+		const hasIconOnly = Boolean(this.props.action.description?.text);
 		const customClassName = this.props.action.className ? this.props.action.className : "";
 		const className = classNames("properties-action-image", { "left": this.props.action.image.placement === "left" },
 			{ "right": this.props.action.image.placement === "right" }, { "hide": this.props.state === STATES.HIDDEN },
@@ -98,10 +99,11 @@ class ImageAction extends React.Component {
 				disabled={disabled}
 				// Ensures the button is treated as icon-only when a description is present,
 				// preventing an empty tooltip from appearing.
-				hasIconOnly={Boolean(this.props.action.description?.text)}
+				hasIconOnly={hasIconOnly}
 				// Position the tooltip with floating-ui so it flips/shifts to stay fully visible
 				// instead of being clipped by containers with overflow hidden.
-				autoAlign
+				// Only valid for icon-only buttons; otherwise it leaks onto the DOM <button>.
+				{...(hasIconOnly ? { autoAlign: true } : {})}
 			/>
 		);
 

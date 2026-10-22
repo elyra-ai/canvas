@@ -91,7 +91,7 @@ function validatePropertiesListValues(controller, controls, showErrors) {
 				continue;
 			}
 			const control = controls[controlKey];
-			// control is a subcontrol
+			// control is a sub-control
 			if (control.parameterName) {
 				continue;
 			}
@@ -116,7 +116,7 @@ function validatePropertiesListConditions(controller, controls, newStates) {
 				continue;
 			}
 			const control = controls[controlKey];
-			// control is a subcontrol
+			// control is a sub-control
 			if (control.parameterName) {
 				continue;
 			}
@@ -377,7 +377,7 @@ function setConditionalDefaultValue(inPropertyId, controller, conditionalDefault
 }
 
 /**
-* Filters the datamodel fields for the given parameter.
+* Filters the data model fields for the given parameter.
 *
 * @param {object} propertyId. required
 * @param {object} list of filter definitions. required.
@@ -401,7 +401,7 @@ function filterConditions(propertyId, filterDefinitions, controller, fields) {
 	return returnFields;
 }
 
-// ========= miscellanious APIs
+// ========= miscellaneous APIs
 
 /**
 * Takes an array of panel IDs and updates the states of the children of
@@ -568,11 +568,11 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 * This function will inject validation definitions for controls with the following attributes.
 *    Required: validation definition to ensure that the required parameter is not is not empty.
 *    Date format: validation definition to ensure parameter has a proper date format.
-*    Time format: validation definition to ensure parameter has a propert time format.
+*    Time format: validation definition to ensure parameter has a property time format.
 *
 * @param {object} a list of control objects. required.
 * @param {object} a list of validation definition objects. required.
-* @return {object} a modified validation defintion object with any injected definitions.
+* @return {object} a modified validation definition object with any injected definitions.
 */
 function injectDefaultValidations(controls, validationDefinitions, requiredDefinitionsIds, intl) {
 	for (const keyName in controls) {
@@ -613,7 +613,7 @@ function injectDefaultValidations(controls, validationDefinitions, requiredDefin
 
 // ========= internal functions
 
-// This function will traverse the panel tree and propogate the state so that a higher order
+// This function will traverse the panel tree and propagate the state so that a higher order
 // panel state will be set for lower order panels.  The disableOnly flag will only propagate the
 // disable state.
 function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabledOnly) {
@@ -759,7 +759,7 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					validation.definition.validation.fail_message.focus_parameter_ref) {
 					msgPropertyId = getParamRefPropertyId(validation.definition.validation.fail_message.focus_parameter_ref, msgPropertyId);
 				}
-				// don't set column if not a subcontrol
+				// don't set column if not a sub-control
 				if (typeof msgPropertyId.col !== "undefined" && typeof control.columnIndex === "undefined") {
 					delete msgPropertyId.col;
 				}
@@ -813,7 +813,7 @@ function _validateInput(propertyId, controller, control, showErrors) {
 }
 
 // This function allows a single interface to perform all conditions validation.
-// It enables common code for the various APIs by delaying the exapnsion of all three
+// It enables common code for the various APIs by delaying the expansion of all three
 // conditions test until this point.
 function _validateConditionsByType(propertyId, newStates, controller) {
 	_validateDefinitionsByType(propertyId, newStates, controller, CONDITION_TYPE.VISIBLE);
@@ -835,7 +835,7 @@ function _validateByType(definitions, propertyId, newStates, controller, condTyp
 		try {
 			definitions.forEach((definition, idx) => {
 				const evalState = UiConditions.validateInput(definition.definition, propertyId, controller);
-				// After the evalution, there is different processing of the result based on the condition type.
+				// After the evaluation, there is different processing of the result based on the condition type.
 				switch (condType) {
 				case CONDITION_TYPE.VISIBLE:
 					_updateControlState(evalState, definition.definition.visible, propertyId, newStates, controller, true);
@@ -844,7 +844,7 @@ function _validateByType(definitions, propertyId, newStates, controller, condTyp
 					_updateControlState(evalState, definition.definition.enabled, propertyId, newStates, controller, false);
 					break;
 				case CONDITION_TYPE.FILTEREDENUM: {
-					const lastDefinition = _isLastDefintiionForParameter(definitions, idx);
+					const lastDefinition = _isLastDefinitionForParameter(definitions, idx);
 					_updateFilteredState(definition.definition, propertyId, newStates, evalState, lastDefinition);
 					break;
 				}
@@ -858,15 +858,15 @@ function _validateByType(definitions, propertyId, newStates, controller, condTyp
 	}
 }
 
-// Returns true if the defintion is the last definition for the target.parameter_ref from the list of 'definitions'
+// Returns true if the definition is the last definition for the target.parameter_ref from the list of 'definitions'
 // This is only used for 'enum_filter' conditions
-function _isLastDefintiionForParameter(definitions, index) {
+function _isLastDefinitionForParameter(definitions, index) {
 	const currentDefinition = definitions[index];
 	const currentParameter = currentDefinition.definition.enum_filter.target.parameter_ref;
 
 	let lastDefinition = true;
 	definitions.forEach((definition, idx) => {
-		// definitions are evaluated in order, so assume any defition before 'idx' are already evaluated
+		// definitions are evaluated in order, so assume any definition before 'idx' are already evaluated
 		if (idx > index && definition.definition.enum_filter.target.parameter_ref === currentParameter) {
 			lastDefinition = false;
 		}
@@ -984,7 +984,7 @@ function _updateFilteredState(definition, inPropertyId, newStates, filtered, las
 	}
 }
 
-// This function will updatethe state all the children of a panel when that parent panel state
+// This function will update the state all the children of a panel when that parent panel state
 // has changed.  It will update the state of the child.  If the state is transitioning to
 // enabled or visible, then the child state may need to be set by other conditions or panels states.
 function _updatePanelChildrenState(newStates, referenceId, state, controller) {
@@ -995,7 +995,7 @@ function _updatePanelChildrenState(newStates, referenceId, state, controller) {
 			updateState(newStates.panels, panelPropertyId, state);
 			// recurse to get the children of the panel
 			_updatePanelChildrenState(newStates, panelPropertyId, state, controller);
-			// after recursing down the panelTree, re-run defintions to ensure the panel is in the proper state.
+			// after recursing down the panelTree, re-run definitions to ensure the panel is in the proper state.
 			if (state === STATES.ENABLED) {
 				_runRefsValidateDefinitions(panelPropertyId, controller, CONDITION_TYPE.ENABLED, newStates);
 			} else if (state === STATES.VISIBLE) {
@@ -1020,7 +1020,7 @@ function _updatePanelChildrenState(newStates, referenceId, state, controller) {
 	}
 }
 
-// In this context "Object" menas either a control or an action.
+// In this context "Object" means either a control or an action.
 function _updatePanelChildrenObjectState(newStates, referenceId, state, controller, objectId, objectStates) {
 	updateState(objectStates, objectId, state);
 	// re-run ref conditions to see if they should override this new state.
