@@ -1,6 +1,6 @@
 {
 	"titleDefinition": {
-	  "title": "Sample Rows"
+	  "title": "Default properties for node"
 	},
 	"current_parameters": {
 	  "withReplacement": false,
@@ -130,6 +130,13 @@
 		  },
 		  "type": "panels",
 		  "group_info": [
+			{
+			  "id": "default-file-message",
+			  "type": "textPanel",
+			  "description": {
+				"default": "No parameter definition file could be found for the node so these default properties are displayed instead."
+			  }
+			},
 			{
 			  "id": "basic-settings",
 			  "type": "controls",
@@ -335,4 +342,3 @@
 	  "sampling-ratio_not_empty": "Select a sampling ratio"
 	}
   }
-  
