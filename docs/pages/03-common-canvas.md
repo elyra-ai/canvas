@@ -10,8 +10,8 @@ import { CommonCanvas, CanvasController } from "@elyra/canvas";
 import { useMemo } from "react";
 import { Theme } from '@carbon/react';
 
-import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
-import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
+import AllTypesCanvas from "test-resources/pipeline-flows/allTypesCanvas.json";
+import ModelerPalette from "test-resources/palettes/modelerPalette.json";
 
 import "@carbon/styles/css/styles.min.css";
 import "@elyra/canvas/dist/styles/common-canvas.min.css";
@@ -125,7 +125,7 @@ The pipelineFlowPalette object should conform to the JSON schema found here: <br
 https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/palette
 
 Some examples of palette JSON files can be found here: <br />
-https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/palettes
+https://github.com/elyra-ai/canvas/tree/master/canvas_modules/test-resources/palettes
 
 !!! info "Images"
     If the palette file references any images using a path you need those image files at the appropriate location.
@@ -142,7 +142,7 @@ The pipelineFlow object should conform to the JSON schema found here: <br />
 https://github.com/elyra-ai/pipeline-schemas/tree/master/common-pipeline/pipeline-flow
 
 Some examples of pipeline flow JSON files can be found here: <br />
-https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/diagrams
+https://github.com/elyra-ai/canvas/tree/master/canvas_modules/test-resources/pipeline-flows
 
 !!! info "Images"
     If the pipeline flow references any images using a path you need those image files at the appropriate location.

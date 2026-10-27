@@ -21,7 +21,7 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 import { Play, StopFilledAlt } from "@carbon/react/icons";
 
 import ProgressFlow from "./progress-flow.json";
-import ProgressPalette from "../../../../../test_resources/palettes/modelerPalette.json";
+import ProgressPalette from "test-resources/palettes/modelerPalette.json";
 
 const nodeCompleteDec = [{
 	id: "done",

@@ -20,25 +20,25 @@ import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 
 // Imports from harness test resources
-import startCanvas from "../test_resources/json/startCanvas.json";
-import branchTestExpected from "../test_resources/canvas-controller/branch-test-exp.json";
-import upstreamTestExpected from "../test_resources/canvas-controller/upstream-test-exp.json";
-import downstreamTestExpected from "../test_resources/canvas-controller/downstream-test-exp.json";
+import startCanvas from "test-resources/shared/startCanvas.json";
+import branchTestExpected from "test-resources/canvas-controller/branch-test-exp.json";
+import upstreamTestExpected from "test-resources/canvas-controller/upstream-test-exp.json";
+import downstreamTestExpected from "test-resources/canvas-controller/downstream-test-exp.json";
 
 
 // Imports from common-canvas test resources
-import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
-import supernodeCanvas from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
-import externalMainCanvasExpanded from "../../../harness/test_resources/diagrams/externalMainCanvasExpanded.json";
-import commonPalette from "../../../harness/test_resources/palettes/commonPalette.json";
-import supernodePalette from "../../../harness/test_resources/palettes/supernodePalette.json";
-import cardinalityCanvas from "../../../harness/test_resources/diagrams/cardinalityCanvas.json";
-import multiPortsCanvas2 from "../../../harness/test_resources/diagrams/multiPortsCanvas2.json";
+import allTypesCanvas from "test-resources/pipeline-flows/allTypesCanvas.json";
+import supernodeCanvas from "test-resources/pipeline-flows/supernodeCanvas.json";
+import externalMainCanvasExpanded from "test-resources/pipeline-flows/externalMainCanvasExpanded.json";
+import commonPalette from "test-resources/palettes/commonPalette.json";
+import supernodePalette from "test-resources/palettes/supernodePalette.json";
+import cardinalityCanvas from "test-resources/pipeline-flows/cardinalityCanvas.json";
+import multiPortsCanvas2 from "test-resources/pipeline-flows/multiPortsCanvas2.json";
 
 
-import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas1.json";
-import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas2.json";
-import multiPortsCanvas3 from "../../../harness/test_resources/diagrams/multiPortsCanvas3.json";
+import EXTERNAL_SUB_FLOW_CANVAS_1 from "test-resources/pipeline-flows/externalSubFlowCanvas1.json";
+import EXTERNAL_SUB_FLOW_CANVAS_2 from "test-resources/pipeline-flows/externalSubFlowCanvas2.json";
+import multiPortsCanvas3 from "test-resources/pipeline-flows/multiPortsCanvas3.json";
 
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";

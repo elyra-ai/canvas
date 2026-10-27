@@ -19,10 +19,10 @@ import { expect } from "chai";
 import { CONNECTED_BRANCH, CONNECTED_UPSTREAM, CONNECTED_DOWNSTREAM } from "../../src/common-canvas/constants/canvas-constants.js";
 
 import ObjectModel from "../../src/object-model/object-model.js";
-import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
-import circularFlowsCanvas1 from "../../../harness/test_resources/diagrams/circularFlowsCanvas1.json";
-import circularFlowsCanvas2 from "../../../harness/test_resources/diagrams/circularFlowsCanvas2.json";
-import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
+import allTypesCanvas from "test-resources/pipeline-flows/allTypesCanvas.json";
+import circularFlowsCanvas1 from "test-resources/pipeline-flows/circularFlowsCanvas1.json";
+import circularFlowsCanvas2 from "test-resources/pipeline-flows/circularFlowsCanvas2.json";
+import supernodeNestedCanvas from "test-resources/pipeline-flows/supernodeNestedCanvas.json";
 
 const objectModel = new ObjectModel();
 

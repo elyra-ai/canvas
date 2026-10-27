@@ -20,7 +20,7 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import { renderWithIntl } from "../../_utils_/intl-utils";
 import TearSheet from "./../../../src/common-properties/panels/tearsheet";
-import codeParamDef from "./../../test_resources/paramDefs/code_paramDef.json";
+import codeParamDef from "test-resources/paramDefs/code_paramDef.json";
 import Sinon from "sinon";
 import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";

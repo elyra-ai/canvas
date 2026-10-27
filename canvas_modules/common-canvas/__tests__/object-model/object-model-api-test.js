@@ -18,20 +18,20 @@
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
-import startCanvas from "../test_resources/json/startCanvas.json";
-import clonedCanvas from "../test_resources/json/canvasWithClones.json";
-import paletteJson from "../test_resources/palettes/test-palette.json";
-import filterNode from "../test_resources/json/filterNode.json";
-import horizontalLayoutCanvas from "../test_resources/json/horizontalLayoutCanvas.json";
-import verticalLayoutCanvas from "../test_resources/json/verticalLayoutCanvas.json";
-import addNodeHorizontalLayoutCanvas from "../test_resources/json/addNodeHorizontalLayoutCanvas.json";
-import moveVarNode from "../test_resources/json/moveVarNode.json";
-import moveNodeHorizontalLayoutCanvas from "../test_resources/json/moveNodeHorizontalLayoutCanvas.json";
-import moveNodeVerticalLayoutCanvas from "../test_resources/json/moveNodeVerticalLayoutCanvas.json";
-import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
-import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Start.json";
-import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
-import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
+import startCanvas from "test-resources/shared/startCanvas.json";
+import clonedCanvas from "test-resources/object-model/canvasWithClones.json";
+import paletteJson from "test-resources/palettes/test-palette.json";
+import filterNode from "test-resources/object-model/filterNode.json";
+import horizontalLayoutCanvas from "test-resources/object-model/horizontalLayoutCanvas.json";
+import verticalLayoutCanvas from "test-resources/object-model/verticalLayoutCanvas.json";
+import addNodeHorizontalLayoutCanvas from "test-resources/object-model/addNodeHorizontalLayoutCanvas.json";
+import moveVarNode from "test-resources/object-model/moveVarNode.json";
+import moveNodeHorizontalLayoutCanvas from "test-resources/object-model/moveNodeHorizontalLayoutCanvas.json";
+import moveNodeVerticalLayoutCanvas from "test-resources/object-model/moveNodeVerticalLayoutCanvas.json";
+import startPipelineFlow from "test-resources/shared/startPipelineFlow.json";
+import pipelineFlowTest1Start from "test-resources/object-model/pipelineFlowTest1Start.json";
+import pipelineFlowTest1Expected from "test-resources/object-model/pipelineFlowTest1Expected.json";
+import supernodeNestedCanvas from "test-resources/pipeline-flows/supernodeNestedCanvas.json";
 
 import { VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../src/common-canvas/constants/canvas-constants.js";

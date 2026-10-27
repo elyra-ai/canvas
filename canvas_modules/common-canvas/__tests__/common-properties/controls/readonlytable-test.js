@@ -24,7 +24,7 @@ import sinon from "sinon";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import Controller from "../../../src/common-properties/properties-controller";
 
-import readonlyTableParamDef from "../../test_resources/paramDefs/readonlyTable_paramDef.json";
+import readonlyTableParamDef from "test-resources/paramDefs/readonlyTable_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 const controller = new Controller();

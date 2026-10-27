@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
-import defaultsParamDef from "./../../test_resources/paramDefs/defaults_paramDef.json";
+import defaultsParamDef from "test-resources/paramDefs/defaults_paramDef.json";
 import { expect } from "chai";
 import { cleanup } from "@testing-library/react";
 

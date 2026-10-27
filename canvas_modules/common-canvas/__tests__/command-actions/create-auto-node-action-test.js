@@ -18,7 +18,7 @@ import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import { CreateAutoNodeAction } from "../../src/"; // Imports from the export list in index.js for common-canvas
-import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
+import startPipelineFlow from "test-resources/shared/startPipelineFlow.json";
 
 const canvasController = new CanvasController();
 deepFreeze(startPipelineFlow);

@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 // Modules
-import { HTTP_STATUS_NOT_FOUND, HTTP_STATUS_OK, TEST_RESOURCES_PARAMETERDEFS_PATH } from "../lib/constants.js";
+import { HTTP_STATUS_NOT_FOUND, HTTP_STATUS_OK, TEST_RESOURCES_PARAMDEFS_PATH } from "../lib/constants.js";
 import { readFile, readdir } from "fs";
 import { join } from "path";
 import log4js from "log4js";
 
-const logger = log4js.getLogger("v1-get-parameterdefs-list-controller");
+const logger = log4js.getLogger("v1-get-paramdefs-list-controller");
 
 export const get = _get;
 
 function _get(req, res) {
 	logger.info("Retrieving list of files");
-	var dirPath = join(import.meta.dirname, TEST_RESOURCES_PARAMETERDEFS_PATH);
+	var dirPath = join(import.meta.dirname, TEST_RESOURCES_PARAMDEFS_PATH);
 	if (req.query.file) { // retrieve file contents
 		var filename = req.query.file;
 		logger.info(`Retrieving ${dirPath}${filename}`);
-		readFile(dirPath + filename, "utf-8", function(err, data) {
+		readFile(join(dirPath, filename), "utf-8", function(err, data) {
 			if (err) {
 				res.status(HTTP_STATUS_NOT_FOUND);
-				res.json({ error: err });
+				return res.json({ error: err });
 			}
 			res.status(HTTP_STATUS_OK);
 			var content = {};
@@ -41,16 +41,16 @@ function _get(req, res) {
 			} catch {
 				logger.warn("error parsing json " + filename);
 			}
-			res.json(content);
+			return res.json(content);
 		});
 	} else { // retrieve all
 		readdir(dirPath, function(err, files) {
 			if (err) {
 				res.status(HTTP_STATUS_NOT_FOUND);
-				res.json({ error: err });
+				return res.json({ error: err });
 			}
 			res.status(HTTP_STATUS_OK);
-			res.json(files);
+			return res.json(files);
 		});
 	}
 }

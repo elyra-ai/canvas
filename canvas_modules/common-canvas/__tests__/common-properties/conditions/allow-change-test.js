@@ -17,7 +17,7 @@
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import { expect } from "chai";
-import structuretableParamDef from "../../test_resources/paramDefs/structureTable_paramDef.json";
+import structuretableParamDef from "test-resources/paramDefs/structureTable_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 

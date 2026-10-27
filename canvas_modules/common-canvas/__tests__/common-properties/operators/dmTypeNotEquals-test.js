@@ -16,7 +16,7 @@
 
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
-import dataset from "../../test_resources/json/deriveDatasetMetadata.json";
+import dataset from "test-resources/common-properties/deriveDatasetMetadata.json";
 
 describe("validating dmTypeNotEquals operators works correctly", () => {
 	const controller = new Controller();

@@ -17,13 +17,13 @@
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import Form from "./../../../src/common-properties/form/Form";
-import formResource from "./../../test_resources/json/form-test.json";
-import formStructuredTable from "./../../test_resources/json/form-structure-test.json";
-import formStructuredTable2 from "./../../test_resources/json/form-structure2-test.json";
-import conditionResource from "./../../test_resources/json/form-test-condition.json";
-import editStyleResource from "./../../test_resources/json/form-editstyle-test.json";
-import placementResource from "./../../test_resources/json/form-placement-test.json";
-import actionResource from "./../../test_resources/json/form-actions-test.json";
+import formResource from "test-resources/common-properties/form-test.json";
+import formStructuredTable from "test-resources/common-properties/form-structure-test.json";
+import formStructuredTable2 from "test-resources/common-properties/form-structure2-test.json";
+import conditionResource from "test-resources/common-properties/form-test-condition.json";
+import editStyleResource from "test-resources/common-properties/form-editstyle-test.json";
+import placementResource from "test-resources/common-properties/form-placement-test.json";
+import actionResource from "test-resources/common-properties/form-actions-test.json";
 
 
 const buttons = [{ id: "ok", text: "OK", isPrimary: true, url: "" }, { id: "cancel", text: "Cancel", isPrimary: false, url: "" }];

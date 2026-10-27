@@ -22,7 +22,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";
 import { expect as expectJest } from "@jest/globals";
-import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
+import ACTION_PARAMDEF from "test-resources/paramDefs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { fireEvent, within } from "@testing-library/react";
 

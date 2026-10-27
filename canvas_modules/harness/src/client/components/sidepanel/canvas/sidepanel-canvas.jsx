@@ -161,12 +161,16 @@ export default class SidePanelForms extends React.Component {
 
 		FormsService.getFiles("diagrams")
 			.then(function(res) {
-				that.setState({ canvasFiles: res });
+				if (Array.isArray(res)) {
+					that.setState({ canvasFiles: res });
+				}
 			});
 
 		FormsService.getFiles("palettes")
 			.then(function(res) {
-				that.setState({ paletteFiles: res });
+				if (Array.isArray(res)) {
+					that.setState({ paletteFiles: res });
+				}
 			});
 
 		// Avoid replaying the accordion open/close animation on mount.
@@ -406,8 +410,10 @@ export default class SidePanelForms extends React.Component {
 		options.push(
 			<SelectItemGroup key ={"choose-file-option"} label = {LOCAL_FILE_OPTION}>{chooseFromLocation}
 			</SelectItemGroup>);
-		for (const option of optionsInput) {
-			groupOptions.push(<SelectItem key={"param-def-option-" + key++} text={option} value={option} />);
+		if (Array.isArray(optionsInput)) {
+			for (const option of optionsInput) {
+				groupOptions.push(<SelectItem key={"param-def-option-" + key++} text={option} value={option} />);
+			}
 		}
 		options.push(<SelectItemGroup key ={"form-option"} label = {typeLabel}>{groupOptions}</SelectItemGroup>);
 		return options;

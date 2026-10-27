@@ -17,7 +17,7 @@
 import { cleanup, fireEvent } from "@testing-library/react";
 import propertyUtilsRTL from "../_utils_/property-utilsRTL";
 import tableUtilsRTL from "../_utils_/table-utilsRTL";
-import defaultsParamDef from "../test_resources/paramDefs/defaults_paramDef.json";
+import defaultsParamDef from "test-resources/paramDefs/defaults_paramDef.json";
 import { expect } from "chai";
 
 // base test cases

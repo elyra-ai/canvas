@@ -33,8 +33,8 @@ import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 
-import ExpressionInfo from "../../test_resources/json/expression-function-list.json";
-import ExpressionParamdef from "../../test_resources/paramDefs/expressionControl_paramDef.json";
+import ExpressionInfo from "test-resources/common-properties/expression-function-list.json";
+import ExpressionParamdef from "test-resources/paramDefs/expressionControl_paramDef.json";
 import Sinon from "sinon";
 import { fireEvent } from "@testing-library/react";
 

@@ -18,9 +18,9 @@ import { expect } from "chai";
 import { within } from "@testing-library/react";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "../../_utils_/table-utilsRTL";
-import columnSelectionPanel from "./../../test_resources/paramDefs/columnSelectionPanelMultiInput_paramDef.json";
-import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
-import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import columnSelectionPanel from "test-resources/paramDefs/columnSelectionPanelMultiInput_paramDef.json";
+import panelParamDef from "test-resources/paramDefs/panel_paramDef.json";
+import panelConditionsParamDef from "test-resources/paramDefs/panelConditions_paramDef.json";
 import { cleanup, fireEvent } from "@testing-library/react";
 
 describe("selectcolumn and selectcolumns controls work in columnSelection panel", () => {

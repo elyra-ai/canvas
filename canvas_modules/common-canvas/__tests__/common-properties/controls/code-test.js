@@ -18,9 +18,9 @@
 import React from "react";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
-import ExpressionInfo from "../../test_resources/json/expression-function-list.json";
+import ExpressionInfo from "test-resources/common-properties/expression-function-list.json";
 import Expression from "../../../src/common-properties/controls/expression";
-import CodeParamdef from "../../test_resources/paramDefs/code_paramDef.json";
+import CodeParamdef from "test-resources/paramDefs/code_paramDef.json";
 import { Button } from "@carbon/react";
 import { Code } from "@carbon/react/icons";
 import sinon from "sinon";

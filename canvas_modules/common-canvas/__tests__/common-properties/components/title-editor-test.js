@@ -24,7 +24,7 @@ import { renderWithIntl } from "../../_utils_/intl-utils";
 import { fireEvent, within } from "@testing-library/react";
 
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
+import ACTION_PARAMDEF from "test-resources/paramDefs/action_paramDef.json";
 
 let controller = new Controller();
 controller.setTitle("test title");

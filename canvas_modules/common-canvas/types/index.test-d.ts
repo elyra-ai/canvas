@@ -15,8 +15,8 @@
  */
 
 import SampleContent from "./sample-content.tsx";
-import allTypesCanvas from "../../harness/test_resources/diagrams/allTypesCanvas.json";
-import modelerPalette from "../../harness/test_resources/palettes/modelerPalette.json";
+import allTypesCanvas from "test-resources/pipeline-flows/allTypesCanvas.json";
+import modelerPalette from "test-resources/palettes/modelerPalette.json";
 
 import type {
   PipelineFlowDef,

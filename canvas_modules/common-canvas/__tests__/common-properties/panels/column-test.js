@@ -15,8 +15,8 @@
  */
 import { cleanup, waitFor } from "@testing-library/react";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
-import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import panelParamDef from "test-resources/paramDefs/panel_paramDef.json";
+import panelConditionsParamDef from "test-resources/paramDefs/panelConditions_paramDef.json";
 import { expect } from "chai";
 
 describe("column panel renders correctly", () => {

@@ -18,7 +18,7 @@ import { fireEvent, cleanup } from "@testing-library/react";
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import React from "react";
 import CommonProperties from "./../../../src/common-properties/common-properties.jsx";
-import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import panelConditionsParamDef from "test-resources/paramDefs/panelConditions_paramDef.json";
 import { expect } from "chai";
 
 describe("nested panels visible and enabled conditions work correctly", () => {

@@ -23,7 +23,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import CommonProperties from "./../../../src/common-properties/common-properties.jsx";
-import datefieldParamDef from "../../test_resources/paramDefs/dateField_paramDef.json";
+import datefieldParamDef from "test-resources/paramDefs/dateField_paramDef.json";
 import DateField from "../../../src/common-properties/controls/datefield";
 import { fireEvent, cleanup } from "@testing-library/react";
 

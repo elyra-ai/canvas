@@ -22,8 +22,8 @@ import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
-import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldPicker_paramDef.json";
-import glmmParamDef from "./../../test_resources/paramDefs/glmm_paramDef.json";
+import fieldPickerParamDef from "test-resources/paramDefs/fieldPicker_paramDef.json";
+import glmmParamDef from "test-resources/paramDefs/glmm_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { fireEvent } from "@testing-library/react";
 

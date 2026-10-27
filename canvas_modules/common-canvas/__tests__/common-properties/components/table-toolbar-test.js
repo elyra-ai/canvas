@@ -24,7 +24,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import { STATES } from "../../../src/common-properties/constants/constants";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "../../_utils_/table-utilsRTL";
-import structureListEditorParamDef from "../../test_resources/paramDefs/structureListEditor_paramDef.json";
+import structureListEditorParamDef from "test-resources/paramDefs/structureListEditor_paramDef.json";
 import { fireEvent, within, cleanup } from "@testing-library/react";
 
 const removeSelectedRows = sinon.spy();

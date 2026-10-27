@@ -18,9 +18,9 @@ import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";
-import flowValidationPipeline from "../test_resources/flow-validation/pipeline.json";
-import subFlowValidationPipeline from "../test_resources/flow-validation/subFlowPipeline.json";
-import flowValidationNoMsgsPipeline from "../test_resources/flow-validation/noMsgsPipeline.json";
+import flowValidationPipeline from "test-resources/flow-validation/pipeline.json";
+import subFlowValidationPipeline from "test-resources/flow-validation/subFlowPipeline.json";
+import flowValidationNoMsgsPipeline from "test-resources/flow-validation/noMsgsPipeline.json";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import * as FlowValidation from "../../src/flow-validation/validate-flow.js";
 
@@ -34,12 +34,12 @@ const NodeIds = {
 	NOMSG2: "paramDefNodeNoMsgs2"
 };
 
-import FLOW_VALIDATION_DEFAULT_DEF from "../test_resources/flow-validation/node_defaultData.json";
-import FLOW_VALIDATION_FORM_DEF from "../test_resources/flow-validation/node_formData.json";
-import FLOW_VALIDATION_PARAM_DEF from "../test_resources/flow-validation/node_paramDef.json";
-import FLOW_VALIDATION_TABLE_PARAM_DEF from "../test_resources/flow-validation/node_table_paramDef.json";
-import FLOW_VALIDATION_RECORD_DEF from "../test_resources/flow-validation/spark.AddColumn_paramDef.json";
-import FLOW_VALIDATION_MODEL_DEF from "../test_resources/flow-validation/spark.GBTClassifier_paramDef.json";
+import FLOW_VALIDATION_DEFAULT_DEF from "test-resources/flow-validation/node_defaultData.json";
+import FLOW_VALIDATION_FORM_DEF from "test-resources/flow-validation/node_formData.json";
+import FLOW_VALIDATION_PARAM_DEF from "test-resources/flow-validation/node_paramDef.json";
+import FLOW_VALIDATION_TABLE_PARAM_DEF from "test-resources/flow-validation/node_table_paramDef.json";
+import FLOW_VALIDATION_RECORD_DEF from "test-resources/flow-validation/spark.AddColumn_paramDef.json";
+import FLOW_VALIDATION_MODEL_DEF from "test-resources/flow-validation/spark.GBTClassifier_paramDef.json";
 
 const expectedNode1Messages = [
 	{ "text": "The new column name cannot be empty", "type": "error", "validation_id": "colName1", "id_ref": "colName" },

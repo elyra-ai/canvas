@@ -20,8 +20,8 @@ import * as PropertyUtils from "./../../../src/common-properties/util/property-u
 import testUtils from "./../../_utils_/property-utilsRTL.js";
 import Controller from "./../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL.js";
-import structureTableParamDef from "./../../test_resources/paramDefs/structureTable_paramDef.json";
-import convertValuesDataTypesParamDef from "./../../test_resources/paramDefs/convertValueDataTypes_paramDef.json";
+import structureTableParamDef from "test-resources/paramDefs/structureTable_paramDef.json";
+import convertValuesDataTypesParamDef from "test-resources/paramDefs/convertValueDataTypes_paramDef.json";
 import { cleanup } from "@testing-library/react";
 
 describe("dynamic text with expressions", () => {

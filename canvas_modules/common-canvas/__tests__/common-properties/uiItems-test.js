@@ -16,9 +16,9 @@
 
 import { expect } from "chai";
 import propertyUtilsRTL from "../_utils_/property-utilsRTL";
-import uiItemParamDef from "../test_resources/paramDefs/uiItems_paramDef.json";
-import panelParamDef from "../test_resources/paramDefs/panel_paramDef.json";
-import panelParamDefWide from "../test_resources/paramDefs/widePanel_paramDef.json";
+import uiItemParamDef from "test-resources/paramDefs/uiItems_paramDef.json";
+import panelParamDef from "test-resources/paramDefs/panel_paramDef.json";
+import panelParamDefWide from "test-resources/paramDefs/widePanel_paramDef.json";
 import { cleanup, fireEvent } from "@testing-library/react";
 
 describe("editor-form renders correctly with correct uiItems", () => {

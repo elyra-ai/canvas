@@ -26,7 +26,7 @@ import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/const
 import { render } from "../../_utils_/mount-utils.js";
 import { Provider } from "react-redux";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import textfieldParamDef from "../../test_resources/paramDefs/textField_paramDef.json";
+import textfieldParamDef from "test-resources/paramDefs/textField_paramDef.json";
 
 
 const controller = new Controller();
