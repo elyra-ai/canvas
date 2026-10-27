@@ -23,7 +23,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
-import oneofselectParamDef from "test-resources/paramDefs/oneOfSelect_paramDef.json";
+import oneofselectParamDef from "test-resources/shared/param-defs/oneOfSelect_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { cloneDeep } from "lodash";
 

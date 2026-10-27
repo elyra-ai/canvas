@@ -25,7 +25,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
 
-import listParamDef from "test-resources/paramDefs/list_paramDef.json";
+import listParamDef from "test-resources/shared/param-defs/list_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 const controlString = {

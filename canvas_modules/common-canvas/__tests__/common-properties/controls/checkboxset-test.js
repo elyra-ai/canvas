@@ -24,7 +24,7 @@ import CommonProperties from "./../../../src/common-properties/common-properties
 import { render } from "../../_utils_/mount-utils.js";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
-import checkboxSetParamDef from "test-resources/paramDefs/checkboxSet_paramDef.json";
+import checkboxSetParamDef from "test-resources/shared/param-defs/checkboxSet_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 

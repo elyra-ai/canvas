@@ -17,7 +17,7 @@
 import { expect } from "chai";
 import { validateInput } from "./../../../src/common-properties/ui-conditions/ui-conditions.js";
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
-import structureeditorParamDef from "test-resources/paramDefs/structureEditor_paramDef.json";
+import structureeditorParamDef from "test-resources/shared/param-defs/structureEditor_paramDef.json";
 import { cleanup } from "@testing-library/react";
 
 describe("validateInput returns the correct boolean for the given condition", () => {

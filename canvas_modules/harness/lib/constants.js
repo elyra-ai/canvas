@@ -22,11 +22,11 @@ export const APP_PATH = "/";
 export const API_PATH_V1 = "/v1/test-harness";
 export const APP_SESSION_KEY = "keyboard cat";
 
-export const TEST_RESOURCES_DIAGRAMS_PATH = "../../test-resources/pipeline-flows/";
-export const TEST_RESOURCES_PALETTES_PATH = "../../test-resources/palettes/";
+export const TEST_RESOURCES_DIAGRAMS_PATH = "../../test-resources/shared/pipeline-flows/";
+export const TEST_RESOURCES_PALETTES_PATH = "../../test-resources/shared/palettes/";
 export const TEST_RESOURCES_PROPERTIES_PATH = "../../test-resources/properties/";
 export const TEST_RESOURCES_FORMS_PATH = "../../test-resources/forms/";
-export const TEST_RESOURCES_PARAMDEFS_PATH = "../../test-resources/paramDefs/";
+export const TEST_RESOURCES_PARAMDEFS_PATH = "../../test-resources/shared/param-defs/";
 
 export const PROCESS_EXIT_TIMEOUT = 5000; // ms (5 seconds)
 export const FAILURE_EXIT_CODE = 1;

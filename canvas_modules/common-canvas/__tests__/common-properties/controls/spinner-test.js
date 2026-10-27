@@ -21,7 +21,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import spinnerParamDef from "test-resources/paramDefs/spinner_paramDef.json";
+import spinnerParamDef from "test-resources/shared/param-defs/spinner_paramDef.json";
 import { fireEvent, waitFor } from "@testing-library/react";
 
 

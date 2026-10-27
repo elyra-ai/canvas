@@ -16,7 +16,7 @@
 
 import { cleanup, waitFor } from "@testing-library/react";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import panelConditionsParamDef from "test-resources/paramDefs/panelConditions_paramDef.json";
+import panelConditionsParamDef from "test-resources/shared/param-defs/panelConditions_paramDef.json";
 import "@testing-library/jest-dom";
 import { expect } from "chai";
 

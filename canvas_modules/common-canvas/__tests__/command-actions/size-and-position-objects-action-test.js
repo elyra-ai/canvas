@@ -18,7 +18,7 @@ import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import SizeAndPositionObjectsAction from "../../src/command-actions/sizeAndPositionObjectsAction.js";
-import startPipelineFlow from "test-resources/shared/startPipelineFlow.json";
+import startPipelineFlow from "test-resources/jest/startPipelineFlow.json";
 
 const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();

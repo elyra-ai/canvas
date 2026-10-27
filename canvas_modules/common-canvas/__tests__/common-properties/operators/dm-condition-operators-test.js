@@ -16,7 +16,7 @@
 
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
-import conditionOpParamDef from "test-resources/paramDefs/dmConditionOp_paramDef.json";
+import conditionOpParamDef from "test-resources/shared/param-defs/dmConditionOp_paramDef.json";
 import { cleanup, fireEvent } from "@testing-library/react";
 
 describe("dm condition operators work correctly", () => {

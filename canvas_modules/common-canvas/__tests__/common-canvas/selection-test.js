@@ -23,7 +23,7 @@ import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import LayoutDimensions from "../../src/object-model/layout-dimensions.js";
-import supernodeFlow from "test-resources/pipeline-flows/supernodeCanvas.json";
+import supernodeFlow from "test-resources/shared/pipeline-flows/supernodeCanvas.json";
 
 
 describe("Selection notification tests", () => {

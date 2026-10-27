@@ -18,10 +18,10 @@ import React from "react";
 import CommonProperties from "./../../../src/common-properties/common-properties.jsx";
 import { expect } from "chai";
 import { fireEvent, within, cleanup } from "@testing-library/react";
-import TAB_PARAM_DEF from "test-resources/paramDefs/tab_paramDef.json";
-import PARAMS_ONLY_DEF from "test-resources/paramDefs/paramsOnly_paramDef.json";
-import CODE_PARAM_DEF from "test-resources/paramDefs/code_paramDef.json";
-import DATEFIELD_PARAM_DEF from "test-resources/paramDefs/dateField_paramDef.json";
+import TAB_PARAM_DEF from "test-resources/shared/param-defs/tab_paramDef.json";
+import PARAMS_ONLY_DEF from "test-resources/shared/param-defs/paramsOnly_paramDef.json";
+import CODE_PARAM_DEF from "test-resources/shared/param-defs/code_paramDef.json";
+import DATEFIELD_PARAM_DEF from "test-resources/shared/param-defs/dateField_paramDef.json";
 
 describe("tabs and subtabs should be rendered correctly", () => {
 	let wrapper;

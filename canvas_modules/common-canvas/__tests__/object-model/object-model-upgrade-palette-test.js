@@ -20,20 +20,20 @@ import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import ObjectModel from "../../src/object-model/object-model.js";
 
-import commonPalette from "test-resources/palettes/commonPalette.json";
-import modelerPalette from "test-resources/palettes/modelerPalette.json";
-import sparkPalette from "test-resources/palettes/sparkPalette.json";
-import bindingWithOutputPalette from "test-resources/palettes/bindingWithOutputPalette.json";
+import commonPalette from "test-resources/shared/palettes/commonPalette.json";
+import modelerPalette from "test-resources/shared/palettes/modelerPalette.json";
+import sparkPalette from "test-resources/shared/palettes/sparkPalette.json";
+import bindingWithOutputPalette from "test-resources/shared/palettes/bindingWithOutputPalette.json";
 
-import commonPaletteV2 from "test-resources/palettes/v2-commonPalette.json";
-import modelerPaletteV2 from "test-resources/palettes/v2-modelerPalette.json";
-import sparkPaletteV2 from "test-resources/palettes/v2-sparkPalette.json";
+import commonPaletteV2 from "test-resources/shared/palettes/v2-commonPalette.json";
+import modelerPaletteV2 from "test-resources/shared/palettes/v2-modelerPalette.json";
+import sparkPaletteV2 from "test-resources/shared/palettes/v2-sparkPalette.json";
 
-import modelerPaletteV1 from "test-resources/palettes/v1-modelerPalette.json";
-import sparkPaletteV1 from "test-resources/palettes/v1-sparkPalette.json";
+import modelerPaletteV1 from "test-resources/shared/palettes/v1-modelerPalette.json";
+import sparkPaletteV1 from "test-resources/shared/palettes/v1-sparkPalette.json";
 
-import modelerPaletteV0 from "test-resources/palettes/x-modelerPalette.json";
-import sparkPaletteV0 from "test-resources/palettes/x-sparkPalette.json";
+import modelerPaletteV0 from "test-resources/shared/palettes/x-modelerPalette.json";
+import sparkPaletteV0 from "test-resources/shared/palettes/x-sparkPalette.json";
 
 import { extractPaletteVersion } from "../../src/object-model/schemas-utils/upgrade-palette.js";
 

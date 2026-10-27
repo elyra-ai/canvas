@@ -17,7 +17,7 @@
 import { expect } from "chai";
 import { validateInput } from "./../../../src/common-properties/ui-conditions/conditions-utils.js";
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
-import readOnlyParamDef from "test-resources/paramDefs/readOnly_paramDef.json";
+import readOnlyParamDef from "test-resources/shared/param-defs/readOnly_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 

@@ -21,7 +21,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import Controller from "./../../../src/common-properties/properties-controller";
-import ACTION_PARAMDEF from "test-resources/paramDefs/action_paramDef.json";
+import ACTION_PARAMDEF from "test-resources/shared/param-defs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { cleanup, fireEvent, within } from "@testing-library/react";
 import { Launch } from "@carbon/react/icons";

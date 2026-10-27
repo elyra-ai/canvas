@@ -21,11 +21,11 @@ import { createIntlCommonCanvasRTL } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
-import startPipelineFlow from "test-resources/shared/startPipelineFlow.json";
-import supernodeCanvas from "test-resources/pipeline-flows/supernodeCanvas.json";
-import paletteJson from "test-resources/palettes/test-palette.json";
-import expectedPaletteNode from "test-resources/palettes/expected-add-node.json";
-import expectedPaletteSupernode from "test-resources/palettes/expected-add-supernode.json";
+import startPipelineFlow from "test-resources/jest/startPipelineFlow.json";
+import supernodeCanvas from "test-resources/shared/pipeline-flows/supernodeCanvas.json";
+import paletteJson from "test-resources/shared/palettes/test-palette.json";
+import expectedPaletteNode from "test-resources/shared/palettes/expected-add-node.json";
+import expectedPaletteSupernode from "test-resources/shared/palettes/expected-add-supernode.json";
 
 describe("Expand and Collapse Supernode Action", () => {
 	let canvasController;

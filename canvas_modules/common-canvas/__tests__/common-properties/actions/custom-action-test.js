@@ -15,7 +15,7 @@
  */
 
 import { expect } from "chai";
-import ACTION_PARAMDEF from "test-resources/paramDefs/action_paramDef.json";
+import ACTION_PARAMDEF from "test-resources/shared/param-defs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { cleanup, fireEvent } from "@testing-library/react";
 

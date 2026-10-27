@@ -19,7 +19,7 @@ import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import SetObjectsStyleAction from "../../src/command-actions/setObjectsStyleAction.js";
-import startPipelineFlow from "test-resources/shared/startPipelineFlow.json";
+import startPipelineFlow from "test-resources/jest/startPipelineFlow.json";
 
 
 const canvasController = new CanvasController();

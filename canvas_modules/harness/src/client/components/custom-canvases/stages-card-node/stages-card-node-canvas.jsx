@@ -24,7 +24,7 @@ import { Edit } from "@carbon/react/icons";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import StagesCardNodeFlow from "./stages-card-node-flow.json";
-import StagesCardNodePalette from "test-resources/palettes/stagesPalette.json";
+import StagesCardNodePalette from "test-resources/shared/palettes/stagesPalette.json";
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {

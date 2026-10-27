@@ -20,10 +20,10 @@ import React from "react";
 import { expect } from "chai";
 import { cleanup } from "@testing-library/react";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import panelParamDef from "test-resources/paramDefs/panel_paramDef.json";
-import customPanelParamDef from "test-resources/paramDefs/customPanel_paramDef.json";
-import panelConditionsParamDef from "test-resources/paramDefs/panelConditions_paramDef.json";
-import nestedPanelParamDef from "test-resources/paramDefs/panelNested_paramDef.json";
+import panelParamDef from "test-resources/shared/param-defs/panel_paramDef.json";
+import customPanelParamDef from "test-resources/shared/param-defs/customPanel_paramDef.json";
+import panelConditionsParamDef from "test-resources/shared/param-defs/panelConditions_paramDef.json";
+import nestedPanelParamDef from "test-resources/shared/param-defs/panelNested_paramDef.json";
 import AddtlCmptsTest from "./../../_utils_/custom-components/AddtlCmptsTest.jsx";
 
 

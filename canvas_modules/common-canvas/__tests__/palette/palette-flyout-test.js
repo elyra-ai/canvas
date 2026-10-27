@@ -20,10 +20,10 @@ import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 
-import imageTestPalette from "test-resources/palettes/image-test-palette.json";
-import testPalette2 from "test-resources/palettes/test-palette2.json";
-import testPalette3NoDesc from "test-resources/palettes/test-palette3-no-desc.json";
-import paletteMissingFields from "test-resources/palettes/test-missing-fields.json";
+import imageTestPalette from "test-resources/shared/palettes/image-test-palette.json";
+import testPalette2 from "test-resources/shared/palettes/test-palette2.json";
+import testPalette3NoDesc from "test-resources/shared/palettes/test-palette3-no-desc.json";
+import paletteMissingFields from "test-resources/shared/palettes/test-missing-fields.json";
 
 
 // This describe() function needs to be positioned above the other describe()

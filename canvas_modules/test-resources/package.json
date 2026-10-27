@@ -8,8 +8,8 @@
   "exports": {
     "./*": "./*",
     "./package.json": "./package.json",
-    "./paramDefs/*": "./paramDefs/*",
-    "./pipeline-flows/*": "./pipeline-flows/*",
-    "./palettes/*": "./palettes/*"
+    "./shared/param-defs/*": "./shared/param-defs/*",
+    "./shared/pipeline-flows/*": "./shared/pipeline-flows/*",
+    "./shared/palettes/*": "./shared/palettes/*"
   }
 }

@@ -21,7 +21,7 @@ import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
-import datepickerParamDef from "test-resources/paramDefs/datePicker_paramDef.json";
+import datepickerParamDef from "test-resources/shared/param-defs/datePicker_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const mockDatepicker = jest.fn();

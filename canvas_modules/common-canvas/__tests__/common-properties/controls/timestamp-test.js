@@ -20,7 +20,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import timestampParamDef from "test-resources/paramDefs/timestamp_paramDef.json";
+import timestampParamDef from "test-resources/shared/param-defs/timestamp_paramDef.json";
 
 const controller = new Controller();
 const control = {

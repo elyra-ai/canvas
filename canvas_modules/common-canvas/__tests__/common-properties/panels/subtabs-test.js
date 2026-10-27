@@ -16,7 +16,7 @@
 
 import { cleanup, waitFor } from "@testing-library/react";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import tabParamDef from "test-resources/paramDefs/tab_paramDef.json";
+import tabParamDef from "test-resources/shared/param-defs/tab_paramDef.json";
 import { expect } from "chai";
 
 describe("subtabs renders correctly", () => {

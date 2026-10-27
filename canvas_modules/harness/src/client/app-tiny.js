@@ -17,8 +17,8 @@
 
 import React from "react";
 import { IntlProvider } from "react-intl";
-import AllTypesCanvas from "test-resources/pipeline-flows/allTypesCanvas.json" with { type: "json" };
-import ModelerPalette from "test-resources/palettes/modelerPalette.json" with { type: "json" };
+import AllTypesCanvas from "test-resources/shared/pipeline-flows/allTypesCanvas.json" with { type: "json" };
+import ModelerPalette from "test-resources/shared/palettes/modelerPalette.json" with { type: "json" };
 import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
 // This library is only needed if you want to use hot loading during development.

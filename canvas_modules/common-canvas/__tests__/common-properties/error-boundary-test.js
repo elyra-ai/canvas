@@ -17,7 +17,7 @@
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import { IntlProvider } from "react-intl";
-import editStyleResource from "test-resources/common-properties/form-editstyle-test.json";
+import editStyleResource from "test-resources/jest/common-properties/form-editstyle-test.json";
 
 import { expect } from "chai";
 import sinon from "sinon";

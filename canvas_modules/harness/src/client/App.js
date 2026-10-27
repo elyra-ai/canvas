@@ -96,7 +96,7 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 // Uncomment these and associated code to automatically display a flow and palette.
-// import allTypesCanvas from "test-resources/pipeline-flows/allTypesCanvas.json";
+// import allTypesCanvas from "test-resources/shared/pipeline-flows/allTypesCanvas.json";
 
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
@@ -171,8 +171,8 @@ import {
 	LAYOUT_LIBRARY_DAGRE
 } from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
-import EXTERNAL_SUB_FLOW_CANVAS_1 from "test-resources/pipeline-flows/externalSubFlowCanvas1.json";
-import EXTERNAL_SUB_FLOW_CANVAS_2 from "test-resources/pipeline-flows/externalSubFlowCanvas2.json";
+import EXTERNAL_SUB_FLOW_CANVAS_1 from "test-resources/shared/pipeline-flows/externalSubFlowCanvas1.json";
+import EXTERNAL_SUB_FLOW_CANVAS_2 from "test-resources/shared/pipeline-flows/externalSubFlowCanvas2.json";
 
 import FormsService from "./services/FormsService";
 

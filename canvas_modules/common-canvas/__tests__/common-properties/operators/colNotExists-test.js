@@ -16,8 +16,8 @@
 
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
-import dataset from "test-resources/common-properties/deriveDatasetMetadata.json";
-import structuretableParamDef from "test-resources/paramDefs/structureTable_paramDef.json";
+import dataset from "test-resources/jest/common-properties/deriveDatasetMetadata.json";
+import structuretableParamDef from "test-resources/shared/param-defs/structureTable_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { cleanup } from "@testing-library/react";
 

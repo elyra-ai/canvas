@@ -23,7 +23,7 @@ import { expect } from "chai";
 import { cleanup, fireEvent } from "@testing-library/react";
 import sinon from "sinon";
 import SliderControl from "./../../../src/common-properties/controls/slider";
-import sliderParamDef from "test-resources/paramDefs/slider_paramDef.json";
+import sliderParamDef from "test-resources/shared/param-defs/slider_paramDef.json";
 
 describe("SliderControl renders correctly", () => {
 

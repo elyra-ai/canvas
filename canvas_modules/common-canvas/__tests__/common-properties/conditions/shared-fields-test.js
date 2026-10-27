@@ -17,7 +17,7 @@
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import { expect } from "chai";
-import sharedFieldsParamDef from "test-resources/paramDefs/sharedFields_paramDef.json";
+import sharedFieldsParamDef from "test-resources/shared/param-defs/sharedFields_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 
