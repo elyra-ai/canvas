@@ -97,7 +97,6 @@ export const NOTIFICATION_MESSAGE_TYPE = {
 
 export const LOCAL_FILE_OPTION = "Local File";
 export const PARAM_DEFS = "paramDefs";
-export const PARAMETER_DEFS = "paramDefs";
 
 export const PRIMARY = "Primary";
 
