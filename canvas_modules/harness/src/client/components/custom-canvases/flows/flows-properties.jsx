@@ -20,7 +20,7 @@ import { FormattedMessage } from "react-intl";
 import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { isEmpty } from "lodash";
 import FormsService from "../../../services/FormsService";
-import { PARAM_DEFS, CUSTOM } from "../../../constants/harness-constants.js";
+import { PARAMETER_DEFS, CUSTOM } from "../../../constants/harness-constants.js";
 import CustomTableControl from "../../../components/custom-controls/CustomTableControl";
 
 export default class FlowsProperties extends React.Component {
@@ -39,7 +39,7 @@ export default class FlowsProperties extends React.Component {
 	}
 	componentDidMount() {
 		const that = this;
-		FormsService.getFiles(PARAM_DEFS)
+		FormsService.getFiles(PARAMETER_DEFS)
 			.then(function(res) {
 				if (Array.isArray(res)) {
 					that.availableParamDefs = res;
@@ -77,13 +77,13 @@ export default class FlowsProperties extends React.Component {
 			if (foundName) {
 				return {
 					fileName: foundName,
-					type: PARAM_DEFS
+					type: PARAMETER_DEFS
 				};
 			}
 		}
 		return {
 			fileName: "appDefault_paramDef.json",
-			type: PARAM_DEFS
+			type: PARAMETER_DEFS
 		};
 	}
 

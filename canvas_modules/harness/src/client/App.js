@@ -136,7 +136,7 @@ import {
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
-	PARAM_DEFS,
+	PARAMETER_DEFS,
 	PRIMARY,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_STANDARD_ACTIONS,
@@ -626,7 +626,7 @@ class App extends React.Component {
 	componentDidMount() {
 		this.setBreadcrumbsDefinition();
 		const that = this;
-		FormsService.getFiles(PARAM_DEFS)
+		FormsService.getFiles(PARAMETER_DEFS)
 			.then(function(res) {
 				if (Array.isArray(res)) {
 					that.availableParamDefs = res;
@@ -744,7 +744,7 @@ class App extends React.Component {
 				propertiesFileChooserVisible: false
 			}, function() {
 				that.log("Submit common properties file", that.state.selectedPropertiesDropdownFile);
-				FormsService.getFileContent(PARAM_DEFS, that.state.selectedPropertiesDropdownFile)
+				FormsService.getFileContent(PARAMETER_DEFS, that.state.selectedPropertiesDropdownFile)
 					.then(function(res) {
 						that.setPropertiesJSON(res);
 					});
@@ -774,13 +774,13 @@ class App extends React.Component {
 			if (foundName) {
 				return {
 					fileName: foundName,
-					type: PARAM_DEFS
+					type: PARAMETER_DEFS
 				};
 			}
 		}
 		return {
 			fileName: "appDefault_paramDef.json",
-			type: PARAM_DEFS
+			type: PARAMETER_DEFS
 		};
 	}
 
