@@ -22,8 +22,8 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import selectcolumnParamDef from "../../test_resources/paramDefs/selectColumn_paramDef.json";
-import selectcolumnMultiInputParamDef from "../../test_resources/paramDefs/selectColumnMultiInput_paramDef.json";
+import selectcolumnParamDef from "test-resources/shared/param-defs/selectColumn_paramDef.json";
+import selectcolumnMultiInputParamDef from "test-resources/shared/param-defs/selectColumnMultiInput_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 const emptyValueIndicator = "...";

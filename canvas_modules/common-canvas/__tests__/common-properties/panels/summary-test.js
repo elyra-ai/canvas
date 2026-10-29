@@ -16,8 +16,8 @@
 
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "../../_utils_/table-utilsRTL";
-import summaryPanelParamDef from "./../../test_resources/paramDefs/summaryPanel_paramDef.json";
-import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import summaryPanelParamDef from "test-resources/shared/param-defs/summaryPanel_paramDef.json";
+import panelConditionsParamDef from "test-resources/shared/param-defs/panelConditions_paramDef.json";
 import { expect } from "chai";
 import { cleanup, waitFor, fireEvent } from "@testing-library/react";
 

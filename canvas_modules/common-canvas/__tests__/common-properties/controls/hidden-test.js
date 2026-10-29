@@ -18,7 +18,7 @@
 
 import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import hiddenParamDef from "../../test_resources/paramDefs/hidden_paramDef.json";
+import hiddenParamDef from "test-resources/shared/param-defs/hidden_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 describe("hidden control works correctly", () => {

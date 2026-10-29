@@ -23,7 +23,7 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
-import SomeOfSelectParamDef from "../../test_resources/paramDefs/someOfSelect_paramDef.json";
+import SomeOfSelectParamDef from "test-resources/shared/param-defs/someOfSelect_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const mockSomeOfSelect = jest.fn();

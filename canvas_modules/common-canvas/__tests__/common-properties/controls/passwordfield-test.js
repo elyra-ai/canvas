@@ -22,7 +22,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 
-import passwordfieldParamDef from "../../test_resources/paramDefs/passwordField_paramDef.json";
+import passwordfieldParamDef from "test-resources/shared/param-defs/passwordField_paramDef.json";
 import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();

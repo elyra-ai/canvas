@@ -27,7 +27,7 @@ import MultiCommandPanel from "./multi-command-panel";
 import AppDecoration from "./app-decoration.jsx";
 
 import StagesFlow from "./stages-flow.json";
-import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
+import StagesPalette from "test-resources/shared/palettes/stagesPalette.json";
 
 export default class StagesCanvas extends React.Component {
 	constructor(props) {

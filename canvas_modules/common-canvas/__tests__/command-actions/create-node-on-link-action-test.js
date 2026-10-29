@@ -18,7 +18,7 @@ import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import CreateNodeOnLinkAction from "../../src/command-actions/createNodeOnLinkAction.js";
-import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
+import startPipelineFlow from "test-resources/jest/startPipelineFlow.json";
 import difference from "lodash/difference";
 
 const canvasController = new CanvasController();
