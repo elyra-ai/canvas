@@ -89,6 +89,7 @@
     "sass-loader": "14.1.1",
     "source-map-loader": "5.0.0",
     "stylelint": "14.16.1",
+    "test-resources": "file:../test-resources",
     "ts-loader": "9.5.4",
     "typescript": "5.9.3",
     "webpack": "5.104.1",

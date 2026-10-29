@@ -16,8 +16,8 @@
 import React from "react";
 import sinon from "sinon";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import twistypanelParamDef from "./../../test_resources/paramDefs/twistyPanel_paramDef.json";
-import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import twistypanelParamDef from "test-resources/shared/param-defs/twistyPanel_paramDef.json";
+import panelConditionsParamDef from "test-resources/shared/param-defs/panelConditions_paramDef.json";
 import { expect } from "chai";
 import { cleanup, fireEvent, waitFor } from "@testing-library/react";
 

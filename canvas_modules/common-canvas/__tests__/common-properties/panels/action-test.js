@@ -16,7 +16,7 @@
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import panelConditionsParamDef from "test-resources/shared/param-defs/panelConditions_paramDef.json";
 
 describe("action panel visible and enabled conditions work correctly", () => {
 	let wrapper;

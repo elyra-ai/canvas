@@ -24,7 +24,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import StructureEditorControl from "../../../src/common-properties/controls/structureeditor";
-import structureeditorParamDef from "../../test_resources/paramDefs/structureEditor_paramDef.json";
+import structureeditorParamDef from "test-resources/shared/param-defs/structureEditor_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 

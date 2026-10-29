@@ -132,6 +132,7 @@
     "sass": "1.71.1",
     "sinon": "9.0.3",
     "stylelint": "13.13.1",
+    "test-resources": "file:../test-resources",
     "tsd": "^0.31.2",
     "url": "0.11.3"
   },

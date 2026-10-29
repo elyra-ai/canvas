@@ -1,0 +1,15 @@
+{
+  "name": "test-resources",
+  "version": "0.0.1",
+  "description": "Elyra Canvas test resources and fixtures",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": {
+    "./*": "./*",
+    "./package.json": "./package.json",
+    "./shared/param-defs/*": "./shared/param-defs/*",
+    "./shared/pipeline-flows/*": "./shared/pipeline-flows/*",
+    "./shared/palettes/*": "./shared/palettes/*"
+  }
+}

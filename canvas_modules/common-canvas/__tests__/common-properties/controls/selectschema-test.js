@@ -21,7 +21,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import selectschemaParamDef from "../../test_resources/paramDefs/selectSchema_paramDef.json";
+import selectschemaParamDef from "test-resources/shared/param-defs/selectSchema_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 

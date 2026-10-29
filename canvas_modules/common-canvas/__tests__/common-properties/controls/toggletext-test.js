@@ -21,7 +21,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL.js";
-import toggletextParamDef from "../../test_resources/paramDefs/toggleText_paramDef.json";
+import toggletextParamDef from "test-resources/shared/param-defs/toggleText_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
 
 const controller = new Controller();

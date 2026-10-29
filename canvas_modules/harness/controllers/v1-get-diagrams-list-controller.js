@@ -31,10 +31,10 @@ function _get(req, res) {
 	if (req.query.file) { // retrieve file contents
 		var filename = req.query.file;
 		logger.info(`Retrieving ${dirPath}${filename}`);
-		readFile(dirPath + filename, "utf-8", function(err, data) {
+		readFile(path.join(dirPath, filename), "utf-8", function(err, data) {
 			if (err) {
 				res.status(HTTP_STATUS_NOT_FOUND);
-				res.json({ error: err });
+				return res.json({ error: err });
 			}
 			res.status(HTTP_STATUS_OK);
 			var content = {};
@@ -43,16 +43,16 @@ function _get(req, res) {
 			} catch {
 				logger.warn("error parsing json " + filename);
 			}
-			res.json(content);
+			return res.json(content);
 		});
 	} else { // retrieve all
 		readdir(dirPath, function(err, files) {
 			if (err) {
 				res.status(HTTP_STATUS_NOT_FOUND);
-				res.json({ error: err });
+				return res.json({ error: err });
 			}
 			res.status(HTTP_STATUS_OK);
-			res.json(files);
+			return res.json(files);
 		});
 	}
 }

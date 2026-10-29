@@ -36,7 +36,7 @@ import {
 import {
 	CHOOSE_FROM_LOCATION,
 	LOCAL_FILE_OPTION,
-	PARAMETER_DEFS
+	PARAM_DEFS
 } from "../../../constants/harness-constants.js";
 
 import FormsService from "../../../services/FormsService";
@@ -123,9 +123,11 @@ export default class SidePanelProperties extends React.Component {
 
 	componentDidMount() {
 		const that = this;
-		FormsService.getFiles(PARAMETER_DEFS)
+		FormsService.getFiles(PARAM_DEFS)
 			.then(function(res) {
-				that.setState({ commonPropertiesParamDefsFiles: res });
+				if (Array.isArray(res)) {
+					that.setState({ commonPropertiesParamDefsFiles: res });
+				}
 			});
 	}
 
@@ -151,7 +153,7 @@ export default class SidePanelProperties extends React.Component {
 	getSelectedFile() {
 		const that = this;
 		this.props.log("Submit common properties file", this.props.propertiesConfig.selectedPropertiesDropdownFile);
-		FormsService.getFileContent(PARAMETER_DEFS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
+		FormsService.getFileContent(PARAM_DEFS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
 			.then(function(res) {
 				that.props.propertiesConfig.setPropertiesJSON(res);
 			});
@@ -208,14 +210,18 @@ export default class SidePanelProperties extends React.Component {
 		options.push(
 			<SelectItemGroup key ={"choose-file-option"} label = {LOCAL_FILE_OPTION}>{chooseFromLocation}
 			</SelectItemGroup>);
-		for (const option of this.state.commonPropertiesParamDefsFiles) {
-			paramDefOptions.push(<SelectItem key={"param-def-option-" + key++} text={option} value={option} />);
+		if (Array.isArray(this.state.commonPropertiesParamDefsFiles)) {
+			for (const option of this.state.commonPropertiesParamDefsFiles) {
+				paramDefOptions.push(<SelectItem key={"param-def-option-" + key++} text={option} value={option} />);
+			}
 		}
 		options.push(
-			<SelectItemGroup key ={"param-def-option"} label = {PARAMETER_DEFS}>{paramDefOptions}
+			<SelectItemGroup key ={"param-def-option"} label = {PARAM_DEFS}>{paramDefOptions}
 			</SelectItemGroup>);
-		for (const option of this.state.commonPropertiesFormsFiles) {
-			formOptions.push(<SelectItem key={"form-option-" + key++} text={option} value={option} />);
+		if (Array.isArray(this.state.commonPropertiesFormsFiles)) {
+			for (const option of this.state.commonPropertiesFormsFiles) {
+				formOptions.push(<SelectItem key={"form-option-" + key++} text={option} value={option} />);
+			}
 		}
 		return options;
 	}

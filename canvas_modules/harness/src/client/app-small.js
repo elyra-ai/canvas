@@ -17,8 +17,8 @@
 
 import React from "react";
 import { IntlProvider } from "react-intl";
-import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json" with { type: "json" };
-import ModelerPalette from "../../test_resources/palettes/modelerPalette.json" with { type: "json" };
+import AllTypesCanvas from "test-resources/shared/pipeline-flows/allTypesCanvas.json" with { type: "json" };
+import ModelerPalette from "test-resources/shared/palettes/modelerPalette.json" with { type: "json" };
 import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
 class App extends React.Component {

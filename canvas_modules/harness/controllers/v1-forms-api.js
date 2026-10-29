@@ -19,7 +19,7 @@ import { Router } from "express";
 import { get as getDiagramsList } from "./v1-get-diagrams-list-controller.js";
 import { get as getFormsList } from "./v1-get-forms-list-controller.js";
 import { get as getPalettesList } from "./v1-get-palettes-list-controller.js";
-import { get as getParameterDefsList } from "./v1-get-parameterdefs-list-controller.js";
+import { get as getParamDefsList } from "./v1-get-paramdefs-list-controller.js";
 import { get as getPropertiesList } from "./v1-get-properties-list-controller.js";
 
 // Globals
@@ -39,4 +39,5 @@ router.get("/forms/diagrams", getDiagramsList);
 router.get("/forms/palettes", getPalettesList);
 router.get("/forms/properties", getPropertiesList);
 router.get("/forms/forms", getFormsList);
-router.get("/forms/parameterDefs", getParameterDefsList);
+router.get("/forms/paramDefs", getParamDefsList);
+router.get("/forms/parameterDefs", getParamDefsList);

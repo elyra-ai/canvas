@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import uiItemsParamDef from "../test_resources/paramDefs/uiItems_paramDef.json";
+import uiItemsParamDef from "test-resources/shared/param-defs/uiItems_paramDef.json";
 import propertyUtilsRTL from "../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import { cleanup, fireEvent } from "@testing-library/react";

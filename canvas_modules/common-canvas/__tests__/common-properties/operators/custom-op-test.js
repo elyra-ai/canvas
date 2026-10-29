@@ -16,7 +16,7 @@
 
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
-import customControlParamDef from "../../test_resources/paramDefs/customCtrlOp_paramDef.json";
+import customControlParamDef from "test-resources/shared/param-defs/customCtrlOp_paramDef.json";
 import { cleanup } from "@testing-library/react";
 
 describe("validating custom operators work correctly", () => {
