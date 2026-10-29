@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { OverflowMenu, OverflowMenuItem } from "@carbon/react";
+import { MenuItem, OverflowMenu, OverflowMenuItem, useFeatureFlag } from "@carbon/react";
 
 class CustomOverflowAction {
 	static id() {
@@ -33,17 +33,45 @@ class CustomOverflowAction {
 	}
 
 	renderAction() {
-		return (
-			<div data-floating-menu-container style={{ position: "relative" }}>
+		const isRight = this.data?.parameter_ref === "oneofselect-custom-action-right";
+		const changeText = (val) => this.changeReadonlyText(val);
+
+		// A small functional component so we can call useFeatureFlag (a hook).
+		// It switches between v11 and v12 props/children based on which
+		// OverflowMenu implementation is active.
+		function OverflowMenuAdapter() {
+			const v12 = useFeatureFlag("enable-v12-overflowmenu");
+			if (v12) {
+				// v12: use menuAlignment and MenuItem children
+				return (
+					<OverflowMenu
+						aria-label="Overflow menu"
+						size="sm"
+						className="harness-custom-action"
+						menuAlignment={isRight ? "bottom-end" : "bottom-start"}
+					>
+						<MenuItem className="overflow-menu-item" label="Menu item 1" onClick={() => changeText("Menu item 1")} />
+						<MenuItem className="overflow-menu-item" label="Menu item 2" onClick={() => changeText("Menu item 2")} />
+					</OverflowMenu>
+				);
+			}
+			// v11: use flipped and OverflowMenuItem children
+			return (
 				<OverflowMenu
-					flipped={this.data?.parameter_ref === "oneofselect-custom-action-right"}
 					aria-label="Overflow menu"
 					size="sm"
 					className="harness-custom-action"
+					flipped={isRight}
 				>
-					<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 1" onClick={() => this.changeReadonlyText("Menu item 1")} />
-					<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 2" onClick={() => this.changeReadonlyText("Menu item 2")} />
+					<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 1" onClick={() => changeText("Menu item 1")} />
+					<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 2" onClick={() => changeText("Menu item 2")} />
 				</OverflowMenu>
+			);
+		}
+
+		return (
+			<div data-floating-menu-container style={{ position: "relative" }}>
+				<OverflowMenuAdapter />
 			</div>
 		);
 	}

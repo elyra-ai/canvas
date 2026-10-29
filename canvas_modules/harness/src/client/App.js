@@ -102,7 +102,7 @@ import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Do
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification as NotificationIcon, Save, Launch, Restart } from "@carbon/react/icons";
 
-import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
+import { FeatureFlags, InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -380,6 +380,7 @@ class App extends React.Component {
 			showHeadingDesc: false,
 			light: true,
 			lightTheme: false,
+			carbonV12: true,
 			cspEnabled: Boolean(window.__CSP_NONCE__),
 			showRequiredIndicator: true,
 			showAlertsTab: true,
@@ -2910,6 +2911,13 @@ class App extends React.Component {
 		}));
 	}
 
+	handleV12Toggle() {
+		this.setState((prevState) => ({
+			...prevState,
+			carbonV12: !prevState.carbonV12,
+		}));
+	}
+
 	/**
 	 * Handles the CSP-enabled toggle in the toolbar.
 	 * Posts the new value to the server, then navigates to the origin so the
@@ -3008,6 +3016,28 @@ class App extends React.Component {
 						</div>
 					),
 					tooltip: "Enable/disable Content Security Policy (page will reload)"
+				},
+				{ divider: true },
+				{
+					action: "v12-toggle",
+					label: "Carbon v12",
+					enable: true,
+					jsx: (tabIndex) => (
+						<div className="harness-theme-toggle-wrapper" tabIndex={-1}>
+							<Toggle
+								id="harness-toggle-v12"
+								aria-label="Enable Carbon v12 feature flags"
+								size="sm"
+								labelA="v11"
+								labelB="v12"
+								className="toolbar-jsx-obj"
+								toggled={this.state.carbonV12}
+								onToggle={this.handleV12Toggle.bind(this)}
+								tabIndex={tabIndex}
+							/>
+						</div>
+					),
+					tooltip: "Enable/disable Carbon v12 feature flags"
 				},
 				{ divider: true },
 				{
@@ -3416,9 +3446,15 @@ class App extends React.Component {
 		</div>);
 
 		return (
-			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-				{mainView}
-			</IntlProvider>
+			<FeatureFlags
+				enableV12Release={this.state.carbonV12}
+				enableV12Overflowmenu={this.state.carbonV12}
+				enableV12DynamicFloatingStyles={this.state.carbonV12}
+			>
+				<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
+					{mainView}
+				</IntlProvider>
+			</FeatureFlags>
 		);
 	}
 }

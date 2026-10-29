@@ -133,6 +133,7 @@ module.exports = {
 			"react-dom": "node_modules/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
+			"@carbon/react": "node_modules/@carbon/react",
 			"common-canvas": "src/common-canvas.js",
 		},
 		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]

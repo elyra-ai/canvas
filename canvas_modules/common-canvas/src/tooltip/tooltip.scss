@@ -43,7 +43,7 @@
 	z-index: 10000; // Modal layout has z-index 9000. Show tooltip on top of modal.
 	word-wrap: break-word;
 	max-width: 228px;
-	border-radius: carbon.$spacing-01;
+	border-radius: carbon.$spacing-01; // 2px — matches Carbon v11 tooltip
 	white-space: pre-wrap; // Add a line break for \n in tooltip
 	// Set Carbon's link custom properties so .cds--link picks up inverse
 	// colors automatically — same approach as Carbon's own toggletip.
@@ -86,6 +86,11 @@
 
 .common-canvas-tooltip[direction="bottom"] {
 	transform: translate3d(0, -22px, 0);
+}
+
+// Carbon v12 tooltip style: rounded corners (matches Carbon's $border-radius-04 = 0.25rem)
+.common-canvas-tooltip--v12 {
+	border-radius: 0.25rem;
 }
 
 .icon-tooltip {
