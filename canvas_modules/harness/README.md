@@ -37,8 +37,8 @@ npm start
 ./canvas_modules/common-canvas/build.sh
 cd canvas_modules/harness
 npm install
-npm build-prod
-npm start-prod
+npm run build-prod
+npm run start-prod
 ```
 
 #### Connect to canvas:
