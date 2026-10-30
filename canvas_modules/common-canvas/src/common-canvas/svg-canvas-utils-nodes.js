@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import ErrorFilled from "@carbon/icons-react/lib/ErrorFilled";
+import WarningFilled from "@carbon/icons-react/lib/WarningFilled";
 import CanvasUtils from "./common-canvas-utils.js";
-import { ERROR, WARNING, NODE_ERROR_ICON, NODE_WARNING_ICON,
+import { ERROR, WARNING,
 	TEXT_AREA_BORDER_ADJUSTMENT, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON } from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
+
+// d3's .html() requires a string, so the Carbon icons are rendered to static
+// SVG markup once. fill="inherit" lets the CSS fill set on the .node-error-marker
+// svg element (error/warning color) apply, instead of Carbon's default currentColor.
+const ICON_PROPS = { fill: "inherit", width: "100%", height: "100%" };
+const NODE_ERROR_ICON = renderToStaticMarkup(React.createElement(ErrorFilled, ICON_PROPS));
+const NODE_WARNING_ICON = renderToStaticMarkup(React.createElement(WarningFilled, ICON_PROPS));
 
 // Map defining the display order of node child elements
 // Lower numbers are rendered first (appear behind higher numbers)
