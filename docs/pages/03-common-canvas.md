@@ -204,6 +204,7 @@ Common Canvas has five **optional** configuration objects. They are documented h
                 idGeneratorHandler={this.idGeneratorHandler}
                 selectionChangeHandler={this.selectionChangeHandler}
                 actionLabelHandler={this.actionLabelHandler}
+                errorMarkerHandler={this.errorMarkerHandler}
             >
             </CommonCanvas>
         </div>
@@ -211,7 +212,7 @@ Common Canvas has five **optional** configuration objects. They are documented h
 ```
 
 
-There are ten **optional** handlers implemented as callback functions. They are documented here: [Common Canvas Callbacks](03.03-callbacks.md)
+There are eleven **optional** handlers implemented as callback functions. They are documented here: [Common Canvas Callbacks](03.03-callbacks.md)
 
 #### Panels
 

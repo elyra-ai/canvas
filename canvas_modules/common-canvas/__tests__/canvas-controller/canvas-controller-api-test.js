@@ -15,6 +15,7 @@
  */
 /* eslint no-console: "off" */
 
+import React from "react";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
@@ -880,6 +881,20 @@ describe("Test canvas controller methods", () => {
 			l.trgNodePortId === "inPort"
 		);
 		expect(link4).to.not.be.undefined;
+	});
+
+	it("should test setting and calling errorMarkerHandler", () => {
+		const canvasController = new CanvasController();
+		const customErrorMarkerHandler = (node) =>
+			React.createElement("div", { className: "custom-error-class" }, "test");
+		canvasController.setHandlers({ errorMarkerHandler: customErrorMarkerHandler });
+		expect(canvasController.handlers.errorMarkerHandler).to.equal(customErrorMarkerHandler);
+
+		const testNode = { id: "node1", messages: [{ type: "error", text: "Test Error" }] };
+		const result = canvasController.handlers.errorMarkerHandler(testNode);
+		expect(React.isValidElement(result)).to.be.true;
+		expect(result.props.className).to.equal("custom-error-class");
+		expect(result.props.children).to.equal("test");
 	});
 });
 

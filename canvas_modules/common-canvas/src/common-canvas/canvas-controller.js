@@ -136,7 +136,8 @@ export default class CanvasController {
 			layoutHandler: null,
 			idGeneratorHandler: null,
 			selectionChangeHandler: null,
-			actionLabelHandler: null
+			actionLabelHandler: null,
+			errorMarkerHandler: null
 		};
 
 		this.objectModel = new ObjectModel();

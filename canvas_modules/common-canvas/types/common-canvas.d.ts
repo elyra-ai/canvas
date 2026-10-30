@@ -1296,6 +1296,11 @@ export interface CommonCanvasProps {
   actionLabelHandler?: (action: GeneratorAction) => string | null | void;
 
   /**
+   * https://elyra-ai.github.io/canvas/03.03.11-error-marker-handler/
+   */
+  errorMarkerHandler?: (node: CanvasNode) => ReactNode | null | void;
+
+  /**
    * https://elyra-ai.github.io/canvas/01.09.10-panels/
    */
   showLeftFlyout?: boolean;

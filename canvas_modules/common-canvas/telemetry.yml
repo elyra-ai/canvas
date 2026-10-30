@@ -79,6 +79,7 @@ collect:
         - contextMenuHandler
         - decorationActionHandler
         - editActionHandler
+        - errorMarkerHandler
         - idGeneratorHandler
         - keyboardConfig
         - layoutHandler

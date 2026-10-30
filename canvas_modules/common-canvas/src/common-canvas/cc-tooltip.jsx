@@ -93,10 +93,21 @@ class CommonCanvasTooltip extends React.Component {
 			case TIP_TYPE_NODE:
 				{
 					let icon = null;
-					if (this.props.canvasController.getObjectModel().hasErrorMessage(this.props.node)) {
-						icon = (<ErrorFilled className={classNames("canvas-state-icon-error", "tip-node-status", "error")} />);
-					} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node)) {
-						icon = (<WarningFilled className={classNames("canvas-state-icon-warning", "tip-node-status", "warning")} />);
+					if (this.props.canvasController.handlers.errorMarkerHandler) {
+						const customMarker = this.props.canvasController.handlers.errorMarkerHandler(this.props.node);
+						if (React.isValidElement(customMarker)) {
+							icon = React.cloneElement(customMarker, {
+								className: classNames(customMarker.props.className, "tip-node-status")
+							});
+						}
+					}
+
+					if (!icon) {
+						if (this.props.canvasController.getObjectModel().hasErrorMessage(this.props.node)) {
+							icon = (<ErrorFilled className={classNames("canvas-state-icon-error", "tip-node-status", "error")} />);
+						} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node)) {
+							icon = (<WarningFilled className={classNames("canvas-state-icon-warning", "tip-node-status", "warning")} />);
+						}
 					}
 					const nodeType = this.props.canvasController.getObjectModel().getPaletteNode(this.props.node.op);
 					let nodeLabel = this.props.node.label;

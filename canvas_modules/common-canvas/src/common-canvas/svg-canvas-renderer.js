@@ -23,6 +23,8 @@ import * as d3Selection from "d3-selection";
 import * as d3Fetch from "d3-fetch";
 const d3 = Object.assign({}, d3Selection, d3Fetch);
 import markdownIt from "markdown-it";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
 import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
@@ -3297,9 +3299,19 @@ export default class SVGCanvasRenderer {
 					.attr("class", "node-error-marker"); // Need to set this so following selection will work
 			}
 
+
+			let errorMarkerIcon = SvgCanvasNodes.getErrorMarkerIcon(d);
+
+			if (this.canvasController.handlers.errorMarkerHandler) {
+				const customMarker = this.canvasController.handlers.errorMarkerHandler(d);
+				if (React.isValidElement(customMarker)) {
+					errorMarkerIcon = renderToStaticMarkup(customMarker);
+				}
+			}
+
 			nodeGrp.selectChildren(".node-error-marker")
 				.attr("class", () => "node-error-marker " + SvgCanvasNodes.getErrorMarkerClass(d.messages))
-				.html(SvgCanvasNodes.getErrorMarkerIcon(d))
+				.html(errorMarkerIcon)
 				.attr("width", SvgCanvasNodes.getNodeErrorWidth(d))
 				.attr("height", SvgCanvasNodes.getNodeErrorHeight(d))
 				.attr("x", SvgCanvasNodes.getNodeErrorPosX(d))
