@@ -161,6 +161,9 @@ const commonCanvasAll = new CommonCanvas({
     return undefined;
   },
   actionLabelHandler: (action) => "Remove stuff",
+  errorMarkerHandler: (node) => {
+    return null;
+  },
   showRightFlyout: true,
   rightFlyoutContent: (SampleContent),
   showTopPanel: false,

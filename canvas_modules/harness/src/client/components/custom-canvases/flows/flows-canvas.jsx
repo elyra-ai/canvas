@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { WarningFilled, WarningAltFilled, InformationFilled } from "@carbon/react/icons";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
@@ -23,6 +24,7 @@ import FlowsFlow from "./flows-flow.json";
 import FlowsPalette from "./flows-palette.json";
 import FlowsProperties from "./flows-properties";
 
+const ICON_PROPS = { fill: "inherit", width: "100%", height: "100%" };
 export default class FlowsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
@@ -34,6 +36,7 @@ export default class FlowsCanvas extends React.Component {
 		this.getConfig = this.getConfig.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
+		this.errorMarkerHandler = this.errorMarkerHandler.bind(this);
 	}
 
 	getConfig() {
@@ -117,6 +120,27 @@ export default class FlowsCanvas extends React.Component {
 		}
 	}
 
+	errorMarkerHandler(node) {
+		const messages = node.messages || [];
+		const errorMessage = messages.some((m) => m.type === "error");
+		if (errorMessage) {
+			return <WarningFilled {...ICON_PROPS} className="d3-error-circle" />;
+		}
+
+		const warningMessage = messages.some((m) => m.type === "warning");
+		if (warningMessage) {
+			return <WarningAltFilled {...ICON_PROPS} className="d3-warning-circle" />;
+		}
+
+		const infoMessage = messages.some((m) => m.type === "info");
+		if (infoMessage) {
+			return <InformationFilled {...ICON_PROPS} className="d3-info-circle" />;
+		}
+
+		// Return null/undefined for standard warning or error handling to fall back to default behavior
+		return null;
+	}
+
 	render() {
 		const config = this.getConfig();
 
@@ -134,6 +158,7 @@ export default class FlowsCanvas extends React.Component {
 				config={config}
 				rightFlyoutContent={rightFlyoutContent}
 				clickActionHandler={this.clickActionHandler}
+				errorMarkerHandler={this.errorMarkerHandler}
 				showRightFlyout
 			/>
 		);

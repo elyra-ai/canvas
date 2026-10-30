@@ -95,6 +95,39 @@ describe("SvgCanvasNodes utility tests", () => {
 		});
 	});
 
+	describe("getErrorMarkerIcon", () => {
+		it("should return NODE_ERROR_ICON for ERROR level messages", () => {
+			const node = { messages: [{ type: ERROR }] };
+			expect(SvgCanvasNodes.getErrorMarkerIcon(node)).toBeDefined();
+		});
+
+		it("should return NODE_WARNING_ICON for WARNING level messages", () => {
+			const node = { messages: [{ type: WARNING }] };
+			expect(SvgCanvasNodes.getErrorMarkerIcon(node)).toBeDefined();
+		});
+
+		it("should return empty string when no messages are present", () => {
+			const node = { messages: [] };
+			expect(SvgCanvasNodes.getErrorMarkerIcon(node)).toBe("");
+		});
+	});
+
+	describe("getErrorMarkerClass", () => {
+		it("should return d3-error-circle for ERROR level messages", () => {
+			const messages = [{ type: ERROR }];
+			expect(SvgCanvasNodes.getErrorMarkerClass(messages)).toBe("d3-error-circle");
+		});
+
+		it("should return d3-warning-circle for WARNING level messages", () => {
+			const messages = [{ type: WARNING }];
+			expect(SvgCanvasNodes.getErrorMarkerClass(messages)).toBe("d3-warning-circle");
+		});
+
+		it("should return d3-error-circle-off when no messages", () => {
+			expect(SvgCanvasNodes.getErrorMarkerClass([])).toBe("d3-error-circle-off");
+		});
+	});
+
 	describe("getNodeCenterPosX", () => {
 		it("should calculate center X position correctly", () => {
 			const node = { x_pos: 100, width: 200 };

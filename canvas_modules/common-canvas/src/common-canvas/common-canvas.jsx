@@ -66,7 +66,8 @@ class CommonCanvas extends React.Component {
 			layoutHandler: props.layoutHandler,
 			idGeneratorHandler: props.idGeneratorHandler,
 			selectionChangeHandler: props.selectionChangeHandler,
-			actionLabelHandler: props.actionLabelHandler
+			actionLabelHandler: props.actionLabelHandler,
+			errorMarkerHandler: props.errorMarkerHandler
 		});
 		this.logger.logEndTimer("initializeController");
 	}
@@ -103,6 +104,7 @@ CommonCanvas.propTypes = {
 	idGeneratorHandler: PropTypes.func,
 	selectionChangeHandler: PropTypes.func,
 	actionLabelHandler: PropTypes.func,
+	errorMarkerHandler: PropTypes.func,
 	rightFlyoutContent: PropTypes.object,
 	showRightFlyout: PropTypes.bool,
 	bottomPanelContent: PropTypes.object,
