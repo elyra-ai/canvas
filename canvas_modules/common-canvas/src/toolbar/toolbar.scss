@@ -263,6 +263,16 @@ $toolbar-divider-width: 1px;
 	}
 }
 
+// Carbon v12 makes buttons fully rounded (pill/circle for icon-only buttons).
+// Use the same corner radius as Carbon v12 text fields ($border-radius-04 =
+// 0.25rem) so toolbar buttons keep a rectangular proportion.
+.toolbar-div--v12 {
+	.toolbar-item > .toolbar-button-item > button,
+	.toolbar-overflow-item > button {
+		border-radius: 0.25rem;
+	}
+}
+
 // Make ghost button icon the same as text color
 .toolbar-item,
 .toolbar-sub-menu-item {

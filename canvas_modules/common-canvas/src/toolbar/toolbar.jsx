@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
+import withCarbonV12 from "../common-canvas/with-carbon-v12.jsx";
 import ToolbarActionItem from "./toolbar-action-item.jsx";
 import ToolbarOverflowItem from "./toolbar-overflow-item.jsx";
 import ToolbarDividerItem from "./toolbar-divider-item.jsx";
@@ -678,6 +679,9 @@ class Toolbar extends React.Component {
 		const rightItems = this.generateToolbarItems(this.rightBar, false, this.rightItemRefs);
 
 		let toolbarClass = "toolbar-div";
+		if (this.props.carbonV12) {
+			toolbarClass += " toolbar-div--v12";
+		}
 		if (this.props.size === "sm") {
 			toolbarClass += " toolbar-size-small";
 		} else if (this.props.size === "lg") {
@@ -723,11 +727,12 @@ Toolbar.propTypes = {
 	setInitialFocus: PropTypes.bool,
 	closeToolbarOnEsc: PropTypes.bool,
 	closeToolbar: PropTypes.func,
-	size: PropTypes.oneOf(["md", "sm", "lg"])
+	size: PropTypes.oneOf(["md", "sm", "lg"]),
+	carbonV12: PropTypes.bool // Internal: set by withCarbonV12 when enable-v12-release flag is active
 };
 
 Toolbar.defaultProps = {
 	size: "md"
 };
 
-export default Toolbar;
+export default withCarbonV12(Toolbar);
