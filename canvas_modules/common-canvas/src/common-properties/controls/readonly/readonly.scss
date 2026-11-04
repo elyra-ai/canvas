@@ -27,7 +27,7 @@
 		text-overflow: clip;
 	}
 	span {
-		white-space: pre;
+		white-space: pre-wrap;
 		line-height: 1.5;
 		overflow-wrap: break-word;
 		user-select: text; // Readonly content is selectable
