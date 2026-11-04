@@ -22,7 +22,7 @@
     "oneofselect": "blue",
     "oneofselect-custom-action-left": "blue",
     "oneofselect-custom-action-right": "red",
-    "readonly_text": "I will change when you select any item from overflow menu in the custom action above.",
+    "readonly_text": "I will change when you select any item from overflow menu in the custom action above. Additional text is needed to show word wrapping in modal and tearsheet displays.",
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
     "oneofselect_custom_value": "custom",

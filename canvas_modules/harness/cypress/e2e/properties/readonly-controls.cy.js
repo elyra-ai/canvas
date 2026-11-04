@@ -24,6 +24,7 @@ describe("Test of text styling and word wrapping", function() {
 		cy.verifyReadOnlyTextValue("readonly_text",
 			"The more I study, the more insatiable do I feel my genius for it to be. 'Ada Lovelace'");
 		cy.verifyReadOnlyTextCSS("readonly_text", "overflow-wrap", "break-word");
+		cy.verifyReadOnlyTextCSS("readonly_text", "white-space", "pre-wrap");
 	});
 });
 
