@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,6 +133,7 @@ module.exports = {
 			"react-dom": "node_modules/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
+			"@carbon/react": "node_modules/@carbon/react",
 			"common-canvas": "src/common-canvas.js",
 		},
 		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]

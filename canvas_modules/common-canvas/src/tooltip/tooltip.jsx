@@ -20,7 +20,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Portal } from "react-portal";
-import { Link } from "@carbon/react";
+import { Link, useFeatureFlag } from "@carbon/react";
 import { v4 as uuid4 } from "uuid";
 
 class ToolTip extends React.Component {
@@ -500,6 +500,9 @@ class ToolTip extends React.Component {
 		}
 
 		let tipClass = "common-canvas-tooltip";
+		if (this.props.carbonV12) {
+			tipClass += " common-canvas-tooltip--v12";
+		}
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
@@ -635,6 +638,7 @@ ToolTip.propTypes = {
 	delay: PropTypes.number,
 	showToolTipOnClick: PropTypes.bool,
 	hoverable: PropTypes.bool, // If true, mouse cursor can be hovered over to the tooltip, instead of immediately disappearing.
+	carbonV12: PropTypes.bool, // Internal: set by ToolTipWithFeatureFlag wrapper when enable-v12-release flag is active
 };
 
 ToolTip.defaultProps = {
@@ -645,4 +649,13 @@ ToolTip.defaultProps = {
 	hoverable: false
 };
 
-export default ToolTip;
+// Wrapper reads the Carbon v12 feature flag (a hook) and forwards it to the
+// class component as a plain prop, since hooks cannot be called inside classes.
+const ToolTipWithFeatureFlag = React.forwardRef((props, ref) => {
+	const carbonV12 = useFeatureFlag("enable-v12-release");
+	return <ToolTip {...props} ref={ref} carbonV12={carbonV12} />;
+});
+
+ToolTipWithFeatureFlag.displayName = "ToolTip";
+
+export default ToolTipWithFeatureFlag;
