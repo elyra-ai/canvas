@@ -31,19 +31,26 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // Entry & Output files -------------------------------------------------------------->
 
-const entry = [
-	"webpack-hot-middleware/client",
-	"@babel/polyfill",
-	"./src/client/index.js",
-	"../common-canvas/src/index.scss",
-	"./assets/styles/harness.scss"
-];
+// The harness styles are built twice, once with the Carbon v11 Sass flags
+// (harness.css) and once with the Carbon v12 flags (harness-v12.css). Both are
+// linked from the page and App.js enables one of them depending on the v11/v12
+// toggle. They are separate entries so that each is extracted to its own file.
+const entry = {
+	"main": [
+		"webpack-hot-middleware/client",
+		"@babel/polyfill",
+		"./src/client/index.js",
+		"../common-canvas/src/index.scss"
+	],
+	"harness": ["./assets/styles/harness.scss"],
+	"harness-v12": ["./assets/styles/harness-v12.scss"]
+};
 
 
 const output = {
 	path: path.join(__dirname, ".build"),
 	publicPath: constants.APP_PATH,
-	filename: "js/canvasharness.js",
+	filename: (pathData) => (pathData.chunk.name === "main" ? "js/canvasharness.js" : "js/[name].js"),
 	chunkFilename: "js/canvasharness.chunk.[id].js",
 	sourceMapFilename: "[file].map",
 	pathinfo: true
@@ -159,6 +166,7 @@ module.exports = {
 			"react-dom": "node_modules/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
+			"@carbon/react": "node_modules/@carbon/react",
 			"common-canvas": "src/common-canvas-dev.js"
 		},
 		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],

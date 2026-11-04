@@ -102,7 +102,7 @@ import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Do
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification as NotificationIcon, Save, Launch, Restart } from "@carbon/react/icons";
 
-import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
+import { FeatureFlags, InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -380,6 +380,7 @@ class App extends React.Component {
 			showHeadingDesc: false,
 			light: true,
 			lightTheme: false,
+			carbonV12: true,
 			cspEnabled: Boolean(window.__CSP_NONCE__),
 			showRequiredIndicator: true,
 			showAlertsTab: true,
@@ -624,6 +625,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
+		this.applyCarbonStylesheet();
 		this.setBreadcrumbsDefinition();
 		const that = this;
 		FormsService.getFiles(PARAM_DEFS)
@@ -2910,6 +2912,57 @@ class App extends React.Component {
 		}));
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if (prevState.carbonV12 !== this.state.carbonV12) {
+			this.applyCarbonStylesheet();
+		}
+	}
+
+	// Carbon's v12 appearance is compiled into its CSS (see
+	// assets/styles/harness-v12.scss), so the harness loads two stylesheets,
+	// one compiled for v11 and one for v12. This enables the one that matches
+	// the toggle and disables the other. This is only needed because the harness
+	// can switch versions at runtime; a real application would compile just one.
+	//
+	// The stylesheet being switched to is enabled first and the other is only
+	// disabled once the new one has loaded. A stylesheet that was disabled
+	// before it finished loading is not fetched until it is enabled, so
+	// disabling the old one straight away would leave the page unstyled until
+	// the new one arrives.
+	applyCarbonStylesheet() {
+		const links = Array.from(document.querySelectorAll("link[rel='stylesheet']"));
+		const v12Link = links.find((link) => (link.getAttribute("href") || "").endsWith("/css/harness-v12.css"));
+		const v11Link = links.find((link) => (link.getAttribute("href") || "").endsWith("/css/harness.css"));
+		if (!v12Link || !v11Link) {
+			return;
+		}
+
+		const wantV12 = this.state.carbonV12;
+		const newLink = wantV12 ? v12Link : v11Link;
+		const oldLink = wantV12 ? v11Link : v12Link;
+
+		const disableOld = () => {
+			// Ignore if the toggle has been flipped again while loading.
+			if (this.state.carbonV12 === wantV12) {
+				oldLink.disabled = true;
+			}
+		};
+
+		newLink.disabled = false;
+		if (newLink.sheet) {
+			disableOld();
+		} else {
+			newLink.addEventListener("load", disableOld, { once: true });
+		}
+	}
+
+	handleV12Toggle() {
+		this.setState((prevState) => ({
+			...prevState,
+			carbonV12: !prevState.carbonV12,
+		}));
+	}
+
 	/**
 	 * Handles the CSP-enabled toggle in the toolbar.
 	 * Posts the new value to the server, then navigates to the origin so the
@@ -3008,6 +3061,28 @@ class App extends React.Component {
 						</div>
 					),
 					tooltip: "Enable/disable Content Security Policy (page will reload)"
+				},
+				{ divider: true },
+				{
+					action: "v12-toggle",
+					label: "Carbon v12",
+					enable: true,
+					jsx: (tabIndex) => (
+						<div className="harness-theme-toggle-wrapper" tabIndex={-1}>
+							<Toggle
+								id="harness-toggle-v12"
+								aria-label="Enable Carbon v12 feature flags"
+								size="sm"
+								labelA="v11"
+								labelB="v12"
+								className="toolbar-jsx-obj"
+								toggled={this.state.carbonV12}
+								onToggle={this.handleV12Toggle.bind(this)}
+								tabIndex={tabIndex}
+							/>
+						</div>
+					),
+					tooltip: "Enable/disable Carbon v12 feature flags"
 				},
 				{ divider: true },
 				{
@@ -3416,9 +3491,15 @@ class App extends React.Component {
 		</div>);
 
 		return (
-			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-				{mainView}
-			</IntlProvider>
+			<FeatureFlags
+				enableV12Release={this.state.carbonV12}
+				enableV12Overflowmenu={this.state.carbonV12}
+				enableV12DynamicFloatingStyles={this.state.carbonV12}
+			>
+				<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
+					{mainView}
+				</IntlProvider>
+			</FeatureFlags>
 		);
 	}
 }

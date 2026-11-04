@@ -22,6 +22,7 @@ import PropTypes from "prop-types";
 import { Portal } from "react-portal";
 import { Link } from "@carbon/react";
 import { v4 as uuid4 } from "uuid";
+import withCarbonV12 from "../common-canvas/with-carbon-v12.jsx";
 
 class ToolTip extends React.Component {
 	constructor(props) {
@@ -500,6 +501,9 @@ class ToolTip extends React.Component {
 		}
 
 		let tipClass = "common-canvas-tooltip";
+		if (this.props.carbonV12) {
+			tipClass += " common-canvas-tooltip--v12";
+		}
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
@@ -635,6 +639,7 @@ ToolTip.propTypes = {
 	delay: PropTypes.number,
 	showToolTipOnClick: PropTypes.bool,
 	hoverable: PropTypes.bool, // If true, mouse cursor can be hovered over to the tooltip, instead of immediately disappearing.
+	carbonV12: PropTypes.bool, // Internal: set by withCarbonV12 when enable-v12-release flag is active
 };
 
 ToolTip.defaultProps = {
@@ -645,4 +650,4 @@ ToolTip.defaultProps = {
 	hoverable: false
 };
 
-export default ToolTip;
+export default withCarbonV12(ToolTip);
