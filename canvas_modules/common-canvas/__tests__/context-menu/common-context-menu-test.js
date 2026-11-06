@@ -121,7 +121,7 @@ describe("CommonContextMenu renders correctly", () => {
 		expect(container.getElementsByClassName("context-menu-item")[0]).to.equal(document.activeElement);
 	});
 
-	it("correctly positions submenus that are near the right viewport edge", () => {
+	it("correctly renders nested submenus", () => {
 		const _contextHandler = sinon.spy();
 		const _closeContextMenu = sinon.spy();
 		const _menuDefinition = getNestedMenuDefinition();
@@ -139,11 +139,46 @@ describe("CommonContextMenu renders correctly", () => {
 			"mousePos": _mousePos,
 			"closeContextMenu": _closeContextMenu
 		});
-		const subMenuItem = container.getElementsByClassName("context-menu-submenu")[0];
-		const style = subMenuItem.style;
+		const subMenus = container.querySelectorAll(".cds--menu");
+		expect(subMenus.length).to.be.greaterThan(1);
+	});
 
-		// If left property is negative, the submenu is on the left of the main menu.
-		expect(style.getPropertyValue("--context-submenu-left")).to.equal("-160px");
+	it("does not trigger contextHandler or close menu when Enter is pressed on a cascading submenu item", () => {
+		const _contextHandler = sinon.spy();
+		const _closeContextMenu = sinon.spy();
+		const _menuDefinition = getNestedMenuDefinition();
+		const _canvasRect = { width: 1000, height: 1000, left: 0, top: 0, right: 1000, bottom: 1000 };
+		const _mousePos = { x: 950, y: 100 };
+		const wrapper = renderWithIntl(
+			<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition}
+				canvasRect={_canvasRect} mousePos={_mousePos} closeContextMenu={_closeContextMenu}
+			/>);
+		const editMenuItem = wrapper.getByText("Edit");
+		fireEvent.keyDown(editMenuItem, { key: "Enter" });
+		fireEvent.keyUp(editMenuItem, { key: "Enter" });
+
+		expect(_contextHandler.called).to.equal(false);
+		expect(_closeContextMenu.called).to.equal(false);
+	});
+
+	it("moves focus to adjacent menu item when ArrowDown is pressed on a cascading submenu item", async() => {
+		const _contextHandler = sinon.spy();
+		const _closeContextMenu = sinon.spy();
+		const _menuDefinition = getNestedMenuDefinition();
+		const _canvasRect = { width: 1000, height: 1000, left: 0, top: 0, right: 1000, bottom: 1000 };
+		const _mousePos = { x: 950, y: 100 };
+		const wrapper = renderWithIntl(
+			<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition}
+				canvasRect={_canvasRect} mousePos={_mousePos} closeContextMenu={_closeContextMenu}
+			/>);
+		const editMenuItem = wrapper.getByText("Edit").closest("[role='menuitem']");
+		editMenuItem.focus();
+		expect(document.activeElement).to.equal(editMenuItem);
+		fireEvent.keyDown(editMenuItem, { key: "ArrowDown" });
+		const deleteMenuItem = wrapper.getByText("Delete").closest("[role='menuitem']");
+		fireEvent.focusOut(editMenuItem, { relatedTarget: deleteMenuItem });
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		expect(document.activeElement).to.equal(deleteMenuItem);
 	});
 });
 
