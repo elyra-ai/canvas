@@ -17,10 +17,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-// Carbon icons - direct imports for tree-shaking optimization
-import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
+import { injectIntl } from "react-intl";
+import { Menu, MenuItem, MenuItemDivider } from "@carbon/react";
+import withCarbonV12 from "../common-canvas/with-carbon-v12.jsx";
 import ColorPicker from "../color-picker";
-import KeyboardUtils from "../common-canvas/keyboard-utils";
 import { ACTION_COLOR_BACKGROUND } from "../common-canvas/constants/canvas-constants";
 
 // context-menu sizing
@@ -29,106 +29,224 @@ const CONTEXT_MENU_LINK_HEIGHT = 30; // See context-menu.scss
 const CONTEXT_MENU_DIVIDER_HEIGHT = 1; // See context-menu.scss
 const EXTRA_OFFSET = 5; // Extra offset for vertical menu positioning
 
-
 class CommonContextMenu extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			displaySubMenuAction: ""
-		};
+		this.state = {};
 		this.menuRefs = [];
-		this.subMenuRefs = [];
-		this.subMenuDivRefs = {};
-		this.subMenuPosData = {};
 
 		this.focusIndex = null; // Set to null so we know when it is not initialized.
-		this.subMenuFocusIndex = 0;
 
-		this.onKeyDown = this.onKeyDown.bind(this);
 		this.itemSelected = this.itemSelected.bind(this);
 		this.colorClicked = this.colorClicked.bind(this);
+		this.handleMenuOpen = this.handleMenuOpen.bind(this);
+		this.closeMenu = this.closeMenu.bind(this);
+		this.closing = false;
+
+		// Records whether the most recent user input was from the mouse (true) or
+		// the keyboard (false) so we can tell how a cascaded menu was closed.
+		this.lastInputWasMouse = false;
+		this.onDocumentMouseMove = () => {
+			this.lastInputWasMouse = true;
+		};
+		this.onDocumentKeyDown = () => {
+			this.lastInputWasMouse = false;
+		};
 
 		this.menuPopoverRef = React.createRef();
 	}
 
 	componentDidMount() {
 		this.applyMenuPosition();
-		this.applySubMenuPositions();
-		this.focusIndex = this.focusIndex === null ? 0 : this.focusIndex;
-		this.menuRefs[this.focusIndex].current.focus();
+		this.ensureMenuItemsHaveMenuRole();
+		this.removeMenuItemTooltips();
+		this.focusCurrentItem();
+		this.observeSubMenuOpening();
+		document.addEventListener("mousemove", this.onDocumentMouseMove, true);
+		document.addEventListener("keydown", this.onDocumentKeyDown, true);
 	}
 
 	componentDidUpdate() {
 		this.applyMenuPosition();
-		this.applySubMenuPositions();
+		this.ensureMenuItemsHaveMenuRole();
+		this.removeMenuItemTooltips();
+		this.focusCurrentItem();
+	}
 
-		if (this.state.displaySubMenuAction) {
-			this.subMenuFocusIndex = 0;
-			if (this.state.displaySubMenuAction !== ACTION_COLOR_BACKGROUND) {
-				const subMenuRefs = this.subMenuRefs[this.state.displaySubMenuAction];
-				subMenuRefs[this.subMenuFocusIndex].current.focus();
-			}
-
-		} else {
-			this.focusIndex = this.focusIndex === null ? 0 : this.focusIndex;
-			this.menuRefs[this.focusIndex].current.focus();
-		}
+	componentWillUnmount() {
+		this.subMenuObserver?.disconnect();
+		cancelAnimationFrame(this.subMenuFocusFrame);
+		cancelAnimationFrame(this.subMenuCloseFrame);
+		document.removeEventListener("mousemove", this.onDocumentMouseMove, true);
+		document.removeEventListener("keydown", this.onDocumentKeyDown, true);
 	}
 
 	onContextMenu(e) {
 		e.preventDefault();
 	}
 
-	onKeyDown(evt) {
-		// Don't let keyboard event go through to other objects.
-		evt.stopPropagation();
-		evt.preventDefault();
-
-		if (KeyboardUtils.nextContextMenuOption(evt)) {
-			if (this.state.displaySubMenuAction) {
-				const subMenuRefs = this.subMenuRefs[this.state.displaySubMenuAction];
-				this.subMenuFocusIndex = this.subMenuFocusIndex === subMenuRefs.length - 1 ? 0 : this.subMenuFocusIndex + 1;
-				subMenuRefs[this.subMenuFocusIndex].current.focus();
-
-			} else {
-				this.focusIndex = this.focusIndex === this.menuRefs.length - 1 ? 0 : this.focusIndex + 1;
-				this.menuRefs[this.focusIndex].current.focus();
-			}
-
-		} else if (KeyboardUtils.previousContextMenuOption(evt)) {
-			if (this.state.displaySubMenuAction) {
-				const subMenuRefs = this.subMenuRefs[this.state.displaySubMenuAction];
-				this.subMenuFocusIndex = this.subMenuFocusIndex === 0 ? subMenuRefs.length - 1 : this.subMenuFocusIndex - 1;
-				subMenuRefs[this.subMenuFocusIndex].current.focus();
-
-			} else {
-				this.focusIndex = this.focusIndex === 0 ? this.menuRefs.length - 1 : this.focusIndex - 1;
-				this.menuRefs[this.focusIndex].current.focus();
-			}
-
-		} else if (KeyboardUtils.openContextMenuSubMenu(evt)) {
-			const action = evt.target.dataset.action;
-			if (this.subMenuRefs[action]) {
-				this.subMenuOpen(action);
-			}
-
-		} else if (KeyboardUtils.closeContextMenuSubMenu(evt) &&
-					this.state.displaySubMenuAction) {
-			this.subMenuClose();
-
-		} else if (KeyboardUtils.closeContextMenu(evt) &&
-					!this.state.displaySubMenuAction) {
-			this.props.closeContextMenu();
-
-		} else if (KeyboardUtils.activateContextMenuOption(evt)) {
-			const action = evt.target.dataset.action;
-			if (this.subMenuRefs[action]) {
-				this.subMenuOpen(action);
-
-			} else {
-				this.itemSelected(action);
-			}
+	// Closes the menu. Closing the menu restores focus to the canvas which blurs
+	// this menu while it is still mounted, and Carbon responds to that blur by
+	// calling onClose again. The closing flag stops that re-entrant call from
+	// recursing infinitely.
+	// Carbon's MenuItem requires a string label but menu definitions may supply
+	// a React element (for example a <FormattedMessage>). This converts such an
+	// element to a string using the element's message props and the intl object.
+	getLabelString(label) {
+		if (React.isValidElement(label) && label.props?.id) {
+			const { id, defaultMessage, values } = label.props;
+			return this.props.intl.formatMessage({ id, defaultMessage }, values);
 		}
+		return label;
+	}
+
+	closeMenu() {
+		if (this.closing) {
+			return;
+		}
+		this.closing = true;
+		try {
+			this.props.closeContextMenu();
+		} finally {
+			this.closing = false;
+		}
+	}
+
+	handleMenuOpen() {
+		this.applyMenuPosition();
+		this.focusCurrentItem();
+	}
+
+	// Sets focus on the current top level menu item unless focus is already on
+	// an element within the menu (other than the menu itself). This prevents
+	// focus being pulled back to a top level item when, for example, focus has
+	// been moved to the first item of a cascaded menu because the mouse cursor
+	// is over the item that opens that menu.
+	focusCurrentItem() {
+		this.focusIndex = this.focusIndex === null ? 0 : this.focusIndex;
+
+		const popover = this.menuPopoverRef.current;
+		const active = document.activeElement;
+		if (popover && active && active !== popover && popover.contains(active)) {
+			return;
+		}
+
+		if (this.menuRefs[this.focusIndex]?.current) {
+			this.menuRefs[this.focusIndex].current.focus();
+		}
+	}
+
+	// Watches for a menu item expanding its cascaded menu. When that happens
+	// (for example, when the mouse is moved over the item) focus is moved to the
+	// first item in the cascaded menu. Carbon does try to do this itself but its
+	// focus manager also queues a call to focus the parent menu item and, which
+	// one wins is a matter of timing. So we wait two animation frames, to let
+	// Carbon finish, and then, if focus is not already inside the cascaded
+	// menu, we set it ourselves.
+	observeSubMenuOpening() {
+		const popover = this.menuPopoverRef.current;
+		if (!popover) {
+			return;
+		}
+		this.subMenuObserver = new MutationObserver((mutations) => {
+			// Cascaded menu items are added to the DOM when a submenu opens so
+			// remove their tooltips too.
+			this.removeMenuItemTooltips();
+			const targets = mutations
+				.filter((m) => m.type === "attributes")
+				.map((m) => m.target);
+			const expanded = targets
+				.filter((t) => t.getAttribute("aria-expanded") === "true")
+				.pop();
+			const collapsed = targets
+				.filter((t) => t.getAttribute("aria-expanded") === "false");
+			if (expanded) {
+				cancelAnimationFrame(this.subMenuFocusFrame);
+				this.subMenuFocusFrame = requestAnimationFrame(() => {
+					this.subMenuFocusFrame = requestAnimationFrame(() => this.focusFirstSubMenuItem(expanded));
+				});
+			} else if (collapsed.length > 0 && this.lastInputWasMouse) {
+				// A cascaded menu was closed by the mouse moving away. If focus is
+				// inside the cascaded menu, move it out immediately, before the
+				// browser hides the menu. Otherwise the focused element disappears,
+				// focus is lost (blur with no related target) and Carbon closes the
+				// whole context menu.
+				this.focusTopItemAfterSubMenuClose(collapsed);
+
+				// Carbon may also move focus to the parent item after this callback
+				// so check again after it has finished.
+				cancelAnimationFrame(this.subMenuCloseFrame);
+				this.subMenuCloseFrame = requestAnimationFrame(() => {
+					this.subMenuCloseFrame = requestAnimationFrame(() => this.focusTopItemAfterSubMenuClose(collapsed));
+				});
+			}
+		});
+		this.subMenuObserver.observe(popover, { attributes: true, attributeFilter: ["aria-expanded"], childList: true, subtree: true });
+	}
+
+	// Carbon's MenuItem always sets a title attribute, equal to the label, which
+	// causes the browser to display a tooltip as the mouse hovers over the item.
+	// Carbon doesn't allow this to be overridden through props so we remove the
+	// attribute from the DOM.
+	removeMenuItemTooltips() {
+		const popover = this.menuPopoverRef.current;
+		if (!popover) {
+			return;
+		}
+		popover.querySelectorAll("[role='menuitem'][title]").forEach((item) => item.removeAttribute("title"));
+	}
+
+	// Carbon moves focus to the menu item that opened a cascaded menu when the
+	// cascaded menu is closed because the mouse moved away. We want focus to
+	// go to the top item in the main menu instead. We only do this if focus is
+	// on one of the collapsed items (or has been lost from the menu entirely)
+	// so we don't disturb focus the user has placed elsewhere in the menu.
+	focusTopItemAfterSubMenuClose(collapsedItems) {
+		const popover = this.menuPopoverRef.current;
+		const active = document.activeElement;
+		if (!popover) {
+			return;
+		}
+		const focusInCollapsed = collapsedItems.some((item) => item.contains(active));
+		if (!focusInCollapsed && popover.contains(active)) {
+			return;
+		}
+		this.focusIndex = 0;
+		this.menuRefs[0]?.current?.focus();
+	}
+
+	focusFirstSubMenuItem(parentItem) {
+		if (parentItem.getAttribute("aria-expanded") !== "true") {
+			return;
+		}
+		const subMenu = parentItem.querySelector(":scope > [role='menu']");
+		if (!subMenu || subMenu.contains(document.activeElement)) {
+			return;
+		}
+		const first = subMenu.querySelector(".color-picker-item") ||
+			subMenu.querySelector(":scope > [role='menuitem']:not([aria-disabled='true'])");
+		first?.focus();
+	}
+
+	// Carbon's MenuItem with submenu has an issue in onOpenChange where it steals
+	// focus back to itself whenever focus moves to another menu item unless the
+	// target menu item contains an element with role="menu". To prevent Carbon
+	// from incorrectly trapping focus on cascading submenu items when navigating
+	// with ArrowUp/ArrowDown, we ensure each menu item contains a hidden role="menu".
+	ensureMenuItemsHaveMenuRole() {
+		const popover = this.menuPopoverRef.current;
+		if (!popover) {
+			return;
+		}
+		const items = popover.querySelectorAll("[role='menuitem']");
+		items.forEach((item) => {
+			if (!item.querySelector("[role='menu']")) {
+				const dummy = document.createElement("span");
+				dummy.setAttribute("role", "menu");
+				dummy.style.display = "none";
+				item.appendChild(dummy);
+			}
+		});
 	}
 
 	/** Sets CSS custom properties for the root menu position on its DOM node. */
@@ -141,22 +259,6 @@ class CommonContextMenu extends React.Component {
 		const el = this.menuPopoverRef.current;
 		el.style.setProperty("--context-menu-left", menuPos.x + "px");
 		el.style.setProperty("--context-menu-top", menuPos.y + "px");
-	}
-
-	/** Sets CSS custom properties for each sub-menu position collected during render. */
-	applySubMenuPositions() {
-		Object.keys(this.subMenuDivRefs).forEach((action) => {
-			const ref = this.subMenuDivRefs[action];
-			const posData = this.subMenuPosData[action];
-			if (ref && ref.current && posData) {
-				ref.current.style.setProperty("--context-submenu-top", posData.top);
-				if ("left" in posData) {
-					ref.current.style.setProperty("--context-submenu-left", posData.left);
-				} else {
-					ref.current.style.removeProperty("--context-submenu-left");
-				}
-			}
-		});
 	}
 
 	itemSelected(data) {
@@ -177,8 +279,9 @@ class CommonContextMenu extends React.Component {
 			}
 		}
 
+		const linkHeight = this.props.carbonV12 ? 32 : CONTEXT_MENU_LINK_HEIGHT;
 		var menuSize = {
-			height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) + (numDividers * CONTEXT_MENU_DIVIDER_HEIGHT),
+			height: ((menu.length - numDividers) * linkHeight) + (numDividers * CONTEXT_MENU_DIVIDER_HEIGHT),
 			width: CONTEXT_MENU_WIDTH
 		};
 
@@ -246,8 +349,6 @@ class CommonContextMenu extends React.Component {
 		const menuItems = [];
 		const menuRefs = [];
 
-		let runningYPos = 0;
-
 		// Records if we have just displayed a divider. This is useful because we
 		// only want to display one divider if there is a divider element
 		// immediately after another divider element in the menuDefinition array.
@@ -261,8 +362,7 @@ class CommonContextMenu extends React.Component {
 
 			if (divider) {
 				if (!previousDivider) {
-					menuItem = <div key={i} className={"context-menu-divider"} />;
-					runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
+					menuItem = <MenuItemDivider key={i} className={"context-menu-divider"} />;
 					previousDivider = true;
 				}
 			} else {
@@ -276,37 +376,54 @@ class CommonContextMenu extends React.Component {
 					menuRefs.push(ref);
 
 					menuItem = (
-						<div key={i} ref={ref} tabIndex={0} className={"context-menu-item disabled"} onKeyDown={this.onKeyDown} role="menuitem" aria-disabled>
-							{menuDefinition[i].label}
-						</div>
+						<MenuItem key={i} ref={ref} tabIndex={0} label={this.getLabelString(menuDefinition[i].label)}
+							className={"context-menu-item disabled"}
+							role="menuitem" aria-disabled
+						/>
 					);
 
 				} else if (menuDefinition[i].action === ACTION_COLOR_BACKGROUND) {
 					const disabled = !this.isItemEnabled(menuDefinition[i]);
-					const subMenuSize = { width: CONTEXT_MENU_WIDTH, height: 50 };
-					const subMenuInfo = this.buildColorPickerPanel();
-					const subMenuContent = subMenuInfo.menuItems;
-					this.subMenuRefs[menuDefinition[i].action] = subMenuInfo.menuRefs;
+					const subMenuContent = this.buildColorPickerPanel();
+					const ref = disabled ? null : React.createRef();
+					if (!disabled) {
+						menuRefs.push(ref);
+					}
 
-					menuItem = this.buildSubMenu(
-						menuDefinition, i, menuRefs, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
-
+					menuItem = (
+						<MenuItem key={i} ref={ref} className={"context-menu-item" + (disabled ? " disabled" : "")}
+							label={this.getLabelString(menuDefinition[i].label)}
+							aria-disabled={disabled} disabled={disabled}
+							role="menuitem"
+						>
+							{subMenuContent}
+						</MenuItem>
+					);
 
 				} else if (menuDefinition[i].submenu) {
 					const disabled = this.areAllItemsDisabled(menuDefinition[i].menu);
-					const subMenuSize = this.calculateMenuSize(menuDefinition[i].menu);
 					const subMenuInfo = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect, 100);
 					const subMenuContent = subMenuInfo.menuItems;
-					this.subMenuRefs[menuDefinition[i].action] = subMenuInfo.menuRefs;
+					const ref = disabled ? null : React.createRef();
+					if (!disabled) {
+						menuRefs.push(ref);
+					}
 
-					menuItem = this.buildSubMenu(
-						menuDefinition, i, menuRefs, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+					menuItem = (
+						<MenuItem key={i} ref={ref} className={"context-menu-item" + (disabled ? " disabled" : "")}
+							label={this.getLabelString(menuDefinition[i].label)}
+							aria-disabled={disabled} disabled={disabled}
+							role="menuitem"
+						>
+							{subMenuContent}
+						</MenuItem>
+					);
 
 				} else if (menuDefinition[i].enable === false) {
 					menuItem = (
-						<div key={i} className={"context-menu-item disabled"} role="menuitem" aria-disabled>
-							{menuDefinition[i].label}
-						</div>
+						<MenuItem key={i} label={this.getLabelString(menuDefinition[i].label)} className={"context-menu-item disabled"}
+							disabled role="menuitem" aria-disabled
+						/>
 					);
 
 				} else {
@@ -315,14 +432,12 @@ class CommonContextMenu extends React.Component {
 					menuRefs.push(ref);
 
 					menuItem = (
-						<div key={i} ref={ref} tabIndex={-1} data-action={menuDefinition[i].action}
-							className={"context-menu-item"} onClick={onClickFunction} onKeyDown={this.onKeyDown} role="menuitem"
-						>
-							{menuDefinition[i].label}
-						</div>
+						<MenuItem key={i} ref={ref} tabIndex={-1} data-action={menuDefinition[i].action}
+							label={this.getLabelString(menuDefinition[i].label)} className={"context-menu-item"}
+							onClick={onClickFunction} role="menuitem"
+						/>
 					);
 				}
-				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 			}
 			menuItems.push(menuItem);
 		}
@@ -332,133 +447,44 @@ class CommonContextMenu extends React.Component {
 	buildColorPickerPanel() {
 		const subPanelData = {
 			clickActionHandler: (c, evt) => this.colorClicked(c, evt),
-			closeSubPanel: () => this.subMenuClose()
+			closeSubPanel: () => this.closeMenu()
 		};
-		// Only create the color picker when we are actually displaying it in the sub-menu.
-		// That way the color picker will set focus on itself when it is opened.
-		const colorPicker = this.state.displaySubMenuAction === ACTION_COLOR_BACKGROUND
-			? <ColorPicker ref={ref} subPanelData={subPanelData} closeSubPanel={() => this.subMenuClose()} />
-			: null;
-
-		const ref = React.createRef();
-
-		const content = (
-			<div key={"color-picker"} ref={ref} tabIndex={-1}>
-				{colorPicker}
-			</div>
-		);
-
-		return { menuItems: [content], menuRefs: [ref] };
-	}
-
-	subMenuOpen(action) {
-		this.setState({ displaySubMenuAction: action });
-	}
-
-	subMenuClose(action) {
-		this.setState({ displaySubMenuAction: "" });
-	}
-
-	// Builds a sub-menu for the menuitem identified by the index into the menu definition.
-	buildSubMenu(menuDefinition, index, menuRefs, subMenuContent, runningYPos, menuPos,
-		menuSize, subMenuSize, canvasRect, disabled) {
-		const rtl = this.buildRtlState(menuPos, menuSize, subMenuSize, canvasRect);
-		const subMenuPosStyle = this.buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect, rtl);
-		const menuItem = menuDefinition[index];
-
-		const icon = (<ChevronRight />);
-		const menuItemContent = <div>{menuItem.label}{icon} </div>;
-		const menuItemClass = "context-menu-item " + (disabled ? " disabled" : "");
-		const subMenuClass = "context-menu-popover context-menu-submenu" +
-			(this.state.displaySubMenuAction === menuItem.action ? " context-menu--visible" : "");
-		const onMouseEnter = (disabled ? null : this.subMenuOpen.bind(this, menuItem.action));
-		const onMouseLeave = (disabled ? null : this.subMenuClose.bind(this));
-
-		const ref = disabled ? null : React.createRef();
-		if (!disabled) {
-			menuRefs.push(ref);
-		}
-
-		const subMenuDivRef = React.createRef();
-		this.subMenuDivRefs[menuItem.action] = subMenuDivRef;
-		this.subMenuPosData[menuItem.action] = subMenuPosStyle;
-
 		return (
-			<div key={index} ref={ref} className={menuItemClass} aria-haspopup tabIndex={-1} data-action={menuItem.action} role="menuitem"
-				aria-disabled={disabled}
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-				onKeyDown={this.onKeyDown}
-			>
-				{menuItemContent}
-				<div ref={subMenuDivRef} className={subMenuClass}>
-					{subMenuContent}
-				</div>
+			<div key="color-picker" tabIndex={-1}>
+				<ColorPicker subPanelData={subPanelData} closeSubPanel={() => this.closeMenu()} />
 			</div>
 		);
-	}
-
-	// Returns a boolean to indicate whether the submenu should appear on the
-	// right of the context menu (rtl === false) or on the left of the context
-	// menu (rtl === true).
-	buildRtlState(menuPos, menuSize, subMenuSize, canvasRect) {
-		// Ensure that the combined menu position, plus the menu width,
-		//  plus the submenu width, does not exceed the viewport bounds.
-		return (menuPos.x + menuSize.width + subMenuSize.width > canvasRect.right);
-	}
-
-	// Returns a style object that can be applied to the sub-menu to adjust its:
-	// * vertical (y) position: If the submenu is tall enough that it would be
-	// displayed off the bottom of the canvas area.
-	// * horizontal (x) position: If the sub-menu needs to appear on the left
-	// side of the main menu (rtl === true).
-	buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect, rtl) {
-		// Does the submenu go below the bottom of the viewport?
-		const y = canvasRect.bottom - (menuPos.y + runningYPos + subMenuSize.height);
-
-		// If submenu is not below the viewport bottom set offset to 0 so the
-		// submenu will not be moved. Otherwise, y will be used to move the
-		// submenu up fully into the view port.
-		const offset = (y > 0) ? 0 : y - EXTRA_OFFSET;
-
-		const subMenuPosStyle = {
-			top: offset + "px" // Use negative to push the menu up
-		};
-
-		if (rtl) {
-			subMenuPosStyle.left = -CONTEXT_MENU_WIDTH + "px";
-		}
-
-		return subMenuPosStyle;
-	}
-
-	// Returns the menu definition array passed in making sure any
-	// submenu items have an action. Note: some applications forget
-	// to provide an action because, for the submenu, it is only
-	// used by the context menu code.
-	ensureAllSubMenuItemsHaveAction(menuDef) {
-		return menuDef.map((item, index) => {
-			if (item.submenu && typeof item.action === "undefined") {
-				return { ...item, action: "submenu_" + index };
-			}
-			return item;
-		});
 	}
 
 	render() {
 		this.menuRefs = [];
-		this.subMenuDivRefs = {};
-		this.subMenuPosData = {};
 		const menuSize = this.calculateMenuSize(this.props.menuDefinition);
 		const menuPos = this.calculateMenuPos(this.props.mousePos, menuSize, this.props.canvasRect);
-		const menuDefinition = this.ensureAllSubMenuItemsHaveAction(this.props.menuDefinition);
-		const menuInfo = this.buildMenu(menuDefinition, menuSize, menuPos, this.props.canvasRect);
+		const menuInfo = this.buildMenu(this.props.menuDefinition, menuSize, menuPos, this.props.canvasRect);
 		this.menuRefs = menuInfo.menuRefs;
 
+		let popoverClass = "context-menu-popover";
+		if (this.props.carbonV12) {
+			popoverClass += " context-menu-popover--v12";
+		}
+
 		return (
-			<div ref={this.menuPopoverRef} id="context-menu-popover" role="menu" tabIndex={0} className="context-menu-popover" onContextMenu={this.onContextMenu}>
+			<Menu
+				ref={this.menuPopoverRef}
+				id="context-menu-popover"
+				className={popoverClass}
+				open
+				target={null}
+				legacyAutoalign={false}
+				label="Context menu"
+				tabIndex={0}
+				role="menu"
+				onContextMenu={this.onContextMenu}
+				onOpen={this.handleMenuOpen}
+				onClose={this.closeMenu}
+			>
 				{menuInfo.menuItems}
-			</div>
+			</Menu>
 		);
 	}
 }
@@ -468,7 +494,9 @@ CommonContextMenu.propTypes = {
 	closeContextMenu: PropTypes.func.isRequired,
 	menuDefinition: PropTypes.array.isRequired,
 	canvasRect: PropTypes.object.isRequired,
-	mousePos: PropTypes.object.isRequired
+	mousePos: PropTypes.object.isRequired,
+	carbonV12: PropTypes.bool,
+	intl: PropTypes.object.isRequired // Provided by injectIntl
 };
 
-export default CommonContextMenu;
+export default withCarbonV12(injectIntl(CommonContextMenu));
