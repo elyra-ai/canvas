@@ -665,3 +665,51 @@ describe("selectcolumns control shows warnings on initial load when invalid valu
 	});
 
 });
+
+describe("selectcolumns control selects the new rows when a propertyListener reorders the values", () => {
+	const fieldsPropertyId = { name: "fields1_panel" };
+	let wrapper;
+	let scController;
+
+	// Mimics a host application that reorders the fields each time the property is updated.
+	// Fields are sorted in descending order so the new fields end up in front of "age".
+	function propertyListener(data) {
+		if (data.action === "UPDATE_PROPERTY" && data.property.name === fieldsPropertyId.name &&
+			typeof data.property.row === "undefined" && Array.isArray(data.value)) {
+			const reordered = [...data.value].sort((a, b) => b.localeCompare(a));
+			const isReordered = reordered.some((field, idx) => field !== data.value[idx]);
+			if (isReordered) {
+				scController.updatePropertyValue(data.property, reordered);
+			}
+		}
+	}
+
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(selectcolumnsParamDef, null, { propertyListener: propertyListener });
+		wrapper = renderedObject.wrapper;
+		scController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("should select only the newly added fields after the values are reordered", () => {
+		const { container } = wrapper;
+		expect(scController.getPropertyValue(fieldsPropertyId)).to.eql(["age"]);
+
+		// add "Na" and "drug" to the existing "age" field
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-fields1_panel");
+		tableUtilsRTL.fieldPicker(fieldPicker, ["Na", "drug"]);
+
+		// the listener reordered the stored values, "age" is now last
+		const values = scController.getPropertyValue(fieldsPropertyId);
+		expect(values).to.eql(["Na", "drug", "age"]);
+
+		// the selected rows must be the rows of the newly added fields, not the row of "age"
+		const selectedFields = scController.getSelectedRows(fieldsPropertyId)
+			.map((rowIdx) => values[rowIdx])
+			.sort();
+		expect(selectedFields).to.eql(["Na", "drug"]);
+	});
+});
