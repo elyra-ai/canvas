@@ -181,7 +181,14 @@ export default class AbstractTable extends React.Component {
 
 		// Update the property value
 		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
-		const selectedRows = Array.isArray(inSelectedRows) ? inSelectedRows : [];
+
+		// Re-derive selected row indices from the actual stored value, since a propertyListener
+		// may have reordered the array after updatePropertyValue was called
+		const storedValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const newFields = Array.isArray(inSelectedRows) ? inSelectedRows.map((i) => updatedControlValues[i]) : [];
+		const selectedRows = Array.isArray(storedValue)
+			? newFields.map((field) => storedValue.indexOf(field)).filter((i) => i >= 0)
+			: [];
 		this.updateRowSelections(selectedRows);
 	}
 
