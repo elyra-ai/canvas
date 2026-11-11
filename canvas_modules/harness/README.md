@@ -1,6 +1,6 @@
 <!--
 {% comment %}
-Copyright 2017-2023 Elyra Authors
+Copyright 2017-2026 Elyra Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ npm start
 ./canvas_modules/common-canvas/build.sh
 cd canvas_modules/harness
 npm install
-npm build-prod
-npm start-prod
+npm run build-prod
+npm run start-prod
 ```
 
 #### Connect to canvas:
@@ -47,7 +47,7 @@ npm start-prod
 
 ## UI test
 
-Ensure that the test harness is running.  The default location is http://localhost:3001.  
+Ensure that the test harness is running.  The default location is http://localhost:3001.
 ```sh
 cd <base dir>/canvas_modules/harness
 # Chrome
