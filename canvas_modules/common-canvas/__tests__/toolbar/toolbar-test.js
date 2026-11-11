@@ -251,6 +251,36 @@ describe("Toolbar renders correctly", () => {
 		});
 		expect(container.querySelectorAll(".toolbar-popover-list.submenu")).to.have.length(0);
 	});
+
+	it("should not leave an aria-hidden overflow button tabbable after the menu is closed by clicking away", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "palette", label: "Palette", enable: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ action: "cut", label: "Cut", enable: true },
+				{ action: "copy", label: "Copy", enable: true }
+			]
+		};
+		const { container } = createToolbar(toolbarConfig);
+
+		// Open an overflow menu by clicking its overflow button.
+		const overflowButton = container.querySelectorAll(".toolbar-overflow-item button")[0];
+		fireEvent.click(overflowButton);
+		expect(container.querySelectorAll(".toolbar-popover-list.submenu")).to.have.length(1);
+
+		// Close the overflow menu by clicking outside of it.
+		fireEvent.click(document.body);
+		expect(container.querySelectorAll(".toolbar-popover-list.submenu")).to.have.length(0);
+
+		// An overflow button that is hidden from assistive technology must not be
+		// in the tab order (rule aria_hidden_nontabbable).
+		const hiddenTabbable = container.querySelectorAll(".toolbar-overflow-item button[aria-hidden=\"true\"][tabindex=\"0\"]");
+		expect(hiddenTabbable).to.have.length(0);
+		expect(overflowButton.getAttribute("aria-hidden")).to.equal("true");
+		expect(overflowButton.getAttribute("tabindex")).to.equal("-1");
+	});
+
 });
 
 function createToolbar(config, actionHandler, size) {
