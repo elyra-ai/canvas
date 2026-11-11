@@ -52,6 +52,10 @@
 		height: carbon.$spacing-05;
 		cursor: pointer;
 	}
+
+	.properties-title-editor-btn.help {
+		border-radius: 0;
+	}
 }
 
 // Action buttons within a small right flyout will take up 50% width and display 2 buttons per row
