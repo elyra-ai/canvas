@@ -65,7 +65,7 @@ export default function getContextMenuDefinition(source, canvasController) {
 	}
 
 	// We need to remove any unwanted dividers. These might be dividers at
-	// the top of the array that are there after editing actions have been
+	// the top/bottom of the array that are there after editing actions have been
 	// removed or doubled-up dividers in the menu which might be there after
 	// removing editing actions or in the menu def returned by the host app.
 	if (menuDefinition && menuDefinition.length > 0) {
@@ -94,7 +94,7 @@ const filterOutEditingActions = (menuDefinition) => {
 	return newMenuDefinition;
 };
 
-// Remove any doubled-up or leading dividers in the array.
+// Remove any doubled-up, leading or trailing dividers in the array.
 const filterOutUnwantedDividers = (menuDef) => {
 	const newMenuDef = [];
 	let previousDivider = true;
@@ -109,6 +109,12 @@ const filterOutUnwantedDividers = (menuDef) => {
 			previousDivider = false;
 		}
 	});
+
+	// Doubled-up dividers have been removed above so there can be at most
+	// one divider left at the end of the array.
+	if (newMenuDef.length > 0 && newMenuDef[newMenuDef.length - 1].divider) {
+		newMenuDef.pop();
+	}
 	return newMenuDef;
 };
 
