@@ -198,7 +198,7 @@ const ToolbarOverflowItem = forwardRef(({
 				<Button
 					ref={buttonRef}
 					kind="ghost"
-					tabIndex={tabIndex}
+					tabIndex={isAriaHidden ? -1 : tabIndex}
 					onClick={toggleExtendedMenu}
 					onKeyDown={onKeyDown}
 					onFocus={onButtonFocus}

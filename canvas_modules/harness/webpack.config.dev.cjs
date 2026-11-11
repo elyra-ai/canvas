@@ -172,6 +172,12 @@ module.exports = {
 		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
 		symlinks: false
 	},
+	// A single shared runtime is required because there are multiple entries on
+	// the page. Otherwise each entry's runtime registers the same global HMR
+	// callback and hot updates fail with "Cannot set properties of undefined".
+	optimization: {
+		runtimeChunk: "single"
+	},
 	output: output,
 	module: {
 		rules: rules
