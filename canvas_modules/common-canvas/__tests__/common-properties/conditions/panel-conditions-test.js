@@ -25,7 +25,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionsParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionsParamDef, { conditionHiddenPropertyHandling: "null", conditionDisabledPropertyHandling: "null" });
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});

@@ -1880,8 +1880,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disablePanelLevel1",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -1894,8 +1894,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hidePanelLevel1",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -1908,8 +1908,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disablePanelLevel1",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -1922,8 +1922,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disablePanelLevel2",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -1936,8 +1936,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hidePanelLevel2",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -1950,8 +1950,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disablePanelLevel3",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -1964,8 +1964,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hidePanelLevel3",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -1978,8 +1978,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hidePanelLevel1",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -1992,8 +1992,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disablePanelLevel2",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2006,8 +2006,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hidePanelLevel2",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2020,8 +2020,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disablePanelLevel3",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2034,8 +2034,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hidePanelLevel3",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2048,8 +2048,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disableInit1PanelLevel1",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2062,8 +2062,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hideInit1PanelLevel1",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2076,8 +2076,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disableInit1PanelLevel1",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2090,8 +2090,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disableInit1PanelLevel2",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2104,8 +2104,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hideInit1PanelLevel2",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2118,8 +2118,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disableInit1PanelLevel3",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2132,8 +2132,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hideInit1PanelLevel3",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2146,8 +2146,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hideInit1PanelLevel1",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2160,8 +2160,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disableInit1PanelLevel2",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2174,8 +2174,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hideInit1PanelLevel2",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2188,8 +2188,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disableInit1PanelLevel3",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
@@ -2202,8 +2202,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hideInit1PanelLevel3",
-            "op": "equals",
-            "value": false
+            "op": "notEquals",
+            "value": true
           }
         }
       }
