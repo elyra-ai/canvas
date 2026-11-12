@@ -20,7 +20,7 @@ import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import startCanvas from "test-resources/jest/startCanvas.json";
 import clonedCanvas from "test-resources/jest/object-model/canvasWithClones.json";
-import paletteJson from "test-resources/shared/palettes/test-palette.json";
+import paletteJson from "test-resources/jest/palettes/test-palette.json";
 import filterNode from "test-resources/jest/object-model/filterNode.json";
 import horizontalLayoutCanvas from "test-resources/jest/object-model/horizontalLayoutCanvas.json";
 import verticalLayoutCanvas from "test-resources/jest/object-model/verticalLayoutCanvas.json";

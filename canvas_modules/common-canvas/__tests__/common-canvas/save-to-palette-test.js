@@ -23,9 +23,9 @@ import sinon from "sinon";
 
 import startPipelineFlow from "test-resources/jest/startPipelineFlow.json";
 import supernodeCanvas from "test-resources/shared/pipeline-flows/supernodeCanvas.json";
-import paletteJson from "test-resources/shared/palettes/test-palette.json";
-import expectedPaletteNode from "test-resources/shared/palettes/expected-add-node.json";
-import expectedPaletteSupernode from "test-resources/shared/palettes/expected-add-supernode.json";
+import paletteJson from "test-resources/jest/palettes/test-palette.json";
+import expectedPaletteNode from "test-resources/jest/palettes/expected-add-node.json";
+import expectedPaletteSupernode from "test-resources/jest/palettes/expected-add-supernode.json";
 
 describe("Expand and Collapse Supernode Action", () => {
 	let canvasController;
