@@ -373,6 +373,42 @@ describe("textarea control renders correctly", () => {
 		const readOnlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
 		expect(readOnlyWrapper.querySelector("textarea").readOnly).to.equal(control.readOnly);
 	});
+
+	it("textarea should have aria-label when labelVisible is true or false", () => {
+		const controlWithVisibleLabel = {
+			...control,
+			label: { text: "Textarea label" },
+			labelVisible: true
+		};
+		const wrapper = render(
+			<TextArea
+				store={controller.getStore()}
+				control={controlWithVisibleLabel}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
+		expect(textWrapper.querySelector("textarea").getAttribute("aria-label")).to.equal("Textarea label");
+
+		const controlWithHiddenLabel = {
+			...control,
+			label: { text: "Textarea label" },
+			labelVisible: false
+		};
+		const wrapperHidden = render(
+			<TextArea
+				store={controller.getStore()}
+				control={controlWithHiddenLabel}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapperHidden = wrapperHidden.container.querySelector("div[data-id='properties-test-textarea']");
+		expect(textWrapperHidden.querySelector("textarea").getAttribute("aria-label")).to.equal("Textarea label");
+	});
 });
 describe("textarea counter display tests", () => {
 	beforeEach(() => {
