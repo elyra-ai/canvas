@@ -45,7 +45,8 @@ export default {
 		// but we need to explicitly externalize React subpath imports
 		"react/jsx-runtime",
 		"react/jsx-dev-runtime",
-		"react-dom/client"
+		"react-dom/client",
+		"react-dom/server"
 	],
 	output: [
 		{
