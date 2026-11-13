@@ -139,6 +139,15 @@ const commonCanvasAll = new CommonCanvas({
     label: "label1",
     emptyMessage: "No notifications",
   },
+  notificationBarConfig: {
+    title: "Title",
+    subtitle: "Subtitle",
+    kind: "error",
+    actionButtonLabel: "Action",
+    onActionButtonClick: () => {},
+    onCloseButtonClick: () => {},
+    screenReaderText: "Details"
+  },
   contextMenuConfig: { enableCreateSupernodeNonContiguous: true },
   keyboardConfig: { actions: { delete: false } },
   contextMenuHandler: (source, defaultMenu) => defaultMenu,

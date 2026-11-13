@@ -34,6 +34,7 @@ import texttoolbar from "./reducers/texttoolbar.js";
 import notifications from "./reducers/notifications.js";
 import selectioninfo from "./reducers/selectioninfo.js";
 import notificationpanel from "./reducers/notificationpanel.js";
+import notificationbar from "./reducers/notificationbar.js";
 import externalpipelineflows from "./reducers/externalpipelineflows.js";
 
 export default class CanvasStore {
@@ -50,6 +51,7 @@ export default class CanvasStore {
 			palette,
 			notifications,
 			notificationpanel,
+			notificationbar,
 			externalpipelineflows,
 			tooltip,
 			canvastoolbar,
@@ -69,6 +71,7 @@ export default class CanvasStore {
 			palette: { content: {} }, // Don't initialize isOpen here, it must be done in CanvasController.setCanvasConfig based on paletteInitialState
 			notifications: [],
 			notificationpanel: { isOpen: false, config: {} },
+			notificationbar: {},
 			externalpipelineflows: [],
 			tooltip: {},
 			canvastoolbar: {},

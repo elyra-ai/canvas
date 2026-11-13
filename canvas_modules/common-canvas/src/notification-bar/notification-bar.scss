@@ -1,0 +1,56 @@
+/*
+ * Copyright 2026 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use "../carbon.scss";
+@use "@carbon/react/scss/feature-flags";
+
+// The notification bar is positioned in the canvas contents div, so it
+// cannot overlap the flyouts which are outside that div.
+.common-canvas-notification-bar {
+	position: absolute;
+	top: carbon.$spacing-03;
+	left: carbon.$spacing-03;
+	right: carbon.$spacing-03;
+	z-index: 1;
+
+	.cds--actionable-notification,
+	.cds--inline-notification {
+		max-width: 100%;
+		width: 100%;
+	}
+
+	// With the Carbon v12 flag the close button is 32px high inside a notification
+	// with a minimum height of 48px, so it is not vertically centered by default.
+	// The actionable notification holds the action and close buttons in a
+	// button wrapper, whereas the inline notification's close button is a direct
+	// child of the notification.
+	.cds--actionable-notification__button-wrapper {
+		align-items: center;
+
+		// With the v12 flag, the 32px close button has no margin on its right, so
+		// it touches the right edge. Add the 8px that is above and below it in a
+		// 48px high notification so it is equally distant from the top and right.
+		@if feature-flags.enabled("enable-v12-release") {
+			.cds--actionable-notification__close-button {
+				margin-inline-end: carbon.$spacing-03;
+			}
+		}
+	}
+
+	.cds--inline-notification__close-button {
+		align-self: center;
+	}
+}

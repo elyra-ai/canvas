@@ -47,6 +47,7 @@ class CommonCanvas extends React.Component {
 		props.canvasController.setKeyboardConfig(props.keyboardConfig);
 		props.canvasController.setToolbarConfig(props.toolbarConfig);
 		props.canvasController.setNotificationPanelConfig(props.notificationConfig);
+		props.canvasController.setNotificationBarConfig(props.notificationBarConfig);
 		props.canvasController.setLeftFlyoutConfig(
 			{ content: props.leftFlyoutContent, isOpen: props.showLeftFlyout });
 		props.canvasController.setRightFlyoutConfig(
@@ -91,6 +92,7 @@ CommonCanvas.propTypes = {
 		PropTypes.object
 	]),
 	notificationConfig: PropTypes.object,
+	notificationBarConfig: PropTypes.object,
 	contextMenuConfig: PropTypes.object,
 	keyboardConfig: PropTypes.object,
 	contextMenuHandler: PropTypes.func,
