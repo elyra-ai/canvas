@@ -151,6 +151,7 @@ export default class SidePanelForms extends React.Component {
 
 		this.notificationConfigChange = this.notificationConfigChange.bind(this);
 		this.notificationConfigToggle = this.notificationConfigToggle.bind(this);
+		this.notificationBarChange = this.notificationBarChange.bind(this);
 		this.exampleAppOptionChange = this.exampleAppOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
@@ -282,6 +283,13 @@ export default class SidePanelForms extends React.Component {
 		const configObj = this.props.getStateValue(notifConfig);
 		configObj[field] = value;
 		this.props.setStateValue(notifConfig, configObj);
+	}
+
+	// Updates a field of the notificationBar object in App.js state.
+	notificationBarChange(field, value) {
+		const notificationBar = Object.assign({}, this.props.getStateValue("notificationBar"));
+		notificationBar[field] = value;
+		this.props.setStateValue("notificationBar", notificationBar);
 	}
 
 	exampleAppOptionChange(value) {
@@ -1872,6 +1880,79 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		const notificationBarState = this.props.getStateValue("notificationBar");
+		const notificationBarDisabled = !this.props.getStateValue("selectedNotificationBar");
+
+		var notificationBarControls = (<>
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="selectedNotificationBar"
+					labelText="Display Notification Bar"
+					toggled={this.props.getStateValue("selectedNotificationBar")}
+					onToggle={(val) => this.setStateValue(val, "selectedNotificationBar")}
+				/>
+			</div>
+			<div className="harness-sidepanel-children">
+				<Select
+					id="notificationBarKind"
+					labelText="Kind"
+					disabled={notificationBarDisabled}
+					value={notificationBarState.kind}
+					onChange={(evt) => this.notificationBarChange("kind", evt.target.value)}
+				>
+					<SelectItem value="error" text="error" />
+					<SelectItem value="warning" text="warning" />
+					<SelectItem value="success" text="success" />
+					<SelectItem value="info" text="info" />
+				</Select>
+			</div>
+			<div className="harness-sidepanel-children">
+				<TextInput
+					id="notificationBarTitle"
+					labelText="Title"
+					disabled={notificationBarDisabled}
+					value={notificationBarState.title}
+					onChange={(evt) => this.notificationBarChange("title", evt.target.value)}
+				/>
+			</div>
+			<div className="harness-sidepanel-children">
+				<TextInput
+					id="notificationBarSubtitle"
+					labelText="Subtitle (will hide if empty)"
+					disabled={notificationBarDisabled}
+					value={notificationBarState.subtitle}
+					onChange={(evt) => this.notificationBarChange("subtitle", evt.target.value)}
+				/>
+			</div>
+			<div className="harness-sidepanel-children">
+				<TextInput
+					id="notificationBarActionButtonLabel"
+					labelText="Action button label (no action button if empty)"
+					disabled={notificationBarDisabled}
+					value={notificationBarState.actionButtonLabel}
+					onChange={(evt) => this.notificationBarChange("actionButtonLabel", evt.target.value)}
+				/>
+			</div>
+			<div className="harness-sidepanel-children">
+				<TextInput
+					id="notificationBarScreenReaderText"
+					labelText="Screen reader only text"
+					disabled={notificationBarDisabled}
+					value={notificationBarState.screenReaderText}
+					onChange={(evt) => this.notificationBarChange("screenReaderText", evt.target.value)}
+				/>
+			</div>
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="notificationBarShowCloseButton"
+					labelText="Provide onCloseButtonClick (displays close button)"
+					disabled={notificationBarDisabled}
+					toggled={notificationBarState.showCloseButton}
+					onToggle={(val) => this.notificationBarChange("showCloseButton", val)}
+				/>
+			</div>
+		</>);
+
 		var enableNotificationConfigToggle2 = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedNotificationConfig2"
@@ -2121,6 +2202,7 @@ export default class SidePanelForms extends React.Component {
 							{notificationKeepOpen}
 							{notificationSecondaryButtonDisabled}
 						</>)}
+						{section("Notification Bar", notificationBarControls)}
 						{section("Extra Canvas", <>
 							{extraCanvas}
 							{canvasInput2}
