@@ -124,7 +124,6 @@ const CommonContextMenu = (props) => {
 
 	const menuPopoverRef = useRef(null);
 	const menuRefs = useRef([]);
-	const focusIndex = useRef(null); // Set to null so we know when it is not initialized.
 	const closing = useRef(false);
 	const mounted = useRef(false);
 
@@ -140,10 +139,6 @@ const CommonContextMenu = (props) => {
 	// selections). Closing is done by the canvas (on zoom start) or by the
 	// context menu wrapper (on click) instead.
 	const mouseDownOutsideMenu = useRef(false);
-
-	const subMenuObserver = useRef(null);
-	const subMenuFocusFrame = useRef(null);
-	const subMenuCloseFrame = useRef(null);
 
 	// Holds the latest props so callbacks passed to Carbon, and to long-lived
 	// listeners, can stay stable and still see current values.
@@ -177,81 +172,18 @@ const CommonContextMenu = (props) => {
 		}
 	}, []);
 
-	// Sets focus on the current top level menu item unless focus is already on
+	// Sets focus on the first top level menu item unless focus is already on
 	// an element within the menu (other than the menu itself). This prevents
-	// focus being pulled back to a top level item when, for example, focus has
+	// focus being pulled back to the top item when, for example, focus has
 	// been moved to the first item of a cascaded menu because the mouse cursor
 	// is over the item that opens that menu.
 	const focusCurrentItem = useCallback(() => {
-		focusIndex.current = focusIndex.current === null ? 0 : focusIndex.current;
-
 		const popover = menuPopoverRef.current;
 		const active = document.activeElement;
 		if (popover && active && active !== popover && popover.contains(active)) {
 			return;
 		}
-
-		if (menuRefs.current[focusIndex.current]?.current) {
-			menuRefs.current[focusIndex.current].current.focus();
-		}
-	}, []);
-
-	// Carbon moves focus to the menu item that opened a cascaded menu when the
-	// cascaded menu is closed because the mouse moved away. We want focus to
-	// go to the top item in the main menu instead. We only do this if focus is
-	// on one of the collapsed items (or has been lost from the menu entirely)
-	// so we don't disturb focus the user has placed elsewhere in the menu.
-	const focusTopItemAfterSubMenuClose = useCallback((collapsedItems) => {
-		const popover = menuPopoverRef.current;
-		const active = document.activeElement;
-		if (!popover) {
-			return;
-		}
-		const focusInCollapsed = collapsedItems.some((item) => item.contains(active));
-		if (!focusInCollapsed && popover.contains(active)) {
-			return;
-		}
-		focusIndex.current = 0;
 		menuRefs.current[0]?.current?.focus();
-	}, []);
-
-	// Moves keyboard focus to the first focusable item in the cascaded menu
-	// belonging to the given parent menu item.
-	//
-	// parentItem - the DOM element of the menu item that owns the cascaded menu.
-	//
-	// Focus is only moved when:
-	//   - parentItem is expanded (aria-expanded="true"),
-	//   - parentItem contains a direct child element with role="menu", and
-	//   - focus is not already inside that cascaded menu.
-	//
-	// The target is the color picker item if the cascaded menu contains one,
-	// otherwise the first direct child menuitem that is not aria-disabled.
-	// If no target is found, focus is left unchanged.
-	const focusFirstSubMenuItem = useCallback((parentItem) => {
-		if (parentItem.getAttribute("aria-expanded") !== "true") {
-			return;
-		}
-		const subMenu = parentItem.querySelector(":scope > [role='menu']");
-		if (!subMenu || subMenu.contains(document.activeElement)) {
-			return;
-		}
-		const first = subMenu.querySelector(".color-picker-item") ||
-			subMenu.querySelector(":scope > [role='menuitem']:not([aria-disabled='true'])");
-		first?.focus();
-	}, []);
-
-	// Carbon's MenuItem always sets a title attribute, equal to the label, which
-	// causes the browser to display a tooltip as the mouse hovers over the item.
-	// Carbon sets it after spreading the other props so it can't be overridden
-	// so we remove the attribute from the DOM. Cascaded menu items are in the
-	// DOM even when the cascaded menu is closed, so this covers them too.
-	const removeMenuItemTooltips = useCallback(() => {
-		const popover = menuPopoverRef.current;
-		if (!popover) {
-			return;
-		}
-		popover.querySelectorAll("[role='menuitem'][title]").forEach((item) => item.removeAttribute("title"));
 	}, []);
 
 	// Sets CSS custom properties for the root menu position on its DOM node.
@@ -272,61 +204,14 @@ const CommonContextMenu = (props) => {
 		focusCurrentItem();
 	}, [applyMenuPosition, focusCurrentItem]);
 
-	// Watches for a menu item expanding or collapsing its cascaded menu. When
-	// one expands (for example, when the mouse is moved over the item) focus is
-	// moved to the first item in the cascaded menu.
-	//
-	// Carbon does try to do this itself but two of its mechanisms compete:
-	//   - Menu moves focus to the first MenuItem in the cascaded menu (in an
-	//     animation frame) but it can't do this for the color picker because
-	//     its content is not made up of MenuItems.
-	//   - Each MenuItem's FloatingFocusManager has order ["reference", "floating"]
-	//     so its initial focus (also set in an animation frame) goes to the
-	//     reference, which is the parent menu item.
-	// Which one wins is a matter of timing. So we wait two animation frames, to
-	// let Carbon finish, and then, if focus is not already inside the cascaded
-	// menu, we set it ourselves.
-	const observeSubMenuOpening = useCallback(() => {
-		const popover = menuPopoverRef.current;
-		if (!popover) {
-			return;
-		}
-		subMenuObserver.current = new MutationObserver((mutations) => {
-			const targets = mutations.map((m) => m.target);
-			const expanded = targets
-				.filter((t) => t.getAttribute("aria-expanded") === "true")
-				.pop();
-			const collapsed = targets
-				.filter((t) => t.getAttribute("aria-expanded") === "false");
-			if (expanded) {
-				cancelAnimationFrame(subMenuFocusFrame.current);
-				subMenuFocusFrame.current = requestAnimationFrame(() => {
-					subMenuFocusFrame.current = requestAnimationFrame(() => focusFirstSubMenuItem(expanded));
-				});
-			} else if (collapsed.length > 0 && lastInputWasMouse.current) {
-				// A cascaded menu was closed by the mouse moving away. If focus is
-				// inside the cascaded menu, move it out immediately, before the
-				// browser hides the menu. Otherwise the focused element disappears,
-				// focus is lost (blur with no related target) and Carbon closes the
-				// whole context menu.
-				focusTopItemAfterSubMenuClose(collapsed);
-
-				// Carbon may also move focus to the parent item after this callback
-				// so check again after it has finished.
-				cancelAnimationFrame(subMenuCloseFrame.current);
-				subMenuCloseFrame.current = requestAnimationFrame(() => {
-					subMenuCloseFrame.current = requestAnimationFrame(() => focusTopItemAfterSubMenuClose(collapsed));
-				});
-			}
-		});
-		subMenuObserver.current.observe(popover, { attributes: true, attributeFilter: ["aria-expanded"], subtree: true });
-	}, [focusFirstSubMenuItem, focusTopItemAfterSubMenuClose]);
-
 	// Runs after every render. This must be declared before the mount effect
 	// so that, on mount, the menu is positioned before the observer is started.
 	useLayoutEffect(() => {
 		applyMenuPosition();
-		removeMenuItemTooltips();
+		// Carbon's MenuItem always sets a title attribute, equal to the label,
+		// which makes the browser display a tooltip on hover. Carbon sets it after
+		// spreading the other props so it can't be overridden. So we remove it.
+		menuPopoverRef.current?.querySelectorAll("[role='menuitem'][title]").forEach((item) => item.removeAttribute("title"));
 		// On mount, focus is set on the first menu item by handleMenuOpen which
 		// Carbon calls after it has recorded the element that currently has focus.
 		// Carbon returns focus to that element when the menu closes, so we must
@@ -339,7 +224,84 @@ const CommonContextMenu = (props) => {
 
 	useLayoutEffect(() => {
 		mounted.current = true;
-		observeSubMenuOpening();
+		const popover = menuPopoverRef.current;
+
+		// Carbon moves focus into a cascaded menu when it opens but two of its
+		// mechanisms compete:
+		//   - Menu moves focus to the first enabled MenuItem in the cascaded menu
+		//     (in an animation frame) but it can't do this for the color picker
+		//     because its content is not made up of MenuItems.
+		//   - Each MenuItem's FloatingFocusManager has order ["reference", "floating"]
+		//     so its initial focus (also set in an animation frame) goes to the
+		//     reference, which is the parent menu item.
+		// Both run in the same frame and the last one to be queued wins. With
+		// React 19 the first cascaded item usually ends up with focus but with
+		// React 18 the parent item does, and Elyra Canvas must work with both.
+		// So we watch for cascaded menus expanding or collapsing and, after Carbon
+		// has finished, set focus ourselves. This runs a callback after two
+		// animation frames and returns a function that cancels it.
+		const afterTwoFrames = (fn) => {
+			let id = requestAnimationFrame(() => {
+				id = requestAnimationFrame(fn);
+			});
+			return () => cancelAnimationFrame(id);
+		};
+
+		// Moves focus to the color picker, or else the first enabled item, in the
+		// cascaded menu of the expanded parentItem, unless focus is already on an
+		// element within it. Focus on the cascaded menu itself, which Carbon sets
+		// when it opens, doesn't count because it shows a focus outline around
+		// the whole menu.
+		const focusFirstSubMenuItem = (parentItem) => {
+			const subMenu = parentItem.getAttribute("aria-expanded") === "true" &&
+				parentItem.querySelector(":scope > [role='menu']");
+			const active = document.activeElement;
+			if (!subMenu || (active !== subMenu && subMenu.contains(active))) {
+				return;
+			}
+			(subMenu.querySelector(".color-picker-item") ||
+				subMenu.querySelector(":scope > [role='menuitem']:not([aria-disabled='true'])"))?.focus();
+		};
+
+		// Carbon moves focus to the menu item that opened a cascaded menu when it
+		// is closed by the mouse moving away. We want focus to go to the top item
+		// in the main menu instead. We only do this if focus is in one of the
+		// collapsed items (or has been lost from the menu entirely) so we don't
+		// disturb focus the user has placed elsewhere in the menu.
+		const focusTopItemAfterSubMenuClose = (collapsedItems) => {
+			const active = document.activeElement;
+			if (collapsedItems.some((item) => item.contains(active)) || !popover.contains(active)) {
+				menuRefs.current[0]?.current?.focus();
+			}
+		};
+
+		let cancelOpenFocus;
+		let cancelCloseFocus;
+		const observer = new MutationObserver((mutations) => {
+			const targets = mutations.map((m) => m.target);
+			const expanded = targets
+				.filter((t) => t.getAttribute("aria-expanded") === "true")
+				.pop();
+			const collapsed = targets
+				.filter((t) => t.getAttribute("aria-expanded") === "false");
+			if (expanded) {
+				cancelOpenFocus?.();
+				cancelOpenFocus = afterTwoFrames(() => focusFirstSubMenuItem(expanded));
+			} else if (collapsed.length > 0 && lastInputWasMouse.current) {
+				// A cascaded menu was closed by the mouse moving away. If focus is
+				// inside it, move focus out immediately, before the browser hides
+				// the menu. Otherwise the focused element disappears, focus is lost
+				// (blur with no related target) and Carbon closes the whole menu.
+				// Carbon may also move focus to the parent item after this callback
+				// so check again after it has finished.
+				focusTopItemAfterSubMenuClose(collapsed);
+				cancelCloseFocus?.();
+				cancelCloseFocus = afterTwoFrames(() => focusTopItemAfterSubMenuClose(collapsed));
+			}
+		});
+		if (popover) {
+			observer.observe(popover, { attributes: true, attributeFilter: ["aria-expanded"], subtree: true });
+		}
 
 		const onDocumentMouseMove = () => {
 			lastInputWasMouse.current = true;
@@ -348,7 +310,6 @@ const CommonContextMenu = (props) => {
 			lastInputWasMouse.current = false;
 		};
 		const onDocumentMouseDown = (evt) => {
-			const popover = menuPopoverRef.current;
 			mouseDownOutsideMenu.current = !(popover && popover.contains(evt.target));
 		};
 		const onDocumentMouseUp = () => {
@@ -361,15 +322,15 @@ const CommonContextMenu = (props) => {
 
 		return () => {
 			mounted.current = false;
-			subMenuObserver.current?.disconnect();
-			cancelAnimationFrame(subMenuFocusFrame.current);
-			cancelAnimationFrame(subMenuCloseFrame.current);
+			observer.disconnect();
+			cancelOpenFocus?.();
+			cancelCloseFocus?.();
 			document.removeEventListener("mousemove", onDocumentMouseMove, true);
 			document.removeEventListener("keydown", onDocumentKeyDown, true);
 			document.removeEventListener("mousedown", onDocumentMouseDown, true);
 			document.removeEventListener("mouseup", onDocumentMouseUp, true);
 		};
-	}, [observeSubMenuOpening]);
+	}, []);
 
 	const colorClicked = (color, evt) => {
 		contextHandler("colorSelectedObjects", evt, { color });
