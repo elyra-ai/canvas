@@ -215,7 +215,6 @@ const CommonContextMenu = (props) => {
 		menuRefs.current[0]?.current?.focus();
 	}, []);
 
-
 	// Moves keyboard focus to the first focusable item in the cascaded menu
 	// belonging to the given parent menu item.
 	//
@@ -244,8 +243,9 @@ const CommonContextMenu = (props) => {
 
 	// Carbon's MenuItem always sets a title attribute, equal to the label, which
 	// causes the browser to display a tooltip as the mouse hovers over the item.
-	// Carbon doesn't allow this to be overridden through props so we remove the
-	// attribute from the DOM.
+	// Carbon sets it after spreading the other props so it can't be overridden
+	// so we remove the attribute from the DOM. Cascaded menu items are in the
+	// DOM even when the cascaded menu is closed, so this covers them too.
 	const removeMenuItemTooltips = useCallback(() => {
 		const popover = menuPopoverRef.current;
 		if (!popover) {
@@ -272,12 +272,19 @@ const CommonContextMenu = (props) => {
 		focusCurrentItem();
 	}, [applyMenuPosition, focusCurrentItem]);
 
-	// Watches for a menu item expanding its cascaded menu. When that happens
-	// (for example, when the mouse is moved over the item) focus is moved to the
-	// first item in the cascaded menu. Carbon does try to do this itself but its
-	// focus manager also queues a call to focus the parent menu item and, which
-	// one wins is a matter of timing. So we wait two animation frames, to let
-	// Carbon finish, and then, if focus is not already inside the cascaded
+	// Watches for a menu item expanding or collapsing its cascaded menu. When
+	// one expands (for example, when the mouse is moved over the item) focus is
+	// moved to the first item in the cascaded menu.
+	//
+	// Carbon does try to do this itself but two of its mechanisms compete:
+	//   - Menu moves focus to the first MenuItem in the cascaded menu (in an
+	//     animation frame) but it can't do this for the color picker because
+	//     its content is not made up of MenuItems.
+	//   - Each MenuItem's FloatingFocusManager has order ["reference", "floating"]
+	//     so its initial focus (also set in an animation frame) goes to the
+	//     reference, which is the parent menu item.
+	// Which one wins is a matter of timing. So we wait two animation frames, to
+	// let Carbon finish, and then, if focus is not already inside the cascaded
 	// menu, we set it ourselves.
 	const observeSubMenuOpening = useCallback(() => {
 		const popover = menuPopoverRef.current;
@@ -285,12 +292,7 @@ const CommonContextMenu = (props) => {
 			return;
 		}
 		subMenuObserver.current = new MutationObserver((mutations) => {
-			// Cascaded menu items are added to the DOM when a submenu opens so
-			// remove their tooltips too.
-			removeMenuItemTooltips();
-			const targets = mutations
-				.filter((m) => m.type === "attributes")
-				.map((m) => m.target);
+			const targets = mutations.map((m) => m.target);
 			const expanded = targets
 				.filter((t) => t.getAttribute("aria-expanded") === "true")
 				.pop();
@@ -317,8 +319,8 @@ const CommonContextMenu = (props) => {
 				});
 			}
 		});
-		subMenuObserver.current.observe(popover, { attributes: true, attributeFilter: ["aria-expanded"], childList: true, subtree: true });
-	}, [removeMenuItemTooltips, focusFirstSubMenuItem, focusTopItemAfterSubMenuClose]);
+		subMenuObserver.current.observe(popover, { attributes: true, attributeFilter: ["aria-expanded"], subtree: true });
+	}, [focusFirstSubMenuItem, focusTopItemAfterSubMenuClose]);
 
 	// Runs after every render. This must be declared before the mount effect
 	// so that, on mount, the menu is positioned before the observer is started.
