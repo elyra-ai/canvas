@@ -1183,6 +1183,10 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_NOTIFICATION_PANEL_CONFIG", data: { notificationPanelConfig: config } });
 	}
 
+	setNotificationBarConfig(config) {
+		this.store.dispatch({ type: "SET_NOTIFICATION_BAR_CONFIG", data: { notificationBarConfig: config } });
+	}
+
 	getCanvasConfig() {
 		return this.store.getCanvasConfig();
 	}

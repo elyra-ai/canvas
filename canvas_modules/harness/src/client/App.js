@@ -437,7 +437,18 @@ class App extends React.Component {
 				keepOpen: true
 			},
 			selectedNotificationConfig: true,
-			selectedNotificationConfig2: true
+			selectedNotificationConfig2: true,
+
+			// Fields used to build the notificationBarConfig prop for the first canvas
+			selectedNotificationBar: false,
+			notificationBar: {
+				title: "Flow updated",
+				subtitle: "",
+				kind: "error",
+				actionButtonLabel: "",
+				screenReaderText: "",
+				showCloseButton: true
+			}
 		};
 
 		// There are several functions and variables with the identifiers name and name2. This is needed
@@ -942,6 +953,36 @@ class App extends React.Component {
 			this.openPropertiesEditorDialog();
 		});
 		this.log("Properties set");
+	}
+
+	// Returns the notificationBarConfig for the first canvas or null if the
+	// notification bar is not enabled in the side panel.
+	getNotificationBarConfig() {
+		if (!this.state.selectedNotificationBar) {
+			return null;
+		}
+		const bar = this.state.notificationBar;
+		const config = {
+			title: bar.title,
+			kind: bar.kind
+		};
+		if (bar.subtitle) {
+			config.subtitle = bar.subtitle;
+		}
+		if (bar.actionButtonLabel) {
+			config.actionButtonLabel = bar.actionButtonLabel;
+			config.onActionButtonClick = () => this.log("Notification bar action button clicked");
+		}
+		if (bar.showCloseButton) {
+			config.onCloseButtonClick = () => {
+				this.setState({ selectedNotificationBar: false });
+				this.log("Notification bar closed");
+			};
+		}
+		if (bar.screenReaderText) {
+			config.screenReaderText = bar.screenReaderText;
+		}
+		return config;
 	}
 
 	// Called by canvas sidepanel to set state variables
@@ -3188,6 +3229,7 @@ class App extends React.Component {
 		const commonCanvasConfig = this.getCanvasConfig();
 		const commonCanvasConfig2 = this.getCanvasConfig2();
 		const toolbarConfig = this.getToolbarConfig();
+		const notificationBarConfig = this.getNotificationBarConfig();
 
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
@@ -3255,6 +3297,7 @@ class App extends React.Component {
 				actionLabelHandler={this.actionLabelHandler}
 				toolbarConfig={toolbarConfig}
 				notificationConfig={this.state.selectedNotificationConfig ? this.state.notificationConfig : null}
+				notificationBarConfig={notificationBarConfig}
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
 				leftFlyoutContent={leftFlyoutContent}

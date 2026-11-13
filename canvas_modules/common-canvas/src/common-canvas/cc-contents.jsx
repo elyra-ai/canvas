@@ -25,6 +25,7 @@ import CommonCanvasContextMenu from "./cc-context-menu.jsx";
 import CommonCanvasContextToolbar from "./cc-context-toolbar.jsx";
 import CommonCanvasTextToolbar from "./cc-text-toolbar.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
+import NotificationBar from "../notification-bar/notification-bar.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import { Button } from "@carbon/react";
@@ -753,6 +754,7 @@ class CanvasContents extends React.Component {
 				{emptyCanvas}
 				{returnToPreviousBtn}
 				{stateTag}
+				<NotificationBar />
 				{contextMenu}
 				{textToolbar}
 				{dropZoneCanvas}

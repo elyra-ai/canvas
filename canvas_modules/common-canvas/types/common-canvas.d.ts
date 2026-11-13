@@ -719,6 +719,25 @@ export interface NotificationConfig {
   secondaryButtonDisabled?: boolean;
 }
 
+/**
+ * Configuration for the notification bar displayed at the top of the canvas.
+ * Pass null or undefined to the notificationBarConfig prop to hide the bar.
+ */
+export interface NotificationBarConfig {
+  title?: string;
+  subtitle?: string | ReactNode;
+  /** Defaults to "info". */
+  kind?: "error" | "info" | "info-square" | "success" | "warning" | "warning-alt";
+  actionButtonLabel?: string;
+  onActionButtonClick?: () => void;
+  /** The close button is only displayed when this callback is provided. */
+  onCloseButtonClick?: () => void;
+  /** Extra content displayed in the notification. */
+  content?: ReactNode;
+  /** Text which is only available to screen readers. */
+  screenReaderText?: string;
+}
+
 export interface CtxMenuConfig {
   enableCreateSupernodeNonContiguous?: boolean;
   defaultMenuEntries?: {
@@ -1218,6 +1237,12 @@ export interface CommonCanvasProps {
    * https://elyra-ai.github.io/canvas/03.02.03-notification-config/
    */
   notificationConfig?: NotificationConfig;
+
+  /**
+   * Config for the notification bar displayed at the top of the canvas.
+   * Set to null or undefined to hide the bar.
+   */
+  notificationBarConfig?: NotificationBarConfig | null;
 
   /**
    * https://elyra-ai.github.io/canvas/03.02.04-context-menu-config/
