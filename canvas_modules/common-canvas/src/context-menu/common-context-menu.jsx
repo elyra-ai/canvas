@@ -332,8 +332,35 @@ const CommonContextMenu = (props) => {
 		};
 	}, []);
 
+	const colorPickerWrapperRef = useRef(null);
+	const colorSelected = useRef(false);
+
 	const colorClicked = (color, evt) => {
+		colorSelected.current = true;
 		contextHandler("colorSelectedObjects", evt, { color });
+	};
+
+	// Closes just a cascaded menu. Carbon provides no way to do this other than
+	// its own left arrow handling. So we send a left arrow key press to the
+	// cascaded menu. Carbon then closes just that cascaded menu and returns focus
+	// to its parent menu item.
+	const closeCascadeMenu = (ref) => {
+		ref.current?.dispatchEvent(
+			new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true, cancelable: true })
+		);
+	};
+
+	// The color picker calls closeSubPanel when:
+	// * a color is selected, in which case the whole context menu should close
+	// * when the user presses left arrow on the first color, in which case only
+	//   the cascaded menu should close.
+	const closeColorPicker = () => {
+		if (colorSelected.current) {
+			colorSelected.current = false;
+			closeMenu();
+		} else {
+			closeCascadeMenu(colorPickerWrapperRef);
+		}
 	};
 
 	const buildColorPickerPanel = () => {
@@ -342,8 +369,8 @@ const CommonContextMenu = (props) => {
 			closeSubPanel: () => closeMenu()
 		};
 		return (
-			<div key="color-picker" tabIndex={-1}>
-				<ColorPicker subPanelData={subPanelData} closeSubPanel={() => closeMenu()} />
+			<div key="color-picker" ref={colorPickerWrapperRef} tabIndex={-1}>
+				<ColorPicker subPanelData={subPanelData} closeSubPanel={closeColorPicker} />
 			</div>
 		);
 	};
@@ -404,9 +431,10 @@ const CommonContextMenu = (props) => {
 					);
 
 				} else if (menuDef[i].submenu) {
+					// Carbon ignores the disabled prop on a MenuItem that has children
+					// so the submenu content is only supplied when the item is enabled.
 					const disabled = areAllItemsDisabled(menuDef[i].menu);
-					const subMenuInfo = buildMenu(menuDef[i].menu);
-					const subMenuContent = subMenuInfo.menuItems;
+					const subMenuContent = disabled ? null : buildMenu(menuDef[i].menu).menuItems;
 					const ref = disabled ? null : React.createRef();
 					if (!disabled) {
 						refs.push(ref);
