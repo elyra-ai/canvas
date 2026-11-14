@@ -59,6 +59,10 @@
 		&.selected {
 			outline: solid carbon.$layer-selected-inverse 2px;
 		}
+
+		&:focus {
+			outline: solid carbon.$focus 2px;
+		}
 	}
 
 }
