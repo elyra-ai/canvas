@@ -265,10 +265,12 @@ $toolbar-divider-width: 1px;
 
 // Carbon v12 makes buttons fully rounded (pill/circle for icon-only buttons).
 // Use the same corner radius as Carbon v12 text fields ($border-radius-04 =
-// 0.25rem) so toolbar buttons keep a rectangular proportion.
+// 0.25rem) so toolbar buttons, and the items in sub-menus and overflow menus,
+// keep a rectangular proportion and their focus highlight has subtle corners.
 .toolbar-div--v12 {
 	.toolbar-item > .toolbar-button-item > button,
-	.toolbar-overflow-item > button {
+	.toolbar-overflow-item > button,
+	.toolbar-sub-menu-item > button {
 		border-radius: 0.25rem;
 	}
 }
