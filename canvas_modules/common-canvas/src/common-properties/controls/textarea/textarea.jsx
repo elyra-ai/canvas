@@ -88,7 +88,7 @@ class TextareaControl extends React.Component {
 					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
-					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
+					aria-label={this.props.control?.label?.text}
 					enableCounter={shouldShowCounter}
 					maxCount={this.charLimit}
 				/>
@@ -106,7 +106,7 @@ class TextareaControl extends React.Component {
 					hideLabel
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
-					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
+					aria-label={this.props.control?.label?.text}
 					enableCounter={shouldShowCounter}
 					maxCount={this.charLimit}
 				/>
