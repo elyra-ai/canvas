@@ -686,14 +686,16 @@ Cypress.Commands.add("verifyContextToolbarNonOverflowItems", (noOfItems) => {
 		});
 });
 
-Cypress.Commands.add("verifySubmenuPushedUpBy", (distFromTop) => {
-	// last() returns context submenu
-	cy.get(".context-menu-popover").last()
-		.invoke("css", "top")
-		.then((cssValue) => {
-			// cssValue is a negative number Eg. -91px
-			// Sending 91px to verifyPixelValueInCompareRange
-			cy.verifyPixelValueInCompareRange(distFromTop, Math.abs(Number(cssValue.split("px")[0])) + "px");
+// Verifies the open context submenu has been pushed up so it is fully inside
+// the browser window and its top is above the top of the menu item that opened
+// it. Carbon positions the submenu so we can't test for an exact offset.
+Cypress.Commands.add("verifySubmenuPushedUp", () => {
+	cy.get(".context-menu-popover li[aria-expanded='true']")
+		.then(($parentItem) => {
+			const parentRect = $parentItem[0].getBoundingClientRect();
+			const subMenuRect = $parentItem[0].querySelector(":scope > [role='menu']").getBoundingClientRect();
+			expect(subMenuRect.top).to.be.lessThan(parentRect.top);
+			expect(subMenuRect.bottom).to.be.at.most($parentItem[0].ownerDocument.defaultView.innerHeight);
 		});
 });
 

@@ -34,14 +34,27 @@ Cypress.Commands.add("clickOptionFromContextMenu", (optionName) => {
 	cy.getOptionFromContextMenu(optionName).click();
 });
 
+// Returns the text of the label of a Carbon menu item. We can't use the text of
+// the whole <li> because, for an item that has a cascade menu, that includes the
+// text of all the cascade menu items.
+const getMenuItemLabel = (el) => {
+	const label = el.querySelector(":scope > [class*='menu-item__label']");
+	return label ? label.textContent.trim() : "";
+};
+
 Cypress.Commands.add("clickOptionFromContextSubmenu", (submenuName, optionName) => {
-	cy.get(".context-menu-popover").find(".context-menu-item:not(.contextmenu-divider)")
-		.then((options) => {
-			for (let idx = 0; idx < options.length; idx++) {
-				if (options[idx].outerText === optionName) {
-					options[idx].click();
-				}
-			}
+	// Click the top level item to open its cascade menu. Carbon marks the item
+	// with aria-expanded="true" once the cascade menu is open.
+	cy.get(".context-menu-popover > .context-menu-item")
+		.filter((idx, el) => getMenuItemLabel(el) === submenuName)
+		.click()
+		.should("have.attr", "aria-expanded", "true")
+		.then(($submenuItem) => {
+			// Click the option in the (now visible) cascade menu.
+			cy.wrap($submenuItem)
+				.find("[role='menu'] > .context-menu-item")
+				.filter((idx, el) => getMenuItemLabel(el) === optionName)
+				.click();
 		});
 });
 
