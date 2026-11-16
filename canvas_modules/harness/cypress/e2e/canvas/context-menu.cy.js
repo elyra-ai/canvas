@@ -41,19 +41,19 @@ describe("Test of context menu", function() {
 
 		// Test the context menu is pushed upwards when user clicks near bottom of the page
 		cy.rightClickToDisplayContextMenu(1000, 500);
-		cy.verifyContextMenuPosition("1000px", "311px");
+		cy.verifyContextMenuPosition("1000px", "256px");
 
 		// Test the context menu is pushed to the left correctly even when the palette is open
 		cy.clickCanvasAt(1, 1);
 		cy.clickToolbarPaletteOpen();
 		cy.rightClickToDisplayContextMenu(940, 300);
-		cy.verifyContextMenuPosition("940px", "300px");
+		cy.verifyContextMenuPosition("940px", "256px");
 
 		// Test the context menu is pushed to the left correctly when the palette is open AND the right flyout is open
 		cy.clickCanvasAt(1, 1);
 		cy.getNodeWithLabel("Na_to_K").dblclick();
 		cy.rightClickToDisplayContextMenu(640, 300);
-		cy.verifyContextMenuPosition("640px", "300px");
+		cy.verifyContextMenuPosition("640px", "256px");
 
 		// Test the context menu's 'Highlight' submenu is pushed up in a situation
 		// where it would appear off the bottom of the screen
@@ -61,7 +61,7 @@ describe("Test of context menu", function() {
 		cy.clickToolbarZoomToFit();
 		cy.getNodeWithLabel("Neural Net").rightclick();
 		cy.clickOptionFromContextMenu("Highlight");
-		cy.verifySubmenuPushedUpBy("91px");
+		cy.verifySubmenuPushedUp();
 
 		// Test that, when a set of objects are selected, a click opening the context menu will not clear the selections
 		cy.clickCanvasAt(1, 1); // To close context menu

@@ -70,6 +70,7 @@ class ColorPicker extends React.Component {
 			evt.stopPropagation();
 			this.colorIndex--;
 			if (this.colorIndex < 0) {
+				this.colorIndex = 0;
 				this.props.closeSubPanel();
 				return;
 			}
@@ -90,6 +91,9 @@ class ColorPicker extends React.Component {
 				this.colorIndex -= this.colorsPerRow;
 			}
 			this.setFocus(this.colorIndex);
+
+		} else if (KeyboardUtils.closeSubArea(evt)) {
+			this.colorIndex = 0;
 
 		} else if (KeyboardUtils.selectColor(evt)) {
 			evt.stopPropagation();
