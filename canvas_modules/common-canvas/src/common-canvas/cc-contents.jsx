@@ -750,11 +750,11 @@ class CanvasContents extends React.Component {
 				onDragEnter={this.dragEnter}
 				onDragLeave={this.dragLeave}
 			>
+				<NotificationBar />
 				{svgCanvasDiv}
 				{emptyCanvas}
 				{returnToPreviousBtn}
 				{stateTag}
-				<NotificationBar />
 				{contextMenu}
 				{textToolbar}
 				{dropZoneCanvas}

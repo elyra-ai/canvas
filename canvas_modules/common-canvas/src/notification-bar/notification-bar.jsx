@@ -17,7 +17,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { ActionableNotification, InlineNotification } from "@carbon/react";
+import { ActionableNotification, FeatureFlags, InlineNotification } from "@carbon/react";
 
 // Delay before the notification content is shown so screen readers detect the
 // change in the aria-live region. 100ms was too fast for VoiceOver on macOS.
@@ -69,21 +69,23 @@ function NotificationBarContent({ config }) {
 		// ActionableNotification is used, with an overridden role, because
 		// InlineNotification does not support actions or content.
 		return (
-			<ActionableNotification
-				inline
-				title={title}
-				subtitle={subtitle}
-				kind={kind}
-				role={role}
-				lowContrast
-				hideCloseButton={!hasCloseButton}
-				onCloseButtonClick={config.onCloseButtonClick}
-				actionButtonLabel={showContent ? config.actionButtonLabel : ""}
-				onActionButtonClick={config.onActionButtonClick}
-			>
-				{showContent ? config.content : null}
-				{screenReaderText}
-			</ActionableNotification>
+			<FeatureFlags enableFocusWrapWithoutSentinels>
+				<ActionableNotification
+					inline
+					title={title}
+					subtitle={subtitle}
+					kind={kind}
+					role={role}
+					lowContrast
+					hideCloseButton={!hasCloseButton}
+					onCloseButtonClick={config.onCloseButtonClick}
+					actionButtonLabel={showContent ? config.actionButtonLabel : ""}
+					onActionButtonClick={config.onActionButtonClick}
+				>
+					{showContent ? config.content : null}
+					{screenReaderText}
+				</ActionableNotification>
+			</FeatureFlags>
 		);
 	}
 
