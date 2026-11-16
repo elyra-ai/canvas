@@ -44,7 +44,7 @@ import TrashCan from "@carbon/icons-react/lib/TrashCan";
 import ZoomIn from "@carbon/icons-react/lib/ZoomIn";
 import ZoomOut from "@carbon/icons-react/lib/ZoomOut";
 import Checkmark from "@carbon/icons-react/lib/Checkmark";
-import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
+import CaretRight from "@carbon/icons-react/lib/CaretRight";
 import ChevronDown from "@carbon/icons-react/lib/ChevronDown";
 import ChevronUp from "@carbon/icons-react/lib/ChevronUp";
 import CenterToFit from "@carbon/icons-react/lib/CenterToFit";
@@ -376,7 +376,7 @@ class ToolbarButtonItem extends React.Component {
 	generateChevronDiv(actionObj) {
 		if (actionObj.subMenu || actionObj.subPanel) {
 			if (this.props.isInMenu) {
-				return <div className={"toolbar-right-chevron"}><ChevronRight /></div>;
+				return <div className={"toolbar-right-chevron"}><CaretRight /></div>;
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
 					actionObj.incLabelWithIcon === "after" ||
