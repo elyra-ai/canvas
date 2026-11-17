@@ -223,6 +223,11 @@ export default class CanvasController {
 		this.objectModel.setNotificationPanelConfig(config);
 	}
 
+	setNotificationBarConfig(config) {
+		this.logger.log("Setting Notif Bar Config");
+		this.objectModel.setNotificationBarConfig(config);
+	}
+
 	setLeftFlyoutConfig(config) {
 		this.logger.log("Setting Left Flyout Config");
 		this.objectModel.setLeftFlyoutConfig(config);

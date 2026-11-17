@@ -71,10 +71,11 @@ nav:
     - Context Toolbar: 01.04-context-toolbar.md
     - Toolbar: 01.05-toolbar.md
     - Notification Panel: 01.06-notification-panel.md
-    - State Tag: 01.07-state-tag.md
-    - Tooltips: 01.08-tooltips.md
-    - Panels: 01.09-panels.md
-    - Common Properties: 01.10-common-properties.md
+    - Notification Bar: 01.07-notification-bar.md
+    - State Tag: 01.08-state-tag.md
+    - Tooltips: 01.09-tooltips.md
+    - Panels: 01.10-panels.md
+    - Common Properties: 01.11-common-properties.md
 
   - Initial Setup:
     - Installation: 02-set-up.md
@@ -89,8 +90,9 @@ nav:
       - Canvas Config: 03.02.01-canvas-config.md
       - Toolbar Config: 03.02.02-toolbar-config.md
       - Notification Config: 03.02.03-notification-config.md
-      - Context Menu Config: 03.02.04-context-menu-config.md
-      - Keyboard Config: 03.02.05-keyboard-config.md
+      - Notification Bar Config: 03.02.04-notification-bar-config.md
+      - Context Menu Config: 03.02.05-context-menu-config.md
+      - Keyboard Config: 03.02.06-keyboard-config.md
     - Callbacks:
       - Callbacks Overview: 03.03-callbacks.md
       - Context Menu Handler: 03.03.01-context-menu-handler.md

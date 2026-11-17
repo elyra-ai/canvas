@@ -1,7 +1,7 @@
 # Getting started with Common Properties
 
 ## Introduction
-[Common Properties](01.10-common-properties.md) is directed by a JavaScript object called the [Parameter Definition](04.01-parameter-definition.md). The 'paramDef' object describes the properties to be displayed as controls in the `<CommonProperties>` React object.
+[Common Properties](01.11-common-properties.md) is directed by a JavaScript object called the [Parameter Definition](04.01-parameter-definition.md). The 'paramDef' object describes the properties to be displayed as controls in the `<CommonProperties>` React object.
 
 You can look at the [harness/src/client/App.js](https://github.com/elyra-ai/canvas/blob/49ed634e3353d8f5c58eb8409ed8e1009f19c87a/canvas_modules/harness/src/client/App.js) file to see examples of code that uses the common-properties component.
 
