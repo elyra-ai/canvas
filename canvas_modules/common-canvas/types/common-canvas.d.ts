@@ -1322,7 +1322,7 @@ export interface CommonCanvasProps {
   actionLabelHandler?: (action: GeneratorAction) => string | null | void;
 
   /**
-   * https://elyra-ai.github.io/canvas/01.09.10-panels/
+   * https://elyra-ai.github.io/canvas/01.10-panels/
    */
   showLeftFlyout?: boolean;
   leftFlyoutContent?: ReactNode | FunctionComponent;
