@@ -176,6 +176,7 @@ If you want to customize the behavior of Common Canvas you can specify any combi
                 config={this.canvasConfig}
                 toolbarConfig={this.toolbarConfig}
                 notificationConfig={this.notificationConfig}
+                notificationBarConfig={this.notificationBarConfig}
                 contextMenuConfig={this.contextMenuConfig}
                 keyboardConfig={this.keyboardConfig}
             >
@@ -184,7 +185,7 @@ If you want to customize the behavior of Common Canvas you can specify any combi
     );
 ```
 
-Common Canvas has five **optional** configuration objects. They are documented here: [Config Objects](03.02-configuration.md)
+Common Canvas has six **optional** configuration objects. They are documented here: [Config Objects](03.02-configuration.md)
 
 #### Handlers
 

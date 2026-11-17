@@ -92,7 +92,7 @@ function NotificationBarContent({ config }) {
 	return (
 		<InlineNotification
 			title={title}
-			subtitle={typeof subtitle === "string" ? subtitle : ""}
+			subtitle={subtitle || ""}
 			kind={kind}
 			role={role}
 			lowContrast
@@ -120,8 +120,7 @@ class NotificationBar extends React.Component {
 			return null;
 		}
 
-		const subtitleKey = typeof config.subtitle === "string" ? config.subtitle : "";
-		const key = [config.kind || "info", config.title, subtitleKey].join("|");
+		const key = [config.kind || "info", config.title, config.subtitle].join("|");
 
 		return (
 			<div className="common-canvas-notification-bar" data-testid="common-canvas-notification-bar">
@@ -135,7 +134,7 @@ NotificationBar.propTypes = {
 	// Provided by Redux
 	config: PropTypes.shape({
 		title: PropTypes.string,
-		subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+		subtitle: PropTypes.string,
 		kind: PropTypes.oneOf(["error", "info", "info-square", "success", "warning", "warning-alt"]),
 		actionButtonLabel: PropTypes.string,
 		onActionButtonClick: PropTypes.func,

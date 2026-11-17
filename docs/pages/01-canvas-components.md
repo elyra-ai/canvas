@@ -31,11 +31,12 @@ Common Canvas has several constituent parts that can be visible to the user and 
 * [Context toolbar](01.04-context-toolbar.md) - a menu of options for nodes, comments, etc presented as a small toolbar
 * [Toolbar](01.05-toolbar.md) - a set of tools across the top of the UI.
 * [Notification panel](01.06-notification-panel.md) - a panel for displaying runtime and other messages to the user.
-* [State Tag](01.07-state-tag.md) - a small pill-shaped component that appears over the canvas to indicate its state: locked or
+* [Notification bar](01.07-notification-bar.md) - a bar displayed at the top of the canvas for bringing a single message to the user's attention.
+* [State Tag](01.08-state-tag.md) - a small pill-shaped component that appears over the canvas to indicate its state: locked or
 read-only.
-* [Tooltips](01.08-tooltips.md) - information tips displayed when the mouse cursor is over an object.
+* [Tooltips](01.09-tooltips.md) - information tips displayed when the mouse cursor is over an object.
 
-In addition, there are [five optional panels](01.09-panels.md) where application specific output can be displayed such as
+In addition, there are [five optional panels](01.10-panels.md) where application specific output can be displayed such as
 properties, log info or data previews.
 <img src="../assets/cc-panels-example.png" width="900" />
 
@@ -47,7 +48,7 @@ properties, log info or data previews.
 
 
 ## Common Properties
-[Common Properties](01.10-common-properties.md) allows the application to display a Carbon compliant properties panel or dialog with just a Javascript (JSON) object as input. Common Properties supports the most commonly used UI components and also allows custom components to be added into its visual output.
+[Common Properties](01.11-common-properties.md) allows the application to display a Carbon compliant properties panel or dialog with just a Javascript (JSON) object as input. Common Properties supports the most commonly used UI components and also allows custom components to be added into its visual output.
 
 <img src="../assets/cp-example.png" width="300" />
 

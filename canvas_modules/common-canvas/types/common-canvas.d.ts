@@ -725,7 +725,7 @@ export interface NotificationConfig {
  */
 export interface NotificationBarConfig {
   title?: string;
-  subtitle?: string | ReactNode;
+  subtitle?: string;
   /** Defaults to "info". */
   kind?: "error" | "info" | "info-square" | "success" | "warning" | "warning-alt";
   actionButtonLabel?: string;
@@ -1241,16 +1241,17 @@ export interface CommonCanvasProps {
   /**
    * Config for the notification bar displayed at the top of the canvas.
    * Set to null or undefined to hide the bar.
+   * https://elyra-ai.github.io/canvas/03.02.04-notification-bar-config/
    */
   notificationBarConfig?: NotificationBarConfig | null;
 
   /**
-   * https://elyra-ai.github.io/canvas/03.02.04-context-menu-config/
+   * https://elyra-ai.github.io/canvas/03.02.05-context-menu-config/
    */
   contextMenuConfig?: CtxMenuConfig;
 
   /**
-   * https://elyra-ai.github.io/canvas/03.02.05-keyboard-config/
+   * https://elyra-ai.github.io/canvas/03.02.06-keyboard-config/
    */
   keyboardConfig?: KeyboardConfig;
 
