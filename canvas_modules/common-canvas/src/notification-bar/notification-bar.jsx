@@ -120,7 +120,7 @@ class NotificationBar extends React.Component {
 			return null;
 		}
 
-		const key = [config.kind || "info", config.title, config.subtitle].join("|");
+		const key = [config.kind || "info", config.title, config.subtitle, config.screenReaderText].join("|");
 
 		return (
 			<div className="common-canvas-notification-bar" data-testid="common-canvas-notification-bar">

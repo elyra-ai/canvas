@@ -1902,8 +1902,10 @@ export default class SidePanelForms extends React.Component {
 				>
 					<SelectItem value="error" text="error" />
 					<SelectItem value="warning" text="warning" />
+					<SelectItem value="warning-alt" text="warning-alt" />
 					<SelectItem value="success" text="success" />
 					<SelectItem value="info" text="info" />
+					<SelectItem value="info-square" text="info-square" />
 				</Select>
 			</div>
 			<div className="harness-sidepanel-children">
