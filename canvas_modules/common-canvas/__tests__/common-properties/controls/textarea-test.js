@@ -489,6 +489,24 @@ describe("textarea counter display tests", () => {
 		const counter = textWrapper.querySelector(".cds--text-area__label-counter");
 		expect(counter).to.be.null;
 	});
+
+	it("textarea should not show counter when the control is disabled", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: true });
+		controller.updateControlState(propertyId, "disabled");
+		const wrapper = render(
+			<TextArea
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				controlItem={controlItem}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
+		// Disabled counter fails WCAG 1.4.3 contrast so it is not displayed
+		const counter = textWrapper.querySelector(".cds--text-area__label-counter");
+		expect(counter).to.be.null;
+	});
 });
 
 
