@@ -719,6 +719,25 @@ export interface NotificationConfig {
   secondaryButtonDisabled?: boolean;
 }
 
+/**
+ * Configuration for the notification bar displayed at the top of the canvas.
+ * Pass null or undefined to the notificationBarConfig prop to hide the bar.
+ */
+export interface NotificationBarConfig {
+  title?: string;
+  subtitle?: string;
+  /** Defaults to "info". */
+  kind?: "error" | "info" | "info-square" | "success" | "warning" | "warning-alt";
+  actionButtonLabel?: string;
+  onActionButtonClick?: () => void;
+  /** The close button is only displayed when this callback is provided. */
+  onCloseButtonClick?: () => void;
+  /** Extra content displayed in the notification. */
+  content?: ReactNode;
+  /** Text which is only available to screen readers. */
+  screenReaderText?: string;
+}
+
 export interface CtxMenuConfig {
   enableCreateSupernodeNonContiguous?: boolean;
   defaultMenuEntries?: {
@@ -1220,12 +1239,19 @@ export interface CommonCanvasProps {
   notificationConfig?: NotificationConfig;
 
   /**
-   * https://elyra-ai.github.io/canvas/03.02.04-context-menu-config/
+   * Config for the notification bar displayed at the top of the canvas.
+   * Set to null or undefined to hide the bar.
+   * https://elyra-ai.github.io/canvas/03.02.04-notification-bar-config/
+   */
+  notificationBarConfig?: NotificationBarConfig | null;
+
+  /**
+   * https://elyra-ai.github.io/canvas/03.02.05-context-menu-config/
    */
   contextMenuConfig?: CtxMenuConfig;
 
   /**
-   * https://elyra-ai.github.io/canvas/03.02.05-keyboard-config/
+   * https://elyra-ai.github.io/canvas/03.02.06-keyboard-config/
    */
   keyboardConfig?: KeyboardConfig;
 
@@ -1296,7 +1322,7 @@ export interface CommonCanvasProps {
   actionLabelHandler?: (action: GeneratorAction) => string | null | void;
 
   /**
-   * https://elyra-ai.github.io/canvas/01.09.10-panels/
+   * https://elyra-ai.github.io/canvas/01.10-panels/
    */
   showLeftFlyout?: boolean;
   leftFlyoutContent?: ReactNode | FunctionComponent;

@@ -82,6 +82,7 @@ collect:
         - idGeneratorHandler
         - keyboardConfig
         - layoutHandler
+        - notificationBarConfig
         - rightFlyoutContent
         - selectionChangeHandler
         - showBottomPanel
