@@ -42,6 +42,10 @@ export default class SubPanelCell extends React.Component {
 			this.props.controller.setErrorMessages(this.initialMessages);
 			this.props.controller.setControlStates(this.initialStates);
 		}
+		const editModalHandler = this.props.controller.getHandlers().editModalHandler;
+		if (editModalHandler) {
+			editModalHandler({ type: "close", propertyId: this.props.propertyId, applyChanges: applyChanges });
+		}
 	}
 
 	showSubPanel() {
@@ -50,6 +54,10 @@ export default class SubPanelCell extends React.Component {
 		this.initialMessages = this.props.controller.getAllErrorMessages();
 		this.initialStates = this.props.controller.getControlStates();
 		this.subPanelInvoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
+		const editModalHandler = this.props.controller.getHandlers().editModalHandler;
+		if (editModalHandler) {
+			editModalHandler({ type: "open", propertyId: this.props.propertyId });
+		}
 	}
 
 	render() {
