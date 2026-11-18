@@ -1,12 +1,3 @@
-
-// Elyra Canvas needs the Carbon v12 feature flags. The Sass flag must be
-// configured before anything else loads Carbon, so keep this @use first.
-@use "@carbon/react/scss/feature-flags" with (
-	$feature-flags: (
-		"enable-v12-release": true
-	)
-);
-
 @forward "@carbon/react" with (
 	$font-path: "@ibm/plex",
 	$use-per-family-plex: true
