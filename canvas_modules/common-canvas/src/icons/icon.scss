@@ -32,26 +32,6 @@ svg.properties-icon, svg.canvas-icon {
 	fill: carbon.$icon-primary;
 }
 
-svg.canvas-state-icon-error {
-	fill: carbon.$support-error;
-}
-
-svg.canvas-state-icon-success {
-	fill: carbon.$support-success;
-}
-
-svg.canvas-state-icon-warning {
-	fill: carbon.$support-warning;
-	[data-icon-path="inner-path"] { // exclamation mark
-		fill: carbon.$layer-selected-inverse;
-		opacity: 1;
-	}
-}
-
-svg.canvas-state-icon-info {
-	fill: carbon.$support-info;
-}
-
 svg.canvas-state-icon-information-hollow {
 	fill: carbon.$icon-secondary;
 }

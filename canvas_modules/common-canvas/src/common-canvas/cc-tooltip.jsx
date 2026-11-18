@@ -17,12 +17,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import classNames from "classnames";
+import StateIcon from "../state-icon";
 import Tooltip from "../tooltip/tooltip.jsx";
 import { isEmpty } from "lodash";
-// Carbon icons - direct imports for tree-shaking optimization
-import WarningFilled from "@carbon/icons-react/lib/WarningFilled";
-import ErrorFilled from "@carbon/icons-react/lib/ErrorFilled";
 import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_DEC,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TIP_TYPE_STATE_TAG } from "../common-canvas/constants/canvas-constants.js";
 
@@ -94,9 +91,9 @@ class CommonCanvasTooltip extends React.Component {
 				{
 					let icon = null;
 					if (this.props.canvasController.getObjectModel().hasErrorMessage(this.props.node)) {
-						icon = (<ErrorFilled className={classNames("canvas-state-icon-error", "tip-node-status", "error")} />);
+						icon = (<StateIcon type="error" className="tip-node-status" />);
 					} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node)) {
-						icon = (<WarningFilled className={classNames("canvas-state-icon-warning", "tip-node-status", "warning")} />);
+						icon = (<StateIcon type="warning" className="tip-node-status" />);
 					}
 					const nodeType = this.props.canvasController.getObjectModel().getPaletteNode(this.props.node.op);
 					let nodeLabel = this.props.node.label;

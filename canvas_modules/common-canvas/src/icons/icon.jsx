@@ -24,10 +24,6 @@ import Integer from "./../../assets/images/integer.svg";
 import StringIcon from "./../../assets/images/string.svg";
 
 // Carbon icons - direct imports for tree-shaking optimization
-import WarningFilled from "@carbon/icons-react/lib/WarningFilled";
-import ErrorFilled from "@carbon/icons-react/lib/ErrorFilled";
-import CheckmarkFilled from "@carbon/icons-react/lib/CheckmarkFilled";
-import InformationFilled from "@carbon/icons-react/lib/InformationFilled";
 import Information from "@carbon/icons-react/lib/Information";
 import ChevronDown from "@carbon/icons-react/lib/ChevronDown";
 import ChevronUp from "@carbon/icons-react/lib/ChevronUp";
@@ -46,7 +42,7 @@ import Calendar from "@carbon/icons-react/lib/Calendar";
 import Time from "@carbon/icons-react/lib/Time";
 import EventSchedule from "@carbon/icons-react/lib/EventSchedule";
 
-import { CONDITION_MESSAGE_TYPE, CARBON_ICONS, DATA_TYPE } from "../common-properties/constants/constants";
+import { CARBON_ICONS, DATA_TYPE } from "../common-properties/constants/constants";
 
 const iconClassName = "properties-icon";
 
@@ -64,15 +60,6 @@ export default class Icon extends React.Component {
 		const className = iconClassName + " " + customClassName;
 
 		switch (type) {
-		case (CONDITION_MESSAGE_TYPE.ERROR):
-			return <ErrorFilled className={classNames("canvas-state-icon-error", className)} disabled={this.props.disabled} />;
-		case (CONDITION_MESSAGE_TYPE.WARNING):
-			return <WarningFilled className={classNames("canvas-state-icon-warning", className)} disabled={this.props.disabled} />;
-		case (CONDITION_MESSAGE_TYPE.SUCCESS):
-			return <CheckmarkFilled className={classNames("canvas-state-icon-success", className)} disabled={this.props.disabled} />;
-		case (CONDITION_MESSAGE_TYPE.INFO):
-			return <InformationFilled className={classNames("canvas-state-icon-info", className)} disabled={this.props.disabled} />;
-
 		case (CARBON_ICONS.INFORMATION):
 			return <Information className={classNames("canvas-state-icon-information-hollow", className)} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.CHEVRONARROWS.UP):

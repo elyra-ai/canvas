@@ -41,6 +41,7 @@ import ActionPanel from "./../../panels/action-panel";
 
 import ActionFactory from "./../../actions/action-factory";
 import Icon from "./../../../icons/icon";
+import StateIcon from "./../../../state-icon";
 import { ItemType } from "../../constants/form-constants";
 
 const ALERT_TAB_GROUP = "alertMsgs";
@@ -387,9 +388,9 @@ class EditorForm extends React.Component {
 		case ("linkText"): // linkText used for Alerts tab. Only used internally
 			textClass = classNames("properties-link-text-container", uiItem.textType);
 			if (uiItem.textType === "warning") {
-				icon = <Icon type={CONDITION_MESSAGE_TYPE.WARNING} />;
+				icon = <StateIcon type={CONDITION_MESSAGE_TYPE.WARNING} />;
 			} else if (uiItem.textType === "error") {
-				icon = <Icon type={CONDITION_MESSAGE_TYPE.ERROR} />;
+				icon = <StateIcon type={CONDITION_MESSAGE_TYPE.ERROR} />;
 			}
 			text = (
 				<Link className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)} >
