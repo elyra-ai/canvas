@@ -2043,7 +2043,7 @@ export default class SVGCanvasRenderer {
 		nonBindingNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
 			.attr("transform", (d) => SvgCanvasNodes.getNodeExpansionIconTranslate(d));
 
-		// Ports display; Supernode sub-flow display; Error marker display; and
+		// Ports display; Supernode sub-flow display; State marker display; and
 		// Decoration display.
 		joinedNodeGrps.each((d, index, grps) => {
 			const nodeGrp = d3.select(grps[index]);
@@ -2056,7 +2056,7 @@ export default class SVGCanvasRenderer {
 
 			if (!CanvasUtils.isSuperBindingNode(d)) {
 				// Display error indicator
-				this.addErrorMarker(d, nodeGrp);
+				this.addStateMarker(d, nodeGrp);
 
 				// Display Decorators
 				const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
@@ -2087,6 +2087,13 @@ export default class SVGCanvasRenderer {
 		// unmount their React objects.
 		removeSel
 			.selectAll(".d3-foreign-object-node-image")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
+		// Remove any JSX state markers for the nodes being removed to
+		// unmount their React objects.
+		removeSel
+			.selectAll(".d3-foreign-object-node-state-marker")
 			.each((d, idx, exts) =>
 				this.externalUtils.removeExternalObject(d, idx, exts));
 
@@ -3287,28 +3294,79 @@ export default class SVGCanvasRenderer {
 			});
 	}
 
-	addErrorMarker(d, nodeGrp) {
-		const errorMarkerSelection = nodeGrp.selectChildren(".node-error-marker");
+	addStateMarker(d, nodeGrp) {
+		const stateIcon = SvgCanvasNodes.getStateMarkerIcon(d);
 
-		if (d.messages && d.messages.length > 0) {
-			if (errorMarkerSelection.empty()) {
-				nodeGrp
-					.append("svg")
-					.attr("class", "node-error-marker"); // Need to set this so following selection will work
+		if (d.messages && d.messages.length > 0 && stateIcon) {
+			const imageType = this.getImageType(stateIcon);
+			let expectedTag = "image";
+			if (imageType === "jsx") {
+				expectedTag = "foreignObject";
+			} else if (imageType === "svg") {
+				expectedTag = "svg";
+			}
+			let errorMarkerSelection = nodeGrp.selectChildren(".node-state-marker");
+
+			if (!errorMarkerSelection.empty() && errorMarkerSelection.node().tagName.toLowerCase() !== expectedTag.toLowerCase()) {
+				errorMarkerSelection.each((data, idx, exts) =>
+					this.externalUtils.removeExternalObject(data, idx, exts));
+				errorMarkerSelection.remove();
+				errorMarkerSelection = nodeGrp.selectChildren(".node-state-marker");
 			}
 
-			nodeGrp.selectChildren(".node-error-marker")
-				.attr("class", () => "node-error-marker " + SvgCanvasNodes.getErrorMarkerClass(d.messages))
-				.html(SvgCanvasNodes.getErrorMarkerIcon(d))
+			if (errorMarkerSelection.empty()) {
+				const beforeElement = SvgCanvasNodes.getBeforeElement(nodeGrp.node(), "d3-node-state-marker");
+				nodeGrp.insert(() => this.getStateMarkerElement(stateIcon), () => beforeElement);
+				errorMarkerSelection = nodeGrp.selectChildren(".node-state-marker");
+			}
+
+			errorMarkerSelection
+				.attr("class", () => "node-state-marker d3-node-state-marker " +
+					(imageType === "jsx" ? " d3-foreign-object-node-state-marker" : ""))
 				.attr("width", SvgCanvasNodes.getNodeErrorWidth(d))
 				.attr("height", SvgCanvasNodes.getNodeErrorHeight(d))
 				.attr("x", SvgCanvasNodes.getNodeErrorPosX(d))
-				.attr("y", SvgCanvasNodes.getNodeErrorPosY(d));
+				.attr("y", SvgCanvasNodes.getNodeErrorPosY(d))
+				.each((data, idx, errorMarkers) => this.setStateMarkerContent(stateIcon, idx, errorMarkers));
 
 		} else {
+			const errorMarkerSelection = nodeGrp.selectChildren(".node-state-marker");
 			if (!errorMarkerSelection.empty()) {
+				errorMarkerSelection.each((data, idx, exts) =>
+					this.externalUtils.removeExternalObject(data, idx, exts));
 				errorMarkerSelection.remove();
 			}
+		}
+	}
+
+	getStateMarkerElement(errorIcon) {
+		const imageType = this.getImageType(errorIcon);
+
+		if (imageType === "jsx") {
+			return d3.create("svg:foreignObject")
+				.attr("tabindex", -1)
+				.attr("class", "d3-foreign-object-node-state-marker node-state-marker d3-node-state-marker")
+				.node();
+
+		} else if (imageType === "svg") {
+			return d3.create("svg")
+				.attr("class", "node-state-marker d3-node-state-marker")
+				.node();
+		}
+		// If imageType is "image" or null, we create an image element
+		return d3.create("svg:image")
+			.attr("class", "node-state-marker d3-node-state-marker")
+			.node();
+	}
+
+	setStateMarkerContent(errorIcon, i, errorMarkers) {
+		const imageType = this.getImageType(errorIcon);
+
+		if (imageType === "jsx") {
+			this.externalUtils.addNodeImageExternalObject(errorIcon, i, errorMarkers);
+		} else {
+			const imageSel = d3.select(errorMarkers[i]);
+			this.setImageContent(imageSel, errorIcon, imageType);
 		}
 	}
 

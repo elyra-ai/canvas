@@ -571,6 +571,7 @@ g.d3-link-dec-group:focus {
 // will cause the SVG to stretch to whatever dimensions the app
 // has set for the node or decoration image.
 .d3-foreign-object-node-image,
+.d3-foreign-object-node-state-marker,
 .d3-foreign-object-dec-jsx {
 	outline: none;
 	svg {
@@ -626,25 +627,6 @@ g.d3-link-dec-group:focus {
 			fill: $node-super-expand-icon-background-hover-color;
 		}
 	}
-}
-
-/* Error indicator */
-.d3-error-circle {
-	stroke: $canvas-background-color;
-	stroke-width: 2;
-	fill: $node-error-color;
-}
-
-/* Warning indicator */
-.d3-warning-circle {
-	stroke: $canvas-background-color;
-	stroke-width: 2;
-	fill: $node-warning-color;
-}
-
-/* Invisible Error indicator */
-.d3-error-circle-off {
-	display: none;
 }
 
 /* Styles for output ports */
