@@ -15,6 +15,8 @@
  */
 
 import React from "react";
+import fs from "fs";
+import path from "path";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import { fireEvent } from "@testing-library/react";
@@ -565,5 +567,14 @@ describe("textfield classnames appear correctly", () => {
 		// From the 4 rows shown, each row has a textfield on-panel and in subpanel
 		expect(tableControlDiv.querySelectorAll(".table-on-panel-textfield-control-class")).to.have.length(4);
 		expect(tableControlDiv.querySelectorAll(".table-subpanel-textfield-control-class")).to.have.length(4);
+	});
+});
+
+describe("textfield accessible name", () => {
+	// Jest maps scss to a mock, so styles are not applied. Check the source instead:
+	// display:none on the Carbon visually-hidden label removes the only <label for=id> from the accessibility tree.
+	it("textfield scss should not hide the visually hidden label with display:none", async() => {
+		const scss = await fs.promises.readFile(path.resolve(__dirname, "../../../src/common-properties/controls/textfield/textfield.scss"), "utf8");
+		expect(scss).to.not.match(/visually-hidden[^}]*display:\s*none/);
 	});
 });

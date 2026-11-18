@@ -57,9 +57,6 @@ $textinput-bottom-padding: 5px;
 		right: 0;
 		inline-size: auto;
 		justify-content: flex-end;
-		// Do not use display:none on .cds--label.cds--visually-hidden. Carbon already clips it
-		// (absolute, 1px) and it must stay in the accessibility tree: it is the <label for=id>
-		// that names the input when the value is empty.
 	}
 	.properties-control-item:not(:has(.properties-label-container:not(:empty))) + .cds--form-item .cds--text-input__label-wrapper {
 		justify-content: flex-end;

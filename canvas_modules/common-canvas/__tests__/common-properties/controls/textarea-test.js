@@ -15,6 +15,8 @@
  */
 
 import React from "react";
+import fs from "fs";
+import path from "path";
 import { expect } from "chai";
 import { fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -511,5 +513,14 @@ describe("textarea classnames appear correctly", () => {
 		// From the 4 rows shown, each row has a textarea on-panel and in subpanel
 		expect(tableControlDiv.querySelectorAll(".table-on-panel-textarea-control-class")).to.have.length(4);
 		expect(tableControlDiv.querySelectorAll(".table-subpanel-textarea-control-class")).to.have.length(4);
+	});
+});
+
+describe("textarea accessible name", () => {
+	// Jest maps scss to a mock, so styles are not applied. Check the source instead:
+	// display:none on the Carbon visually-hidden label removes the only <label for=id> from the accessibility tree.
+	it("textarea scss should not hide the visually hidden label with display:none", async() => {
+		const scss = await fs.promises.readFile(path.resolve(__dirname, "../../../src/common-properties/controls/textarea/textarea.scss"), "utf8");
+		expect(scss).to.not.match(/visually-hidden[^}]*display:\s*none/);
 	});
 });
