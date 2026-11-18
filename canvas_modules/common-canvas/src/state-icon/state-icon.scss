@@ -1,0 +1,37 @@
+/*
+ * Copyright 2026 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use "../carbon.scss";
+
+svg.canvas-state-icon-error {
+	fill: carbon.$support-error;
+}
+
+svg.canvas-state-icon-success {
+	fill: carbon.$support-success;
+}
+
+svg.canvas-state-icon-warning {
+	fill: carbon.$support-warning;
+	[data-icon-path="inner-path"] { // exclamation mark
+		fill: carbon.$gray-100; // fixed dark color, independent of theme
+		opacity: 1;
+	}
+}
+
+svg.canvas-state-icon-info {
+	fill: carbon.$support-info;
+}

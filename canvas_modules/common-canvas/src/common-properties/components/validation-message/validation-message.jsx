@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "./../../../icons/icon.jsx";
+import StateIcon from "./../../../state-icon";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
@@ -30,7 +30,7 @@ export default class ValidationMessage extends React.Component {
 		}
 		const msgText = this.props.inTable ? null : <span>{this.props.messageInfo.text}</span>;
 		const icon = (<div className="icon">
-			{<Icon type={this.props.messageInfo.type} />}
+			{<StateIcon type={this.props.messageInfo.type} />}
 		</div>);
 		const msgIcon = this.props.inTable
 			? (<div className="properties-tooltips-container table-cell-msg-icon">

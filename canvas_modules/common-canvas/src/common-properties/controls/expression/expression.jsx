@@ -19,7 +19,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Icon from "./../../../icons/icon.jsx";
+import StateIcon from "./../../../state-icon";
 import { Button } from "@carbon/react";
 import classNames from "classnames";
 import { isEqual, concat } from "lodash";
@@ -489,7 +489,7 @@ class ExpressionControl extends React.Component {
 		if (this.state.validateIcon) {
 			validateIcon = (
 				<div className="icon validateIcon">
-					<Icon type={this.state.validateIcon} className={`properties-validation-icon-${this.state.validateIcon}`} />
+					<StateIcon type={this.state.validateIcon} />
 				</div>);
 		}
 
