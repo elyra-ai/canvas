@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { CommonCanvas, CanvasController } from '@elyra/canvas';
-import { Toggle } from '@carbon/react';
+import { FeatureFlags, Toggle } from '@carbon/react';
 import flowData from './pipeline-flow.json';
 import paletteData from './palette.json';
 import '@elyra/canvas/dist/styles/common-canvas.min.css';
@@ -37,30 +37,36 @@ function ElyraApp() {
   };
 
   return (
-    <IntlProvider locale="en">
-      <div className="ElyraApp">
-        <div className="header">
-          <h1>{title}</h1>
-          <div className="theme-toggle">
-            <Toggle
-              id="theme-toggle"
-              labelText="Theme"
-              labelA="Light"
-              labelB="Dark"
-              toggled={isDarkTheme}
-              onToggle={(checked) => setIsDarkTheme(checked)}
-              size="sm"
+    <FeatureFlags
+      enableV12Release
+      enableV12Overflowmenu
+      enableV12DynamicFloatingStyles
+    >
+      <IntlProvider locale="en">
+        <div className="ElyraApp">
+          <div className="header">
+            <h1>{title}</h1>
+            <div className="theme-toggle">
+              <Toggle
+                id="theme-toggle"
+                labelText="Theme"
+                labelA="Light"
+                labelB="Dark"
+                toggled={isDarkTheme}
+                onToggle={(checked) => setIsDarkTheme(checked)}
+                size="sm"
+              />
+            </div>
+          </div>
+          <div className="canvas-container">
+            <CommonCanvas
+              canvasController={canvasController.current}
+              config={canvasConfig}
             />
           </div>
         </div>
-        <div className="canvas-container">
-          <CommonCanvas
-            canvasController={canvasController.current}
-            config={canvasConfig}
-          />
-        </div>
-      </div>
-    </IntlProvider>
+      </IntlProvider>
+    </FeatureFlags>
   );
 }
 
