@@ -96,29 +96,29 @@ describe("SvgCanvasNodes utility tests", () => {
 		});
 	});
 
-	describe("getErrorMarkerIcon", () => {
+	describe("getStateMarkerIcon", () => {
 		it("should return Error icon when node has error messages", () => {
 			const data = { messages: [{ type: ERROR }] };
-			const icon = SvgCanvasNodes.getErrorMarkerIcon(data);
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
 			expect(React.isValidElement(icon)).toBe(true);
 		});
 
 		it("should return Warning icon when node has warning messages", () => {
 			const data = { messages: [{ type: WARNING }] };
-			const icon = SvgCanvasNodes.getErrorMarkerIcon(data);
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
 			expect(React.isValidElement(icon)).toBe(true);
 		});
 
 		it("should return Error icon when node has both error and warning messages", () => {
 			const data = { messages: [{ type: WARNING }, { type: ERROR }] };
-			const icon = SvgCanvasNodes.getErrorMarkerIcon(data);
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
 			expect(React.isValidElement(icon)).toBe(true);
 		});
 
 		it("should return null when node has no messages", () => {
-			expect(SvgCanvasNodes.getErrorMarkerIcon({ messages: [] })).toBeNull();
-			expect(SvgCanvasNodes.getErrorMarkerIcon({ messages: null })).toBeNull();
-			expect(SvgCanvasNodes.getErrorMarkerIcon({})).toBeNull();
+			expect(SvgCanvasNodes.getStateMarkerIcon({ messages: [] })).toBeNull();
+			expect(SvgCanvasNodes.getStateMarkerIcon({ messages: null })).toBeNull();
+			expect(SvgCanvasNodes.getStateMarkerIcon({})).toBeNull();
 		});
 	});
 
