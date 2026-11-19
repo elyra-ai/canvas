@@ -153,6 +153,22 @@ export default class SvgCanvasNodes {
 		return labelClass;
 	}
 
+	static getStateMarkerClass(messages) {
+		const messageLevel = this.getMessageLevel(messages);
+		let labelClass = "d3-error-off";
+		switch (messageLevel) {
+		case ERROR:
+			labelClass = "d3-error";
+			break;
+		case WARNING:
+			labelClass = "d3-warning";
+			break;
+		default:
+			break;
+		}
+		return labelClass;
+	}
+
 	// Returns the absolute x coordinate of the center of the node. If node is
 	// an expanded supernode, its expanded width is in the 'width' field.
 	static getNodeCenterPosX(node) {

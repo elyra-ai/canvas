@@ -16,15 +16,15 @@
 
 @use "../carbon.scss";
 
-svg.canvas-state-icon-error {
+svg.state-icon-error {
 	fill: carbon.$support-error;
 }
 
-svg.canvas-state-icon-success {
+svg.state-icon-success {
 	fill: carbon.$support-success;
 }
 
-svg.canvas-state-icon-warning {
+svg.state-icon-warning {
 	fill: carbon.$support-warning;
 	[data-icon-path="inner-path"] { // exclamation mark
 		fill: carbon.$gray-100; // fixed dark color, independent of theme
@@ -32,6 +32,6 @@ svg.canvas-state-icon-warning {
 	}
 }
 
-svg.canvas-state-icon-info {
+svg.state-icon-info {
 	fill: carbon.$support-info;
 }

@@ -822,13 +822,13 @@ Cypress.Commands.add("verifyDecorationPathOnLink", (linkName, decoratorId, path)
 
 Cypress.Commands.add("verifyErrorMarkerOnNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-error-circle")
+		.find(".d3-error")
 		.should("have.length", 1);
 });
 
 Cypress.Commands.add("verifyWarningMarkerOnNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-warning-circle")
+		.find(".d3-warning")
 		.should("have.length", 1);
 });
 
@@ -837,19 +837,19 @@ Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNode", (nodeName) => {
 		.then((node) => {
 			// Verify error marker does not exist
 			cy.wrap(node)
-				.find(".d3-error-circle")
+				.find(".d3-error")
 				.should("not.exist");
 
 			// Verify warning marker does not exist
 			cy.wrap(node)
-				.find(".d3-error-warning")
+				.find(".d3-warning")
 				.should("not.exist");
 		});
 });
 
 Cypress.Commands.add("verifyErrorMarkerOnNodeInSupernode", (nodeName, supernodeName) => {
 	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
-		.find(".d3-error-circle")
+		.find(".d3-error")
 		.should("have.length", 1);
 });
 
@@ -858,12 +858,12 @@ Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNodeInSupernode", (nodeName,
 		.then((node) => {
 			// Verify error marker does not exist
 			cy.wrap(node)
-				.find(".d3-error-circle")
+				.find(".d3-error")
 				.should("not.exist");
 
 			// Verify warning marker does not exist
 			cy.wrap(node)
-				.find(".d3-error-warning")
+				.find(".d3-warning")
 				.should("not.exist");
 		});
 });

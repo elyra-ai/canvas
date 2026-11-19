@@ -33,13 +33,13 @@ const INFO = "info";
 export default function StateIcon({ type, className, disabled }) {
 	switch (type) {
 	case (ERROR):
-		return <ErrorFilled className={classNames("canvas-state-icon-error", className)} disabled={disabled} />;
+		return <ErrorFilled className={classNames("state-icon-error", className)} disabled={disabled} />;
 	case (WARNING):
-		return <WarningFilled className={classNames("canvas-state-icon-warning", className)} disabled={disabled} />;
+		return <WarningFilled className={classNames("state-icon-warning", className)} disabled={disabled} />;
 	case (SUCCESS):
-		return <CheckmarkFilled className={classNames("canvas-state-icon-success", className)} disabled={disabled} />;
+		return <CheckmarkFilled className={classNames("state-icon-success", className)} disabled={disabled} />;
 	case (INFO):
-		return <InformationFilled className={classNames("canvas-state-icon-info", className)} disabled={disabled} />;
+		return <InformationFilled className={classNames("state-icon-info", className)} disabled={disabled} />;
 	default: return null;
 	}
 }

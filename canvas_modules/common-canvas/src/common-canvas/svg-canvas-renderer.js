@@ -3305,23 +3305,23 @@ export default class SVGCanvasRenderer {
 			} else if (imageType === "svg") {
 				expectedTag = "svg";
 			}
-			let errorMarkerSelection = nodeGrp.selectChildren(".node-state-marker");
+			let errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
 
 			if (!errorMarkerSelection.empty() && errorMarkerSelection.node().tagName.toLowerCase() !== expectedTag.toLowerCase()) {
 				errorMarkerSelection.each((data, idx, exts) =>
 					this.externalUtils.removeExternalObject(data, idx, exts));
 				errorMarkerSelection.remove();
-				errorMarkerSelection = nodeGrp.selectChildren(".node-state-marker");
+				errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
 			}
 
 			if (errorMarkerSelection.empty()) {
 				const beforeElement = SvgCanvasNodes.getBeforeElement(nodeGrp.node(), "d3-node-state-marker");
 				nodeGrp.insert(() => this.getStateMarkerElement(stateIcon), () => beforeElement);
-				errorMarkerSelection = nodeGrp.selectChildren(".node-state-marker");
+				errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
 			}
 
 			errorMarkerSelection
-				.attr("class", () => "node-state-marker d3-node-state-marker " +
+				.attr("class", () => "d3-node-state-marker " + SvgCanvasNodes.getStateMarkerClass(d.messages) +
 					(imageType === "jsx" ? " d3-foreign-object-node-state-marker" : ""))
 				.attr("width", SvgCanvasNodes.getNodeErrorWidth(d))
 				.attr("height", SvgCanvasNodes.getNodeErrorHeight(d))
@@ -3330,7 +3330,7 @@ export default class SVGCanvasRenderer {
 				.each((data, idx, errorMarkers) => this.setStateMarkerContent(stateIcon, idx, errorMarkers));
 
 		} else {
-			const errorMarkerSelection = nodeGrp.selectChildren(".node-state-marker");
+			const errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
 			if (!errorMarkerSelection.empty()) {
 				errorMarkerSelection.each((data, idx, exts) =>
 					this.externalUtils.removeExternalObject(data, idx, exts));
@@ -3345,17 +3345,17 @@ export default class SVGCanvasRenderer {
 		if (imageType === "jsx") {
 			return d3.create("svg:foreignObject")
 				.attr("tabindex", -1)
-				.attr("class", "d3-foreign-object-node-state-marker node-state-marker d3-node-state-marker")
+				.attr("class", "d3-foreign-object-node-state-marker d3-node-state-marker")
 				.node();
 
 		} else if (imageType === "svg") {
 			return d3.create("svg")
-				.attr("class", "node-state-marker d3-node-state-marker")
+				.attr("class", "d3-node-state-marker")
 				.node();
 		}
 		// If imageType is "image" or null, we create an image element
 		return d3.create("svg:image")
-			.attr("class", "node-state-marker d3-node-state-marker")
+			.attr("class", "d3-node-state-marker")
 			.node();
 	}
 
