@@ -108,7 +108,7 @@ describe("Test of expression builder", function() {
 
 		// Clicking validate returns error -> success -> error ...
 		cy.clickValidateLinkInSubPanel();
-		cy.verifyIconInSubPanel("canvas-state-icon-error");
+		cy.verifyIconInSubPanel("state-icon-error");
 
 		// Verify the icon goes away on the next input
 		cy.selectFieldFromPropertyInSubPanel("Age", "field");
@@ -128,7 +128,7 @@ describe("Test of expression builder", function() {
 
 		// Clicking validate returns error -> success -> error ...
 		cy.clickValidateLinkInSubPanel();
-		cy.verifyIconInSubPanel("canvas-state-icon-success");
+		cy.verifyIconInSubPanel("state-icon-success");
 	});
 	it("expression builder should displays table Custom header label", function() {
 		// Click to open expression builder
