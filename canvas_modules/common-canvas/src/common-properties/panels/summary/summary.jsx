@@ -22,7 +22,7 @@ import { Button } from "@carbon/react";
 // Carbon icons - direct imports for tree-shaking optimization
 import Add from "@carbon/icons-react/lib/Add";
 import WideFlyout from "./../../components/wide-flyout";
-import Icon from "./../../../icons/icon.jsx";
+import StateIcon from "./../../../state-icon";
 
 import { isEmpty } from "lodash";
 import * as PropertyUtils from "./../../util/property-utils";
@@ -273,7 +273,7 @@ class SummaryPanel extends React.Component {
 					tip={descriptionText}
 					className="properties-tooltips"
 				>
-					{<Icon type={msg.type} className={`properties-summary-link-icon ${msg.type}`} />}
+					{<StateIcon type={msg.type} className={msg.type} />}
 				</Tooltip>
 			);
 		}
