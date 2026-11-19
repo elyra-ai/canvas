@@ -52,10 +52,6 @@
 		right: 0;
 		inline-size: auto;
 		justify-content: flex-end;
-
-		.cds--label.cds--visually-hidden {
-			display: none;
-		}
 	}
 	.properties-control-item:not(:has(.properties-label-container:not(:empty))) + .cds--form-item .cds--text-area__label-wrapper {
 		justify-content: flex-end;
