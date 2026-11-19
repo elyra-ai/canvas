@@ -543,6 +543,26 @@ describe("textfield counter display tests", () => {
 		const counter = textWrapper.querySelector(".cds--text-input__label-counter");
 		expect(counter).to.be.null;
 	});
+
+	it("textfield should not show counter when the control is disabled", () => {
+		controller.setPropertiesConfig({ showCharacterCounter: true });
+		controller.updateControlState(propertyId, "disabled");
+		const wrapper = render(
+			<Provider store={controller.getStore()}>
+				<Textfield
+					store={controller.getStore()}
+					control={control}
+					controller={controller}
+					controlItem={controlItem}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-text']");
+		// Disabled counter fails WCAG 1.4.3 contrast so it is not displayed
+		const counter = textWrapper.querySelector(".cds--text-input__label-counter");
+		expect(counter).to.be.null;
+	});
 });
 
 

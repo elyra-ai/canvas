@@ -57,10 +57,13 @@ class TextareaControl extends React.Component {
 		const truncated = joined.truncated;
 
 		// Determine if counter should be shown
-		// Show counter only if NOT in a table AND (showCharacterCounter is true OR limit is reached)
+		// Show counter only if NOT in a table AND NOT disabled AND (showCharacterCounter is true OR limit is reached)
+		// The counter of a disabled control uses Carbon's $text-disabled color which fails WCAG 1.4.3 contrast.
+		// A truncated value is displayed in a disabled textarea so it is treated as disabled.
 		const showCharacterCounter = this.props.controller.getShowCharacterCounter();
 		const isAtLimit = this.charLimit !== -1 && value.length >= this.charLimit;
-		const shouldShowCounter = !this.props.tableControl && this.charLimit !== -1 && (showCharacterCounter || isAtLimit);
+		const isDisabled = this.props.state === STATES.DISABLED || truncated;
+		const shouldShowCounter = !this.props.tableControl && !isDisabled && this.charLimit !== -1 && (showCharacterCounter || isAtLimit);
 
 		let textArea = null;
 		let validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
