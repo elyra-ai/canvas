@@ -163,16 +163,8 @@
 
 .tip-node-status {
 	position: absolute;
-	width: carbon.$spacing-04;
-	height: carbon.$spacing-04;
 	right: carbon.$spacing-05;
 	top: carbon.$spacing-03;
-	&.warning {
-		fill: carbon.$support-warning;
-	}
-	&.error {
-		fill: carbon.$support-error;
-	}
 }
 
 .tip-port {
