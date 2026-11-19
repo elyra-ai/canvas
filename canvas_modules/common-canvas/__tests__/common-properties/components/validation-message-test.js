@@ -71,7 +71,7 @@ describe("validation-message renders correctly", () => {
 		const { container } = wrapper;
 		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper[0].getElementsByClassName("canvas-state-icon-error")).to.have.length(0);
+		expect(messageWrapper[0].getElementsByClassName("state-icon-error")).to.have.length(0);
 		expect(messageWrapper[0].querySelector("span").textContent).to.equal(errorMessage.text);
 	});
 	it("validation-message renders error message correctly in table", () => {
@@ -84,7 +84,7 @@ describe("validation-message renders correctly", () => {
 		const { container } = wrapper;
 		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper[0].getElementsByClassName("canvas-state-icon-error")).to.have.length(1);
+		expect(messageWrapper[0].getElementsByClassName("state-icon-error")).to.have.length(1);
 		expect(wrapper.getByText(/Testing validation message/).textContent).to.equal(errorMessage.text);
 	});
 	it("validation-message renders warning message correctly", () => {
@@ -96,7 +96,7 @@ describe("validation-message renders correctly", () => {
 		const { container } = wrapper;
 		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper[0].querySelectorAll("svg.canvas-state-icon-warning")).to.have.length(0);
+		expect(messageWrapper[0].querySelectorAll("svg.state-icon-warning")).to.have.length(0);
 		expect(messageWrapper[0].querySelector("span").textContent).to.equal(warningMessage.text);
 
 	});
@@ -110,7 +110,7 @@ describe("validation-message renders correctly", () => {
 		const { container } = wrapper;
 		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper[0].getElementsByClassName("canvas-state-icon-warning")).to.have.length(1);
+		expect(messageWrapper[0].getElementsByClassName("state-icon-warning")).to.have.length(1);
 		expect(wrapper.getByText(/Testing validation message/).textContent).to.equal(warningMessage.text);
 	});
 	it("validation-message renders info message correctly", () => {
@@ -122,7 +122,7 @@ describe("validation-message renders correctly", () => {
 		const { container } = wrapper;
 		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper[0].getElementsByClassName("canvas-state-icon-info")).to.have.length(0);
+		expect(messageWrapper[0].getElementsByClassName("state-icon-info")).to.have.length(0);
 		expect(messageWrapper[0].querySelector("span").textContent).to.equal(infoMessage.text);
 	});
 	it("validation-message renders correctly when no message set", () => {

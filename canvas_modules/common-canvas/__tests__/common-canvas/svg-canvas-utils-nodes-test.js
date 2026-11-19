@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import React from "react";
 import SvgCanvasNodes from "../../src/common-canvas/svg-canvas-utils-nodes.js";
 import { ERROR, WARNING } from "../../src/common-canvas/constants/canvas-constants";
 
@@ -92,6 +93,32 @@ describe("SvgCanvasNodes utility tests", () => {
 		it("should return empty string when no messages", () => {
 			expect(SvgCanvasNodes.getMessageLevel([])).toBe("");
 			expect(SvgCanvasNodes.getMessageLevel(null)).toBe("");
+		});
+	});
+
+	describe("getStateMarkerIcon", () => {
+		it("should return Error icon when node has error messages", () => {
+			const data = { messages: [{ type: ERROR }] };
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
+			expect(React.isValidElement(icon)).toBe(true);
+		});
+
+		it("should return Warning icon when node has warning messages", () => {
+			const data = { messages: [{ type: WARNING }] };
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
+			expect(React.isValidElement(icon)).toBe(true);
+		});
+
+		it("should return Error icon when node has both error and warning messages", () => {
+			const data = { messages: [{ type: WARNING }, { type: ERROR }] };
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
+			expect(React.isValidElement(icon)).toBe(true);
+		});
+
+		it("should return null when node has no messages", () => {
+			expect(SvgCanvasNodes.getStateMarkerIcon({ messages: [] })).toBeNull();
+			expect(SvgCanvasNodes.getStateMarkerIcon({ messages: null })).toBeNull();
+			expect(SvgCanvasNodes.getStateMarkerIcon({})).toBeNull();
 		});
 	});
 
