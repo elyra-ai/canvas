@@ -8,6 +8,7 @@ export default defineConfig({
       scss: {
         api: "modern-compiler",
         loadPaths: ["node_modules"],
+        silenceDeprecations: ["if-function"],
       },
     },
   },
