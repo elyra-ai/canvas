@@ -293,7 +293,7 @@ export const ACTION_HIGHLIGHT_DOWNSTREAM = "highlightDownstream";
 export const ACTION_UNHIGHLIGHT = "unhighlight";
 
 export const EDIT_ICON =
-	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\">" +
+	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" aria-hidden=\"true\">" +
 	"<rect x=\"2\" y=\"26\" width=\"28\" height=\"2\"/>" +
 	"<path d=\"M25.4,9c0.8-0.8,0.8-2,0-2.8c0,0,0,0,0,0l-3.6-3.6c-0.8-0.8-2-0.8-2.8,0" +
 	"c0,0,0,0,0,0l-15,15V24h6.4L25.4,9z M20.4,4L24,7.6" +
