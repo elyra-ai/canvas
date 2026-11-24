@@ -198,3 +198,45 @@ describe("Right flyout category views", () => {
 		expect(titleEditor.className.includes("properties-title-right-flyout-tabs-view")).to.equal(false);
 	});
 });
+
+describe("Category titles use panelTitleHandler", () => {
+	afterEach(() => {
+		cleanup();
+	});
+
+	const panelTitleHandler = ({ panelId, label }) => {
+		if (panelId === "datefield-values") {
+			return <span className="test-custom-category-title">Custom {label}</span>;
+		}
+		return null;
+	};
+
+	it("should use panelTitleHandler for category titles when categoryView=tabs", () => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(
+			DATEFIELD_PARAM_DEF,
+			{ containerType: "Custom", rightFlyout: true, categoryView: "tabs" },
+			{ panelTitleHandler }
+		);
+		const { container } = renderedObject.wrapper;
+		const editorForm = container.getElementsByClassName("properties-editor-form")[0];
+		const tabs = within(editorForm).getAllByRole("tab");
+		expect(tabs).to.have.length(3);
+		expect(tabs[0].querySelector(".test-custom-category-title").textContent).to.equal("Custom Values");
+		// Categories where the handler returns null keep their default text
+		expect(tabs[1].textContent).to.equal("Conditions");
+		expect(tabs[2].textContent).to.equal("Table");
+	});
+
+	it("should use panelTitleHandler for category titles when categoryView=accordions", () => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(
+			DATEFIELD_PARAM_DEF,
+			{ containerType: "Custom", rightFlyout: true, categoryView: "accordions" },
+			{ panelTitleHandler }
+		);
+		const { container } = renderedObject.wrapper;
+		const editorForm = container.getElementsByClassName("properties-editor-form")[0];
+		const customTitles = editorForm.getElementsByClassName("test-custom-category-title");
+		expect(customTitles).to.have.length(1);
+		expect(customTitles[0].textContent).to.equal("Custom Values");
+	});
+});
