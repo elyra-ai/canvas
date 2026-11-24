@@ -15,7 +15,8 @@
  */
 
 import CanvasUtils from "./common-canvas-utils.js";
-import { ERROR, WARNING, NODE_ERROR_ICON, NODE_WARNING_ICON,
+import { ERROR_STATE_ICON, WARNING_STATE_ICON } from "./svg-canvas-utils-icons.js";
+import { ERROR, WARNING,
 	TEXT_AREA_BORDER_ADJUSTMENT, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON } from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -35,7 +36,7 @@ const NODE_ELEMENT_ORDER = new Map([
 	["d3-node-port-input", 10],
 	["d3-node-port-output", 10], // Ports have same priority
 	["d3-svg-canvas-underlay", 11], // Supernode contents
-	["d3-node-error-marker", 12],
+	["d3-node-state-marker", 12],
 	["d3-node-dec-group", 13]
 ]);
 
@@ -105,20 +106,20 @@ export default class SvgCanvasNodes {
 		return "d3-node-label-entry" + lineTypeClass + justificationClass;
 	}
 
-	static getErrorMarkerIcon(data) {
+	static getStateMarkerIcon(data) {
 		const messageLevel = this.getMessageLevel(data.messages);
-		let iconPath = "";
+		let icon = null;
 		switch (messageLevel) {
 		case ERROR:
-			iconPath = NODE_ERROR_ICON;
+			icon = ERROR_STATE_ICON;
 			break;
 		case WARNING:
-			iconPath = NODE_WARNING_ICON;
+			icon = WARNING_STATE_ICON;
 			break;
 		default:
 			break;
 		}
-		return iconPath;
+		return icon;
 	}
 
 	static getMessageLevel(messages) {
@@ -151,15 +152,15 @@ export default class SvgCanvasNodes {
 		return labelClass;
 	}
 
-	static getErrorMarkerClass(messages) {
+	static getStateMarkerClass(messages) {
 		const messageLevel = this.getMessageLevel(messages);
-		let labelClass = "d3-error-circle-off";
+		let labelClass = "d3-error-off";
 		switch (messageLevel) {
 		case ERROR:
-			labelClass = "d3-error-circle";
+			labelClass = "d3-error";
 			break;
 		case WARNING:
-			labelClass = "d3-warning-circle";
+			labelClass = "d3-warning";
 			break;
 		default:
 			break;
@@ -433,8 +434,9 @@ export default class SvgCanvasNodes {
 		return d.image;
 	}
 
-	// Returns the type of image passed in, either "svg" or "image" or
-	// "jsx" or null (if no image was provided).
+	// Returns the type of image passed in, either "svg" or "image" or "jsx" or
+	// "carbon" (a Carbon icon from svg-canvas-utils-icons.js) or null (if no image
+	// was provided).
 	// This will be used to append an svg or image element to the DOM.
 	// Parameters:
 	//   nodeImage - the image to check
@@ -443,6 +445,9 @@ export default class SvgCanvasNodes {
 	static getImageType(nodeImage, externalUtils, config) {
 		if (nodeImage) {
 			if (typeof nodeImage === "object") {
+				if (nodeImage.isCarbonSvgIcon) {
+					return "carbon";
+				}
 				if (externalUtils && externalUtils.isValidJsxElement(nodeImage)) {
 					return "jsx";
 				}

@@ -32,8 +32,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, OBJ_NODE, OBJ_COMMENT, OBJ_LINK, OBJ_CANVAS,
-	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT, EDIT_ICON,
-	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON,
+	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT,
 	PORT_DISPLAY_CIRCLE, PORT_DISPLAY_CIRCLE_WITH_ARROW, PORT_DISPLAY_IMAGE, PORT_DISPLAY_JSX,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
@@ -49,6 +48,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	CANVAS_FOCUS
 } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
+import { EDIT_ICON, NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON } from "./svg-canvas-utils-icons.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
@@ -2043,7 +2043,7 @@ export default class SVGCanvasRenderer {
 		nonBindingNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
 			.attr("transform", (d) => SvgCanvasNodes.getNodeExpansionIconTranslate(d));
 
-		// Ports display; Supernode sub-flow display; Error marker display; and
+		// Ports display; Supernode sub-flow display; State marker display; and
 		// Decoration display.
 		joinedNodeGrps.each((d, index, grps) => {
 			const nodeGrp = d3.select(grps[index]);
@@ -2056,7 +2056,7 @@ export default class SVGCanvasRenderer {
 
 			if (!CanvasUtils.isSuperBindingNode(d)) {
 				// Display error indicator
-				this.addErrorMarker(d, nodeGrp);
+				this.addStateMarker(d, nodeGrp);
 
 				// Display Decorators
 				const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
@@ -2087,6 +2087,13 @@ export default class SVGCanvasRenderer {
 		// unmount their React objects.
 		removeSel
 			.selectAll(".d3-foreign-object-node-image")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
+		// Remove any JSX state markers for the nodes being removed to
+		// unmount their React objects.
+		removeSel
+			.selectAll(".d3-foreign-object-node-state-marker")
 			.each((d, idx, exts) =>
 				this.externalUtils.removeExternalObject(d, idx, exts));
 
@@ -2988,10 +2995,8 @@ export default class SVGCanvasRenderer {
 			.attr("x", EDIT_ICON_X_OFFSET)
 			.attr("y", EDIT_ICON_Y_OFFSET);
 
-		editIconGrpSel
-			.append("svg")
+		this.setCarbonIconContent(editIconGrpSel.append("svg"), EDIT_ICON)
 			.attr("class", "d3-node-edit-label-icon")
-			.html(EDIT_ICON)
 			.attr("width", 16)
 			.attr("height", 16)
 			.attr("aria-label", "Node edit label icon")
@@ -3287,29 +3292,93 @@ export default class SVGCanvasRenderer {
 			});
 	}
 
-	addErrorMarker(d, nodeGrp) {
-		const errorMarkerSelection = nodeGrp.selectChildren(".node-error-marker");
+	addStateMarker(d, nodeGrp) {
+		const stateIcon = SvgCanvasNodes.getStateMarkerIcon(d);
 
-		if (d.messages && d.messages.length > 0) {
-			if (errorMarkerSelection.empty()) {
-				nodeGrp
-					.append("svg")
-					.attr("class", "node-error-marker"); // Need to set this so following selection will work
+		if (d.messages && d.messages.length > 0 && stateIcon) {
+			const imageType = this.getImageType(stateIcon);
+			let expectedTag = "image";
+			if (imageType === "jsx") {
+				expectedTag = "foreignObject";
+			} else if (imageType === "svg" || imageType === "carbon") {
+				expectedTag = "svg";
+			}
+			let errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
+
+			if (!errorMarkerSelection.empty() && errorMarkerSelection.node().tagName.toLowerCase() !== expectedTag.toLowerCase()) {
+				errorMarkerSelection.each((data, idx, exts) =>
+					this.externalUtils.removeExternalObject(data, idx, exts));
+				errorMarkerSelection.remove();
+				errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
 			}
 
-			nodeGrp.selectChildren(".node-error-marker")
-				.attr("class", () => "node-error-marker " + SvgCanvasNodes.getErrorMarkerClass(d.messages))
-				.html(SvgCanvasNodes.getErrorMarkerIcon(d))
+			if (errorMarkerSelection.empty()) {
+				const beforeElement = SvgCanvasNodes.getBeforeElement(nodeGrp.node(), "d3-node-state-marker");
+				nodeGrp.insert(() => this.getStateMarkerElement(stateIcon), () => beforeElement);
+				errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
+			}
+
+			errorMarkerSelection
+				.attr("class", () => "d3-node-state-marker " + SvgCanvasNodes.getStateMarkerClass(d.messages) +
+					(imageType === "jsx" ? " d3-foreign-object-node-state-marker" : "") +
+					(imageType === "carbon" ? " " + stateIcon.className : ""))
 				.attr("width", SvgCanvasNodes.getNodeErrorWidth(d))
 				.attr("height", SvgCanvasNodes.getNodeErrorHeight(d))
 				.attr("x", SvgCanvasNodes.getNodeErrorPosX(d))
-				.attr("y", SvgCanvasNodes.getNodeErrorPosY(d));
+				.attr("y", SvgCanvasNodes.getNodeErrorPosY(d))
+				.each((data, idx, errorMarkers) => this.setStateMarkerContent(stateIcon, idx, errorMarkers));
 
 		} else {
+			const errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
 			if (!errorMarkerSelection.empty()) {
+				errorMarkerSelection.each((data, idx, exts) =>
+					this.externalUtils.removeExternalObject(data, idx, exts));
 				errorMarkerSelection.remove();
 			}
 		}
+	}
+
+	getStateMarkerElement(errorIcon) {
+		const imageType = this.getImageType(errorIcon);
+
+		if (imageType === "jsx") {
+			return d3.create("svg:foreignObject")
+				.attr("tabindex", -1)
+				.attr("class", "d3-foreign-object-node-state-marker d3-node-state-marker")
+				.node();
+
+		} else if (imageType === "svg" || imageType === "carbon") {
+			return d3.create("svg")
+				.attr("class", "d3-node-state-marker")
+				.node();
+		}
+		// If imageType is "image" or null, we create an image element
+		return d3.create("svg:image")
+			.attr("class", "d3-node-state-marker")
+			.node();
+	}
+
+	setStateMarkerContent(errorIcon, i, errorMarkers) {
+		const imageType = this.getImageType(errorIcon);
+
+		if (imageType === "jsx") {
+			this.externalUtils.addNodeImageExternalObject(errorIcon, i, errorMarkers);
+		} else if (imageType === "carbon") {
+			this.setCarbonIconContent(d3.select(errorMarkers[i]), errorIcon);
+		} else {
+			const imageSel = d3.select(errorMarkers[i]);
+			this.setImageContent(imageSel, errorIcon, imageType);
+		}
+	}
+
+	// Sets the Carbon icon passed in (from svg-canvas-utils-icons.js) into the D3
+	// selection of the <svg> element passed in. Carbon icons are static markup
+	// so they are inserted directly by D3.
+	setCarbonIconContent(svgSel, icon) {
+		return svgSel
+			.attr("viewBox", icon.viewBox)
+			.attr("aria-hidden", true)
+			.html(icon.content);
 	}
 
 	getNodeInputPortClassName() {
@@ -3597,10 +3666,8 @@ export default class SVGCanvasRenderer {
 			.attr("x", 0)
 			.attr("y", 0);
 
-		ellipsisGrp
-			.append("svg")
+		this.setCarbonIconContent(ellipsisGrp.append("svg"), NODE_MENU_ICON)
 			.attr("class", "d3-node-ellipsis")
-			.html(NODE_MENU_ICON)
 			.attr("width", (nd) => SvgCanvasNodes.getNodeEllipsisIconWidth(nd))
 			.attr("height", (nd) => SvgCanvasNodes.getNodeEllipsisIconHeight(nd))
 			.attr("x", (nd) => nd.layout.ellipsisHoverAreaPadding)
@@ -3632,10 +3699,8 @@ export default class SVGCanvasRenderer {
 			.attr("x", 0)
 			.attr("y", 0);
 
-		expGrp
-			.append("svg")
+		this.setCarbonIconContent(expGrp.append("svg"), SUPER_NODE_EXPAND_ICON)
 			.attr("class", "d3-node-super-expand-icon")
-			.html(SUPER_NODE_EXPAND_ICON)
 			.attr("width", (d) => d.layout.supernodeExpansionIconWidth - (2 * d.layout.supernodeExpansionIconHoverAreaPadding))
 			.attr("height", (d) => d.layout.supernodeExpansionIconHeight - (2 * d.layout.supernodeExpansionIconHoverAreaPadding))
 			.attr("x", (d) => d.layout.supernodeExpansionIconHoverAreaPadding)

@@ -253,7 +253,7 @@ describe("list renders correctly for array[string]", () => {
 		expect(listWrapper.querySelectorAll(".properties-textinput-readonly")).to.have.length(1);
 		const validationMsg = listWrapper.querySelectorAll("div.properties-validation-message.inTable");
 		expect(validationMsg).to.have.length(1);
-		expect(validationMsg[0].querySelectorAll("svg.canvas-state-icon-error")).to.have.length(1);
+		expect(validationMsg[0].querySelectorAll("svg.state-icon-error")).to.have.length(1);
 	});
 
 	it("should select rows in `list` control table using keyboard", () => {

@@ -95,6 +95,37 @@ describe("SvgCanvasNodes utility tests", () => {
 		});
 	});
 
+	describe("getStateMarkerIcon", () => {
+		it("should return Error icon when node has error messages", () => {
+			const data = { messages: [{ type: ERROR }] };
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
+			expect(SvgCanvasNodes.getImageType(icon)).toBe("carbon");
+			expect(icon.className).toBe("state-icon-error");
+			expect(icon.viewBox).toBe("0 0 16 16");
+			expect(icon.content).toContain("<path");
+		});
+
+		it("should return Warning icon when node has warning messages", () => {
+			const data = { messages: [{ type: WARNING }] };
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
+			expect(SvgCanvasNodes.getImageType(icon)).toBe("carbon");
+			expect(icon.className).toBe("state-icon-warning");
+			expect(icon.content).toContain("data-icon-path=\"inner-path\"");
+		});
+
+		it("should return Error icon when node has both error and warning messages", () => {
+			const data = { messages: [{ type: WARNING }, { type: ERROR }] };
+			const icon = SvgCanvasNodes.getStateMarkerIcon(data);
+			expect(icon.className).toBe("state-icon-error");
+		});
+
+		it("should return null when node has no messages", () => {
+			expect(SvgCanvasNodes.getStateMarkerIcon({ messages: [] })).toBeNull();
+			expect(SvgCanvasNodes.getStateMarkerIcon({ messages: null })).toBeNull();
+			expect(SvgCanvasNodes.getStateMarkerIcon({})).toBeNull();
+		});
+	});
+
 	describe("getNodeCenterPosX", () => {
 		it("should calculate center X position correctly", () => {
 			const node = { x_pos: 100, width: 200 };

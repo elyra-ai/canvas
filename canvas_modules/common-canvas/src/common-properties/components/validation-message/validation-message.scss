@@ -21,22 +21,6 @@
 	display: flex;
 	.icon {
 		margin: 0 carbon.$spacing-01;
-		.properties-validation-icon-warning {
-			fill: carbon.$support-warning;
-			[data-icon-path="inner-path"] { // exclamation mark
-				fill: carbon.$layer-selected-inverse;
-				opacity: 1;
-			}
-		}
-		.properties-validation-icon-error {
-			fill: carbon.$support-error;
-		}
-		.properties-validation-icon-info {
-			fill: carbon.$support-info;
-		}
-		.properties-validation-icon-success {
-			fill: carbon.$support-success;
-		}
 	}
 	span {
 		@include carbon.type-style("caption-01");
