@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import React from "react";
 import CanvasUtils from "./common-canvas-utils.js";
-import StateIcon from "../state-icon";
+import { ERROR_STATE_ICON, WARNING_STATE_ICON } from "./svg-canvas-utils-icons.js";
 import { ERROR, WARNING,
 	TEXT_AREA_BORDER_ADJUSTMENT, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON } from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -112,10 +111,10 @@ export default class SvgCanvasNodes {
 		let icon = null;
 		switch (messageLevel) {
 		case ERROR:
-			icon = <StateIcon type={ERROR} />;
+			icon = ERROR_STATE_ICON;
 			break;
 		case WARNING:
-			icon = <StateIcon type={WARNING} />;
+			icon = WARNING_STATE_ICON;
 			break;
 		default:
 			break;
@@ -435,8 +434,9 @@ export default class SvgCanvasNodes {
 		return d.image;
 	}
 
-	// Returns the type of image passed in, either "svg" or "image" or
-	// "jsx" or null (if no image was provided).
+	// Returns the type of image passed in, either "svg" or "image" or "jsx" or
+	// "carbon" (a Carbon icon from svg-canvas-utils-icons.js) or null (if no image
+	// was provided).
 	// This will be used to append an svg or image element to the DOM.
 	// Parameters:
 	//   nodeImage - the image to check
@@ -445,6 +445,9 @@ export default class SvgCanvasNodes {
 	static getImageType(nodeImage, externalUtils, config) {
 		if (nodeImage) {
 			if (typeof nodeImage === "object") {
+				if (nodeImage.isCarbonSvgIcon) {
+					return "carbon";
+				}
 				if (externalUtils && externalUtils.isValidJsxElement(nodeImage)) {
 					return "jsx";
 				}

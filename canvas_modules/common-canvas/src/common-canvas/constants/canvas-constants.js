@@ -292,29 +292,6 @@ export const ACTION_HIGHLIGHT_UPSTREAM = "highlightUpstream";
 export const ACTION_HIGHLIGHT_DOWNSTREAM = "highlightDownstream";
 export const ACTION_UNHIGHLIGHT = "unhighlight";
 
-export const EDIT_ICON =
-	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\">" +
-	"<rect x=\"2\" y=\"26\" width=\"28\" height=\"2\"/>" +
-	"<path d=\"M25.4,9c0.8-0.8,0.8-2,0-2.8c0,0,0,0,0,0l-3.6-3.6c-0.8-0.8-2-0.8-2.8,0" +
-	"c0,0,0,0,0,0l-15,15V24h6.4L25.4,9z M20.4,4L24,7.6" +
-	"l-3,3L17.4,7L20.4,4z M6,22v-3.6l10-10l3.6,3.6l-10,10H6z\"/>" +
-	"</svg>";
-
-export const NODE_MENU_ICON =
-	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 16\">" +
-	"<circle cx=\"2\" cy=\"4\" r=\"1.1\"/>" +
-	"<circle cx=\"2\" cy=\"9\" r=\"1.1\"/>" +
-	"<circle cx=\"2\" cy=\"14\" r=\"1.1\"/>" +
-	"</svg>";
-
-export const SUPER_NODE_EXPAND_ICON =
-	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\" enable-background=\"new 0 0 16 16\">" +
-	"<g><path d=\"m14.9 9.1h-1.5c-.1 0-.1 0-.1.1v5.2h-11.6v-11.6h5.2c.1 0 .1 0 .1-.1v-1.5c0-.1 " +
-	"0-.1-.1-.1h-5.4c-.8 0-1.5.7-1.5 1.4v12c0 .8.7 1.5 1.5 1.5h12.1c.8 0 1.5-.7 1.5-1.4v-5.4c-.1-.1-.2-.1-.2-.1\"/>" +
-	"<path d=\"m10.4 0v1.4h3.2l-5.1 5v.1l1.1 1 4.9-5.1v3.3h1.5v-5.7z\"/>" +
-	"</g>" +
-	"</svg>";
-
 // This image is stored in the format to be shown as an <img> in the JSX
 // created by palette-flyout-content-category render method.
 export const SAVED_NODES_FOLDER_ICON =

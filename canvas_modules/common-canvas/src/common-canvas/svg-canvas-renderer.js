@@ -32,8 +32,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, OBJ_NODE, OBJ_COMMENT, OBJ_LINK, OBJ_CANVAS,
-	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT, EDIT_ICON,
-	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON,
+	OBJ_INPUT_PORT, OBJ_OUTPUT_PORT,
 	PORT_DISPLAY_CIRCLE, PORT_DISPLAY_CIRCLE_WITH_ARROW, PORT_DISPLAY_IMAGE, PORT_DISPLAY_JSX,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
@@ -49,6 +48,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	CANVAS_FOCUS
 } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
+import { EDIT_ICON, NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON } from "./svg-canvas-utils-icons.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
@@ -2995,10 +2995,8 @@ export default class SVGCanvasRenderer {
 			.attr("x", EDIT_ICON_X_OFFSET)
 			.attr("y", EDIT_ICON_Y_OFFSET);
 
-		editIconGrpSel
-			.append("svg")
+		this.setCarbonIconContent(editIconGrpSel.append("svg"), EDIT_ICON)
 			.attr("class", "d3-node-edit-label-icon")
-			.html(EDIT_ICON)
 			.attr("width", 16)
 			.attr("height", 16)
 			.attr("aria-label", "Node edit label icon")
@@ -3302,7 +3300,7 @@ export default class SVGCanvasRenderer {
 			let expectedTag = "image";
 			if (imageType === "jsx") {
 				expectedTag = "foreignObject";
-			} else if (imageType === "svg") {
+			} else if (imageType === "svg" || imageType === "carbon") {
 				expectedTag = "svg";
 			}
 			let errorMarkerSelection = nodeGrp.selectChildren(".d3-node-state-marker");
@@ -3322,7 +3320,8 @@ export default class SVGCanvasRenderer {
 
 			errorMarkerSelection
 				.attr("class", () => "d3-node-state-marker " + SvgCanvasNodes.getStateMarkerClass(d.messages) +
-					(imageType === "jsx" ? " d3-foreign-object-node-state-marker" : ""))
+					(imageType === "jsx" ? " d3-foreign-object-node-state-marker" : "") +
+					(imageType === "carbon" ? " " + stateIcon.className : ""))
 				.attr("width", SvgCanvasNodes.getNodeErrorWidth(d))
 				.attr("height", SvgCanvasNodes.getNodeErrorHeight(d))
 				.attr("x", SvgCanvasNodes.getNodeErrorPosX(d))
@@ -3348,7 +3347,7 @@ export default class SVGCanvasRenderer {
 				.attr("class", "d3-foreign-object-node-state-marker d3-node-state-marker")
 				.node();
 
-		} else if (imageType === "svg") {
+		} else if (imageType === "svg" || imageType === "carbon") {
 			return d3.create("svg")
 				.attr("class", "d3-node-state-marker")
 				.node();
@@ -3364,10 +3363,22 @@ export default class SVGCanvasRenderer {
 
 		if (imageType === "jsx") {
 			this.externalUtils.addNodeImageExternalObject(errorIcon, i, errorMarkers);
+		} else if (imageType === "carbon") {
+			this.setCarbonIconContent(d3.select(errorMarkers[i]), errorIcon);
 		} else {
 			const imageSel = d3.select(errorMarkers[i]);
 			this.setImageContent(imageSel, errorIcon, imageType);
 		}
+	}
+
+	// Sets the Carbon icon passed in (from svg-canvas-utils-icons.js) into the D3
+	// selection of the <svg> element passed in. Carbon icons are static markup
+	// so they are inserted directly by D3.
+	setCarbonIconContent(svgSel, icon) {
+		return svgSel
+			.attr("viewBox", icon.viewBox)
+			.attr("aria-hidden", true)
+			.html(icon.content);
 	}
 
 	getNodeInputPortClassName() {
@@ -3655,10 +3666,8 @@ export default class SVGCanvasRenderer {
 			.attr("x", 0)
 			.attr("y", 0);
 
-		ellipsisGrp
-			.append("svg")
+		this.setCarbonIconContent(ellipsisGrp.append("svg"), NODE_MENU_ICON)
 			.attr("class", "d3-node-ellipsis")
-			.html(NODE_MENU_ICON)
 			.attr("width", (nd) => SvgCanvasNodes.getNodeEllipsisIconWidth(nd))
 			.attr("height", (nd) => SvgCanvasNodes.getNodeEllipsisIconHeight(nd))
 			.attr("x", (nd) => nd.layout.ellipsisHoverAreaPadding)
@@ -3690,10 +3699,8 @@ export default class SVGCanvasRenderer {
 			.attr("x", 0)
 			.attr("y", 0);
 
-		expGrp
-			.append("svg")
+		this.setCarbonIconContent(expGrp.append("svg"), SUPER_NODE_EXPAND_ICON)
 			.attr("class", "d3-node-super-expand-icon")
-			.html(SUPER_NODE_EXPAND_ICON)
 			.attr("width", (d) => d.layout.supernodeExpansionIconWidth - (2 * d.layout.supernodeExpansionIconHoverAreaPadding))
 			.attr("height", (d) => d.layout.supernodeExpansionIconHeight - (2 * d.layout.supernodeExpansionIconHoverAreaPadding))
 			.attr("x", (d) => d.layout.supernodeExpansionIconHoverAreaPadding)
