@@ -127,6 +127,27 @@ class EditorForm extends React.Component {
 		return [];
 	}
 
+	// Returns the category title text (string) including the alert message count.
+	_getCategoryTitleText(tab) {
+		return filter([tab.text, this._getMessageCountForCategory(tab)]).join("");
+	}
+
+	// Returns the category title to display. When the panelTitleHandler callback returns a value
+	// for the category (identified by panelId = category group), that value, which can be a string or a React node,
+	// is used instead of the category text. The alert message count is appended in either case.
+	_getCategoryTitle(tab) {
+		const panelTitleHandler = this.props.controller.getHandlers().panelTitleHandler;
+		const customTitle = panelTitleHandler?.({ panelId: tab.group, label: tab.text });
+		if (!customTitle) {
+			return this._getCategoryTitleText(tab);
+		}
+		const messageCount = this._getMessageCountForCategory(tab);
+		if (typeof customTitle === "string") {
+			return customTitle + (messageCount || "");
+		}
+		return (<>{customTitle}{messageCount}</>);
+	}
+
 	_getTabId(tab) {
 		return tab.group;
 	}
@@ -214,7 +235,7 @@ class EditorForm extends React.Component {
 						<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 							className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						>
-							<AccordionItem title={`${tab.text}${this._getMessageCountForCategory(tab) ? this._getMessageCountForCategory(tab) : ""}`}
+							<AccordionItem title={this._getCategoryTitle(tab)}
 								// Open Tab with Alert Message when from Alerts Tab or a open Default Tab
 								open={ this.defaultOpenTab === tab.group || this.alertOpenTab === tab.group }
 								onHeadingClick={this._showCategoryPanel.bind(this, tab.group)}
@@ -234,11 +255,11 @@ class EditorForm extends React.Component {
 				tabLists.push(
 					<Tab
 						key={tab.group}
-						title={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
+						title={this._getCategoryTitleText(tab)}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>
-						{filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
+						{this._getCategoryTitle(tab)}
 					</Tab>
 				);
 
