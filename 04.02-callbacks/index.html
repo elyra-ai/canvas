@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -4092,12 +4092,22 @@ This callback must return an object having url and label.</p>
 <span class="p">}</span>
 </code></pre></div></p>
 <h3 id="paneltitlehandler">panelTitleHandler()<a class="headerlink" href="#paneltitlehandler" title="Permanent link">&para;</a></h3>
-<p>Optional callback used to customize the title display of panels. This callback is currently only called when rendering a twisty panel and allows you to replace the default panel title with custom content (such as adding icons, badges, or additional text).</p>
-<p>The callback receives an object with <code>panelId</code>, <code>label</code>, and <code>data</code> properties, and should return a string or JSX element to be used as the panel title, or null to use the default label.</p>
+<p>Optional callback used to customize the title display of panels. It allows you to replace the default title with custom content (such as adding icons, badges, or additional text). The callback is called when rendering:</p>
+<ul>
+<li><strong>Twisty panels</strong>: the callback is called with the twisty panel&rsquo;s ID.</li>
+<li><strong>Categories</strong>: the callback is called with the category&rsquo;s group ID. This applies to the primary categories of the properties editor, whether they are displayed as accordions or as tabs (<code>categoryView</code> is <code>"accordions"</code> or <code>"tabs"</code> in a right flyout, and categories are always tabs in a modal or tearsheet container).</li>
+</ul>
+<p>The callback is called once for each panel or category each time it is rendered. It receives an object with <code>panelId</code>, <code>label</code> and <code>data</code> properties and should return a string or a JSX element to be used as the title, or a falsy value (for example <code>null</code>) to use the default label.</p>
 <p><strong>Parameters:</strong>
-- <code>panelId</code> (string): The ID of the panel
-- <code>label</code> (string): The default label/title of the panel
-- <code>data</code> (object, optional): Optional data object associated with the panel, as specified in the parameter definition</p>
+- <code>panelId</code> (string): The ID of the panel or category. For a category this is the ID of the group in the <code>group_info</code> of the parameter definition.
+- <code>label</code> (string): The default label/title of the panel or category
+- <code>data</code> (object, optional): Optional data object associated with the panel, as specified in the parameter definition. This is only provided for twisty panels, not for categories.</p>
+<p><strong>Return value:</strong>
+- A string or JSX element: displayed as the title.
+- A falsy value such as <code>null</code> or <code>undefined</code>: the default <code>label</code> is displayed.</p>
+<p><strong>Notes for categories:</strong>
+- When alert messages are shown (see <code>showAlertsTab</code>), the message count for the category, for example <code>(2)</code>, is appended to the title returned by the callback.
+- In the tab view, the <code>title</code> attribute (tooltip) of a tab is always the plain text label of the category because it cannot contain JSX.</p>
 <div class="highlight"><pre><span></span><code><span class="nx">panelTitleHandler</span><span class="p">({</span><span class="w"> </span><span class="nx">panelId</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">panelId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"twisty-panel-id"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
@@ -4106,6 +4116,15 @@ This callback must return an object having url and label.</p>
 <span class="w">        </span><span class="o">&lt;</span><span class="nx">span</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">"custom-subtitle"</span><span class="o">&gt;</span><span class="nx">sub</span><span class="w"> </span><span class="nx">title</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
 <span class="w">        </span><span class="p">{</span><span class="nx">data</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">badge</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">span</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">"badge"</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">data</span><span class="p">.</span><span class="nx">badge</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/span&gt;}</span>
 <span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// Add an error icon to the title of the category with the group ID "category-id"</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">panelId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"category-id"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="p">{</span><span class="nx">label</span><span class="p">}</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">ErrorFilled</span><span class="w"> </span><span class="o">/&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/span&gt;</span>
 <span class="w">    </span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="c1">// Use default label specified in parameter defintion</span>
